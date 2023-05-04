@@ -1,0 +1,11 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: test-policy
+spec:
+  validationFailureAction: Audit  
+  rules:
+  - name: test-rule
+    match: {}
+    validate:
+      message: ""
