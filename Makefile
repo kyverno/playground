@@ -37,14 +37,18 @@ clean-tools: ## Remove installed tools
 ###########
 
 .PHONY: codegen-schema-openapi
-codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schema
+codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@echo Generate openapi schema... >&2
+	@rm -rf ./schemas
+	@mkdir -p ./schemas/openapi/v2
+	@mkdir -p ./schemas/openapi/v3
 	@$(KIND) create cluster --name schema --image $(KIND_IMAGE)
 	@$(HELM) upgrade --install --wait --timeout 15m --atomic \
   		--version $(KYVERNO_VERSION) \
   		--namespace kyverno --create-namespace \
   		--repo https://kyverno.github.io/kyverno kyverno kyverno
-	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapiv3/schema.json
+	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
+	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/schema.json
 	@$(KIND) delete cluster --name schema
 
 ########
