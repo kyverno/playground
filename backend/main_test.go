@@ -58,7 +58,7 @@ metadata:
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := engineRequest{
+			r := request{
 				Policy:    tt.fields.Policy,
 				Resources: tt.fields.Resources,
 				Context:   tt.fields.Context,
