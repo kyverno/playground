@@ -1,8 +1,8 @@
 <template>
   <v-btn
     size="large"
-    prepend-icon="mdi-play"
-    color="primary"
+    :prepend-icon="icon"
+    :color="color"
     :loading="loading"
     class="play"
     rounded
@@ -18,6 +18,8 @@ const props = defineProps({
   policy: { type: String, default: "" },
   resource: { type: String, default: "" },
   context: { type: String, default: "" },
+  color: { type: String, default: "primary" },
+  icon: { type: String, default: "mdi-play" },
 });
 
 const emit = defineEmits(["on-response", "on-error"]);
@@ -26,10 +28,20 @@ const loading = ref<boolean>(false);
 
 const api: string = import.meta.env.VITE_API_HOST || "";
 
-const submit = (): Promise<any> => {
+const submit = (): void => {
+  if (!props.policy.trim()) {
+    emit('on-error', new Error('Policy is required'))
+    return
+  }
+
+  if (!props.resource.trim()) {
+    emit('on-error', new Error('Resource is required'))
+    return
+  }
+
   loading.value = true;
 
-  return fetch(`${api}/engine`, {
+  fetch(`${api}/engine`, {
     body: JSON.stringify({
       policy: props.policy,
       resources: props.resource,
