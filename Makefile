@@ -61,8 +61,9 @@ build-frontend:
 	@cd frontend && npm install && npm run build
 
 .PHONY: build-backend
-build-backend:
+build-backend: build-frontend
 	@echo Building backend... >&2
+	@cp -r frontend/dist backend/dist
 	@cd backend && go mod tidy && go build .
 
 .PHONY: build-all

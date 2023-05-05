@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -21,6 +23,9 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
 )
+
+//go:embed dist
+var staticFiles embed.FS
 
 type request struct {
 	Policy    string `json:"policy"`
@@ -175,8 +180,10 @@ func run(c *gin.Context) {
 func main() {
 	var host = flag.String("host", "localhost", "server host")
 	var port = flag.Int("port", 8080, "server port")
-	var frontendPath = flag.String("frontend-path", "../frontend/dist", "frontend folder")
-
+	fs, err := fs.Sub(staticFiles, "dist")
+	if err != nil {
+		panic(err)
+	}
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:  []string{"*"},
@@ -184,9 +191,8 @@ func main() {
 		AllowHeaders:  []string{"Origin", "Content-Type"},
 		ExposeHeaders: []string{"Content-Length"},
 	}))
-
 	router.POST("/engine", run)
-	router.StaticFS("/", http.Dir(*frontendPath))
+	router.StaticFS("/", http.FS(fs))
 	address := fmt.Sprintf("%v:%v", *host, *port)
 	if err := router.Run(address); err != nil {
 		panic(err)
