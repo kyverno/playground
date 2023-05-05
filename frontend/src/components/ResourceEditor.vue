@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import MonacoEditor from "monaco-editor-vue3";
+import MonacoEditor from "./MonacoEditor.vue";
 
 const props = defineProps({
     modelValue: { type: String, default: '' }

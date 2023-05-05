@@ -3,7 +3,7 @@ kind: ClusterPolicy
 metadata:
   name: test-policy
 spec:
-  validationFailureAction: Audit  
+  validationFailureAction: Audit
   rules:
   - name: test-rule
     match: {}

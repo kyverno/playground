@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <div class="toolbar-container">
         <div class="py-1 app-logo">
-          <v-img src="kyverno-logo.png" />
+          <v-img src="/kyverno-logo.png" />
         </div>
         <h1 style="display: inline" class="text-h4">Playground</h1>
       </div>

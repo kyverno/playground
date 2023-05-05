@@ -1,12 +1,15 @@
 package main
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func Test_engineRequest_process(t *testing.T) {
 	type fields struct {
-		Policy   string
-		Resource string
-		Context  string
+		Policy    string
+		Resources string
+		Context   string
 	}
 	tests := []struct {
 		name    string
@@ -15,8 +18,8 @@ func Test_engineRequest_process(t *testing.T) {
 	}{
 		{
 			fields: fields{
-				Policy:   "",
-				Resource: "",
+				Policy:    "",
+				Resources: "",
 			},
 			wantErr: true,
 		},
@@ -42,7 +45,7 @@ spec:
       metadata:
         labels:
           purpose: production`,
-				Resource: `
+				Resources: `
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -56,11 +59,11 @@ metadata:
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := engineRequest{
-				Policy:   tt.fields.Policy,
-				Resource: tt.fields.Resource,
-				Context:  tt.fields.Context,
+				Policy:    tt.fields.Policy,
+				Resources: tt.fields.Resources,
+				Context:   tt.fields.Context,
 			}
-			if err := r.process(); (err != nil) != tt.wantErr {
+			if _, err := r.process(context.TODO()); (err != nil) != tt.wantErr {
 				t.Errorf("engineRequest.process() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

@@ -7,6 +7,7 @@
     @update:value="(event: string) => emit('update:modelValue', event)"
     :options="options"
     ref="monaco"
+    :uri="uri"
   />
   <v-card class="config" theme="dark" color="black" v-if="false">
     <v-card-text class="my-0 py-1">
@@ -17,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import MonacoEditor from "monaco-editor-vue3";
+import MonacoEditor from "./MonacoEditor.vue";
 import { ref, watch } from "vue";
-import { editor, Uri, KeyCode } from "monaco-editor";
+import { Uri, KeyCode } from "monaco-editor";
 
 const props = defineProps({
   modelValue: { type: String, default: "" },
@@ -29,10 +30,6 @@ const emit = defineEmits(["update:modelValue"]);
 
 const monaco = ref(null);
 const uri = Uri.parse("policy.yaml");
-let model = editor.getModel(uri);
-if (!model) {
-  model = editor.createModel(props.modelValue, "yaml", uri);
-}
 
 watch(props, (props) => {
   if (!monaco.value) return;
@@ -44,16 +41,13 @@ watch(props, (props) => {
   }
 });
 
-
 const autocompleteOnEnter = ref(true);
-const eventRegistered = ref(true);
+const eventRegistered = ref(false);
 
 watch(monaco, (e: any) => {
   if (!e) return;
 
   const edit = e._getEditor();
-
-  edit.setModel(model);
 
   if (eventRegistered.value) return;
 
