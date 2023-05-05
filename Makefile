@@ -51,6 +51,32 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/schema.json
 	@$(KIND) delete cluster --name schema
 
+#########
+# BUILD #
+#########
+
+.PHONY: build-frontend
+build-frontend:
+	@echo Building frontend... >&2
+	@cd frontend && npm run build
+
+.PHONY: build-backend
+build-backend:
+	@echo Building backend... >&2
+	@cd backend && go build .
+
+.PHONY: build-all
+build-all: build-frontend build-backend
+
+#######
+# RUN #
+#######
+
+.PHONY: run
+run: build-frontend
+	@echo Run backend... >&2
+	@cd backend && go run .
+
 ########
 # HELP #
 ########
