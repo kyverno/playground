@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,10 +27,15 @@ func engine(c *gin.Context) {
 }
 
 func main() {
+	var host = flag.String("host", "localhost", "server host")
+	var port = flag.Int("port", 8080, "server port")
+	var frontend = flag.String("frontend", "../frontend/dist", "frontend folder")
+
 	router := gin.Default()
 	router.POST("/engine", engine)
-	router.StaticFS("/", http.Dir("../frontend/dist"))
-	if err := router.Run("localhost:8080"); err != nil {
+	router.StaticFS("/", http.Dir(*frontend))
+	address := fmt.Sprintf("%v:%v", *host, *port)
+	if err := router.Run(address); err != nil {
 		panic(err)
 	}
 }

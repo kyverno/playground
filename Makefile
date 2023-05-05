@@ -68,6 +68,15 @@ build-backend:
 .PHONY: build-all
 build-all: build-frontend build-backend
 
+#######
+# RUN #
+#######
+
+.PHONY: run
+run: build-frontend
+	@echo Run backend... >&2
+	@cd backend && go run .
+
 ########
 # HELP #
 ########
