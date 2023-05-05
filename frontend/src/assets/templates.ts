@@ -15,6 +15,7 @@ export const ContextTemplate = `{
     "groups": [],
     "role": [],
     "clusterrole": [],
+    "namespaceLabels": {},
     "operation": "CREATE"
 }`
 

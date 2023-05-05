@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/utils/store"
@@ -99,6 +100,13 @@ func main() {
 	var frontendPath = flag.String("frontend-path", "../frontend/dist", "frontend folder")
 
 	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:  []string{"*"},
+		AllowMethods:  []string{"POST"},
+		AllowHeaders:  []string{"Origin", "Content-Type"},
+		ExposeHeaders: []string{"Content-Length"},
+	}))
+
 	router.POST("/engine", run)
 	router.StaticFS("/", http.Dir(*frontendPath))
 	address := fmt.Sprintf("%v:%v", *host, *port)
