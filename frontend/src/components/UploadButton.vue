@@ -34,8 +34,7 @@ const send = (event: Event) => {
         emit('click', res?.target?.result)
         loading.value = false;
     };
-    reader.onerror = (err) => {
-        console.log(err)
+    reader.onerror = () => {
         color.value = "warning"
         loading.value = false;
     };

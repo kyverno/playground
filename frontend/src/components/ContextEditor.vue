@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import MonacoEditor from "monaco-editor-vue3";
+import MonacoEditor from "./MonacoEditor.vue";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
 
 const props = defineProps({
