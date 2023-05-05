@@ -11,6 +11,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
+	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
 	kyvernov2alpha1 "github.com/kyverno/kyverno/api/kyverno/v2alpha1"
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/utils/store"
 	"github.com/kyverno/kyverno/pkg/config"
@@ -19,6 +20,7 @@ import (
 	enginecontext "github.com/kyverno/kyverno/pkg/engine/context"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
+	authenticationv1 "k8s.io/api/authentication/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
@@ -37,10 +39,9 @@ type apiContext struct {
 }
 
 type apiRequest struct {
-	Policy    string `json:"policy"`
-	Resources string `json:"resources"`
-	// Context   apiContext `json:"context"`
-	Context string `json:"context"`
+	Policy    string     `json:"policy"`
+	Resources string     `json:"resources"`
+	Context   apiContext `json:"context"`
 }
 
 type apiResponse struct {
@@ -165,12 +166,23 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 		for _, resource := range resources {
 			for _, policy := range policies {
 				engineContext := enginecontext.NewContext(jp)
+				operation := r.Context.Operation
+				if operation == "" {
+					operation = kyvernov1.Create
+				}
 				// TODO: set data in engine context
-				policyContext := engine.NewPolicyContextWithJsonContext(kyvernov1.Create, engineContext).
+				policyContext := engine.NewPolicyContextWithJsonContext(operation, engineContext).
 					WithPolicy(policy).
-					WithNewResource(resource)
-				// WithNamespaceLabels(namespaceLabels).
-				// WithAdmissionInfo(c.UserInfo).
+					WithNewResource(resource).
+					WithNamespaceLabels(r.Context.NamespaceLabels).
+					WithAdmissionInfo(kyvernov1beta1.RequestInfo{
+						AdmissionUserInfo: authenticationv1.UserInfo{
+							Username: r.Context.Username,
+							Groups:   r.Context.Groups,
+						},
+						Roles:        r.Context.Roles,
+						ClusterRoles: r.Context.ClusterRoles,
+					})
 				// WithResourceKind(gvk, subresource)
 				response.Validation = append(response.Validation, ConvertEngineResponse(eng.Validate(ctx, policyContext)))
 			}
