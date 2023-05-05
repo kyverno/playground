@@ -6,6 +6,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
 type engineRequest struct {
@@ -15,11 +18,18 @@ type engineRequest struct {
 }
 
 type engineResponse struct {
+	EngineResponse engineapi.EngineResponse
 }
 
 func engine(c *gin.Context) {
+	// TODO: error handling
 	var request engineRequest
+	var resource unstructured.Unstructured
 	if err := c.BindJSON(&request); err != nil {
+		return
+	} else if _, err := yamlutils.GetPolicy([]byte(request.Policy)); err != nil {
+		return
+	} else if err := resource.UnmarshalJSON([]byte(request.Resource)); err != nil {
 		return
 	}
 	var response engineResponse
