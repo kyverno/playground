@@ -1,3 +1,4 @@
 .tools
 frontend/node_modules
 frontend/.vite
+frontend/dist

@@ -3,6 +3,7 @@ module github.com/kyverno/playground/backend
 go 1.20
 
 require (
+	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/kyverno/kyverno v1.10.0-alpha.2
 	k8s.io/apimachinery v0.26.3

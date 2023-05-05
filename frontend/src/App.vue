@@ -29,14 +29,20 @@
           </v-card>
         </v-col>
       </v-row>
-      <ValidationButton />
+      <ValidationButton
+        @on-response="handleResponse"
+        @on-error="handleError"
+        :policy="policy"
+        :resource="resource"
+        :context="context"
+      />
     </v-container>
   </v-app>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { config } from './config'
+import { config } from "./config";
 
 import EditorToolbar from "./components/EditorToolbar.vue";
 import ExampleDrawer from "./components/ExampleDrawer.vue";
@@ -51,18 +57,26 @@ const context = ref<string>(ContextTemplate);
 const resource = ref<string>(ResourceTemplate);
 
 const setExample = (values: [string, string]) => {
-  policy.value = values[0]
-  resource.value = values[1]
-}
+  policy.value = values[0];
+  resource.value = values[1];
+};
+
+const handleResponse = (response: Object) => {
+  console.log(response);
+};
+
+const handleError = (error: Error) => {
+  console.error(error);
+};
 
 const drawer = ref<boolean>(false);
 </script>
 
 <style scoped>
 .app-logo {
-  width: 200px; 
-  height: 64px; 
-  position: absolute; 
+  width: 200px;
+  height: 64px;
+  position: absolute;
   left: 0;
 }
 
