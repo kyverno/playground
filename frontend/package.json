@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
-    "monaco-editor-vue3": "^0.1.6",
+    "monaco-editor": "^0.38.0",
     "monaco-yaml": "^4.0.4",
     "roboto-fontface": "*",
     "vue": "^3.2.47",
