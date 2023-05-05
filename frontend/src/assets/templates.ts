@@ -13,8 +13,8 @@ spec:
 export const ContextTemplate = `{
     "username": "",
     "groups": [],
-    "role": [],
-    "clusterrole": [],
+    "roles": [],
+    "clusterRoles": [],
     "namespaceLabels": {},
     "operation": "CREATE"
 }`

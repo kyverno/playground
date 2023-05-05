@@ -35,8 +35,11 @@
         :policy="policy"
         :resource="resource"
         :context="context"
+        :color="btnColor"
+        :icon="btnIcon"
       />
     </v-container>
+    <ErrorBar v-model="showError" :text="errorText" />
   </v-app>
 </template>
 
@@ -44,6 +47,7 @@
 import { ref } from "vue";
 import { config } from "./config";
 
+import ErrorBar from "./components/ErrorBar.vue";
 import EditorToolbar from "./components/EditorToolbar.vue";
 import ExampleDrawer from "./components/ExampleDrawer.vue";
 import PolicyEditor from "./components/PolicyEditor.vue";
@@ -65,8 +69,24 @@ const handleResponse = (response: Object) => {
   console.log(response);
 };
 
+const showError = ref<boolean>(false);
+const errorText = ref<string>("");
+
+const btnColor = ref<string | undefined>(undefined)
+const btnIcon = ref<string | undefined>(undefined)
+
 const handleError = (error: Error) => {
-  console.error(error);
+  errorText.value = error.message
+  showError.value = true
+  btnColor.value = 'error'
+  btnIcon.value = 'mdi-alert-circle-outline'
+
+  setTimeout(() => {
+    errorText.value = ''
+    showError.value = false
+    btnColor.value = undefined
+    btnIcon.value = undefined
+  }, 5000)
 };
 
 const drawer = ref<boolean>(false);
