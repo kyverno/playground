@@ -9,12 +9,25 @@ import (
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"sigs.k8s.io/yaml"
 )
 
 type engineRequest struct {
 	Policy   string `json:"policy"`
 	Resource string `json:"resource"`
 	Context  string `json:"context"`
+}
+
+func (r engineRequest) process() error {
+	var resource unstructured.Unstructured
+	if _, err := yamlutils.GetPolicy([]byte(r.Policy)); err != nil {
+		return err
+	} else if resourceJson, err := yaml.YAMLToJSON([]byte(r.Resource)); err != nil {
+		return err
+	} else if err := resource.UnmarshalJSON(resourceJson); err != nil {
+		return err
+	}
+	return nil
 }
 
 type engineResponse struct {
@@ -24,12 +37,9 @@ type engineResponse struct {
 func engine(c *gin.Context) {
 	// TODO: error handling
 	var request engineRequest
-	var resource unstructured.Unstructured
 	if err := c.BindJSON(&request); err != nil {
 		return
-	} else if _, err := yamlutils.GetPolicy([]byte(request.Policy)); err != nil {
-		return
-	} else if err := resource.UnmarshalJSON([]byte(request.Resource)); err != nil {
+	} else if err := request.process(); err != nil {
 		return
 	}
 	var response engineResponse
