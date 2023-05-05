@@ -90,7 +90,7 @@ func run(c *gin.Context) {
 	} else if response, err := request.process(c.Request.Context()); err != nil {
 		return
 	} else {
-		c.IndentedJSON(http.StatusNotModified, response)
+		c.IndentedJSON(http.StatusOK, response)
 	}
 }
 
