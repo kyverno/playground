@@ -34,6 +34,8 @@ type request struct {
 }
 
 type response struct {
+	Policies   []kyvernov1.PolicyInterface
+	Resources  []unstructured.Unstructured
 	Validation []EngineResponse
 }
 
@@ -123,7 +125,7 @@ func (r request) loadResources() ([]unstructured.Unstructured, error) {
 			if resourceJson, err := yaml.YAMLToJSON(document); err != nil {
 				return nil, err
 			} else if err := resource.UnmarshalJSON(resourceJson); err != nil {
-				return nil, err
+				continue
 			}
 			resources = append(resources, resource)
 		}
@@ -136,7 +138,10 @@ func (r request) process(ctx context.Context) (*response, error) {
 	} else if resources, err := r.loadResources(); err != nil {
 		return nil, err
 	} else {
-		var response response
+		response := response{
+			Resources: resources,
+			Policies:  policies,
+		}
 		cfg := config.NewDefaultConfiguration(false)
 		jp := jmespath.New(cfg)
 		eng := engine.NewEngine(

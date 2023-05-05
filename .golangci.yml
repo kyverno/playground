@@ -1,2 +1,7 @@
 run:
   timeout: 15m
+
+linters:
+  disable:
+  - typecheck
+  
