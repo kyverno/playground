@@ -9,7 +9,7 @@ func Test_engineRequest_process(t *testing.T) {
 	type fields struct {
 		Policy    string
 		Resources string
-		Context   string
+		Context   apiContext
 	}
 	tests := []struct {
 		name    string
@@ -58,7 +58,7 @@ metadata:
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := request{
+			r := apiRequest{
 				Policy:    tt.fields.Policy,
 				Resources: tt.fields.Resources,
 				Context:   tt.fields.Context,

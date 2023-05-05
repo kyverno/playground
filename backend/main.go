@@ -27,13 +27,22 @@ import (
 //go:embed dist
 var staticFiles embed.FS
 
-type request struct {
-	Policy    string `json:"policy"`
-	Resources string `json:"resources"`
-	Context   string `json:"context"`
+type apiContext struct {
+	Username        string                       `json:"policy"`
+	Groups          []string                     `json:"groups"`
+	Roles           []string                     `json:"roles"`
+	ClusterRoles    []string                     `json:"clusterRoles"`
+	Operation       kyvernov1.AdmissionOperation `json:"operation"`
+	NamespaceLabels map[string]string            `json:"namespaceLabels"`
 }
 
-type response struct {
+type apiRequest struct {
+	Policy    string     `json:"policy"`
+	Resources string     `json:"resources"`
+	Context   apiContext `json:"context"`
+}
+
+type apiResponse struct {
 	Policies   []kyvernov1.PolicyInterface
 	Resources  []unstructured.Unstructured
 	Validation []EngineResponse
@@ -115,7 +124,7 @@ func ConvertEngineResponse(in engineapi.EngineResponse) EngineResponse {
 	return out
 }
 
-func (r request) loadResources() ([]unstructured.Unstructured, error) {
+func (r apiRequest) loadResources() ([]unstructured.Unstructured, error) {
 	if documents, err := yamlutils.SplitDocuments([]byte(r.Resources)); err != nil {
 		return nil, err
 	} else {
@@ -132,13 +141,13 @@ func (r request) loadResources() ([]unstructured.Unstructured, error) {
 		return resources, nil
 	}
 }
-func (r request) process(ctx context.Context) (*response, error) {
+func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 	if policies, err := yamlutils.GetPolicy([]byte(r.Policy)); err != nil {
 		return nil, err
 	} else if resources, err := r.loadResources(); err != nil {
 		return nil, err
 	} else {
-		response := response{
+		response := apiResponse{
 			Resources: resources,
 			Policies:  policies,
 		}
@@ -172,7 +181,7 @@ func (r request) process(ctx context.Context) (*response, error) {
 
 func run(c *gin.Context) {
 	// TODO: error handling
-	var request request
+	var request apiRequest
 	if err := c.BindJSON(&request); err != nil {
 		return
 	} else if response, err := request.process(c.Request.Context()); err != nil {
