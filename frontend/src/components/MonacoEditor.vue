@@ -64,6 +64,7 @@ export default defineComponent({
         value: value,
         language: language,
         theme: theme,
+        automaticLayout: true,
         ...options,
         model,
       });

@@ -1,6 +1,6 @@
 <template>
   <v-app :theme="config.theme">
-    <v-toolbar flat color="white" border>
+    <v-app-bar flat border>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <div class="toolbar-container">
         <div class="py-1 app-logo">
@@ -8,38 +8,40 @@
         </div>
         <h1 style="display: inline" class="text-h4">Playground</h1>
       </div>
-    </v-toolbar>
+    </v-app-bar>
     <ExampleDrawer v-model="drawer" @select:example="setExample" />
-    <v-container fluid class="mt-1">
-      <v-row>
-        <v-col :md="7" :sm="12">
-          <v-card style="height: 800px">
-            <EditorToolbar title="ClusterPolicy" v-model="policy" />
-            <PolicyEditor v-model="policy" />
-          </v-card>
-        </v-col>
-        <v-col :md="5" :sm="12">
-          <v-card style="height: 300px">
-            <EditorToolbar title="Context" v-model="context" />
-            <ContextEditor v-model="context" />
-          </v-card>
-          <v-card style="height: 487px" class="mt-3">
-            <EditorToolbar title="Resource" v-model="resource" />
-            <ResourceEditor v-model="resource" />
-          </v-card>
-        </v-col>
-      </v-row>
-      <ValidationButton
-        @on-response="handleResponse"
-        @on-error="handleError"
-        :policy="policy"
-        :resource="resource"
-        :context="context"
-        :color="btnColor"
-        :icon="btnIcon"
-      />
-    </v-container>
-    <ErrorBar v-model="showError" :text="errorText" />
+    <v-main>
+      <v-container fluid>
+        <v-row>
+          <v-col :md="7" :sm="12">
+            <v-card style="height: 800px">
+              <EditorToolbar title="ClusterPolicy" v-model="policy" />
+              <PolicyEditor v-model="policy" />
+            </v-card>
+          </v-col>
+          <v-col :md="5" :sm="12">
+            <v-card style="height: 300px">
+              <EditorToolbar title="Context" v-model="context" />
+              <ContextEditor v-model="context" />
+            </v-card>
+            <v-card style="height: 487px" class="mt-3">
+              <EditorToolbar title="Resource" v-model="resource" />
+              <ResourceEditor v-model="resource" />
+            </v-card>
+          </v-col>
+        </v-row>
+        <ValidationButton
+          @on-response="handleResponse"
+          @on-error="handleError"
+          :policy="policy"
+          :resource="resource"
+          :context="context"
+          :error-state="showError"
+        />
+      </v-container>
+      <ErrorBar v-model="showError" :text="errorText" />
+      <ValidationDialog v-model="showResults" :results="results" :policy="policy" />
+    </v-main>
   </v-app>
 </template>
 
@@ -54,7 +56,9 @@ import PolicyEditor from "./components/PolicyEditor.vue";
 import ContextEditor from "./components/ContextEditor.vue";
 import ResourceEditor from "./components/ResourceEditor.vue";
 import ValidationButton from "./components/ValidationButton.vue";
+import ValidationDialog from "./components/ValidationDialog.vue";
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "./assets/templates";
+import { EngineResponse } from './types'
 
 const policy = ref<string>(PolicyTemplate);
 const context = ref<string>(ContextTemplate);
@@ -65,27 +69,24 @@ const setExample = (values: [string, string]) => {
   resource.value = values[1];
 };
 
-const handleResponse = (response: Object) => {
-  console.log(response);
+const showResults = ref<boolean>(false);
+const results = ref<EngineResponse>({ Validation: [] });
+
+const handleResponse = (response: EngineResponse) => {
+  results.value = response
+  showResults.value = true
 };
 
 const showError = ref<boolean>(false);
 const errorText = ref<string>("");
 
-const btnColor = ref<string | undefined>(undefined)
-const btnIcon = ref<string | undefined>(undefined)
-
 const handleError = (error: Error) => {
   errorText.value = error.message
   showError.value = true
-  btnColor.value = 'error'
-  btnIcon.value = 'mdi-alert-circle-outline'
 
   setTimeout(() => {
     errorText.value = ''
     showError.value = false
-    btnColor.value = undefined
-    btnIcon.value = undefined
   }, 5000)
 };
 

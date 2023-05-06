@@ -1,14 +1,22 @@
 export const PolicyTemplate = `apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: test-policy
+  name: require-labels
 spec:
   validationFailureAction: Audit
   rules:
-  - name: test-rule
-    match: {}
+  - name: check-for-labels
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
     validate:
-      message: ""`
+      message: "label 'app.kubernetes.io/name' is required"
+      pattern:
+        metadata:
+          labels:
+            app.kubernetes.io/name: "?*"`
 
 export const ContextTemplate = `{
     "username": "",
