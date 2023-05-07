@@ -3,11 +3,23 @@ import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import yamlWorker from './worker/yaml.worker.js?worker?worker';
 import { setDiagnosticsOptions } from 'monaco-yaml';
+import { languages } from 'monaco-editor';
 
 import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 
 import clusterpolicy from './schemas/clusterpolicy.json'
+import context from './schemas/context.json'
+
+const baseURL = `${window.location.protocol}//${window.location.host}`
+
+languages.json.jsonDefaults.setDiagnosticsOptions({
+    enableSchemaRequest: true,
+    validate: true,
+    schemas: [
+        { ...context, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.json'] }
+    ]
+})
 
 setDiagnosticsOptions({
     enableSchemaRequest: true,
@@ -16,7 +28,7 @@ setDiagnosticsOptions({
     validate: true,
     format: true,
     schemas: [
-        { ...clusterpolicy, uri: '/schemas/clusterpolicy.json', fileMatch: ['policy.yaml'] }
+        { ...clusterpolicy, uri: `${baseURL}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] }
     ]
 });
 

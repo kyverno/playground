@@ -1,22 +1,26 @@
 <template>
   <MonacoEditor
     language="json"
-    theme="vs-dark"
+    :theme="editorTheme"
     :value="props.modelValue"
     @update:value="(event: string) => emit('update:modelValue', event)"
     :options="options"
+    :uri="uri"
   />
 </template>
 
 <script setup lang="ts">
 import MonacoEditor from "./MonacoEditor.vue";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
+import { Uri } from "monaco-editor";
+import { editorTheme } from "../config";
 
 const props = defineProps({
     modelValue: { type: String, default: '' }
 })
 
 const emit = defineEmits(["update:modelValue"])
+const uri = Uri.parse("context.json");
 
 const options: editor.IStandaloneEditorConstructionOptions = {
   colorDecorators: true,

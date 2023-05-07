@@ -2,7 +2,7 @@
 <div style="height: 100%; position: relative;">
   <MonacoEditor
     language="yaml"
-    theme="vs-dark"
+    :theme="editorTheme"
     :value="props.modelValue"
     @update:value="(event: string) => emit('update:modelValue', event)"
     :options="options"
@@ -21,6 +21,7 @@
 import MonacoEditor from "./MonacoEditor.vue";
 import { ref, watch } from "vue";
 import { Uri, KeyCode } from "monaco-editor";
+import { editorTheme } from "../config";
 
 const props = defineProps({
   modelValue: { type: String, default: "" },
