@@ -12,6 +12,7 @@
         <h1 class="text-h4 d-none d-md-inline">Playground</h1>
       </div>
         <template v-slot:append>
+          <v-btn icon="mdi-github" href="https://github.com/kyverno/playground" target="_blank" class="mr-2" title="GitHub: Kyverno Playground" />
           <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2">Examples</PrimeButton>
           <ConfigMenu @on-reset="reset" />
         </template>
@@ -132,6 +133,7 @@ const drawer = ref<boolean>(false);
   align-items: center;
   justify-content: center;
   position: relative;
+  padding-left: 175px;
 }
 
 .footer {
