@@ -9,7 +9,7 @@
       <v-card-text>
         <v-select
           :items="config.layoutThemes"
-          label="Laoyut Theme"
+          label="Layout Theme"
           v-model="layoutTheme"
           hide-details
           variant="outlined"
