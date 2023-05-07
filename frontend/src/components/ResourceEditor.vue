@@ -1,7 +1,7 @@
 <template>
   <MonacoEditor
     language="yaml"
-    theme="vs-dark"
+    :theme="editorTheme"
     :value="props.modelValue"
     @update:value="(event: string) => emit('update:modelValue', event)"
     :options="options"
@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import MonacoEditor from "./MonacoEditor.vue";
+import { editorTheme } from "../config";
 
 const props = defineProps({
     modelValue: { type: String, default: '' }

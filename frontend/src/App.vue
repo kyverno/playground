@@ -1,17 +1,25 @@
 <template>
-  <v-app :theme="config.theme">
+  <v-app :theme="layoutTheme">
     <v-app-bar flat border>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+        <template v-slot:prepend>
+          <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+        </template>
       <div class="toolbar-container">
         <div class="py-1 app-logo">
           <v-img src="/kyverno-logo.png" />
+          <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px;">v1.10</v-chip>
         </div>
-        <h1 style="display: inline" class="text-h4">Playground</h1>
+        <h1 class="text-h4 d-none d-md-inline">Playground</h1>
       </div>
+        <template v-slot:append>
+          <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2">Examples</PrimeButton>
+          <ConfigMenu @on-reset="reset" />
+        </template>
     </v-app-bar>
     <ExampleDrawer v-model="drawer" @select:example="setExample" />
     <v-main>
       <v-container fluid>
+        <OnboardingAlert />
         <v-row>
           <v-col :md="7" :sm="12">
             <v-card style="height: 800px">
@@ -47,7 +55,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { config } from "./config";
+import { layoutTheme } from "./config";
 
 import ErrorBar from "./components/ErrorBar.vue";
 import EditorToolbar from "./components/EditorToolbar.vue";
@@ -57,6 +65,10 @@ import ContextEditor from "./components/ContextEditor.vue";
 import ResourceEditor from "./components/ResourceEditor.vue";
 import ValidationButton from "./components/ValidationButton.vue";
 import ValidationDialog from "./components/ValidationDialog.vue";
+import OnboardingAlert from "./components/OnboardingAlert.vue";
+import ConfigMenu from "./components/ConfigMenu.vue";
+import PrimeButton from "./components/PrimeButton.vue";
+
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "./assets/templates";
 import { EngineResponse } from './types'
 
@@ -76,6 +88,18 @@ const handleResponse = (response: EngineResponse) => {
   results.value = response
   showResults.value = true
 };
+
+const reset = () => {
+  policy.value = PolicyTemplate
+  context.value = ContextTemplate
+  resource.value = ResourceTemplate
+
+  results.value = { Validation: [] }
+  showResults.value = false
+
+  errorText.value = ''
+  showError.value = false
+}
 
 const showError = ref<boolean>(false);
 const errorText = ref<string>("");
@@ -108,5 +132,12 @@ const drawer = ref<boolean>(false);
   align-items: center;
   justify-content: center;
   position: relative;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>

@@ -1,12 +1,27 @@
-import { reactive } from "vue";
+import { useLocalStorage, usePreferredDark } from "@vueuse/core";
+import { reactive, watch } from "vue";
 
 export type Config = {
-    theme: 'light' | 'dark'
+    editorThemes: { name: string; theme: string; }[];
     examples: { [group: string]: { path: string; policies: string[] } }[]
 }
 
+const isDark = usePreferredDark()
+export const layoutTheme = useLocalStorage<'light' | 'dark'>('config:layoutTheme', isDark.value ? 'dark' : 'light')
+watch(isDark, (dark: boolean) => {
+    layoutTheme.value = dark ? 'dark' : 'light'
+})
+
+export const editorTheme = useLocalStorage('config:editorTheme', 'vs-dark')
+
 export const config = reactive({
-    theme: 'light',
+    layoutThemes: ['light', 'dark'],
+    editorThemes: [
+        { name: 'VS Dark', theme: 'vs-dark' }, 
+        { name: 'VS Light', theme: 'vs' },
+        { name: 'HC Black', theme: 'hc-black' }, 
+        { name: 'HC Light', theme: 'hc-light' }
+    ],
     examples: {
         "Best Practices": {
             path: 'https://raw.githubusercontent.com/kyverno/policies/main/best-practices',
@@ -53,6 +68,36 @@ export const config = reactive({
                 "require-run-as-nonroot",
                 "restrict-seccomp-strict",
                 "restrict-volume-types",
+            ]
+        },
+        "Pod Security Subrule": {
+            path: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule',
+            policies: [
+                "podsecurity-subrule-baseline",
+            ]
+        },
+        "Pod Security Subrule Restricted": {
+            path: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule/restricted',
+            policies: [
+                "restricted-exclude-capabilities",
+                "restricted-exclude-seccomp",
+                "restricted-latest",
+            ]
+        },
+        "Cert Manager": {
+            path: 'https://raw.githubusercontent.com/kyverno/policies/main/cert-manager',
+            policies: [
+                "limit-dnsnames",
+                "limit-duration",
+                "restrict-issuer",
+            ]
+        },
+        "NGINX Ingress": {
+            path: 'https://raw.githubusercontent.com/kyverno/policies/main/nginx-ingress',
+            policies: [
+                "disallow-ingress-nginx-custom-snippets",
+                "restrict-annotations",
+                "restrict-ingress-paths",
             ]
         },
     }

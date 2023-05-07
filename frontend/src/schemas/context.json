@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "username": {
+            "type": "string",
+            "description": "Username is the name for the user."
+        },
+        "groups": {
+            "type": "array",
+            "description": "Groups is the list of group names for the user.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "roles": {
+            "type": "array",
+            "description": "Roles is the list of namespaced role names for the user.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "clusterRoles": {
+            "type": "array",
+            "description": "ClusterRoles is the list of cluster-wide role names for the user.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "namespaceLabels": {
+            "type": "object"
+        },
+        "operation": {
+            "type": "string",
+            "default": "CREATE",
+            "enum": [
+                "CREATE",
+                "UPDATE",
+                "DELETE",
+                "CONNECT"
+            ]
+        }
+    },
+    "required": [
+        "operation"
+    ]
+}

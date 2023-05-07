@@ -2,7 +2,7 @@
   <v-navigation-drawer
     :model-value="props.modelValue"
     temporary
-    width="350"
+    width="400"
     @update:modelValue="(event: boolean) => emit('update:modelValue', event)"
   >
     <template v-for="(value, group) in config.examples" :key="group">
@@ -56,7 +56,13 @@ const loadExample = async (path: string, name: string) => {
     overlay.value = true;
     const values = await Promise.all([
       fetch(`${path}/${name}/${name}.yaml`).then((resp) => resp.text()),
-      fetch(`${path}/${name}/resource.yaml`).then((resp) => resp.text()),
+      fetch(`${path}/${name}/resource.yaml`).then((resp) => {
+        if (resp.status === 404) {
+          return fetch(`${path}/${name}/resources.yaml`)
+        }
+
+        return resp
+      }).then((resp) => resp.text()),
     ]);
 
     emit("select:example", values);

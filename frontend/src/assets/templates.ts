@@ -5,18 +5,18 @@ metadata:
 spec:
   validationFailureAction: Audit
   rules:
-  - name: check-for-labels
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-    validate:
-      message: "label 'app.kubernetes.io/name' is required"
-      pattern:
-        metadata:
-          labels:
-            app.kubernetes.io/name: "?*"`
+    - name: check-for-labels
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "label 'app.kubernetes.io/name' is required"
+        pattern:
+          metadata:
+            labels:
+              app.kubernetes.io/name: "?*"`
 
 export const ContextTemplate = `{
     "username": "",
@@ -36,6 +36,6 @@ metadata:
   namespace: default
 spec:
   containers:
-  - image: nginx
-    name: nginx
-    resources: {}`
+    - image: nginx
+      name: nginx
+      resources: {}`
