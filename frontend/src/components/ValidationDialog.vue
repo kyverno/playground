@@ -20,6 +20,7 @@
         class="result-table"
         show-expand
         v-model:expanded="expanded"
+        :items-per-page="-1"
       >
         <template v-slot:[`item.status`]="{ item }">
           <StatusChip :status="item.raw.status" />
