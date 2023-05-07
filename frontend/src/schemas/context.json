@@ -4,11 +4,11 @@
     "properties": {
         "username": {
             "type": "string",
-            "description": "Username is the name for the user."
+            "description": "The name that uniquely identifies this user among all active users."
         },
         "groups": {
             "type": "array",
-            "description": "Groups is the list of group names for the user.",
+            "description": "The names of groups this user is a part of.",
             "items": {
                 "type": "string"
             }
@@ -28,11 +28,13 @@
             }
         },
         "namespaceLabels": {
-            "type": "object"
+            "type": "object",
+            "description": "namespaceLabels stores the label of namespace to be processed by namespace selector"
         },
         "operation": {
             "type": "string",
             "default": "CREATE",
+            "description": "operation contains the admission operation",
             "enum": [
                 "CREATE",
                 "UPDATE",
