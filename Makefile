@@ -55,8 +55,13 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 # BUILD #
 #########
 
+.PHONY: build-clean
+build-clean:
+	@rm -rf frontend/dist
+	@rm -rf backend/dist
+
 .PHONY: build-frontend
-build-frontend:
+build-frontend: build-clean
 	@echo Building frontend... >&2
 	@cd frontend && npm install && npm run build
 
@@ -74,7 +79,7 @@ build-all: build-frontend build-backend
 #######
 
 .PHONY: run
-run: build-frontend
+run: build-backend
 	@echo Run backend... >&2
 	@cd backend && go run .
 
