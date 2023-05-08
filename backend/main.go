@@ -164,13 +164,25 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 			nil,
 		)
 		for _, resource := range resources {
+			resource := resource
 			for _, policy := range policies {
 				engineContext := enginecontext.NewContext(jp)
 				operation := r.Context.Operation
 				if operation == "" {
 					operation = kyvernov1.Create
 				}
-				// TODO: set data in engine context
+				if err := engineContext.AddResource(resource.Object); err != nil {
+					return nil, err
+				}
+				if err := engineContext.AddNamespace(resource.GetNamespace()); err != nil {
+					return nil, err
+				}
+				if err := engineContext.AddImageInfos(&resource, cfg); err != nil {
+					return nil, err
+				}
+				if err := engineContext.AddOperation(string(operation)); err != nil {
+					return nil, err
+				}
 				policyContext := engine.NewPolicyContextWithJsonContext(operation, engineContext).
 					WithPolicy(policy).
 					WithNewResource(resource).
