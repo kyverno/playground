@@ -6,9 +6,9 @@ KIND_IMAGE           ?= kindest/node:v1.26.3
 KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
 
-############
+#############
 # VARIABLES #
-############
+#############
 
 GIT_SHA             := $(shell git rev-parse HEAD)
 TIMESTAMP           := $(shell date '+%Y-%m-%d_%I:%M:%S%p')
@@ -19,6 +19,7 @@ REPO                ?= kyverno
 BACKEND_DIR         := backend
 BACKEND_BIN         := $(BACKEND_DIR)/backend
 LOCAL_PLATFORM      := linux/$(GOARCH)
+LD_FLAGS            := "-s -w"
 
 KO_REGISTRY         := ko.local
 ifndef VERSION
@@ -85,8 +86,14 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 # BUILD #
 #########
 
+.PHONY: build-clean
+build-clean:
+	@rm -rf frontend/dist
+	@rm -rf backend/dist
+	@rm -rf backend/backend
+
 .PHONY: build-frontend
-build-frontend:
+build-frontend: build-clean
 	@echo Building frontend... >&2
 	@cd frontend && npm install && npm run build
 
@@ -100,9 +107,9 @@ build-backend: build-frontend
 build-all: build-frontend build-backend
 
 .PHONY: ko-build
-ko-build: $(KO)
+ko-build: $(KO) build-all
 	@echo Build image with ko... >&2
-	cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(KO_REGISTRY) \
+	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(KO_REGISTRY) \
 		$(KO) build . --preserve-import-paths --tags=$(KO_TAGS) --platform=$(LOCAL_PLATFORM)
 
 #######
@@ -110,7 +117,7 @@ ko-build: $(KO)
 #######
 
 .PHONY: run
-run: build-frontend
+run: build-backend
 	@echo Run backend... >&2
 	@cd backend && go run .
 
