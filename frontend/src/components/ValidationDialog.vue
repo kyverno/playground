@@ -27,7 +27,7 @@
         </template>
         <template v-slot:expanded-row="{ columns, item }">
           <tr>
-            <td :colspan="columns.length" style="background-color: #eee" class="py-2">
+            <td :colspan="columns.length" class="py-2 table-expansion">
               {{ item.raw.message }}
             </td>
           </tr>
@@ -157,5 +157,13 @@ const emit = defineEmits(["update:modelValue"]);
 .result-table th:last-child,
 .result-table td:last-child {
   padding-right: 24px !important;
+}
+
+.v-theme--light .table-expansion {
+  background-color: #eee!important;
+}
+
+.v-theme--dark .table-expansion {
+  background-color: #111!important;
 }
 </style>
