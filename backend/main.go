@@ -45,10 +45,10 @@ type apiRequest struct {
 }
 
 type apiResponse struct {
-	Policies   []kyvernov1.PolicyInterface
-	Resources  []unstructured.Unstructured
-	Mutation   []EngineResponse
-	Validation []EngineResponse
+	Policies   []kyvernov1.PolicyInterface `json:"policies"`
+	Resources  []unstructured.Unstructured `json:"resources"`
+	Mutation   []EngineResponse            `json:"mutation"`
+	Validation []EngineResponse            `json:"validation"`
 }
 
 type EngineResponse struct {

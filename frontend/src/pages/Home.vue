@@ -88,7 +88,7 @@ const setExample = (values: [string, string]) => {
 };
 
 const showResults = ref<boolean>(false);
-const results = ref<EngineResponse>({ Validation: [], Policies: [], Resources: [] });
+const results = ref<EngineResponse>({ validation: [], policies: [], resources: [] });
 
 const handleResponse = (response: EngineResponse) => {
   results.value = response
@@ -100,7 +100,7 @@ const reset = () => {
   context.value = ContextTemplate
   resource.value = ResourceTemplate
 
-  results.value = { Validation: [], Policies: [], Resources: [] }
+  results.value = { validation: [], policies: [], resources: [] }
   showResults.value = false
 
   errorText.value = ''
