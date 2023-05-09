@@ -34,7 +34,11 @@
               <ContextEditor v-model="context" />
             </v-card>
             <v-card style="height: 487px" class="mt-3">
-              <EditorToolbar title="Resource" v-model="resource" />
+              <EditorToolbar title="Resource" v-model="resource">
+                <template #prepend-actions>
+                  <TemplateButton @select="(template: string) => resource = template" />
+                </template>
+              </EditorToolbar>
               <ResourceEditor v-model="resource" />
             </v-card>
           </v-col>
@@ -69,6 +73,7 @@ import ValidationDialog from "./components/ValidationDialog.vue";
 import OnboardingAlert from "./components/OnboardingAlert.vue";
 import ConfigMenu from "./components/ConfigMenu.vue";
 import PrimeButton from "./components/PrimeButton.vue";
+import TemplateButton from "./components/TemplateButton.vue";
 
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "./assets/templates";
 import { EngineResponse } from './types'

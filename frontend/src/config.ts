@@ -14,7 +14,9 @@ watch(isDark, (dark: boolean) => {
 
 export const editorTheme = useLocalStorage('config:editorTheme', 'vs-dark')
 
-export const config = reactive({
+export const hideNoMatch = useLocalStorage('config:hideNoMatch', false)
+
+export const options = reactive({
     layoutThemes: ['light', 'dark'],
     editorThemes: [
         { name: 'VS Dark', theme: 'vs-dark' }, 
@@ -101,4 +103,11 @@ export const config = reactive({
             ]
         },
     }
+})
+
+export const useConfig = () => ({
+    editorTheme,
+    layoutTheme,
+    options,
+    hideNoMatch
 })
