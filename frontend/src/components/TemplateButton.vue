@@ -1,7 +1,7 @@
 <template>
   <v-menu location="bottom">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" prepend-icon="mdi-note-text">from temlate</v-btn>
+      <v-btn v-bind="props" prepend-icon="mdi-note-text">from template</v-btn>
     </template>
     <v-list>
       <v-list-item v-for="(item, key) in templates" :key="key" @click="emit('select', item.template)" :title="item.title" />
