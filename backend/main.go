@@ -47,6 +47,7 @@ type apiRequest struct {
 type apiResponse struct {
 	Policies   []kyvernov1.PolicyInterface
 	Resources  []unstructured.Unstructured
+	Mutation   []EngineResponse
 	Validation []EngineResponse
 }
 
@@ -95,11 +96,10 @@ type RuleResponse struct {
 
 func ConvertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 	out := RuleResponse{
-		Name:     in.Name(),
-		RuleType: in.RuleType(),
-		Message:  in.Message(),
-		Status:   in.Status(),
-		// Patches []string
+		Name:              in.Name(),
+		RuleType:          in.RuleType(),
+		Message:           in.Message(),
+		Status:            in.Status(),
 		GeneratedResource: in.GeneratedResource(),
 		// PatchedTarget *unstructured.Unstructured
 		// // patchedTargetParentResourceGVR is the GVR of the parent resource of the PatchedTarget. This is only populated when PatchedTarget is a subresource.
@@ -108,6 +108,9 @@ func ConvertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 		// PatchedTargetSubresourceName string
 		PodSecurityChecks: in.PodSecurityChecks(),
 		Exception:         in.Exception(),
+	}
+	for _, patch := range in.Patches() {
+		out.Patches = append(out.Patches, string(patch))
 	}
 	return out
 }
@@ -206,6 +209,9 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 						ClusterRoles: requestContext.ClusterRoles,
 					})
 				// WithResourceKind(gvk, subresource)
+				mutate := eng.Mutate(ctx, policyContext)
+				response.Mutation = append(response.Mutation, ConvertEngineResponse(mutate))
+				policyContext = policyContext.WithNewResource(mutate.PatchedResource)
 				response.Validation = append(response.Validation, ConvertEngineResponse(eng.Validate(ctx, policyContext)))
 			}
 		}
