@@ -52,6 +52,8 @@ type apiResponse struct {
 }
 
 type EngineResponse struct {
+	// OriginalResource is the original resource as YAML string
+	OriginalResource string `json:"originalResource"`
 	// Resource is the original resource
 	Resource unstructured.Unstructured `json:"resource"`
 	// Policy is the original policy
@@ -59,7 +61,7 @@ type EngineResponse struct {
 	// namespaceLabels given by policy context
 	NamespaceLabels map[string]string `json:"namespaceLabels"`
 	// PatchedResource is the resource patched with the engine action changes
-	PatchedResource unstructured.Unstructured `json:"patchedResource"`
+	PatchedResource string `json:"patchedResource"`
 	// PolicyResponse contains the engine policy response
 	PolicyResponse PolicyResponse `json:"policyResponse"`
 }
@@ -116,11 +118,14 @@ func ConvertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 }
 
 func ConvertEngineResponse(in engineapi.EngineResponse) EngineResponse {
+	patchedResource, _ := yaml.Marshal(in.PatchedResource.Object)
+	resource, _ := yaml.Marshal(in.Resource.Object)
 	out := EngineResponse{
-		Resource:        in.Resource,
-		Policy:          in.Policy,
-		NamespaceLabels: in.NamespaceLabels(),
-		PatchedResource: in.PatchedResource,
+		OriginalResource: string(resource),
+		Resource:         in.Resource,
+		Policy:           in.Policy,
+		NamespaceLabels:  in.NamespaceLabels(),
+		PatchedResource:  string(patchedResource),
 	}
 	for _, ruleresponse := range in.PolicyResponse.Rules {
 		out.PolicyResponse.Rules = append(out.PolicyResponse.Rules, ConvertRuleResponse(ruleresponse))

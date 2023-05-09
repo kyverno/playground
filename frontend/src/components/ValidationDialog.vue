@@ -6,42 +6,20 @@
   >
     <v-card>
       <v-toolbar color="transparent">
-        <v-toolbar-title>Validation Results</v-toolbar-title>
+        <v-toolbar-title>Results</v-toolbar-title>
         <template v-slot:append>
           <v-checkbox variant="compact" label="Hide no match results" hide-details v-model="hideNoMatch" class="mr-4" />
           <v-btn flat icon="mdi-close" @click="emit('update:modelValue', false)"></v-btn>
         </template>
       </v-toolbar>
       <v-divider />
-      <v-card-text v-if="!hasValidations">
-        <v-alert type="warning" variant="outlined">
-          No resource matched any rule of the provided policies. Please check your manifests.
-        </v-alert>
-      </v-card-text>
-      <v-data-table
-        density="default"
-        hover
-        :items="items"
-        :headers="headers"
-        class="result-table"
-        show-expand
-        v-model:expanded="expanded"
-        :items-per-page="-1"
-        v-else
-      >
-        <template v-slot:[`item.status`]="{ item }">
-          <StatusChip :status="item.raw.status" />
-        </template>
-        <template v-slot:expanded-row="{ columns, item }">
-          <tr>
-            <td :colspan="columns.length" class="py-2 table-expansion">
-              {{ item.raw.message }}
-            </td>
-          </tr>
-        </template>
-        <template #bottom></template>
-      </v-data-table>
-      <v-divider />
+        <v-card-text v-if="!hasResults">
+          <v-alert type="warning" variant="outlined">
+            No resource matched any rule of the provided policies. Please check your manifests.
+          </v-alert>
+        </v-card-text>
+        <ValidationTable :results="validations" v-if="hasResults && validations.length" />
+        <MutationTable :results="mutations" v-if="hasResults && mutations.length" />
       <v-card-actions>
         <v-btn color="error" @click="emit('update:modelValue', false)">Close</v-btn>
         <v-spacer />
@@ -74,24 +52,14 @@
 </template>
 
 <script setup lang="ts">
-import { EngineResponse, RuleStatus } from "../types";
-import StatusChip from "./StatusChip.vue";
+import ValidationTable from './ValidationTable.vue'
+import MutationTable from './MutationTable.vue'
+import { EngineResponse } from "../types";
 import DownloadBtn from "./DownloadBtn.vue";
 import { PropType } from "vue";
 import { useClipboard } from "@vueuse/core";
-import { computed, ref } from "vue";
-import { useDisplay } from "vuetify/lib/framework.mjs";
+import { computed } from "vue";
 import { useConfig } from "@/config";
-
-type Item = {
-  apiVersion: string;
-  kind: string;
-  resource: string;
-  policy: string;
-  rule: string;
-  message: string;
-  status: RuleStatus;
-};
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
@@ -99,81 +67,31 @@ const props = defineProps({
   policy: { type: String, default: "" },
 });
 
-const expanded = ref<number[]>([]);
-
-const display = useDisplay();
-
-const headers = computed(() => {
-  if (display.mdAndUp.value) {
-    return [
-      { title: "APIVersion", key: "apiVersion", width: "15%" },
-      { title: "Kind", key: "kind", width: "10%" },
-      { title: "Resource", key: "resource", width: "20%" },
-      { title: "Policy", key: "policy", width: "25%" },
-      { title: "Rule", key: "rule", width: "25%" },
-      { title: "Status", key: "status", width: "5%", align: "end" },
-    ];
-  }
-
-  return [
-    { title: "Kind", key: "kind", width: "10%" },
-    { title: "Resource", key: "resource", width: "20%" },
-    { title: "Policy", key: "policy", width: "30%" },
-    { title: "Rule", key: "rule", width: "30%" },
-    { title: "Status", key: "status", width: "10%", align: "end" },
-  ];
-});
-
 const filename = computed(
-  () => `${(props.results.Validation || [{}])[0].policy?.metadata.name || "policy"}.yaml`
+  () => `${(props.results.Validation || props.results.Mutation || [{}])[0].policy?.metadata.name || "policy"}.yaml`
 );
 
-const { hideNoMatch } = useConfig()
-
-const hasValidations = computed(() => {
-  return (props.results.Validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
+const hasResults = computed(() => {
+  return (props.results.Validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || (props.results.Mutation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
 })
 
-const items = computed(() => {
-  return (props.results.Validation || []).reduce<Item[]>((results, validation) => {
-    if (!validation.policyResponse.rules && !hideNoMatch.value) {
-      results.push({
-        apiVersion: validation.resource.apiVersion,
-        kind: validation.resource.kind,
-        resource: [
-          validation.resource.metadata.namespace,
-          validation.resource.metadata.name,
-        ]
-          .filter((s) => !!s)
-          .join("/"),
-        policy: validation.policy.metadata.name,
-        rule: 'resource does not match any rule',
-        message: 'no validation triggered',
-        status: 'no match',
-      })
-      return results
-    }
+const validations = computed(() => {
+  if (hasResults.value) {
+    return (props.results.Validation || []).filter(v => v.policyResponse.rules)
+  }
 
-    (validation.policyResponse.rules || []).forEach((rule) => {
-      results.push({
-        apiVersion: validation.resource.apiVersion,
-        kind: validation.resource.kind,
-        resource: [
-          validation.resource.metadata.namespace,
-          validation.resource.metadata.name,
-        ]
-          .filter((s) => !!s)
-          .join("/"),
-        policy: validation.policy.metadata.name,
-        rule: rule.name,
-        message: rule.message,
-        status: rule.status,
-      });
-    });
+  return (props.results.Validation || [])
+})
 
-    return results;
-  }, []);
-});
+const mutations = computed(() => {
+  if (hasResults.value) {
+    return (props.results.Mutation || []).filter(v => v.policyResponse.rules)
+  }
+
+  return (props.results.Mutation || [])
+})
+
+const { hideNoMatch } = useConfig()
 
 const { copy, copied, isSupported } = useClipboard({ source: props.policy });
 

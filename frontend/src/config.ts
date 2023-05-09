@@ -102,6 +102,14 @@ export const options = reactive({
                 "restrict-ingress-paths",
             ]
         },
+        "Velero": {
+            path: 'https://raw.githubusercontent.com/kyverno/policies/main/velero',
+            policies: [
+                "block-velero-restore",
+                "validate-cron-schedule",
+                "backup-all-volumes",
+            ]
+        },
     }
 })
 
