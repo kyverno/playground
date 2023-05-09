@@ -8,6 +8,7 @@
     >
       <v-spacer />
       <v-toolbar-items>
+        <slot name="prepend-actions" />
         <UploadButton @click="(content: string) => emit('update:modelValue', content)" />
         <URLButton @click="(content: string) => emit('update:modelValue', content)" />
       </v-toolbar-items>

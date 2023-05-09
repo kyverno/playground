@@ -8,7 +8,7 @@
       <v-divider />
       <v-card-text>
         <v-select
-          :items="config.layoutThemes"
+          :items="options.layoutThemes"
           label="Layout Theme"
           v-model="layoutTheme"
           hide-details
@@ -19,7 +19,7 @@
           class="mt-2"
         />
         <v-select
-          :items="config.editorThemes"
+          :items="options.editorThemes"
           label="Editor Theme"
           v-model="editorTheme"
           hide-details
@@ -36,7 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { editorTheme, layoutTheme, config } from "../config";
+import { useConfig } from "../config";
+
+const { options, layoutTheme, editorTheme } = useConfig()
 
 const emit = defineEmits(['on-reset'])
 </script>

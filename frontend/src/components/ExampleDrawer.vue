@@ -5,7 +5,7 @@
     width="400"
     @update:modelValue="(event: boolean) => emit('update:modelValue', event)"
   >
-    <template v-for="(value, group) in config.examples" :key="group">
+    <template v-for="(value, group) in options.examples" :key="group">
       <v-list>
         <v-list-group :value="group">
           <template v-slot:activator="{ props }">
@@ -42,7 +42,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { config } from "../config";
+import { useConfig } from "../config";
+
+const { options } = useConfig()
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },

@@ -6,7 +6,8 @@ const statusToColor: { [status in RuleStatus]: string } = {
     pass: '#43A047',
     warn: '#FB8C00',
     fail: '#EF5350',
-    error: '#F44336'
+    error: '#F44336',
+    'no match': '#000000'
 }
 
 const statusToDarkColor: { [status in RuleStatus]: string } = {
@@ -14,7 +15,8 @@ const statusToDarkColor: { [status in RuleStatus]: string } = {
     pass: '#1B5E20',
     warn: '#FF6F00',
     fail: '#D32F2F',
-    error: '#B71C1C'
+    error: '#B71C1C',
+    'no match': '#000000'
   }
   
 

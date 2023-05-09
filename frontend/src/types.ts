@@ -1,5 +1,5 @@
 export type RuleType = 'Vaidation';
-export type RuleStatus = 'fail' | 'pass' | 'warn' | 'error' | 'skip';
+export type RuleStatus = 'fail' | 'pass' | 'warn' | 'error' | 'skip' | 'no match';
 
 export type Metadata = {
     name: string;
