@@ -18,9 +18,12 @@ REGISTRY            ?= ghcr.io
 REPO                ?= kyverno
 BACKEND_DIR         := backend
 BACKEND_BIN         := $(BACKEND_DIR)/backend
-LOCAL_PLATFORM      := linux/$(GOARCH)
 LD_FLAGS            := "-s -w"
+LOCAL_PLATFORM      := linux/$(GOARCH)
 PLATFORMS           := linux/arm64,linux/amd64
+KO_PLATFORMS        := all
+PLAYGROUND_IMAGE    := playground
+REPO_PLAYGROUND     := $(REGISTRY)/$(REPO)/$(PLAYGROUND_IMAGE)
 
 KO_REGISTRY         := ko.local
 ifndef VERSION
@@ -112,6 +115,12 @@ ko-build: $(KO) build-all
 	@echo Build image with ko... >&2
 	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(KO_REGISTRY) \
 		$(KO) build . --preserve-import-paths --tags=$(KO_TAGS) --platform=$(LOCAL_PLATFORM)
+
+.PHONY: ko-publish
+ko-publish: $(KO) build-all ## Build and publish playground image (with ko)
+	@echo Publishing image with ko... >&2
+	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(REPO_PLAYGROUND) \
+		$(KO) build . --bare --tags=$(KO_TAGS) --platform=$(KO_PLATFORMS)
 
 .PHONY: docker-build
 docker-build:
