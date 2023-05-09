@@ -7,12 +7,11 @@ import { defineComponent, computed, toRefs } from "vue";
 import * as monaco from "monaco-editor";
 
 export default defineComponent({
-  name: "MonacoEditor",
   props: {
-    uri: { type: Object },
     width: { type: [String, Number], default: "100%" },
     height: { type: [String, Number], default: "100%" },
     value: String,
+    original: String,
     language: { type: String, default: "javascript" },
     theme: { type: String, default: "vs" },
     options: {
@@ -51,23 +50,15 @@ export default defineComponent({
   methods: {
     initMonaco() {
       this.$emit("editorWillMount", monaco);
-      const { value, language, theme, options } = this;
-      let model = null;
-      if (this.uri) {
-        model = monaco.editor.getModel(this.uri);
-      }
-      if (!model) {
-        model = monaco.editor.createModel(value, language, this.uri);
-      }
+      const { value, language, theme, options, original } = this;
 
-      this.editor = monaco.editor.create(this.$el, {
+      this.editor = monaco.editor.createDiffEditor(this.$el, {
         value: value,
         language: language,
         theme: theme,
-        automaticLayout: true,
         ...options,
-        model,
       });
+      this._setModel(value, original)
 
       // @event `change`
       const editor = this._getEditor();
@@ -82,6 +73,15 @@ export default defineComponent({
 
       this.$emit("editorDidMount", this.editor);
     },
+    _setModel(value, original) {
+      const { language } = this;
+      const originalModel = monaco.editor.createModel(original, language);
+      const modifiedModel = monaco.editor.createModel(value, language);
+      this.editor.setModel({
+        original: originalModel,
+        modified: modifiedModel,
+      });
+    },
     _setValue(value) {
       let editor = this._getEditor();
       if (editor) return editor.setValue(value);
@@ -92,7 +92,12 @@ export default defineComponent({
       return editor.getValue();
     },
     _getEditor() {
-      return this.editor;
+      if (!this.editor) return null
+      return this.editor.modifiedEditor
+    },
+    _setOriginal() {
+      const { original } = this.editor.getModel();
+      original.setValue(this.original);
     },
   },
   watch: {
@@ -105,10 +110,14 @@ export default defineComponent({
     value() {
       this.value !== this._getValue() && this._setValue(this.value);
     },
+    original() {
+      this._setOriginal();
+    },
     language() {
       if (!this.editor) return;
-
-      monaco.editor.setModelLanguage(this.editor.getModel(), this.language);
+      
+      monaco.editor.setModelLanguage(original, this.language)
+      monaco.editor.setModelLanguage(modified, this.language)
     },
     theme() {
       monaco.editor.setTheme(this.theme);

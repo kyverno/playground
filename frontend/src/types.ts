@@ -31,12 +31,23 @@ export type PolicyResponse = {
     rules: Rule[] | null
 }
 
+export type Validation = {
+    resource: Resource;
+    policy: Policy;
+    policyResponse: PolicyResponse;
+}
+
+export type Mutation = {
+    resource: Resource;
+    policy: Policy;
+    policyResponse: PolicyResponse;
+    originalResource: string;
+    patchedResource: string;
+}
+
 export type EngineResponse = {
     Policies: Policy[];
     Resources: Resource[];
-    Validation: {
-        resource: Resource;
-        policy: Policy;
-        policyResponse: PolicyResponse;
-    }[] | null
+    Validation?: Validation[];
+    Mutation?: Mutation[];
 }
