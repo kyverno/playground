@@ -46,8 +46,8 @@ export type Mutation = {
 }
 
 export type EngineResponse = {
-    Policies: Policy[];
-    Resources: Resource[];
-    Validation?: Validation[];
-    Mutation?: Mutation[];
+    policies: Policy[];
+    resources: Resource[];
+    validation?: Validation[];
+    mutation?: Mutation[];
 }

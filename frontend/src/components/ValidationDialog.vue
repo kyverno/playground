@@ -68,27 +68,27 @@ const props = defineProps({
 });
 
 const filename = computed(
-  () => `${(props.results.Validation || props.results.Mutation || [{}])[0].policy?.metadata.name || "policy"}.yaml`
+  () => `${(props.results.validation || props.results.mutation || [{}])[0].policy?.metadata.name || "policy"}.yaml`
 );
 
 const hasResults = computed(() => {
-  return (props.results.Validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || (props.results.Mutation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
+  return (props.results.validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || (props.results.mutation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
 })
 
 const validations = computed(() => {
   if (hasResults.value) {
-    return (props.results.Validation || []).filter(v => v.policyResponse.rules)
+    return (props.results.validation || []).filter(v => v.policyResponse.rules)
   }
 
-  return (props.results.Validation || [])
+  return (props.results.validation || [])
 })
 
 const mutations = computed(() => {
   if (hasResults.value) {
-    return (props.results.Mutation || []).filter(v => v.policyResponse.rules)
+    return (props.results.mutation || []).filter(v => v.policyResponse.rules)
   }
 
-  return (props.results.Mutation || [])
+  return (props.results.mutation || [])
 })
 
 const { hideNoMatch } = useConfig()
