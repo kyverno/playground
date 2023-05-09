@@ -132,9 +132,9 @@ func (r apiRequest) loadResources() ([]unstructured.Unstructured, error) {
 		var resources []unstructured.Unstructured
 		for _, document := range documents {
 			var resource unstructured.Unstructured
-			if resourceJson, err := yaml.YAMLToJSON(document); err != nil {
+			if resourceJSON, err := yaml.YAMLToJSON(document); err != nil {
 				return nil, err
-			} else if err := resource.UnmarshalJSON(resourceJson); err != nil {
+			} else if err := resource.UnmarshalJSON(resourceJSON); err != nil {
 				continue
 			}
 			resources = append(resources, resource)
@@ -228,6 +228,8 @@ func run(c *gin.Context) {
 func main() {
 	var host = flag.String("host", "localhost", "server host")
 	var port = flag.Int("port", 8080, "server port")
+	flag.Parse()
+
 	fs, err := fs.Sub(staticFiles, "dist")
 	if err != nil {
 		panic(err)
