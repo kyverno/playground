@@ -181,20 +181,20 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 			store.ContextLoaderFactory(nil),
 			nil,
 		)
+		admissionInfo := kyvernov1beta1.RequestInfo{
+			AdmissionUserInfo: authenticationv1.UserInfo{
+				Username: requestContext.Username,
+				Groups:   requestContext.Groups,
+			},
+			Roles:        requestContext.Roles,
+			ClusterRoles: requestContext.ClusterRoles,
+		}
+		operation := requestContext.Operation
+		if operation == "" {
+			operation = kyvernov1.Create
+		}
 		for _, resource := range resources {
 			resource := resource
-			admissionInfo := kyvernov1beta1.RequestInfo{
-				AdmissionUserInfo: authenticationv1.UserInfo{
-					Username: requestContext.Username,
-					Groups:   requestContext.Groups,
-				},
-				Roles:        requestContext.Roles,
-				ClusterRoles: requestContext.ClusterRoles,
-			}
-			operation := requestContext.Operation
-			if operation == "" {
-				operation = kyvernov1.Create
-			}
 			getContext := func(policy kyvernov1.PolicyInterface) (engineapi.PolicyContext, error) {
 				policyContext, err := policycontext.NewPolicyContext(
 					jp,
@@ -227,7 +227,6 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 				if policyContext, err := getContext(policy); err != nil {
 					return nil, err
 				} else {
-					// WithResourceKind(gvk, subresource)
 					response := engine.Validate(ctx, policyContext)
 					apiResponse.Validation = append(apiResponse.Validation, ConvertEngineResponse(response))
 				}
