@@ -1,6 +1,6 @@
 import Home from '@/pages/Home.vue'
 import MutationDetails from '@/pages/MutationDetails.vue'
-import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
+import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [{
   path: '/mutation/:id',
@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [{
 }]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes,
 })
 
