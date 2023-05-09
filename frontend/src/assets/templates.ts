@@ -18,14 +18,12 @@ spec:
             labels:
               app.kubernetes.io/name: "?*"`
 
-export const ContextTemplate = `{
-    "username": "",
-    "groups": [],
-    "roles": [],
-    "clusterRoles": [],
-    "namespaceLabels": {},
-    "operation": "CREATE"
-}`
+export const ContextTemplate = `username: ''
+groups: []
+roles: []
+clusterRoles: []
+namespaceLabels: {}
+operation: 'CREATE'`
 
 export const ResourceTemplate = `apiVersion: v1
 kind: Pod
