@@ -121,7 +121,7 @@ const filename = computed(
 );
 
 const items = computed(() => {
-  return props.results.Validation.reduce<Item[]>((results, validation) => {
+  return (props.results.Validation || []).reduce<Item[]>((results, validation) => {
     (validation.policyResponse.rules || []).forEach((rule) => {
       results.push({
         apiVersion: validation.resource.apiVersion,
