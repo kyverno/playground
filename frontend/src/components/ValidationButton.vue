@@ -57,7 +57,7 @@ const submit = (): void => {
     body: JSON.stringify({
       policy: props.policy,
       resources: props.resource,
-      context: JSON.parse(props.context),
+      context: props.context,
     }),
     method: "POST",
     mode: "cors",
