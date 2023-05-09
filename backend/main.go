@@ -17,8 +17,8 @@ import (
 	"github.com/kyverno/kyverno/pkg/config"
 	"github.com/kyverno/kyverno/pkg/engine"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
-	enginecontext "github.com/kyverno/kyverno/pkg/engine/context"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
+	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -123,7 +123,7 @@ func ConvertEngineResponse(in engineapi.EngineResponse) EngineResponse {
 	out := EngineResponse{
 		OriginalResource: string(resource),
 		Resource:         in.Resource,
-		Policy:           in.Policy,
+		Policy:           in.Policy(),
 		NamespaceLabels:  in.NamespaceLabels(),
 		PatchedResource:  string(patchedResource),
 	}
@@ -166,13 +166,13 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 	} else if requestContext, err := r.loadContext(); err != nil {
 		return nil, err
 	} else {
-		response := apiResponse{
+		apiResponse := apiResponse{
 			Resources: resources,
 			Policies:  policies,
 		}
 		cfg := config.NewDefaultConfiguration(false)
 		jp := jmespath.New(cfg)
-		eng := engine.NewEngine(
+		engine := engine.NewEngine(
 			cfg,
 			config.NewDefaultMetricsConfiguration(),
 			jp,
@@ -183,44 +183,57 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 		)
 		for _, resource := range resources {
 			resource := resource
-			for _, policy := range policies {
-				engineContext := enginecontext.NewContext(jp)
-				operation := requestContext.Operation
-				if operation == "" {
-					operation = kyvernov1.Create
-				}
-				if err := engineContext.AddResource(resource.Object); err != nil {
+			admissionInfo := kyvernov1beta1.RequestInfo{
+				AdmissionUserInfo: authenticationv1.UserInfo{
+					Username: requestContext.Username,
+					Groups:   requestContext.Groups,
+				},
+				Roles:        requestContext.Roles,
+				ClusterRoles: requestContext.ClusterRoles,
+			}
+			operation := requestContext.Operation
+			if operation == "" {
+				operation = kyvernov1.Create
+			}
+			getContext := func(policy kyvernov1.PolicyInterface) (engineapi.PolicyContext, error) {
+				policyContext, err := policycontext.NewPolicyContext(
+					jp,
+					resource,
+					operation,
+					&admissionInfo,
+					cfg,
+				)
+				if err != nil {
 					return nil, err
 				}
-				if err := engineContext.AddNamespace(resource.GetNamespace()); err != nil {
-					return nil, err
-				}
-				if err := engineContext.AddImageInfos(&resource, cfg); err != nil {
-					return nil, err
-				}
-				if err := engineContext.AddOperation(string(operation)); err != nil {
-					return nil, err
-				}
-				policyContext := engine.NewPolicyContextWithJsonContext(operation, engineContext).
+				policyContext = policyContext.
 					WithPolicy(policy).
-					WithNewResource(resource).
-					WithNamespaceLabels(requestContext.NamespaceLabels).
-					WithAdmissionInfo(kyvernov1beta1.RequestInfo{
-						AdmissionUserInfo: authenticationv1.UserInfo{
-							Username: requestContext.Username,
-							Groups:   requestContext.Groups,
-						},
-						Roles:        requestContext.Roles,
-						ClusterRoles: requestContext.ClusterRoles,
-					})
+					WithNamespaceLabels(requestContext.NamespaceLabels)
 				// WithResourceKind(gvk, subresource)
-				mutate := eng.Mutate(ctx, policyContext)
-				response.Mutation = append(response.Mutation, ConvertEngineResponse(mutate))
-				policyContext = policyContext.WithNewResource(mutate.PatchedResource)
-				response.Validation = append(response.Validation, ConvertEngineResponse(eng.Validate(ctx, policyContext)))
+				return policyContext, nil
+			}
+			// mutate
+			for _, policy := range policies {
+				if policyContext, err := getContext(policy); err != nil {
+					return nil, err
+				} else {
+					response := engine.Mutate(ctx, policyContext)
+					resource = response.PatchedResource
+					apiResponse.Mutation = append(apiResponse.Mutation, ConvertEngineResponse(response))
+				}
+			}
+			// validate
+			for _, policy := range policies {
+				if policyContext, err := getContext(policy); err != nil {
+					return nil, err
+				} else {
+					// WithResourceKind(gvk, subresource)
+					response := engine.Validate(ctx, policyContext)
+					apiResponse.Validation = append(apiResponse.Validation, ConvertEngineResponse(response))
+				}
 			}
 		}
-		return &response, nil
+		return &apiResponse, nil
 	}
 }
 
