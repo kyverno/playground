@@ -133,9 +133,9 @@ const items = computed(() => {
           .filter((s) => !!s)
           .join("/"),
         policy: validation.policy.metadata.name,
-        rule: '',
-        message: 'validation skipped',
-        status: 'skip',
+        rule: 'resource does not match any rule',
+        message: 'no validation triggered',
+        status: 'no match',
       })
       return results
     }
