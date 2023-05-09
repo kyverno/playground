@@ -8,10 +8,16 @@
       <v-toolbar color="transparent">
         <v-toolbar-title>Validation Results</v-toolbar-title>
         <template v-slot:append>
+          <v-checkbox variant="compact" label="Hide no match results" hide-details v-model="hideNoMatch" class="mr-4" />
           <v-btn flat icon="mdi-close" @click="emit('update:modelValue', false)"></v-btn>
         </template>
       </v-toolbar>
       <v-divider />
+      <v-card-text v-if="!hasValidations">
+        <v-alert type="warning" variant="outlined">
+          No resource matched any rule of the provided policies. Please check your manifests.
+        </v-alert>
+      </v-card-text>
       <v-data-table
         density="default"
         hover
@@ -21,6 +27,7 @@
         show-expand
         v-model:expanded="expanded"
         :items-per-page="-1"
+        v-else
       >
         <template v-slot:[`item.status`]="{ item }">
           <StatusChip :status="item.raw.status" />
@@ -74,6 +81,7 @@ import { PropType } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
+import { useConfig } from "@/config";
 
 type Item = {
   apiVersion: string;
@@ -120,9 +128,15 @@ const filename = computed(
   () => `${(props.results.Validation || [{}])[0].policy?.metadata.name || "policy"}.yaml`
 );
 
+const { hideNoMatch } = useConfig()
+
+const hasValidations = computed(() => {
+  return (props.results.Validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
+})
+
 const items = computed(() => {
   return (props.results.Validation || []).reduce<Item[]>((results, validation) => {
-    if (!validation.policyResponse.rules) {
+    if (!validation.policyResponse.rules && !hideNoMatch.value) {
       results.push({
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
@@ -140,7 +154,7 @@ const items = computed(() => {
       return results
     }
 
-    validation.policyResponse.rules.forEach((rule) => {
+    (validation.policyResponse.rules || []).forEach((rule) => {
       results.push({
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
