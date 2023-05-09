@@ -13,14 +13,6 @@ import context from './schemas/context.json'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
 
-languages.json.jsonDefaults.setDiagnosticsOptions({
-    enableSchemaRequest: true,
-    validate: true,
-    schemas: [
-        { ...context, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.json'] }
-    ]
-})
-
 setDiagnosticsOptions({
     enableSchemaRequest: true,
     hover: true,
@@ -28,7 +20,8 @@ setDiagnosticsOptions({
     validate: true,
     format: true,
     schemas: [
-        { ...clusterpolicy, uri: `${baseURL}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] }
+        { ...clusterpolicy, uri: `${baseURL}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] },
+        { ...context, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
     ]
 });
 

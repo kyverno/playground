@@ -39,9 +39,9 @@ type apiContext struct {
 }
 
 type apiRequest struct {
-	Policy    string     `json:"policy"`
-	Resources string     `json:"resources"`
-	Context   apiContext `json:"context"`
+	Policy    string `json:"policy"`
+	Resources string `json:"resources"`
+	Context   string `json:"context"`
 }
 
 type apiResponse struct {
@@ -142,10 +142,20 @@ func (r apiRequest) loadResources() ([]unstructured.Unstructured, error) {
 		return resources, nil
 	}
 }
+
+func (r apiRequest) loadContext() (apiContext, error) {
+	ctx := apiContext{}
+	err := yaml.Unmarshal([]byte(r.Context), &ctx)
+
+	return ctx, err
+}
+
 func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 	if policies, err := yamlutils.GetPolicy([]byte(r.Policy)); err != nil {
 		return nil, err
 	} else if resources, err := r.loadResources(); err != nil {
+		return nil, err
+	} else if requestContext, err := r.loadContext(); err != nil {
 		return nil, err
 	} else {
 		response := apiResponse{
@@ -167,7 +177,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 			resource := resource
 			for _, policy := range policies {
 				engineContext := enginecontext.NewContext(jp)
-				operation := r.Context.Operation
+				operation := requestContext.Operation
 				if operation == "" {
 					operation = kyvernov1.Create
 				}
@@ -186,14 +196,14 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 				policyContext := engine.NewPolicyContextWithJsonContext(operation, engineContext).
 					WithPolicy(policy).
 					WithNewResource(resource).
-					WithNamespaceLabels(r.Context.NamespaceLabels).
+					WithNamespaceLabels(requestContext.NamespaceLabels).
 					WithAdmissionInfo(kyvernov1beta1.RequestInfo{
 						AdmissionUserInfo: authenticationv1.UserInfo{
-							Username: r.Context.Username,
-							Groups:   r.Context.Groups,
+							Username: requestContext.Username,
+							Groups:   requestContext.Groups,
 						},
-						Roles:        r.Context.Roles,
-						ClusterRoles: r.Context.ClusterRoles,
+						Roles:        requestContext.Roles,
+						ClusterRoles: requestContext.ClusterRoles,
 					})
 				// WithResourceKind(gvk, subresource)
 				response.Validation = append(response.Validation, ConvertEngineResponse(eng.Validate(ctx, policyContext)))

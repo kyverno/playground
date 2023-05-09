@@ -9,7 +9,7 @@ func Test_engineRequest_process(t *testing.T) {
 	type fields struct {
 		Policy    string
 		Resources string
-		Context   apiContext
+		Context   string
 	}
 	tests := []struct {
 		name    string

@@ -1,6 +1,6 @@
 <template>
   <MonacoEditor
-    language="json"
+    language="yaml"
     :theme="editorTheme"
     :value="props.modelValue"
     @update:value="(event: string) => emit('update:modelValue', event)"
@@ -20,7 +20,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["update:modelValue"])
-const uri = Uri.parse("context.json");
+const uri = Uri.parse("context.yaml");
 
 const options: editor.IStandaloneEditorConstructionOptions = {
   colorDecorators: true,
