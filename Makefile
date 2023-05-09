@@ -20,6 +20,7 @@ BACKEND_DIR         := backend
 BACKEND_BIN         := $(BACKEND_DIR)/backend
 LOCAL_PLATFORM      := linux/$(GOARCH)
 LD_FLAGS            := "-s -w"
+PLATFORMS           := linux/arm64,linux/amd64
 
 KO_REGISTRY         := ko.local
 ifndef VERSION
@@ -111,6 +112,10 @@ ko-build: $(KO) build-all
 	@echo Build image with ko... >&2
 	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(KO_REGISTRY) \
 		$(KO) build . --preserve-import-paths --tags=$(KO_TAGS) --platform=$(LOCAL_PLATFORM)
+
+.PHONY: docker-build
+docker-build:
+	@docker buildx build --progress plane --platform $(PLATFORMS) --tag "$(REGISTRY)/$(REPO)/playground:latest" . --build-arg LD_FLAGS=$(LD_FLAGS)
 
 #######
 # RUN #
