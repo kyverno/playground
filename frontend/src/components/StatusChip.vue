@@ -1,5 +1,5 @@
 <template>
-  <v-chip :color="color" dark>
+  <v-chip :color="color" class="text-white elevation-0" variant="elevated">
     {{ status }}
   </v-chip>
 </template>

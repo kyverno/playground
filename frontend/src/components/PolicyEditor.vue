@@ -22,6 +22,7 @@ import MonacoEditor from "./MonacoEditor.vue";
 import { ref, watch } from "vue";
 import { Uri, KeyCode } from "monaco-editor";
 import { editorTheme } from "../config";
+import { editor } from 'monaco-editor'
 
 const props = defineProps({
   modelValue: { type: String, default: "" },
@@ -48,7 +49,7 @@ const eventRegistered = ref(false);
 watch(monaco, (e: any) => {
   if (!e) return;
 
-  const edit = e._getEditor();
+  const edit: editor.ICodeEditor = e._getEditor();
 
   if (eventRegistered.value) return;
 
@@ -56,7 +57,8 @@ watch(monaco, (e: any) => {
     if (!autocompleteOnEnter.value) return;
 
     const position = edit.getPosition();
-    const text = edit.getModel().getLineContent(position.lineNumber).trim();
+    if (!position) return
+    const text = edit.getModel()?.getLineContent(position.lineNumber).trim();
     if (e.keyCode === KeyCode.Enter && !text) {
       edit.trigger("", "editor.action.triggerSuggest", "");
     }
