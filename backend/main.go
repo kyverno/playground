@@ -236,7 +236,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 	}
 }
 
-func run(c *gin.Context) {
+func serveApi(c *gin.Context) {
 	// TODO: error handling
 	var request apiRequest
 	if err := c.BindJSON(&request); err != nil {
@@ -248,11 +248,7 @@ func run(c *gin.Context) {
 	}
 }
 
-func main() {
-	var host = flag.String("host", "localhost", "server host")
-	var port = flag.Int("port", 8080, "server port")
-	flag.Parse()
-
+func run(host string, port int) {
 	fs, err := fs.Sub(staticFiles, "dist")
 	if err != nil {
 		panic(err)
@@ -264,10 +260,19 @@ func main() {
 		AllowHeaders:  []string{"Origin", "Content-Type"},
 		ExposeHeaders: []string{"Content-Length"},
 	}))
-	router.POST("/engine", run)
+	router.POST("/engine", serveApi)
 	router.StaticFS("/", http.FS(fs))
-	address := fmt.Sprintf("%v:%v", *host, *port)
+	address := fmt.Sprintf("%v:%v", host, port)
 	if err := router.Run(address); err != nil {
 		panic(err)
 	}
+}
+
+func main() {
+	var host = flag.String("host", "localhost", "server host")
+	var port = flag.Int("port", 8080, "server port")
+	var mode = flag.String("mode", gin.ReleaseMode, "gin run mode")
+	flag.Parse()
+	gin.SetMode(*mode)
+	run(*host, *port)
 }
