@@ -4,6 +4,31 @@
 
 KIND_IMAGE           ?= kindest/node:v1.26.3
 KYVERNO_VERSION      ?= 3.0.0-alpha.2
+KOCACHE              ?= /tmp/ko-cache
+
+#############
+# VARIABLES #
+#############
+
+GIT_SHA             := $(shell git rev-parse HEAD)
+TIMESTAMP           := $(shell date '+%Y-%m-%d_%I:%M:%S%p')
+GOOS                ?= $(shell go env GOOS)
+GOARCH              ?= $(shell go env GOARCH)
+REGISTRY            ?= ghcr.io
+REPO                ?= kyverno
+BACKEND_DIR         := backend
+BACKEND_BIN         := $(BACKEND_DIR)/backend
+LOCAL_PLATFORM      := linux/$(GOARCH)
+LD_FLAGS            := "-s -w"
+
+KO_REGISTRY         := ko.local
+ifndef VERSION
+KO_TAGS             := $(GIT_SHA)
+else ifeq ($(VERSION),main)
+KO_TAGS             := $(GIT_SHA),latest
+else
+KO_TAGS             := $(GIT_SHA),$(subst /,-,$(VERSION))
+endif
 
 #########
 # TOOLS #
@@ -14,7 +39,9 @@ HELM                               := $(TOOLS_DIR)/helm
 HELM_VERSION                       := v3.10.1
 KIND                               := $(TOOLS_DIR)/kind
 KIND_VERSION                       := v0.17.0
-TOOLS                              := $(KIND) $(HELM)
+KO                                 := $(TOOLS_DIR)/ko
+KO_VERSION                         := main #e93dbee8540f28c45ec9a2b8aec5ef8e43123966
+TOOLS                              := $(KIND) $(HELM) $(KO)
 
 $(HELM):
 	@echo Install helm... >&2
@@ -23,6 +50,10 @@ $(HELM):
 $(KIND):
 	@echo Install kind... >&2
 	@GOBIN=$(TOOLS_DIR) go install sigs.k8s.io/kind@$(KIND_VERSION)
+
+$(KO):
+	@echo Install ko... >&2
+	@GOBIN=$(TOOLS_DIR) go install github.com/google/ko@$(KO_VERSION)
 
 .PHONY: install-tools
 install-tools: $(TOOLS) ## Install tools
@@ -59,6 +90,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 build-clean:
 	@rm -rf frontend/dist
 	@rm -rf backend/dist
+	@rm -rf backend/backend
 
 .PHONY: build-frontend
 build-frontend: build-clean
@@ -73,6 +105,12 @@ build-backend: build-frontend
 
 .PHONY: build-all
 build-all: build-frontend build-backend
+
+.PHONY: ko-build
+ko-build: $(KO) build-all
+	@echo Build image with ko... >&2
+	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(KO_REGISTRY) \
+		$(KO) build . --preserve-import-paths --tags=$(KO_TAGS) --platform=$(LOCAL_PLATFORM)
 
 #######
 # RUN #
