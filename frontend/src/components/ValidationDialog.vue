@@ -122,7 +122,25 @@ const filename = computed(
 
 const items = computed(() => {
   return (props.results.Validation || []).reduce<Item[]>((results, validation) => {
-    (validation.policyResponse.rules || []).forEach((rule) => {
+    if (!validation.policyResponse.rules) {
+      results.push({
+        apiVersion: validation.resource.apiVersion,
+        kind: validation.resource.kind,
+        resource: [
+          validation.resource.metadata.namespace,
+          validation.resource.metadata.name,
+        ]
+          .filter((s) => !!s)
+          .join("/"),
+        policy: validation.policy.metadata.name,
+        rule: '',
+        message: 'validation skipped',
+        status: 'skip',
+      })
+      return results
+    }
+
+    validation.policyResponse.rules.forEach((rule) => {
       results.push({
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,

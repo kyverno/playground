@@ -1,7 +1,6 @@
 <template>
     <v-snackbar :model-value="props.modelValue" @update:model-value="(event: boolean) => emit('update:modelValue', event)" color="error">
-      {{ text }}
-
+      <span v-html="text" />
       <template v-slot:actions>
         <v-btn
           variant="text"

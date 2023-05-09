@@ -28,13 +28,15 @@ export type Rule = {
 }
 
 export type PolicyResponse = {
-    rules: Rule[]
+    rules: Rule[] | null
 }
 
 export type EngineResponse = {
+    Policies: Policy[];
+    Resources: Resource[];
     Validation: {
         resource: Resource;
         policy: Policy;
         policyResponse: PolicyResponse;
-    }[]
+    }[] | null
 }
