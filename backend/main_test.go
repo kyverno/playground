@@ -59,7 +59,7 @@ metadata:
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := apiRequest{
-				Policy:    tt.fields.Policy,
+				Policies:  tt.fields.Policy,
 				Resources: tt.fields.Resources,
 				Context:   tt.fields.Context,
 			}
