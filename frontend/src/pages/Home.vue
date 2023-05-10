@@ -24,7 +24,7 @@
         <v-row>
           <v-col :md="7" :sm="12">
             <v-card style="height: 800px">
-              <EditorToolbar title="ClusterPolicy" v-model="policy" />
+              <EditorToolbar title="ClusterPolicy" v-model="policy" :restore-value="loadedPolicy" />
               <PolicyEditor v-model="policy" />
             </v-card>
           </v-col>
@@ -34,7 +34,7 @@
               <ContextEditor v-model="context" />
             </v-card>
             <v-card style="height: 487px" class="mt-3">
-              <EditorToolbar title="Resource" v-model="resource">
+              <EditorToolbar title="Resource" v-model="resource" :restore-value="loadedResource">
                 <template #prepend-actions>
                   <TemplateButton @select="(template: string) => resource = template" />
                 </template>
@@ -82,9 +82,15 @@ const policy = ref<string>(PolicyTemplate);
 const context = ref<string>(ContextTemplate);
 const resource = ref<string>(ResourceTemplate);
 
+const loadedPolicy = ref<string>(PolicyTemplate);
+const loadedResource = ref<string>(ResourceTemplate);
+
 const setExample = (values: [string, string]) => {
   policy.value = values[0];
   resource.value = values[1];
+
+  loadedPolicy.value = values[0]
+  loadedResource.value = values[1]
 };
 
 const showResults = ref<boolean>(false);
@@ -99,6 +105,9 @@ const reset = () => {
   policy.value = PolicyTemplate
   context.value = ContextTemplate
   resource.value = ResourceTemplate
+
+  loadedPolicy.value = PolicyTemplate
+  loadedResource.value = ResourceTemplate
 
   results.value = { validation: [], policies: [], resources: [] }
   showResults.value = false
