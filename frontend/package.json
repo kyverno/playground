@@ -12,6 +12,7 @@
     "@vueuse/core": "^10.1.2",
     "monaco-editor": "^0.38.0",
     "monaco-yaml": "^4.0.4",
+    "object-hash": "^3.0.0",
     "roboto-fontface": "*",
     "vue": "^3.2.47",
     "vue-router": "^4.0.0",
@@ -19,6 +20,7 @@
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {
+    "@types/object-hash": "^3.0.2",
     "@babel/types": "^7.21.4",
     "@types/node": "^18.15.0",
     "@types/webfontloader": "^1.6.35",

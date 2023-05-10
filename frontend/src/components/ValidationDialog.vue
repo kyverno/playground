@@ -20,6 +20,7 @@
         </v-card-text>
         <ValidationTable :results="validations" v-if="hasResults && validations.length" />
         <MutationTable :results="mutations" v-if="hasResults && mutations.length" />
+        <MutationTable :results="verifications" v-if="hasResults && verifications.length" title="ImageVerification Results" />
       <v-card-actions>
         <v-btn color="error" @click="emit('update:modelValue', false)">Close</v-btn>
         <v-spacer />
@@ -72,7 +73,9 @@ const filename = computed(
 );
 
 const hasResults = computed(() => {
-  return (props.results.validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || (props.results.mutation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
+  return (props.results.validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || 
+    (props.results.mutation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || 
+    (props.results.imageVerification || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
 })
 
 const validations = computed(() => {
@@ -89,6 +92,14 @@ const mutations = computed(() => {
   }
 
   return (props.results.mutation || [])
+})
+
+const verifications = computed(() => {
+  if (hasResults.value) {
+    return (props.results.imageVerification || []).filter(v => v.policyResponse.rules)
+  }
+
+  return (props.results.imageVerification || [])
 })
 
 const { hideNoMatch } = useConfig()

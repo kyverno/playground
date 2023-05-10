@@ -50,4 +50,5 @@ export type EngineResponse = {
     resources: Resource[];
     validation?: Validation[];
     mutation?: Mutation[];
+    imageVerification?: Mutation[];
 }
