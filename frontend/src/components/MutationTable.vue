@@ -1,5 +1,5 @@
 <template>
-  <v-card-title class="my-2 text-subtitle-1">Mutation Results</v-card-title>
+  <v-card-title class="my-2 text-subtitle-1">{{ title }}</v-card-title>
   <v-divider />
   <v-data-table
     density="default"
@@ -28,13 +28,16 @@ import { computed } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import { useRouter } from "vue-router";
 import { useSessionStorage } from "@vueuse/core";
+import hash from 'object-hash'
 
 type Item = {
+  id: string;
   apiVersion: string;
   kind: string;
   resource: string;
   policy: string;
   rule: string;
+  message: string;
   patchedResource: string;
   originalReosurce: string;
   status: RuleStatus;
@@ -42,6 +45,7 @@ type Item = {
 
 const props = defineProps({
   results: { type: Array as PropType<Mutation[]>, default: () => [] },
+  title: { type: String, default: 'Mutation Results' }
 });
 
 const display = useDisplay();
@@ -71,7 +75,8 @@ const headers = computed(() => {
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, mutation) => {
     (mutation.policyResponse.rules || []).forEach((rule) => {
-      results.push({
+      const item = {
+        id: '',
         apiVersion: mutation.resource.apiVersion,
         kind: mutation.resource.kind,
         resource: [
@@ -82,10 +87,14 @@ const items = computed(() => {
           .join("/"),
         policy: mutation.policy.metadata.name,
         rule: rule.name,
+        message: rule.message,
         patchedResource: mutation.patchedResource,
         originalReosurce: mutation.originalResource,
         status: rule.status,
-      });
+      }
+      item.id = hash(item)
+
+      results.push(item);
     });
 
     return results;
@@ -95,10 +104,9 @@ const items = computed(() => {
 const router = useRouter()
 
 const details = (mutation: Item) => {
-  const id = `${mutation.policy}-${mutation.resource}`
-  useSessionStorage(`mutation:${id}`, mutation)
+  useSessionStorage(`mutation:${mutation.id}`, mutation)
 
-  const url = router.resolve({ name: 'mutation-details', params: { id }})
+  const url = router.resolve({ name: 'mutation-details', params: { id: mutation.id }})
 
   window.open(url.href, '_blank')
 }

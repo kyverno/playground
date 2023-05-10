@@ -26,7 +26,7 @@
       <v-container fluid>
         <v-row>
           <v-col>
-            <v-card title="Mutation Details">
+            <v-card title="Details">
               <v-card-text v-if="!details">
                 <v-alert type="error">
                   Details not found
@@ -78,6 +78,7 @@
                     </v-row>
                   </v-container>
                 </v-card-text>
+                <v-card-text v-if="details.status !== 'pass'">{{ details.message }}</v-card-text>
                 <DiffEditor
                   :height="600"
                   language="yaml"
@@ -115,6 +116,7 @@ type Item = {
   resource: string;
   policy: string;
   rule: string;
+  message: string;
   originalReosurce: string;
   patchedResource: string;
   status: RuleStatus;
