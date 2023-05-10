@@ -110,6 +110,18 @@ export const options = reactive({
                 "backup-all-volumes",
             ]
         },
+        "Other": {
+            path: 'https://raw.githubusercontent.com/kyverno/policies/main/other',
+            policies: [
+                "add-certificates-volume",
+                "add-default-resources",
+                "add-labels",
+                "allowed-annotations",
+                "allowed-pod-priorities",
+                "check-env-vars",
+                "require-base-image",
+            ]
+        },
     }
 })
 

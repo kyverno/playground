@@ -4,7 +4,7 @@
       <v-btn v-bind="props" prepend-icon="mdi-web">from URL</v-btn>
     </template>
 
-    <v-card theme="light">
+    <v-card>
       <v-card-text>
         <v-text-field label="URL" v-model="url" />
       </v-card-text>
