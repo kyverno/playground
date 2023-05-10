@@ -75,7 +75,7 @@ const submit = (): void => {
 
   fetch(`${api}/engine`, {
     body: JSON.stringify({
-      policy: props.policy,
+      policies: props.policy,
       resources: props.resource,
       context: props.context,
     }),
