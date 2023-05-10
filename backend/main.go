@@ -31,7 +31,7 @@ import (
 var staticFiles embed.FS
 
 type apiContext struct {
-	Username        string                       `json:"policy"`
+	Username        string                       `json:"username"`
 	Groups          []string                     `json:"groups"`
 	Roles           []string                     `json:"roles"`
 	ClusterRoles    []string                     `json:"clusterRoles"`
