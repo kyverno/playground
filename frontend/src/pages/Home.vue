@@ -167,6 +167,8 @@ onMounted(() => {
       loadedResource.value = content.resource
       loadedContext.value = content.context
 
+      router.replace({ ...route , query: {}})
+
       return
     } catch(err) {
       console.error('could not parse content string', err)
