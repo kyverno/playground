@@ -14,6 +14,7 @@
         <template v-slot:append>
           <v-btn icon="mdi-github" href="https://github.com/kyverno/playground" target="_blank" class="mr-2" title="GitHub: Kyverno Playground" />
           <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2">Examples</PrimeButton>
+          <ShareButton :policy="policy" :resource="resource" :context="context" />
           <ConfigMenu @on-reset="reset" />
         </template>
     </v-app-bar>
@@ -30,7 +31,7 @@
           </v-col>
           <v-col :md="5" :sm="12">
             <v-card style="height: 300px">
-              <EditorToolbar title="Context" v-model="context" />
+              <EditorToolbar title="Context" v-model="context" :restore-value="loadedContext" />
               <ContextEditor v-model="context" />
             </v-card>
             <v-card style="height: 487px" class="mt-3">
@@ -73,15 +74,20 @@ import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
 import ConfigMenu from "@/components/ConfigMenu.vue";
 import PrimeButton from "@/components/PrimeButton.vue";
+import ShareButton from "@/components/ShareButton.vue";
 import TemplateButton from "@/components/TemplateButton.vue";
+import * as lzstring from "lz-string";
 
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "@/assets/templates";
 import { EngineResponse } from '@/types'
+import { onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 const policy = ref<string>(PolicyTemplate);
 const context = ref<string>(ContextTemplate);
 const resource = ref<string>(ResourceTemplate);
 
+const loadedContext = ref<string>('');
 const loadedPolicy = ref<string>(PolicyTemplate);
 const loadedResource = ref<string>(ResourceTemplate);
 
@@ -130,6 +136,26 @@ const handleError = (error: Error) => {
 };
 
 const drawer = ref<boolean>(false);
+
+const route = useRoute()
+onMounted(() => {
+  const query = route.query.content as string
+  if (!query) return;
+
+  try {
+    const content = JSON.parse(lzstring.decompressFromBase64(query)) as { policy: string; resource: string; context: string }
+
+    policy.value = content.policy
+    resource.value = content.resource
+    context.value = content.context
+
+    loadedPolicy.value = content.policy
+    loadedResource.value = content.resource
+    loadedContext.value = content.context
+  } catch(err) {
+    console.error('could not parse content string', err)
+  }
+})
 </script>
 
 <style scoped>
