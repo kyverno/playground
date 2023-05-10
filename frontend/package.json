@@ -10,6 +10,7 @@
   "dependencies": {
     "@mdi/font": "7.0.96",
     "@vueuse/core": "^10.1.2",
+    "lz-string": "^1.5.0",
     "monaco-editor": "^0.38.0",
     "monaco-yaml": "^4.0.4",
     "object-hash": "^3.0.0",
@@ -20,9 +21,9 @@
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {
-    "@types/object-hash": "^3.0.2",
     "@babel/types": "^7.21.4",
     "@types/node": "^18.15.0",
+    "@types/object-hash": "^3.0.2",
     "@types/webfontloader": "^1.6.35",
     "@vitejs/plugin-vue": "^4.2.1",
     "@vue/eslint-config-typescript": "^11.0.0",

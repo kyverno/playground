@@ -83,7 +83,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
   		--namespace kyverno --create-namespace \
   		--repo https://kyverno.github.io/kyverno kyverno kyverno
 	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
-	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/schema.json
+	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
 	@$(KIND) delete cluster --name schema
 
 #########

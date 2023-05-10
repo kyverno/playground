@@ -21,9 +21,14 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
+	_ "go.etcd.io/etcd/client/pkg/v3/logutil"
 	authenticationv1 "k8s.io/api/authentication/v1"
+	_ "k8s.io/apiextensions-apiserver/pkg/apiserver/conversion"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
+	"sigs.k8s.io/kubectl-validate/pkg/validatorfactory"
 	"sigs.k8s.io/yaml"
 )
 
@@ -135,6 +140,58 @@ func ConvertEngineResponse(in engineapi.EngineResponse) EngineResponse {
 	return out
 }
 
+func (r apiRequest) loadPolicies() ([]kyvernov1.PolicyInterface, error) {
+	if documents, err := yamlutils.SplitDocuments([]byte(r.Policy)); err != nil {
+		return nil, err
+	} else if factory, err := validatorfactory.New(
+		openapiclient.NewComposite(
+			openapiclient.NewLocalFiles("../schemas/openapi/v3"),
+			openapiclient.NewHardcodedBuiltins("1.27"),
+		),
+	); err != nil {
+		return nil, err
+	} else {
+		var policies []kyvernov1.PolicyInterface
+		for _, document := range documents {
+			metadata := metav1.TypeMeta{}
+			if err = yaml.Unmarshal(document, &metadata); err != nil {
+				return nil, err
+			}
+			gvk := metadata.GetObjectKind().GroupVersionKind()
+			if gvk.Empty() {
+				return nil, err
+			}
+			validator, err := factory.ValidatorsForGVK(gvk)
+			if err != nil {
+				return nil, err
+			}
+			// Fetch a decoder to decode this object from its structural schema
+			decoder, err := validator.Decoder(gvk)
+			if err != nil {
+				return nil, err
+			}
+			const mediaType = runtime.ContentTypeYAML
+			info, ok := runtime.SerializerInfoForMediaType(decoder.SupportedMediaTypes(), mediaType)
+			if !ok {
+				return nil, fmt.Errorf("unsupported media type %q", mediaType)
+			}
+			dec := decoder.DecoderToVersion(info.StrictSerializer, gvk.GroupVersion())
+			var untyped unstructured.Unstructured
+			_, _, err = dec.Decode(document, &gvk, &untyped)
+			if err != nil {
+				return nil, err
+			}
+			var typed kyvernov1.ClusterPolicy
+			err = runtime.DefaultUnstructuredConverter.FromUnstructured(untyped.UnstructuredContent(), &typed)
+			if err != nil {
+				return nil, err
+			}
+			policies = append(policies, &typed)
+		}
+		return policies, nil
+	}
+}
+
 func (r apiRequest) loadResources() ([]unstructured.Unstructured, error) {
 	if documents, err := yamlutils.SplitDocuments([]byte(r.Resources)); err != nil {
 		return nil, err
@@ -161,7 +218,8 @@ func (r apiRequest) loadContext() (apiContext, error) {
 }
 
 func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
-	if policies, err := yamlutils.GetPolicy([]byte(r.Policy)); err != nil {
+	// if policies, err := yamlutils.GetPolicy([]byte(r.Policy)); err != nil {
+	if policies, err := r.loadPolicies(); err != nil {
 		return nil, err
 	} else if resources, err := r.loadResources(); err != nil {
 		return nil, err
