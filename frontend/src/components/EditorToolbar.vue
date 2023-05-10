@@ -1,11 +1,14 @@
 <template>
     <v-toolbar
-      :title="props.title"
       color="#3783c4"
       theme="dark"
       density="compact"
       flat
     >
+      <template #prepend>
+        <v-btn small icon="mdi-backup-restore" v-if="restoreValue" :disabled="restoreValue === modelValue" @click="() => emit('update:modelValue', restoreValue)" :title="`Restore ${title}`" />
+      </template>
+      <v-toolbar-title :class="restoreValue ? 'ml-0': ''">{{ title }}</v-toolbar-title>
       <v-spacer />
       <v-toolbar-items>
         <slot name="prepend-actions" />
@@ -20,6 +23,7 @@ import UploadButton from "./UploadButton.vue";
 import URLButton from "./URLButton.vue";
 
 const props = defineProps({
+    restoreValue: { type: String, default: '' },
     modelValue: { type: String, default: '' },
     title: { type: String, required: true }
 })
