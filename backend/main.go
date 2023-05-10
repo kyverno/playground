@@ -19,6 +19,7 @@ import (
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
+	"github.com/kyverno/kyverno/pkg/registryclient"
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -45,10 +46,11 @@ type apiRequest struct {
 }
 
 type apiResponse struct {
-	Policies   []kyvernov1.PolicyInterface `json:"policies"`
-	Resources  []unstructured.Unstructured `json:"resources"`
-	Mutation   []EngineResponse            `json:"mutation"`
-	Validation []EngineResponse            `json:"validation"`
+	Policies          []kyvernov1.PolicyInterface `json:"policies"`
+	Resources         []unstructured.Unstructured `json:"resources"`
+	Mutation          []EngineResponse            `json:"mutation"`
+	ImageVerification []EngineResponse            `json:"imageVerification"`
+	Validation        []EngineResponse            `json:"validation"`
 }
 
 type EngineResponse struct {
@@ -172,12 +174,16 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 		}
 		cfg := config.NewDefaultConfiguration(false)
 		jp := jmespath.New(cfg)
+		rclient, err := registryclient.New(registryclient.WithLocalKeychain())
+		if err != nil {
+			return nil, err
+		}
 		engine := engine.NewEngine(
 			cfg,
 			config.NewDefaultMetricsConfiguration(),
 			jp,
 			nil,
-			nil,
+			rclient,
 			store.ContextLoaderFactory(nil),
 			nil,
 		)
@@ -220,6 +226,16 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 					response := engine.Mutate(ctx, policyContext)
 					resource = response.PatchedResource
 					apiResponse.Mutation = append(apiResponse.Mutation, ConvertEngineResponse(response))
+				}
+			}
+			// verify images
+			for _, policy := range policies {
+				if policyContext, err := getContext(policy); err != nil {
+					return nil, err
+				} else {
+					response, _ := engine.VerifyAndPatchImages(ctx, policyContext)
+					resource = response.PatchedResource
+					apiResponse.ImageVerification = append(apiResponse.ImageVerification, ConvertEngineResponse(response))
 				}
 			}
 			// validate
