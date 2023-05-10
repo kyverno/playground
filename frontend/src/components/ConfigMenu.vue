@@ -29,7 +29,6 @@
           item-value="theme"
           class="mt-4"
         />
-        <v-btn block @click="emit('on-reset')" flat color="grey" class="mt-4">Reset Input</v-btn>
       </v-card-text>
     </v-card>
   </v-menu>
@@ -39,6 +38,4 @@
 import { useConfig } from "../config";
 
 const { options, layoutTheme, editorTheme } = useConfig()
-
-const emit = defineEmits(['on-reset'])
 </script>

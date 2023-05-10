@@ -5,16 +5,19 @@
           <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
         </template>
       <div class="toolbar-container">
-        <div class="py-1 app-logo">
+        <router-link class="py-1 app-logo d-block" to="/">
           <v-img src="/kyverno-logo.png" />
           <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px;">v1.10</v-chip>
-        </div>
-        <h1 class="text-h4 d-none d-md-inline">Playground</h1>
+        </router-link>
+        <h1 class="text-h4 d-none d-md-inline" style="padding-left: 200px;">Playground</h1>
       </div>
         <template v-slot:append>
           <v-btn icon="mdi-github" href="https://github.com/kyverno/playground" target="_blank" class="mr-2" title="GitHub: Kyverno Playground" />
           <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2">Examples</PrimeButton>
-          <ConfigMenu @on-reset="reset" />
+          <ShareButton :policy="policy" :resource="resource" :context="context" />
+          <SaveButton :policy="policy" :resource="resource" :context="context" />
+          <ResetButton @on-reset="reset" />
+          <ConfigMenu />
         </template>
     </v-app-bar>
     <ExampleDrawer v-model="drawer" @select:example="setExample" />
@@ -30,7 +33,7 @@
           </v-col>
           <v-col :md="5" :sm="12">
             <v-card style="height: 300px">
-              <EditorToolbar title="Context" v-model="context" />
+              <EditorToolbar title="Context" v-model="context" :restore-value="loadedContext" />
               <ContextEditor v-model="context" />
             </v-card>
             <v-card style="height: 487px" class="mt-3">
@@ -60,7 +63,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { layoutTheme } from "@/config";
+import { layoutTheme, useConfig } from "@/config";
 
 import ErrorBar from "@/components/ErrorBar.vue";
 import EditorToolbar from "@/components/EditorToolbar.vue";
@@ -73,17 +76,29 @@ import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
 import ConfigMenu from "@/components/ConfigMenu.vue";
 import PrimeButton from "@/components/PrimeButton.vue";
+import ShareButton from "@/components/ShareButton.vue";
+import SaveButton from "@/components/SaveButton.vue";
+import ResetButton from "@/components/ResetButton.vue";
 import TemplateButton from "@/components/TemplateButton.vue";
+import * as lzstring from "lz-string";
 
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "@/assets/templates";
 import { EngineResponse } from '@/types'
+import { onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute()
+const router = useRouter()
 
 const policy = ref<string>(PolicyTemplate);
 const context = ref<string>(ContextTemplate);
 const resource = ref<string>(ResourceTemplate);
 
+const loadedContext = ref<string>('');
 const loadedPolicy = ref<string>(PolicyTemplate);
 const loadedResource = ref<string>(ResourceTemplate);
+
+const config = useConfig()
 
 const setExample = (values: [string, string]) => {
   policy.value = values[0];
@@ -94,7 +109,7 @@ const setExample = (values: [string, string]) => {
 };
 
 const showResults = ref<boolean>(false);
-const results = ref<EngineResponse>({ validation: [], policies: [], resources: [] });
+const results = ref<EngineResponse>({ policies: [], resources: [] });
 
 const handleResponse = (response: EngineResponse) => {
   results.value = response
@@ -106,14 +121,20 @@ const reset = () => {
   context.value = ContextTemplate
   resource.value = ResourceTemplate
 
+  config.policy.value = null
+  config.context.value = null
+  config.resource.value = null
+
   loadedPolicy.value = PolicyTemplate
   loadedResource.value = ResourceTemplate
 
-  results.value = { validation: [], policies: [], resources: [] }
+  results.value = { policies: [], resources: [] }
   showResults.value = false
 
   errorText.value = ''
   showError.value = false
+
+  router.push({ ...route , query: {}})
 }
 
 const showError = ref<boolean>(false);
@@ -130,6 +151,34 @@ const handleError = (error: Error) => {
 };
 
 const drawer = ref<boolean>(false);
+
+onMounted(() => {
+  const query = route.query.content as string
+  
+  if (query) {
+    try {
+      const content = JSON.parse(lzstring.decompressFromBase64(query)) as { policy: string; resource: string; context: string }
+
+      policy.value = content.policy
+      resource.value = content.resource
+      context.value = content.context
+
+      loadedPolicy.value = content.policy
+      loadedResource.value = content.resource
+      loadedContext.value = content.context
+
+      router.replace({ ...route , query: {}})
+
+      return
+    } catch(err) {
+      console.error('could not parse content string', err)
+    }
+  }
+  
+  if (config.policy.value) { policy.value = config.policy.value }
+  if (config.resource.value) { resource.value = config.resource.value }
+  if (config.context.value) { context.value = config.context.value }
+})
 </script>
 
 <style scoped>
@@ -147,7 +196,7 @@ const drawer = ref<boolean>(false);
   align-items: center;
   justify-content: center;
   position: relative;
-  padding-left: 175px;
+  padding-left: 200px;
 }
 
 .footer {
