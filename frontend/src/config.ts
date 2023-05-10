@@ -16,6 +16,11 @@ export const editorTheme = useLocalStorage('config:editorTheme', 'vs-dark')
 
 export const hideNoMatch = useLocalStorage('config:hideNoMatch', false)
 
+
+export const policyLS = useLocalStorage<string>('persist:policy', null)
+export const resourceLS = useLocalStorage<string>('persist:resource', null)
+export const contextLS = useLocalStorage<string>('persist:context', null)
+
 export const options = reactive({
     layoutThemes: ['light', 'dark'],
     editorThemes: [
@@ -129,5 +134,8 @@ export const useConfig = () => ({
     editorTheme,
     layoutTheme,
     options,
-    hideNoMatch
+    hideNoMatch,
+    policy: policyLS,
+    resource: resourceLS,
+    context: contextLS
 })
