@@ -2,8 +2,9 @@
   <v-tooltip
     :model-value="persisted"
     location="bottom"
-    text="Persisted current state locally"
+    text="persisted current state locally"
     :open-on-hover="false"
+    content-class="no-opacity-tooltip"
   >
     <template v-slot:activator="{ props }">
       <v-btn

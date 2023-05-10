@@ -2,8 +2,9 @@
   <v-tooltip
     :model-value="clicked"
     location="bottom"
-    text="Local state was resettet"
+    text="local state resettet"
     :open-on-hover="false"
+    content-class="no-opacity-tooltip"
   >
     <template v-slot:activator="{ props }">
       <v-btn
