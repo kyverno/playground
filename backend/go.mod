@@ -10,7 +10,7 @@ require (
 	k8s.io/api v0.27.1
 	k8s.io/apiextensions-apiserver v0.27.1
 	k8s.io/apimachinery v0.27.1
-	sigs.k8s.io/kubectl-validate v0.0.0-20230510211825-5f4d23caa3af
+	sigs.k8s.io/kubectl-validate v0.0.0-20230511070719-4f427a78cb5e
 	sigs.k8s.io/yaml v1.3.0
 )
 
