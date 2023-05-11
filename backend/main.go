@@ -140,53 +140,76 @@ func ConvertEngineResponse(in engineapi.EngineResponse) EngineResponse {
 	return out
 }
 
-func (r apiRequest) loadPolicies() ([]kyvernov1.PolicyInterface, error) {
-	if documents, err := yamlutils.SplitDocuments([]byte(r.Policies)); err != nil {
-		return nil, err
-	} else if factory, err := validatorfactory.New(
+func loadUnstructured(document []byte) (unstructured.Unstructured, error) {
+	const mediaType = runtime.ContentTypeYAML
+	var result unstructured.Unstructured
+	var metadata metav1.TypeMeta
+	if err := yaml.Unmarshal(document, &metadata); err != nil {
+		return result, err
+	}
+	gvk := metadata.GetObjectKind().GroupVersionKind()
+	if gvk.Empty() {
+		return result, fmt.Errorf("GVK cannot be empty")
+	}
+	if factory, err := validatorfactory.New(
 		openapiclient.NewComposite(
 			openapiclient.NewLocalFiles("../schemas/openapi/v3"),
 			openapiclient.NewHardcodedBuiltins("1.27"),
 		),
 	); err != nil {
+		return result, err
+	} else if validator, err := factory.ValidatorsForGVK(gvk); err != nil {
+		return result, err
+	} else if decoder, err := validator.Decoder(gvk); err != nil {
+		return result, err
+	} else if info, ok := runtime.SerializerInfoForMediaType(decoder.SupportedMediaTypes(), mediaType); !ok {
+		return result, fmt.Errorf("unsupported media type %q", mediaType)
+	} else if _, _, err := decoder.DecoderToVersion(info.StrictSerializer, gvk.GroupVersion()).Decode(document, &gvk, &result); err != nil {
+		return result, err
+	} else {
+		return result, nil
+	}
+}
+
+func fromUnstructured[T any](untyped unstructured.Unstructured) (T, error) {
+	var result T
+	if err := runtime.DefaultUnstructuredConverter.FromUnstructured(untyped.UnstructuredContent(), &result); err != nil {
+		return result, err
+	}
+	return result, nil
+}
+
+func (r apiRequest) loadPolicies() ([]kyvernov1.PolicyInterface, error) {
+	loadPolicy := func(untyped unstructured.Unstructured) (kyvernov1.PolicyInterface, error) {
+		kind := untyped.GetKind()
+		if kind == "Policy" {
+			if policy, err := fromUnstructured[kyvernov1.Policy](untyped); err != nil {
+				return nil, err
+			} else {
+				return &policy, nil
+			}
+		} else if kind == "ClusterPolicy" {
+			if policy, err := fromUnstructured[kyvernov1.ClusterPolicy](untyped); err != nil {
+				return nil, err
+			} else {
+				return &policy, nil
+			}
+		} else {
+			return nil, fmt.Errorf("invalid kind: %s", kind)
+		}
+	}
+	if documents, err := yamlutils.SplitDocuments([]byte(r.Policies)); err != nil {
 		return nil, err
 	} else {
 		var policies []kyvernov1.PolicyInterface
 		for _, document := range documents {
-			metadata := metav1.TypeMeta{}
-			if err = yaml.Unmarshal(document, &metadata); err != nil {
+			if untyped, err := loadUnstructured(document); err != nil {
 				return nil, err
-			}
-			gvk := metadata.GetObjectKind().GroupVersionKind()
-			if gvk.Empty() {
+			} else if policy, err := loadPolicy(untyped); err != nil {
 				return nil, err
+			} else {
+				policies = append(policies, policy)
 			}
-			validator, err := factory.ValidatorsForGVK(gvk)
-			if err != nil {
-				return nil, err
-			}
-			// Fetch a decoder to decode this object from its structural schema
-			decoder, err := validator.Decoder(gvk)
-			if err != nil {
-				return nil, err
-			}
-			const mediaType = runtime.ContentTypeYAML
-			info, ok := runtime.SerializerInfoForMediaType(decoder.SupportedMediaTypes(), mediaType)
-			if !ok {
-				return nil, fmt.Errorf("unsupported media type %q", mediaType)
-			}
-			dec := decoder.DecoderToVersion(info.StrictSerializer, gvk.GroupVersion())
-			var untyped unstructured.Unstructured
-			_, _, err = dec.Decode(document, &gvk, &untyped)
-			if err != nil {
-				return nil, err
-			}
-			var typed kyvernov1.ClusterPolicy
-			err = runtime.DefaultUnstructuredConverter.FromUnstructured(untyped.UnstructuredContent(), &typed)
-			if err != nil {
-				return nil, err
-			}
-			policies = append(policies, &typed)
 		}
 		return policies, nil
 	}
@@ -218,7 +241,6 @@ func (r apiRequest) loadContext() (apiContext, error) {
 }
 
 func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
-	// if policies, err := yamlutils.GetPolicy([]byte(r.Policy)); err != nil {
 	if policies, err := r.loadPolicies(); err != nil {
 		return nil, err
 	} else if resources, err := r.loadResources(); err != nil {
