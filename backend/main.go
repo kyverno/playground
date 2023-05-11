@@ -45,7 +45,7 @@ type apiContext struct {
 }
 
 type apiRequest struct {
-	Policy    string `json:"policy"`
+	Policies  string `json:"policies"`
 	Resources string `json:"resources"`
 	Context   string `json:"context"`
 }
@@ -141,7 +141,7 @@ func ConvertEngineResponse(in engineapi.EngineResponse) EngineResponse {
 }
 
 func (r apiRequest) loadPolicies() ([]kyvernov1.PolicyInterface, error) {
-	if documents, err := yamlutils.SplitDocuments([]byte(r.Policy)); err != nil {
+	if documents, err := yamlutils.SplitDocuments([]byte(r.Policies)); err != nil {
 		return nil, err
 	} else if factory, err := validatorfactory.New(
 		openapiclient.NewComposite(
