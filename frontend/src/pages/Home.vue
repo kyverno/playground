@@ -1,24 +1,43 @@
 <template>
   <v-app :theme="layoutTheme">
     <v-app-bar flat border>
-        <template v-slot:prepend>
-          <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        </template>
+      <template v-slot:prepend>
+        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      </template>
       <div class="toolbar-container">
         <router-link class="py-1 app-logo d-block" to="/">
           <v-img src="/kyverno-logo.png" />
-          <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px;">v1.10</v-chip>
+          <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px"
+            >v1.10</v-chip
+          >
         </router-link>
-        <h1 class="text-h4 d-none d-md-inline" style="padding-left: 200px;">Playground</h1>
+        <h1 class="text-h4 d-none d-lg-inline" style="padding-left: 200px">Playground</h1>
       </div>
-        <template v-slot:append>
-          <v-btn icon="mdi-github" href="https://github.com/kyverno/playground" target="_blank" class="mr-2" title="GitHub: Kyverno Playground" />
-          <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2">Examples</PrimeButton>
+      <template v-slot:append>
+        <v-btn
+          icon="mdi-github"
+          href="https://github.com/kyverno/playground"
+          target="_blank"
+          class="mr-2"
+          title="GitHub: Kyverno Playground"
+        />
+        <template v-if="display.mdAndUp.value">
+          <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2"
+            >Examples</PrimeButton
+          >
           <ShareButton :policy="policy" :resource="resource" :context="context" />
           <SaveButton :policy="policy" :resource="resource" :context="context" />
           <ResetButton @on-reset="reset" />
-          <ConfigMenu />
         </template>
+        <ConfigMenu />
+        <MobileMenu
+          :policy="policy"
+          :resource="resource"
+          :context="context"
+          @on-reset="reset"
+          v-if="display.smAndDown"
+        />
+      </template>
     </v-app-bar>
     <ExampleDrawer v-model="drawer" @select:example="setExample" />
     <v-main>
@@ -27,17 +46,29 @@
         <v-row>
           <v-col :md="7" :sm="12">
             <v-card style="height: 800px">
-              <EditorToolbar title="ClusterPolicy" v-model="policy" :restore-value="loadedPolicy" />
+              <EditorToolbar
+                title="ClusterPolicy"
+                v-model="policy"
+                :restore-value="loadedPolicy"
+              />
               <PolicyEditor v-model="policy" />
             </v-card>
           </v-col>
           <v-col :md="5" :sm="12">
             <v-card style="height: 300px">
-              <EditorToolbar title="Context" v-model="context" :restore-value="loadedContext" />
+              <EditorToolbar
+                title="Context"
+                v-model="context"
+                :restore-value="loadedContext"
+              />
               <ContextEditor v-model="context" />
             </v-card>
             <v-card style="height: 487px" class="mt-3">
-              <EditorToolbar title="Resource" v-model="resource" :restore-value="loadedResource">
+              <EditorToolbar
+                title="Resource"
+                v-model="resource"
+                :restore-value="loadedResource"
+              >
                 <template #prepend-actions>
                   <TemplateButton @select="(template: string) => resource = template" />
                 </template>
@@ -63,122 +94,138 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { layoutTheme, useConfig } from "@/config";
+import { useDisplay } from "vuetify/lib/framework.mjs";
+import * as lzstring from "lz-string";
 
+import { layoutTheme, useConfig } from "@/config";
 import ErrorBar from "@/components/ErrorBar.vue";
 import EditorToolbar from "@/components/EditorToolbar.vue";
 import ExampleDrawer from "@/components/ExampleDrawer.vue";
 import PolicyEditor from "@/components/PolicyEditor.vue";
 import ContextEditor from "@/components/ContextEditor.vue";
 import ResourceEditor from "@/components/ResourceEditor.vue";
-import ValidationButton from "@/components/ValidationButton.vue";
 import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
-import ConfigMenu from "@/components/ConfigMenu.vue";
-import PrimeButton from "@/components/PrimeButton.vue";
-import ShareButton from "@/components/ShareButton.vue";
-import SaveButton from "@/components/SaveButton.vue";
-import ResetButton from "@/components/ResetButton.vue";
-import TemplateButton from "@/components/TemplateButton.vue";
-import * as lzstring from "lz-string";
+
+import {
+  TemplateButton,
+  ResetButton,
+  SaveButton,
+  ShareButton,
+  PrimeButton,
+  MobileMenu,
+  ConfigMenu,
+  ValidationButton,
+} from "@/components/buttons";
 
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "@/assets/templates";
-import { EngineResponse } from '@/types'
+import { EngineResponse } from "@/types";
 import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
+const display = useDisplay();
 
 const policy = ref<string>(PolicyTemplate);
 const context = ref<string>(ContextTemplate);
 const resource = ref<string>(ResourceTemplate);
 
-const loadedContext = ref<string>('');
+const loadedContext = ref<string>("");
 const loadedPolicy = ref<string>(PolicyTemplate);
 const loadedResource = ref<string>(ResourceTemplate);
 
-const config = useConfig()
+const config = useConfig();
 
 const setExample = (values: [string, string]) => {
   policy.value = values[0];
   resource.value = values[1];
 
-  loadedPolicy.value = values[0]
-  loadedResource.value = values[1]
+  loadedPolicy.value = values[0];
+  loadedResource.value = values[1];
 };
 
 const showResults = ref<boolean>(false);
 const results = ref<EngineResponse>({ policies: [], resources: [] });
 
 const handleResponse = (response: EngineResponse) => {
-  results.value = response
-  showResults.value = true
+  results.value = response;
+  showResults.value = true;
 };
 
 const reset = () => {
-  policy.value = PolicyTemplate
-  context.value = ContextTemplate
-  resource.value = ResourceTemplate
+  policy.value = PolicyTemplate;
+  context.value = ContextTemplate;
+  resource.value = ResourceTemplate;
 
-  config.policy.value = null
-  config.context.value = null
-  config.resource.value = null
+  config.policy.value = null;
+  config.context.value = null;
+  config.resource.value = null;
 
-  loadedPolicy.value = PolicyTemplate
-  loadedResource.value = ResourceTemplate
+  loadedPolicy.value = PolicyTemplate;
+  loadedResource.value = ResourceTemplate;
 
-  results.value = { policies: [], resources: [] }
-  showResults.value = false
+  results.value = { policies: [], resources: [] };
+  showResults.value = false;
 
-  errorText.value = ''
-  showError.value = false
+  errorText.value = "";
+  showError.value = false;
 
-  router.push({ ...route , query: {}})
-}
+  router.push({ ...route, query: {} });
+};
 
 const showError = ref<boolean>(false);
 const errorText = ref<string>("");
 
 const handleError = (error: Error) => {
-  errorText.value = error.message
-  showError.value = true
+  errorText.value = error.message;
+  showError.value = true;
 
   setTimeout(() => {
-    errorText.value = ''
-    showError.value = false
-  }, 5000)
+    errorText.value = "";
+    showError.value = false;
+  }, 5000);
 };
 
 const drawer = ref<boolean>(false);
 
 onMounted(() => {
-  const query = route.query.content as string
-  
+  const query = route.query.content as string;
+
   if (query) {
     try {
-      const content = JSON.parse(lzstring.decompressFromBase64(query)) as { policy: string; resource: string; context: string }
+      const content = JSON.parse(lzstring.decompressFromBase64(query)) as {
+        policy: string;
+        resource: string;
+        context: string;
+      };
 
-      policy.value = content.policy
-      resource.value = content.resource
-      context.value = content.context
+      policy.value = content.policy;
+      resource.value = content.resource;
+      context.value = content.context;
 
-      loadedPolicy.value = content.policy
-      loadedResource.value = content.resource
-      loadedContext.value = content.context
+      loadedPolicy.value = content.policy;
+      loadedResource.value = content.resource;
+      loadedContext.value = content.context;
 
-      router.replace({ ...route , query: {}})
+      router.replace({ ...route, query: {} });
 
-      return
-    } catch(err) {
-      console.error('could not parse content string', err)
+      return;
+    } catch (err) {
+      console.error("could not parse content string", err);
     }
   }
-  
-  if (config.policy.value) { policy.value = config.policy.value }
-  if (config.resource.value) { resource.value = config.resource.value }
-  if (config.context.value) { context.value = config.context.value }
-})
+
+  if (config.policy.value) {
+    policy.value = config.policy.value;
+  }
+  if (config.resource.value) {
+    resource.value = config.resource.value;
+  }
+  if (config.context.value) {
+    context.value = config.context.value;
+  }
+});
 </script>
 
 <style scoped>

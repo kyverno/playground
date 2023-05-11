@@ -19,7 +19,8 @@
           title="GitHub: Kyverno Playground"
         />
         <ConfigMenu />
-        <v-btn @click="close" prepend-icon="mdi-close">Close Window</v-btn>
+        <v-btn @click="close" prepend-icon="mdi-close" class="d-md-flex d-none">Close Window</v-btn>
+        <v-btn @click="close" icon="mdi-close" class="d-flext d-md-none"></v-btn>
       </template>
     </v-app-bar>
     <v-main :class="layoutTheme === 'light' ? 'bg-grey-lighten-2' : undefined">
@@ -42,13 +43,13 @@
                 <v-card-text>
                   <v-container fluid>
                     <v-row>
-                      <v-col md="3"
-                        ><span class="d-inline-block font-weight-bold" style="width: 70px"
+                      <v-col md="3" cols="6"
+                        ><span class="d-inline-block font-weight-bold" style="width: 50px"
                           >Policy</span
                         >
                         {{ details.policy }}</v-col
                       >
-                      <v-col md="3"
+                      <v-col md="3" cols="6"
                         ><span
                           class="d-inline-block font-weight-bold"
                           style="width: 120px"
@@ -56,19 +57,19 @@
                         >
                         {{ details.apiVersion }}/{{ details.kind }}</v-col
                       >
-                      <v-col
-                        ><span class="d-inline-block font-weight-bold" style="width: 70px"
+                      <v-col cols="3" class="d-none d-md-flex align-center"
+                        ><span class="d-inline-block font-weight-bold" style="width: 50px"
                           >Status</span
-                        ><StatusChip :status="details.status"
-                      /></v-col>
+                        ><StatusChip :status="details.status" />
+                      </v-col>
                     </v-row>
                     <v-row class="mt-0">
-                      <v-col md="3"
-                        ><span class="d-inline-block font-weight-bold" style="width: 70px"
+                      <v-col md="3" cols="6"
+                        ><span class="d-inline-block font-weight-bold" style="width: 50px"
                           >Rule</span
                         >{{ details.rule }}</v-col
                       >
-                      <v-col md="3"
+                      <v-col md="3" cols="6"
                         ><span
                           class="d-inline-block font-weight-bold"
                           style="width: 120px"
@@ -76,9 +77,18 @@
                         >{{ details.resource }}</v-col
                       >
                     </v-row>
+                    <v-row>
+                      <v-col>
+                        <span class="d-inline-block font-weight-bold" style="width: 50px"
+                          >Status</span
+                        ><StatusChip :status="details.status"
+                      /></v-col>
+                    </v-row>
                   </v-container>
                 </v-card-text>
-                <v-card-text v-if="details.status !== 'pass'">{{ details.message }}</v-card-text>
+                <v-card-text v-if="details.status !== 'pass'">{{
+                  details.message
+                }}</v-card-text>
                 <DiffEditor
                   :height="600"
                   language="yaml"

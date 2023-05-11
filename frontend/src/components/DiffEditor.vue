@@ -55,6 +55,7 @@ export default defineComponent({
       this.editor = monaco.editor.createDiffEditor(this.$el, {
         value: value,
         language: language,
+        automaticLayout: true,
         theme: theme,
         ...options,
       });

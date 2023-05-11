@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="600px">
     <template v-slot:activator>
-      <v-btn @click="share" prepend-icon="mdi-share">Share</v-btn>
+      <v-btn @click="share" prepend-icon="mdi-share" :variant="variant" :block="block">Share</v-btn>
     </template>
 
     <v-card title="Share Policy">
@@ -38,11 +38,14 @@ import { ref } from "vue";
 import * as lzstring from "lz-string";
 import { useRouter } from "vue-router";
 import { useClipboard } from "@vueuse/core";
+import { PropType } from "vue";
 
 const props = defineProps({
   policy: { type: String, default: "" },
   resource: { type: String, default: "" },
   context: { type: String, default: "" },
+  variant: { type: String as PropType<"outlined" | "text">, default: "" },
+  block: { type: Boolean }
 });
 
 const dialog = ref<boolean>(false);

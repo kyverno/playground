@@ -1,7 +1,8 @@
 <template>
   <v-menu location="bottom" :close-on-content-click="false">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props"> Options </v-btn>
+      <v-btn prepend-icon="mdi-cog" v-bind="props" v-if="display.mdAndUp.value">Options</v-btn>
+      <v-btn icon="mdi-cog" v-bind="props" v-else />
     </template>
     <v-card min-width="250">
       <v-card-title class="text-subtitle-1"> Playground Configuration </v-card-title>
@@ -35,7 +36,10 @@
 </template>
 
 <script setup lang="ts">
+import { useDisplay } from "vuetify/lib/framework.mjs";
 import { useConfig } from "../config";
 
 const { options, layoutTheme, editorTheme } = useConfig()
+
+const display = useDisplay();
 </script>
