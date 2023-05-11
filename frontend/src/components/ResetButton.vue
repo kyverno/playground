@@ -8,6 +8,8 @@
   >
     <template v-slot:activator="{ props }">
       <v-btn
+        :variant="variant"
+        :block="block"
         prepend-icon="mdi-delete"
         color="error"
         @click="reset"
@@ -18,11 +20,16 @@
   </v-tooltip>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { PropType, ref } from "vue";
 
 const clicked = ref<boolean>(false);
 
 const emit = defineEmits(['on-reset'])
+
+defineProps({
+  variant: { type: String as PropType<"outlined" | "text">, default: "" },
+  block: { type: Boolean }
+})
 
 const reset = () => {
   clicked.value = true

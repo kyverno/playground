@@ -69,6 +69,7 @@ const headers = computed(() => {
     { title: "Policy", key: "policy", width: "30%" },
     { title: "Rule", key: "rule", width: "30%" },
     { title: "Status", key: "status", width: "10%", align: "end" },
+      { title: "Details", key: "details", width: "5%", align: "end" },
   ];
 });
 

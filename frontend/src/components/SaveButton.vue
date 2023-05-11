@@ -9,6 +9,8 @@
     <template v-slot:activator="{ props }">
       <v-btn
         prepend-icon="mdi-content-save"
+        :variant="variant"
+        :block="block"
         @click="persist"
         v-bind="props"
         >Save</v-btn
@@ -17,13 +19,15 @@
   </v-tooltip>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { PropType, ref } from "vue";
 import { useConfig } from "@/config"
 
 const props = defineProps({
   policy: { type: String, default: "" },
   resource: { type: String, default: "" },
   context: { type: String, default: "" },
+  variant: { type: String as PropType<"outlined" | "text">, default: "" },
+  block: { type: Boolean }
 });
 
 const persisted = ref<boolean>(false);
