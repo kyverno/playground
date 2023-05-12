@@ -44,7 +44,7 @@ const props = defineProps({
   policy: { type: String, default: "" },
   resource: { type: String, default: "" },
   context: { type: String, default: "" },
-  variant: { type: String as PropType<"outlined" | "text">, default: "" },
+  variant: { type: String as PropType<"outlined" | "text"> },
   block: { type: Boolean }
 });
 

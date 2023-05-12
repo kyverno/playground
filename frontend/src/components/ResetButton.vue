@@ -27,7 +27,7 @@ const clicked = ref<boolean>(false);
 const emit = defineEmits(['on-reset'])
 
 defineProps({
-  variant: { type: String as PropType<"outlined" | "text">, default: "" },
+  variant: { type: String as PropType<"outlined" | "text"> },
   block: { type: Boolean }
 })
 
