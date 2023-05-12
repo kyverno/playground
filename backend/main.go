@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"embed"
 	"flag"
 	"fmt"
 	"io/fs"
@@ -24,6 +23,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
+	"github.com/kyverno/playground/backend/data"
 	_ "go.etcd.io/etcd/client/pkg/v3/logutil"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	_ "k8s.io/apiextensions-apiserver/pkg/apiserver/conversion"
@@ -34,9 +34,6 @@ import (
 	"sigs.k8s.io/kubectl-validate/pkg/validatorfactory"
 	"sigs.k8s.io/yaml"
 )
-
-//go:embed dist
-var staticFiles embed.FS
 
 type apiContext struct {
 	Username        string                       `json:"username"`
@@ -156,7 +153,7 @@ func loadUnstructured(document []byte) (unstructured.Unstructured, error) {
 	}
 	if factory, err := validatorfactory.New(
 		openapiclient.NewComposite(
-			openapiclient.NewLocalFiles("../schemas/openapi/v3"),
+			openapiclient.NewLocalFiles(data.Schemas, "schemas"),
 			openapiclient.NewHardcodedBuiltins("1.27"),
 		),
 	); err != nil {
@@ -378,7 +375,7 @@ func serveApi(c *gin.Context) {
 }
 
 func run(host string, port int) {
-	fs, err := fs.Sub(staticFiles, "dist")
+	fs, err := fs.Sub(data.StaticFiles, "dist")
 	if err != nil {
 		panic(err)
 	}
