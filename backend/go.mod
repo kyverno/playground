@@ -6,6 +6,7 @@ require (
 	github.com/evanphx/json-patch/v5 v5.6.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.0
+	github.com/go-logr/logr v1.2.4
 	github.com/kyverno/kyverno v1.10.0-alpha.2
 	go.etcd.io/etcd/client/pkg/v3 v3.6.0-alpha.0
 	k8s.io/api v0.27.1
@@ -110,7 +111,6 @@ require (
 	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.0 // indirect
 	github.com/go-ldap/ldap/v3 v3.4.4 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-logr/zapr v1.2.3 // indirect
 	github.com/go-openapi/analysis v0.21.4 // indirect
