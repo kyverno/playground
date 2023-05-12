@@ -2,7 +2,7 @@
   <v-tooltip
     :model-value="clicked"
     location="bottom"
-    text="local state resettet"
+    text="persisted input removed"
     :open-on-hover="false"
     content-class="no-opacity-tooltip"
   >
@@ -10,11 +10,12 @@
       <v-btn
         :variant="variant"
         :block="block"
+        title="removes the local persisted input"
         prepend-icon="mdi-delete"
         color="error"
         @click="reset"
         v-bind="props"
-        >Reset</v-btn
+        >Reset Input</v-btn
       >
     </template>
   </v-tooltip>

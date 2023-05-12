@@ -1,5 +1,6 @@
 import { useLocalStorage, usePreferredDark } from "@vueuse/core";
-import { watch } from "vue";
+import { Ref, ref, watch } from "vue";
+import { ContextTemplate, PolicyTemplate, ResourceTemplate } from "./assets/templates";
 
 export type Config = {
     editorThemes: { name: string; theme: string; }[];
@@ -12,13 +13,61 @@ watch(isDark, (dark: boolean) => {
     layoutTheme.value = dark ? 'dark' : 'light'
 })
 
+export const useBtnColor = () => {
+    if (layoutTheme.value === 'dark') return 'secondary'
+
+    return 'primary'
+}
+
 export const editorTheme = useLocalStorage('config:editorTheme', 'vs-dark')
 export const hideNoMatch = useLocalStorage('config:hideNoMatch', false)
 export const showOnboarding = useLocalStorage("onboarding:open", true)
 
-const policy = useLocalStorage<string>('persist:policy', null)
-const resource = useLocalStorage<string>('persist:resource', null)
-const context = useLocalStorage<string>('persist:context', null)
+export const loadedPolicy = useLocalStorage<string>('loaded:policy', PolicyTemplate);
+export const loadedContext = useLocalStorage<string>('loaded:context', ContextTemplate);
+export const loadedResource = useLocalStorage<string>('loaded:resource', ResourceTemplate);
+export const loadedState = useLocalStorage<string>('loaded:state', '')
+
+const persisted = useLocalStorage<string>('persist:list', '')
+
+export const getPersisted = (): Ref<string[]> => {
+    const list = ref<string[]>([])
+
+    watch(persisted, (content: string) => {
+        list.value = (content || '').split(';;').filter(l => !!l)
+    }, { immediate: true })
+
+    return list
+}
+
+export const createLocalInput = (name: string) => {
+    name = name.replaceAll(';;', ';').trim()
+    const policy = useLocalStorage<string>(`persist:policy:${name}`, null)
+    const resource = useLocalStorage<string>(`persist:resource:${name}`, null)
+    const context = useLocalStorage<string>(`persist:context:${name}`, null)
+
+    persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
+
+    return {
+        policy,
+        resource,
+        context,
+        name
+    }
+}
+
+export const removeLocalInput = (name: string) => {
+    const input = createLocalInput(name)
+
+    input.policy.value = null
+    input.resource.value = null
+    input.context.value = null
+
+    name = name.replaceAll(';;', ';').trim()
+    const list = getPersisted()
+
+    persisted.value = list.value.filter(l => l !== name).join(';;')
+}
 
 export const options = {
     onboarding: {
@@ -138,7 +187,8 @@ export const useConfig = () => ({
     showOnboarding,
     options,
     hideNoMatch,
-    policy,
-    resource,
-    context
+    resource: loadedResource,
+    policy: loadedPolicy,
+    context: loadedContext,
+    state: loadedState
 })

@@ -1,6 +1,6 @@
 <template>
     <input type="file" ref="input" style="display: none;" :accept="props.accept" @change="send" />
-    <v-btn @click="select" prepend-icon="mdi-upload" :loading="loading" :color="color">from file</v-btn>
+    <v-btn @click="select" prepend-icon="mdi-upload" :loading="loading" :color="color">file</v-btn>
 </template>
 
 <script setup lang="ts">

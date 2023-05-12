@@ -1,7 +1,14 @@
 <template>
   <v-dialog v-model="dialog" width="600px">
     <template v-slot:activator>
-      <v-btn @click="share" prepend-icon="mdi-share" :variant="variant" :block="block">Share</v-btn>
+      <v-btn
+        @click="share"
+        prepend-icon="mdi-share"
+        :variant="variant"
+        :block="block"
+        title="create a shareable URL with the current input"
+        >Share</v-btn
+      >
     </template>
 
     <v-card title="Share Policy">
@@ -45,14 +52,14 @@ const props = defineProps({
   resource: { type: String, default: "" },
   context: { type: String, default: "" },
   variant: { type: String as PropType<"outlined" | "text"> },
-  block: { type: Boolean }
+  block: { type: Boolean },
 });
 
 const dialog = ref<boolean>(false);
 const loading = ref<boolean>(false);
 const url = ref<string>("");
 
-const router = useRouter()
+const router = useRouter();
 
 const { copy, copied, isSupported } = useClipboard({ source: url });
 
@@ -66,7 +73,10 @@ const share = () => {
 
   const compressed = lzstring.compressToBase64(content);
 
-  url.value = window.location.origin + '/' + router.resolve({ name: 'home', query: { content: compressed } }).href;
+  url.value =
+    window.location.origin +
+    "/" +
+    router.resolve({ name: "home", query: { content: compressed } }).href;
   dialog.value = true;
   loading.value = false;
 };

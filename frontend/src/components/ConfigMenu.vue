@@ -30,6 +30,7 @@
           item-value="theme"
           class="mt-4"
         />
+        <v-btn @click="reset" prepend-icon="mdi-delete" block class="mt-4" variant="outlined" color="error">Reset Options</v-btn>
       </v-card-text>
     </v-card>
   </v-menu>
@@ -38,8 +39,17 @@
 <script setup lang="ts">
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import { useConfig } from "../config";
+import { usePreferredDark } from '@vueuse/core'
 
-const { options, layoutTheme, editorTheme } = useConfig()
+const { options, layoutTheme, editorTheme, showOnboarding } = useConfig()
+
+const isDark = usePreferredDark()
+
+const reset = () => {
+  layoutTheme.value = isDark ? 'dark' : 'light';
+  editorTheme.value = 'vs-dark';
+  showOnboarding.value = true;
+}
 
 const display = useDisplay();
 </script>

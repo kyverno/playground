@@ -5,6 +5,7 @@ import PrimeButton from "@/components/PrimeButton.vue";
 import ShareButton from "@/components/ShareButton.vue";
 import SaveButton from "@/components/SaveButton.vue";
 import ResetButton from "@/components/ResetButton.vue";
+import LoadButton from "@/components/LoadButton.vue";
 import TemplateButton from "@/components/TemplateButton.vue";
 
 export {
@@ -15,5 +16,6 @@ export {
     ShareButton,
     SaveButton,
     ResetButton,
+    LoadButton,
     TemplateButton
 }
