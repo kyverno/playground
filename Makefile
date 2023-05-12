@@ -104,7 +104,8 @@ build-frontend: build-clean
 .PHONY: build-backend
 build-backend: build-frontend
 	@echo Building backend... >&2
-	@cp -r frontend/dist backend/dist
+	@rm -rf backend/data/dist && cp -r frontend/dist backend/data/dist
+	@rm -rf backend/data/schemas && cp -r schemas/openapi/v3 backend/data/schemas
 	@cd backend && go mod tidy && go build .
 
 .PHONY: build-all
