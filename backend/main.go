@@ -153,7 +153,7 @@ func loadUnstructured(document []byte) (unstructured.Unstructured, error) {
 	}
 	if factory, err := validatorfactory.New(
 		openapiclient.NewComposite(
-			openapiclient.NewLocalFiles(data.Schemas, "schemas"),
+			openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
 			openapiclient.NewHardcodedBuiltins("1.27"),
 		),
 	); err != nil {
@@ -375,7 +375,7 @@ func serveApi(c *gin.Context) {
 }
 
 func run(host string, port int) {
-	fs, err := fs.Sub(data.StaticFiles, "dist")
+	fs, err := fs.Sub(data.StaticFiles(), "dist")
 	if err != nil {
 		panic(err)
 	}

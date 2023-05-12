@@ -92,33 +92,39 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 
 .PHONY: build-clean
 build-clean:
+	@echo Cleaning build... >&2
 	@rm -rf frontend/dist
-	@rm -rf backend/dist
 	@rm -rf backend/backend
+	@rm -rf backend/data/dist
+	@rm -rf backend/data/schemas
 
 .PHONY: build-frontend
-build-frontend: build-clean
+build-frontend:
 	@echo Building frontend... >&2
 	@cd frontend && npm install && npm run build
 
-.PHONY: build-backend
-build-backend: build-frontend
-	@echo Building backend... >&2
+.PHONY: build-backend-assets
+build-backend-assets: build-frontend
+	@echo Building backend assets... >&2
 	@rm -rf backend/data/dist && cp -r frontend/dist backend/data/dist
 	@rm -rf backend/data/schemas && cp -r schemas/openapi/v3 backend/data/schemas
+
+.PHONY: build-backend
+build-backend: build-backend-assets
+	@echo Building backend... >&2
 	@cd backend && go mod tidy && go build .
 
 .PHONY: build-all
 build-all: build-frontend build-backend
 
 .PHONY: ko-build
-ko-build: $(KO) build-all
+ko-build: $(KO) build-backend-assets
 	@echo Build image with ko... >&2
 	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(KO_REGISTRY) \
 		$(KO) build . --preserve-import-paths --tags=$(KO_TAGS) --platform=$(LOCAL_PLATFORM)
 
 .PHONY: ko-publish
-ko-publish: $(KO) build-all ## Build and publish playground image (with ko)
+ko-publish: $(KO) build-backend-assets ## Build and publish playground image (with ko)
 	@echo Publishing image with ko... >&2
 	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(REPO_PLAYGROUND) \
 		$(KO) build . --bare --tags=$(KO_TAGS) --platform=$(KO_PLATFORMS)
