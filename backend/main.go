@@ -56,6 +56,7 @@ type apiResponse struct {
 	Mutation          []EngineResponse            `json:"mutation"`
 	ImageVerification []EngineResponse            `json:"imageVerification"`
 	Validation        []EngineResponse            `json:"validation"`
+	Generation        []EngineResponse            `json:"generation"`
 }
 
 type EngineResponse struct {
@@ -355,6 +356,15 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 				} else {
 					response := engine.Validate(ctx, policyContext)
 					apiResponse.Validation = append(apiResponse.Validation, ConvertEngineResponse(response))
+				}
+			}
+			// generate
+			for _, policy := range policies {
+				if policyContext, err := getContext(policy); err != nil {
+					return nil, err
+				} else {
+					response := engine.Generate(ctx, policyContext)
+					apiResponse.Generation = append(apiResponse.Generation, ConvertEngineResponse(response))
 				}
 			}
 		}
