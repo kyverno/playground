@@ -8,8 +8,10 @@ import (
 	"io/fs"
 	"net/http"
 
+	jsonpatch "github.com/evanphx/json-patch/v5"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
 	kyvernov2alpha1 "github.com/kyverno/kyverno/api/kyverno/v2alpha1"
@@ -20,6 +22,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	"github.com/kyverno/kyverno/pkg/registryclient"
+	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
 	_ "go.etcd.io/etcd/client/pkg/v3/logutil"
 	authenticationv1 "k8s.io/api/authentication/v1"
@@ -313,7 +316,37 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 				if policyContext, err := getContext(policy); err != nil {
 					return nil, err
 				} else {
-					response, _ := engine.VerifyAndPatchImages(ctx, policyContext)
+					response, verifiedImageData := engine.VerifyAndPatchImages(ctx, policyContext)
+					// TODO: we apply patches manually because the engine doesn't
+					patches := response.GetPatches()
+					if !verifiedImageData.IsEmpty() {
+						annotationPatches, err := verifiedImageData.Patches(len(resource.GetAnnotations()) != 0, logr.Discard())
+						if err != nil {
+							return nil, err
+						} else {
+							// add annotation patches first
+							patches = append(annotationPatches, patches...)
+						}
+					}
+					if len(patches) != 0 {
+						patch := jsonutils.JoinPatches(patches...)
+						decoded, err := jsonpatch.DecodePatch(patch)
+						if err != nil {
+							return nil, err
+						}
+						options := &jsonpatch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
+						resourceBytes, err := resource.MarshalJSON()
+						if err != nil {
+							return nil, err
+						}
+						patchedResourceBytes, err := decoded.ApplyWithOptions(resourceBytes, options)
+						if err != nil {
+							return nil, err
+						}
+						if err := response.PatchedResource.UnmarshalJSON(patchedResourceBytes); err != nil {
+							return nil, err
+						}
+					}
 					resource = response.PatchedResource
 					apiResponse.ImageVerification = append(apiResponse.ImageVerification, ConvertEngineResponse(response))
 				}
