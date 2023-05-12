@@ -1,5 +1,5 @@
 import { useLocalStorage, usePreferredDark } from "@vueuse/core";
-import { reactive, watch } from "vue";
+import { watch } from "vue";
 
 export type Config = {
     editorThemes: { name: string; theme: string; }[];
@@ -13,15 +13,17 @@ watch(isDark, (dark: boolean) => {
 })
 
 export const editorTheme = useLocalStorage('config:editorTheme', 'vs-dark')
-
 export const hideNoMatch = useLocalStorage('config:hideNoMatch', false)
+export const showOnboarding = useLocalStorage("onboarding:open", true)
 
+const policy = useLocalStorage<string>('persist:policy', null)
+const resource = useLocalStorage<string>('persist:resource', null)
+const context = useLocalStorage<string>('persist:context', null)
 
-export const policyLS = useLocalStorage<string>('persist:policy', null)
-export const resourceLS = useLocalStorage<string>('persist:resource', null)
-export const contextLS = useLocalStorage<string>('persist:context', null)
-
-export const options = reactive({
+export const options = {
+    onboarding: {
+        text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.',
+    },
     layoutThemes: ['light', 'dark'],
     editorThemes: [
         { name: 'VS Dark', theme: 'vs-dark' }, 
@@ -128,14 +130,15 @@ export const options = reactive({
             ]
         },
     }
-})
+}
 
 export const useConfig = () => ({
     editorTheme,
     layoutTheme,
+    showOnboarding,
     options,
     hideNoMatch,
-    policy: policyLS,
-    resource: resourceLS,
-    context: contextLS
+    policy,
+    resource,
+    context
 })

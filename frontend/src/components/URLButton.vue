@@ -4,7 +4,7 @@
       <v-btn v-bind="props" prepend-icon="mdi-web">from URL</v-btn>
     </template>
 
-    <v-card>
+    <v-card :theme="layoutTheme">
       <v-card-text>
         <v-text-field label="URL" v-model="url" />
       </v-card-text>
@@ -18,6 +18,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
+import { layoutTheme } from "@/config"
 
 const emit = defineEmits(["click"]);
 

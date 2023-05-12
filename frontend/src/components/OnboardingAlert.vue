@@ -1,12 +1,11 @@
 <template>
-  <v-row v-if="open">
+  <v-row v-if="showOnboarding">
     <v-col>
-      <v-alert type="info" variant="outlined" prominent v-model="open">
-        Welcome to Kyverno Playground, please note that in the current version only validation
-        policies are supported
+      <v-alert type="info" variant="outlined" prominent>
+        {{ options.onboarding.text }}
 
         <template #append>
-          <v-btn flat color="info" :min-width="150" size="large"  @click="() => open = false">Close</v-btn>
+          <v-btn flat color="info" :min-width="150" size="large"  @click="() => showOnboarding = false">Close</v-btn>
         </template>
       </v-alert>
     </v-col>
@@ -14,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { useLocalStorage } from "@vueuse/core";
+import { useConfig } from "@/config";
 
-const open = useLocalStorage("onboarding:open", true);
+const { options, showOnboarding } = useConfig();
 </script>

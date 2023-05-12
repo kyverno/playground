@@ -4,22 +4,29 @@
       <v-btn v-bind="props" prepend-icon="mdi-note-text">from template</v-btn>
     </template>
     <v-list>
-      <v-list-item v-for="(item, key) in templates" :key="key" @click="emit('select', item.template)" :title="item.title" />
+      <v-list-item v-for="(item, key) in templates" :key="key" @click="() => loadTemplate(item)" :title="item" />
     </v-list>
   </v-menu>
 </template>
 
 <script setup lang="ts">
-import { PodTemplate, DeploymentTemplate, ServiceTemplate, IngressTemplate, ConfigMapTemplate, SecretTemplate } from "@/assets/templates";
 
 const emit = defineEmits(['select'])
 
 const templates = [
-    { title: 'Pod', template: PodTemplate },
-    { title: 'Deployment', template: DeploymentTemplate },
-    { title: 'Service', template: ServiceTemplate },
-    { title: 'Ingress', template: IngressTemplate },
-    { title: 'ConfigMap', template: ConfigMapTemplate },
-    { title: 'Secret', template: SecretTemplate },
+  'Pod',
+  'Deployment',
+  'Service',
+  'Ingress',
+  'ConfigMap',
+  'Secret'
 ]
+
+const loadTemplate = (template: string) => {
+  return fetch(`/templates/${template.toLocaleLowerCase()}.yaml`).then((resp) => {
+    if (resp.status !== 200) return
+
+    return resp.text().then(content => emit('select', content))
+  }).catch(console.error)
+}
 </script>
