@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import * as lzstring from "lz-string";
 
@@ -189,31 +189,34 @@ const handleError = (error: Error) => {
 
 const drawer = ref<boolean>(false);
 
+watchEffect(() => {
+  const query = route.query.content as string
+  if (!query) return;
+
+  try {
+    const content = JSON.parse(lzstring.decompressFromBase64(query)) as {
+      policy: string;
+      resource: string;
+      context: string;
+    };
+
+    policy.value = content.policy;
+    resource.value = content.resource;
+    context.value = content.context;
+
+    loadedPolicy.value = content.policy;
+    loadedResource.value = content.resource;
+    loadedContext.value = content.context;
+
+    router.replace({ ...route, query: {} });
+  } catch (err) {
+    console.error("could not parse content string", err);
+  }
+})
+
 onMounted(() => {
-  const query = route.query.content as string;
-
-  if (query) {
-    try {
-      const content = JSON.parse(lzstring.decompressFromBase64(query)) as {
-        policy: string;
-        resource: string;
-        context: string;
-      };
-
-      policy.value = content.policy;
-      resource.value = content.resource;
-      context.value = content.context;
-
-      loadedPolicy.value = content.policy;
-      loadedResource.value = content.resource;
-      loadedContext.value = content.context;
-
-      router.replace({ ...route, query: {} });
-
-      return;
-    } catch (err) {
-      console.error("could not parse content string", err);
-    }
+  if (route.query.content) {
+    return;
   }
 
   if (config.policy.value) {
