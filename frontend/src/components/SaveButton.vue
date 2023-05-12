@@ -1,47 +1,118 @@
 <template>
-  <v-tooltip
-    :model-value="persisted"
-    location="bottom"
-    text="persisted current state locally"
-    :open-on-hover="false"
-    content-class="no-opacity-tooltip"
-  >
+  <v-menu location="bottom" :close-on-content-click="false" v-model="menu">
     <template v-slot:activator="{ props }">
       <v-btn
         prepend-icon="mdi-content-save"
-        :variant="variant"
-        :block="block"
-        @click="persist"
+        :class="btnClass"
         v-bind="props"
+        :block="block"
+        :variant="variant"
         >Save</v-btn
       >
     </template>
-  </v-tooltip>
+    <v-list class="py-0">
+      <template v-for="(item) in list" :key="item">
+        <v-list-item class="py-0 pl-0">
+          <v-btn
+            :color="config.state.value === item ? color : undefined"
+            prepend-icon="mdi-content-save"
+            variant="text"
+            block
+            @click="persist(item)"
+            class="mr-2 text-left justify-start"
+            >{{ item }}</v-btn
+          >
+        </v-list-item>
+        <v-divider />
+      </template>
+        <v-list-item class="py-0 pl-0">
+          <v-dialog v-model="dialog" width="600px" transition="fade-transition">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                prepend-icon="mdi-plus"
+                variant="text"
+                block
+                v-bind="props"
+                class="mr-2 text-left justify-start"
+                >New State</v-btn
+              >
+            </template>
+
+            <v-card title="Persist your current Input">
+              <v-card-text>
+                <v-text-field label="Name" v-model="name" />
+              </v-card-text>
+              <v-card-actions>
+                <v-btn @click="dialog = false">Close</v-btn>
+                <v-spacer />
+                <v-btn @click="add" :color="color" :disabled="!name">Persist</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-list-item>
+    </v-list>
+  </v-menu>
+  <v-snackbar v-model="persisted" color="success">Changes persisted</v-snackbar>
 </template>
+
 <script setup lang="ts">
-import { PropType, ref } from "vue";
-import { useConfig } from "@/config"
+import { PropType, ref, watch } from "vue";
+import { createLocalInput, useConfig, getPersisted, useBtnColor } from "@/config"
+import { computed } from "vue";
 
 const props = defineProps({
   policy: { type: String, default: "" },
   resource: { type: String, default: "" },
   context: { type: String, default: "" },
   variant: { type: String as PropType<"outlined" | "text"> },
-  block: { type: Boolean }
+  block: { type: Boolean },
+  btnClass: { type: String }
 });
 
 const persisted = ref<boolean>(false);
+const dialog = ref<boolean>(false);
+const menu = ref<boolean>(false);
+const name = ref<string>("");
 
 const config = useConfig()
+const persistedList = getPersisted()
+const color = useBtnColor()
 
-const persist = () => {
+const list = computed(() => {
+  if (!config.state.value) return persistedList.value
+
+  return [...new Set([config.state.value, ...persistedList.value])]
+})
+
+
+const persist = (name: string) => {
+  const input = createLocalInput(name)
+
+  input.policy.value = props.policy
+  input.resource.value = props.resource
+  input.context.value = props.context
+
   config.policy.value = props.policy
   config.resource.value = props.resource
   config.context.value = props.context
+  config.state.value = input.name
 
+  menu.value = false
   persisted.value = true
   setTimeout(() => {
     persisted.value = false
   }, 2000)
 }
+
+const add = () => {
+  persist(name.value)
+
+  dialog.value = false
+} 
+
+watch(dialog, (open) => {
+  if (open) return
+
+  name.value = ''
+})
 </script>

@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="600px" :theme="layoutTheme">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" prepend-icon="mdi-web">from URL</v-btn>
+      <v-btn v-bind="props" prepend-icon="mdi-web">URL</v-btn>
     </template>
 
     <v-card :theme="layoutTheme">

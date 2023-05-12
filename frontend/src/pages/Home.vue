@@ -27,15 +27,14 @@
           >
           <ShareButton :policy="policy" :resource="resource" :context="context" />
           <SaveButton :policy="policy" :resource="resource" :context="context" />
-          <ResetButton @on-reset="reset" />
+          <LoadButton v-model:policy="policy" v-model:resource="resource" v-model:context="context" btn-class="ml-2" />
         </template>
         <ConfigMenu />
         <MobileMenu
-          :policy="policy"
-          :resource="resource"
-          :context="context"
-          @on-reset="reset"
-          v-if="display.smAndDown"
+          v-model:policy="policy"
+          v-model:resource="resource"
+          v-model:context="context"
+          v-if="display.smAndDown.value"
         />
       </template>
     </v-app-bar>
@@ -49,7 +48,7 @@
               <EditorToolbar
                 title="ClusterPolicy"
                 v-model="policy"
-                :restore-value="loadedPolicy"
+                :restore-value="config.policy.value"
               />
               <PolicyEditor v-model="policy" />
             </v-card>
@@ -59,7 +58,7 @@
               <EditorToolbar
                 title="Context"
                 v-model="context"
-                :restore-value="loadedContext"
+                :restore-value="config.context.value"
               />
               <ContextEditor v-model="context" />
             </v-card>
@@ -67,7 +66,7 @@
               <EditorToolbar
                 title="Resource"
                 v-model="resource"
-                :restore-value="loadedResource"
+                :restore-value="config.resource.value"
               >
                 <template #prepend-actions>
                   <TemplateButton @select="(template: string) => resource = template" />
@@ -88,6 +87,9 @@
       </v-container>
       <ErrorBar v-model="showError" :text="errorText" />
       <ValidationDialog v-model="showResults" :results="results" :policy="policy" />
+      <v-card v-if="config.state.value" style="position: fixed; bottom: 0; left: 0;">
+        <v-card-text class="bg-grey-darken-2">Loaded State: {{ config.state.value }}</v-card-text>
+      </v-card>
     </v-main>
   </v-app>
 </template>
@@ -109,7 +111,7 @@ import OnboardingAlert from "@/components/OnboardingAlert.vue";
 
 import {
   TemplateButton,
-  ResetButton,
+  LoadButton,
   SaveButton,
   ShareButton,
   PrimeButton,
@@ -131,18 +133,15 @@ const policy = ref<string>(PolicyTemplate);
 const context = ref<string>(ContextTemplate);
 const resource = ref<string>(ResourceTemplate);
 
-const loadedContext = ref<string>("");
-const loadedPolicy = ref<string>(PolicyTemplate);
-const loadedResource = ref<string>(ResourceTemplate);
-
 const config = useConfig();
 
 const setExample = (values: [string, string]) => {
   policy.value = values[0];
   resource.value = values[1];
 
-  loadedPolicy.value = values[0];
-  loadedResource.value = values[1];
+  config.policy.value = values[0];
+  config.resource.value = values[1];
+  config.state.value = ''
 };
 
 const showResults = ref<boolean>(false);
@@ -151,27 +150,6 @@ const results = ref<EngineResponse>({ policies: [], resources: [] });
 const handleResponse = (response: EngineResponse) => {
   results.value = response;
   showResults.value = true;
-};
-
-const reset = () => {
-  policy.value = PolicyTemplate;
-  context.value = ContextTemplate;
-  resource.value = ResourceTemplate;
-
-  config.policy.value = null;
-  config.context.value = null;
-  config.resource.value = null;
-
-  loadedPolicy.value = PolicyTemplate;
-  loadedResource.value = ResourceTemplate;
-
-  results.value = { policies: [], resources: [] };
-  showResults.value = false;
-
-  errorText.value = "";
-  showError.value = false;
-
-  router.push({ ...route, query: {} });
 };
 
 const showError = ref<boolean>(false);
@@ -204,9 +182,10 @@ watchEffect(() => {
     resource.value = content.resource;
     context.value = content.context;
 
-    loadedPolicy.value = content.policy;
-    loadedResource.value = content.resource;
-    loadedContext.value = content.context;
+    config.policy.value = content.policy;
+    config.resource.value = content.resource;
+    config.context.value = content.context;
+    config.state.value = ''
 
     router.replace({ ...route, query: {} });
   } catch (err) {
