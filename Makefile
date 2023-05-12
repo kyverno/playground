@@ -91,34 +91,34 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 #########
 
 .PHONY: build-clean
-build-clean:
-	@echo Cleaning build... >&2
+build-clean: ## Clean built files
+	@echo Cleaning built files... >&2
 	@rm -rf frontend/dist
 	@rm -rf backend/backend
 	@rm -rf backend/data/dist
 	@rm -rf backend/data/schemas
 
 .PHONY: build-frontend
-build-frontend:
+build-frontend: ## Build frontend
 	@echo Building frontend... >&2
 	@cd frontend && npm install && npm run build
 
 .PHONY: build-backend-assets
-build-backend-assets: build-frontend
+build-backend-assets: build-frontend ## Build backend assets
 	@echo Building backend assets... >&2
 	@rm -rf backend/data/dist && cp -r frontend/dist backend/data/dist
 	@rm -rf backend/data/schemas && cp -r schemas/openapi/v3 backend/data/schemas
 
 .PHONY: build-backend
-build-backend: build-backend-assets
+build-backend: build-backend-assets ## Build backend
 	@echo Building backend... >&2
 	@cd backend && go mod tidy && go build .
 
 .PHONY: build-all
-build-all: build-frontend build-backend
+build-all: build-frontend build-backend ## Build frontend and backend
 
 .PHONY: ko-build
-ko-build: $(KO) build-backend-assets
+ko-build: $(KO) build-backend-assets ## Build playground image (with ko)
 	@echo Build image with ko... >&2
 	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(KO_REGISTRY) \
 		$(KO) build . --preserve-import-paths --tags=$(KO_TAGS) --platform=$(LOCAL_PLATFORM)
@@ -130,7 +130,7 @@ ko-publish: $(KO) build-backend-assets ## Build and publish playground image (wi
 		$(KO) build . --bare --tags=$(KO_TAGS) --platform=$(KO_PLATFORMS)
 
 .PHONY: docker-build
-docker-build:
+docker-build: ## Build playground image (with docker)
 	@docker buildx build --progress plane --platform $(PLATFORMS) --tag "$(REGISTRY)/$(REPO)/playground:latest" . --build-arg LD_FLAGS=$(LD_FLAGS)
 
 #######
@@ -138,7 +138,7 @@ docker-build:
 #######
 
 .PHONY: run
-run: build-backend
+run: build-backend-assets ## Run locally
 	@echo Run backend... >&2
 	@cd backend && go run .
 
