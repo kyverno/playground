@@ -22,19 +22,26 @@
 </template>
 <script setup lang="ts">
 import { PropType, ref } from "vue";
+import { useState } from "@/composables";
+import { ContextTemplate, PolicyTemplate, ResourceTemplate } from "@/assets/templates";
 
 const clicked = ref<boolean>(false);
-
-const emit = defineEmits(['on-reset'])
 
 defineProps({
   variant: { type: String as PropType<"outlined" | "text"> },
   block: { type: Boolean }
 })
 
+const { policy, context, resource, name } = useState()
+
 const reset = () => {
   clicked.value = true
-  emit('on-reset')
+  
+  policy.value = PolicyTemplate
+  resource.value = ResourceTemplate
+  context.value = ContextTemplate
+  name.value = ''
+
   setTimeout(() => {
     clicked.value = false
   }, 2000)

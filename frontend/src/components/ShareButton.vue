@@ -28,7 +28,7 @@
           <template v-slot:activator="{ props }">
             <v-btn
               variant="tonal"
-              color="secondary"
+              :color="btnColor"
               @click="copy(url)"
               :disabled="!isSupported"
               v-bind="props"
@@ -46,6 +46,7 @@ import * as lzstring from "lz-string";
 import { useRouter } from "vue-router";
 import { useClipboard } from "@vueuse/core";
 import { PropType } from "vue";
+import { btnColor } from '@/config'
 
 const props = defineProps({
   policy: { type: String, default: "" },

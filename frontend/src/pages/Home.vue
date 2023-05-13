@@ -48,7 +48,7 @@
               <EditorToolbar
                 title="ClusterPolicy"
                 v-model="policy"
-                :restore-value="config.policy.value"
+                :restore-value="state.policy.value"
               />
               <PolicyEditor v-model="policy" />
             </v-card>
@@ -58,7 +58,7 @@
               <EditorToolbar
                 title="Context"
                 v-model="context"
-                :restore-value="config.context.value"
+                :restore-value="state.context.value"
               />
               <ContextEditor v-model="context" />
             </v-card>
@@ -66,7 +66,7 @@
               <EditorToolbar
                 title="Resource"
                 v-model="resource"
-                :restore-value="config.resource.value"
+                :restore-value="state.resource.value"
               >
                 <template #prepend-actions>
                   <TemplateButton @select="(template: string) => resource = template" />
@@ -87,8 +87,8 @@
       </v-container>
       <ErrorBar v-model="showError" :text="errorText" />
       <ValidationDialog v-model="showResults" :results="results" :policy="policy" />
-      <v-card v-if="config.state.value" style="position: fixed; bottom: 0; left: 0;">
-        <v-card-text class="bg-grey-darken-2">Loaded State: {{ config.state.value }}</v-card-text>
+      <v-card v-if="state.name.value" style="position: fixed; bottom: 0; left: 0;">
+        <v-card-text class="bg-grey-darken-2">Loaded State: {{ state.name.value }}</v-card-text>
       </v-card>
     </v-main>
   </v-app>
@@ -99,7 +99,8 @@ import { ref, watchEffect } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import * as lzstring from "lz-string";
 
-import { layoutTheme, useConfig } from "@/config";
+import { layoutTheme } from "@/config";
+import { useState } from "@/composables";
 import ErrorBar from "@/components/ErrorBar.vue";
 import EditorToolbar from "@/components/EditorToolbar.vue";
 import ExampleDrawer from "@/components/ExampleDrawer.vue";
@@ -133,15 +134,15 @@ const policy = ref<string>(PolicyTemplate);
 const context = ref<string>(ContextTemplate);
 const resource = ref<string>(ResourceTemplate);
 
-const config = useConfig();
+const state = useState()
 
 const setExample = (values: [string, string]) => {
   policy.value = values[0];
   resource.value = values[1];
 
-  config.policy.value = values[0];
-  config.resource.value = values[1];
-  config.state.value = ''
+  state.policy.value = values[0];
+  state.resource.value = values[1];
+  state.name.value = ''
 };
 
 const showResults = ref<boolean>(false);
@@ -182,10 +183,10 @@ watchEffect(() => {
     resource.value = content.resource;
     context.value = content.context;
 
-    config.policy.value = content.policy;
-    config.resource.value = content.resource;
-    config.context.value = content.context;
-    config.state.value = ''
+    state.policy.value = content.policy;
+    state.resource.value = content.resource;
+    state.context.value = content.context;
+    state.name.value = ''
 
     router.replace({ ...route, query: {} });
   } catch (err) {
@@ -198,14 +199,14 @@ onMounted(() => {
     return;
   }
 
-  if (config.policy.value) {
-    policy.value = config.policy.value;
+  if (state.policy.value) {
+    policy.value = state.policy.value;
   }
-  if (config.resource.value) {
-    resource.value = config.resource.value;
+  if (state.resource.value) {
+    resource.value = state.resource.value;
   }
-  if (config.context.value) {
-    context.value = config.context.value;
+  if (state.context.value) {
+    context.value = state.context.value;
   }
 });
 </script>

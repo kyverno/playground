@@ -11,14 +11,14 @@
       <v-card-actions>
         <v-btn @click="dialog = false">Close</v-btn>
         <v-spacer />
-        <v-btn @click="onLoad" color="primary" :loading="loading">Load Content</v-btn>
+        <v-btn @click="onLoad" :color="btnColor" :loading="loading">Load Content</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { layoutTheme } from "@/config"
+import { layoutTheme, btnColor } from "@/config"
 
 const emit = defineEmits(["click"]);
 
