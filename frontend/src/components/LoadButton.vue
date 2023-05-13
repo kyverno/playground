@@ -51,7 +51,8 @@
 
 <script setup lang="ts">
 import { ContextTemplate, PolicyTemplate, ResourceTemplate } from "@/assets/templates";
-import { createLocalInput, removeLocalInput, getPersisted, useConfig } from "@/config";
+import { useState } from "@/composables";
+import { createInput, removeInput, getPersisted } from "@/composables";
 import { ref } from "vue";
 
 defineProps({
@@ -69,41 +70,41 @@ const list = getPersisted();
 
 const emit = defineEmits(["update:policy", "update:resource", "update:context"]);
 
-const config = useConfig();
+const { name: state, policy, resource, context } = useState();
 
 const loadDefault = () => {
   emit("update:policy", PolicyTemplate);
-  config.policy.value = PolicyTemplate;
+  policy.value = PolicyTemplate;
 
   emit("update:resource", ResourceTemplate);
-  config.resource.value = ResourceTemplate;
+  resource.value = ResourceTemplate;
 
   emit("update:context", ContextTemplate);
-  config.context.value = ContextTemplate;
+  context.value = ContextTemplate;
 
   menu.value = false;
-  config.state.value = '';
+  state.value = '';
 };
 
 const load = (name: string) => {
-  const input = createLocalInput(name);
+  const input = createInput(name);
 
   if (input.policy.value) {
     emit("update:policy", input.policy.value);
-    config.policy.value = input.policy.value;
+    policy.value = input.policy.value;
   }
   if (input.resource.value) {
     emit("update:resource", input.resource.value);
-    config.resource.value = input.resource.value;
+    resource.value = input.resource.value;
   }
   if (input.context.value) {
     emit("update:context", input.context.value);
-    config.context.value = input.context.value;
+    context.value = input.context.value;
   }
 
   menu.value = false;
-  config.state.value = input.name;
+  state.value = input.name;
 };
 
-const remove = (name: string) => removeLocalInput(name);
+const remove = (name: string) => removeInput(name);
 </script>

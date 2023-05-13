@@ -14,7 +14,7 @@
       <template v-for="(item) in list" :key="item">
         <v-list-item class="py-0 pl-0">
           <v-btn
-            :color="config.state.value === item ? color : undefined"
+            :color="state === item ? btnColor : undefined"
             prepend-icon="mdi-content-save"
             variant="text"
             block
@@ -45,7 +45,7 @@
               <v-card-actions>
                 <v-btn @click="dialog = false">Close</v-btn>
                 <v-spacer />
-                <v-btn @click="add" :color="color" :disabled="!name">Persist</v-btn>
+                <v-btn @click="add" :color="btnColor" :disabled="!name">Persist</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -57,7 +57,8 @@
 
 <script setup lang="ts">
 import { PropType, ref, watch } from "vue";
-import { createLocalInput, useConfig, getPersisted, useBtnColor } from "@/config"
+import { btnColor } from "@/config"
+import { createInput, getPersisted, useState } from "@/composables";
 import { computed } from "vue";
 
 const props = defineProps({
@@ -74,28 +75,27 @@ const dialog = ref<boolean>(false);
 const menu = ref<boolean>(false);
 const name = ref<string>("");
 
-const config = useConfig()
+const { name: state, policy, resource, context } = useState()
 const persistedList = getPersisted()
-const color = useBtnColor()
 
 const list = computed(() => {
-  if (!config.state.value) return persistedList.value
+  if (!state.value) return persistedList.value
 
-  return [...new Set([config.state.value, ...persistedList.value])]
+  return [...new Set([state.value, ...persistedList.value])]
 })
 
 
 const persist = (name: string) => {
-  const input = createLocalInput(name)
+  const input = createInput(name)
 
   input.policy.value = props.policy
   input.resource.value = props.resource
   input.context.value = props.context
 
-  config.policy.value = props.policy
-  config.resource.value = props.resource
-  config.context.value = props.context
-  config.state.value = input.name
+  policy.value = props.policy
+  resource.value = props.resource
+  context.value = props.context
+  state.value = input.name
 
   menu.value = false
   persisted.value = true

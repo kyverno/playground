@@ -39,7 +39,7 @@
           <template v-slot:activator="{ props }">
             <v-btn
               variant="tonal"
-              color="secondary"
+              :color="btnColor"
               @click="copy(policy)"
               :disabled="!isSupported"
               v-bind="props"
@@ -60,7 +60,7 @@ import DownloadBtn from "./DownloadBtn.vue";
 import { PropType } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { computed } from "vue";
-import { useConfig } from "@/config";
+import { useConfig, btnColor } from "@/config";
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
