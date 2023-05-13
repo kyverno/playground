@@ -383,6 +383,11 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 					return nil, err
 				} else {
 					response := eng.Generate(ctx, policyContext)
+					if len(response.PolicyResponse.Rules) == 0 {
+						apiResponse.Generation = append(apiResponse.Generation, ConvertEngineResponse(response))
+						continue
+					}
+
 					contr := generate.NewGenerateControllerWithOnlyClient(dclient.NewEmptyFakeClient(), eng)
 					gr := toGenerateRequest(policy, resource)
 
