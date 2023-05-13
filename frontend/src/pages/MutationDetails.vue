@@ -1,28 +1,15 @@
 <template>
   <v-app :theme="layoutTheme">
-    <v-app-bar flat border>
-      <div class="toolbar-container">
-        <div class="py-1 app-logo">
-          <v-img src="/kyverno-logo.png" />
-          <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px"
-            >v1.10</v-chip
-          >
-        </div>
-        <h1 class="text-h4 d-none d-md-inline">Playground</h1>
-      </div>
-      <template v-slot:append>
-        <v-btn
-          icon="mdi-github"
-          href="https://github.com/kyverno/playground"
-          target="_blank"
-          class="mr-2"
-          title="GitHub: Kyverno Playground"
-        />
-        <ConfigMenu />
-        <v-btn @click="close" prepend-icon="mdi-close" class="d-md-flex d-none">Close Window</v-btn>
-        <v-btn @click="close" icon="mdi-close" class="d-flext d-md-none"></v-btn>
+    <AppBar>
+      <template #append-actions>
+        <v-btn @click="close" prepend-icon="mdi-close" class="d-md-flex d-none"
+          >Close Window</v-btn
+        >
       </template>
-    </v-app-bar>
+      <template #mobile-actions>
+        <v-btn @click="close" icon="mdi-close"></v-btn>
+      </template>
+    </AppBar>
     <v-main :class="layoutTheme === 'light' ? 'bg-grey-lighten-2' : undefined">
       <v-container fluid>
         <v-row>
@@ -33,7 +20,12 @@
                   Details not found
 
                   <template #append>
-                    <v-btn flat color="error" :min-width="150" size="large" @click="close"
+                    <v-btn
+                      flat
+                      color="error"
+                      :min-width="150"
+                      size="large"
+                      @click="close"
                       >Close</v-btn
                     >
                   </template>
@@ -44,7 +36,9 @@
                   <v-container fluid>
                     <v-row>
                       <v-col md="3" cols="6"
-                        ><span class="d-inline-block font-weight-bold" style="width: 50px"
+                        ><span
+                          class="d-inline-block font-weight-bold"
+                          style="width: 50px"
                           >Policy</span
                         >
                         {{ details.policy }}</v-col
@@ -58,14 +52,19 @@
                         {{ details.apiVersion }}/{{ details.kind }}</v-col
                       >
                       <v-col cols="3" class="d-none d-md-flex align-center"
-                        ><span class="d-inline-block font-weight-bold" style="width: 50px"
+                        ><span
+                          class="d-inline-block font-weight-bold"
+                          style="width: 50px"
                           >Status</span
-                        ><StatusChip :status="details.status" />
+                        >
+                        <StatusChip :status="details.status" />
                       </v-col>
                     </v-row>
                     <v-row class="mt-0">
                       <v-col md="3" cols="6"
-                        ><span class="d-inline-block font-weight-bold" style="width: 50px"
+                        ><span
+                          class="d-inline-block font-weight-bold"
+                          style="width: 50px"
                           >Rule</span
                         >{{ details.rule }}</v-col
                       >
@@ -79,10 +78,13 @@
                     </v-row>
                     <v-row>
                       <v-col>
-                        <span class="d-inline-block font-weight-bold" style="width: 50px"
+                        <span
+                          class="d-inline-block font-weight-bold"
+                          style="width: 50px"
                           >Status</span
-                        ><StatusChip :status="details.status"
-                      /></v-col>
+                        >
+                        <StatusChip :status="details.status" />
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -107,16 +109,15 @@
 </template>
 
 <script setup lang="ts">
-import { layoutTheme, editorTheme } from "@/config";
-
-import ConfigMenu from "@/components/ConfigMenu.vue";
-import DiffEditor from "@/components/DiffEditor.vue";
-import StatusChip from "@/components/StatusChip.vue";
+import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useSessionStorage } from "@vueuse/core";
 import { RuleStatus } from "@/types";
-import { ref } from "vue";
-import { watch } from "vue";
+import { layoutTheme, editorTheme } from "@/config";
+
+import DiffEditor from "@/components/DiffEditor.vue";
+import StatusChip from "@/components/StatusChip.vue";
+import AppBar from "@/components/AppBar.vue";
 
 const route = useRoute();
 
@@ -134,7 +135,10 @@ type Item = {
 
 const details = ref<Item | undefined>(undefined);
 
-const content = useSessionStorage<string | null>(`mutation:${route.params.id}`, null);
+const content = useSessionStorage<string | null>(
+  `mutation:${route.params.id}`,
+  null
+);
 watch(
   content,
   (n) => {

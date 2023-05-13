@@ -1,43 +1,20 @@
 <template>
   <v-app :theme="layoutTheme">
-    <v-app-bar flat border>
-      <template v-slot:prepend>
+    <AppBar>
+      <template #prepend-actions>
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       </template>
-      <div class="toolbar-container">
-        <router-link class="py-1 app-logo d-block" to="/">
-          <v-img src="/kyverno-logo.png" />
-          <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px"
-            >v1.10</v-chip
-          >
-        </router-link>
-        <h1 class="text-h4 d-none d-lg-inline" style="padding-left: 200px">Playground</h1>
-      </div>
-      <template v-slot:append>
-        <v-btn
-          icon="mdi-github"
-          href="https://github.com/kyverno/playground"
-          target="_blank"
-          class="mr-2"
-          title="GitHub: Kyverno Playground"
-        />
-        <template v-if="display.mdAndUp.value">
-          <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2"
-            >Examples</PrimeButton
-          >
-          <ShareButton :policy="policy" :resource="resource" :context="context" />
-          <SaveButton :policy="policy" :resource="resource" :context="context" />
-          <LoadButton v-model:policy="policy" v-model:resource="resource" v-model:context="context" btn-class="ml-2" />
-        </template>
-        <ConfigMenu />
-        <MobileMenu
-          v-model:policy="policy"
-          v-model:resource="resource"
-          v-model:context="context"
-          v-if="display.smAndDown.value"
-        />
+      <template #desktop-actions>
+        <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2">Examples</PrimeButton>
+        <ShareButton :policy="policy" :resource="resource" :context="context" />
+        <SaveButton :policy="policy" :resource="resource" :context="context" btn-class="ml-2" />
+        <LoadButton v-model:policy="policy" v-model:resource="resource" v-model:context="context" btn-class="mx-2" />
       </template>
-    </v-app-bar>
+
+      <template #mobile-actions>
+        <MobileMenu v-model:policy="policy" v-model:resource="resource" v-model:context="context" />
+      </template>
+    </AppBar>
     <ExampleDrawer v-model="drawer" @select:example="setExample" />
     <v-main>
       <v-container fluid>
@@ -96,7 +73,6 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
-import { useDisplay } from "vuetify/lib/framework.mjs";
 import * as lzstring from "lz-string";
 
 import { layoutTheme } from "@/config";
@@ -109,6 +85,7 @@ import ContextEditor from "@/components/ContextEditor.vue";
 import ResourceEditor from "@/components/ResourceEditor.vue";
 import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
+import AppBar from "@/components/AppBar.vue";
 
 import {
   TemplateButton,
@@ -117,7 +94,6 @@ import {
   ShareButton,
   PrimeButton,
   MobileMenu,
-  ConfigMenu,
   ValidationButton,
 } from "@/components/buttons";
 
@@ -128,7 +104,6 @@ import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
-const display = useDisplay();
 
 const policy = ref<string>(PolicyTemplate);
 const context = ref<string>(ContextTemplate);
@@ -142,7 +117,7 @@ const setExample = (values: [string, string]) => {
 
   state.policy.value = values[0];
   state.resource.value = values[1];
-  state.name.value = ''
+  state.name.value = "";
 };
 
 const showResults = ref<boolean>(false);
@@ -169,7 +144,7 @@ const handleError = (error: Error) => {
 const drawer = ref<boolean>(false);
 
 watchEffect(() => {
-  const query = route.query.content as string
+  const query = route.query.content as string;
   if (!query) return;
 
   try {
@@ -186,13 +161,13 @@ watchEffect(() => {
     state.policy.value = content.policy;
     state.resource.value = content.resource;
     state.context.value = content.context;
-    state.name.value = ''
+    state.name.value = "";
 
     router.replace({ ...route, query: {} });
   } catch (err) {
     console.error("could not parse content string", err);
   }
-})
+});
 
 onMounted(() => {
   if (route.query.content) {
@@ -210,29 +185,3 @@ onMounted(() => {
   }
 });
 </script>
-
-<style scoped>
-.app-logo {
-  width: 200px;
-  height: 64px;
-  position: absolute;
-  left: 0;
-}
-
-.toolbar-container {
-  width: 100%;
-  max-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding-left: 200px;
-}
-
-.footer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-</style>
