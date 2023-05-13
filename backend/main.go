@@ -44,6 +44,11 @@ type apiContext struct {
 	NamespaceLabels map[string]string            `json:"namespaceLabels"`
 }
 
+type apiParameters struct {
+	Context   apiContext             `json:"context"`
+	Variables map[string]interface{} `json:"variables"`
+}
+
 type apiRequest struct {
 	Policies  string `json:"policies"`
 	Resources string `json:"resources"`
@@ -233,11 +238,11 @@ func (r apiRequest) loadResources() ([]unstructured.Unstructured, error) {
 	}
 }
 
-func (r apiRequest) loadContext() (apiContext, error) {
-	ctx := apiContext{}
-	err := yaml.Unmarshal([]byte(r.Context), &ctx)
+func (r apiRequest) loadContext() (apiContext, map[string]interface{}, error) {
+	params := apiParameters{}
+	err := yaml.Unmarshal([]byte(r.Context), &params)
 
-	return ctx, err
+	return params.Context, params.Variables, err
 }
 
 func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
@@ -245,7 +250,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 		return nil, err
 	} else if resources, err := r.loadResources(); err != nil {
 		return nil, err
-	} else if requestContext, err := r.loadContext(); err != nil {
+	} else if requestContext, variables, err := r.loadContext(); err != nil {
 		return nil, err
 	} else {
 		apiResponse := apiResponse{
@@ -258,6 +263,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 		if err != nil {
 			return nil, err
 		}
+		store.SetMock(true)
 		engine := engine.NewEngine(
 			cfg,
 			config.NewDefaultMetricsConfiguration(),
@@ -296,6 +302,12 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 					WithPolicy(policy).
 					WithNamespaceLabels(requestContext.NamespaceLabels)
 				// WithResourceKind(gvk, subresource)
+				for k, v := range variables {
+					err = policyContext.JSONContext().AddVariable(k, v)
+					if err != nil {
+						return nil, err
+					}
+				}
 				return policyContext, nil
 			}
 			// mutate
