@@ -1,0 +1,10 @@
+context:
+  username: ''
+  groups: []
+  roles: []
+  clusterRoles: []
+  namespaceLabels: {}
+  operation: 'CREATE'
+
+variables:
+  podcounts: 40

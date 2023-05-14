@@ -1,0 +1,49 @@
+############################
+# UPDATE Operation Example #
+############################
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: limit-configmap-for-sa
+  annotations:
+    policies.kyverno.io/title: Limit ConfigMap to ServiceAccounts for a User
+spec:
+  background: false
+  validationFailureAction: audit
+  rules:
+  - name: limit-configmap-for-sa-developer
+    match:
+      any:
+      - resources:
+          kinds:
+          - ConfigMap
+      - resources:
+          kinds:
+          - ConfigMap
+        subjects:
+        - kind: ServiceAccount
+          name: another-developer
+          namespace: another-namespace
+    preconditions:
+      all:
+      - key: "{{request.object.metadata.namespace}}"
+        operator: AnyIn
+        value:
+        - "any-namespace"
+        - "another-namespace"
+      - key: "{{request.object.metadata.name}}"
+        operator: AnyIn
+        value:
+        - "any-configmap-name-good"
+        - "another-configmap-name"
+    validate:
+      message: "{{request.object.metadata.namespace}}/{{request.object.kind}}/{{request.object.metadata.name}} resource is protected. Admin or allowed users can change the resource"
+      deny:
+        conditions:
+          all:
+          - key: "{{request.operation}}"
+            operator: AnyIn
+            value:
+            - UPDATE
+            - CREATE

@@ -1,0 +1,12 @@
+# Define the executed operation and user context
+context:
+  username: ''
+  groups: []
+  roles: []
+  clusterRoles: []
+  namespaceLabels: {}
+  operation: 'CREATE'
+
+# Custom variables to mock references to 
+# ConfigMaps, Secrets or APICalls
+variables: {}

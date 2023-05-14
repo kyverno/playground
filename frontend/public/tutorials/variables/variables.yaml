@@ -1,0 +1,28 @@
+######################
+# Variables Example #
+######################
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: cm-variable-example
+  annotations:
+    pod-policies.kyverno.io/autogen-controllers: DaemonSet,Deployment,StatefulSet
+spec:
+    rules:
+    - name: example-configmap-lookup
+      context:
+      - name: dictionary
+        configMap:
+          name: some-config-map
+          namespace: some-namespace
+      match:
+        any:
+        - resources:
+            kinds:
+            - Pod
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              environment: "{{dictionary.data.env}}"

@@ -1,0 +1,12 @@
+context:
+  username: ''
+  groups: []
+  roles: []
+  clusterRoles: []
+  namespaceLabels: {}
+  operation: 'CREATE'
+
+variables:
+  namespacefilters:
+    data:
+      exclude: "[\"default\", \"test\"]"

@@ -1,0 +1,9 @@
+context:
+  username: ''
+  groups: []
+  roles: []
+  clusterRoles: []
+  namespaceLabels: {}
+  operation: 'UPDATE'
+
+variables: {}
