@@ -6,6 +6,7 @@ KIND_IMAGE           ?= kindest/node:v1.26.3
 KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
+USE_CONFIG           ?= standard
 
 #############
 # VARIABLES #
@@ -25,8 +26,9 @@ PLATFORMS           := linux/arm64,linux/amd64
 KO_PLATFORMS        := all
 PLAYGROUND_IMAGE    := playground
 REPO_PLAYGROUND     := $(REGISTRY)/$(REPO)/$(PLAYGROUND_IMAGE)
-
 KO_REGISTRY         := ko.local
+COMMA               := ,
+
 ifndef VERSION
 KO_TAGS             := $(GIT_SHA)
 else ifeq ($(VERSION),main)
@@ -168,7 +170,8 @@ kind-install: $(HELM) ## Install playground helm chart
 	@$(HELM) upgrade --install kyverno --namespace kyverno --create-namespace --wait ./charts/kyverno-playground \
 		--set image.registry=$(KO_REGISTRY) \
 		--set image.repository=github.com/kyverno/playground/backend \
-		--set image.tag=$(GIT_SHA)
+		--set image.tag=$(GIT_SHA) \
+		$(foreach CONFIG,$(subst $(COMMA), ,$(USE_CONFIG)),--values ./scripts/config/$(CONFIG)/kyverno-playground.yaml)
 
 .PHONY: kind-deploy
 kind-deploy: $(HELM) kind-load ## Build image, load it in kind cluster and deploy playground helm chart
