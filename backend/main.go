@@ -407,7 +407,7 @@ func run(host string, port int) {
 }
 
 func main() {
-	var host = flag.String("host", "localhost", "server host")
+	var host = flag.String("host", "0.0.0.0", "server host")
 	var port = flag.Int("port", 8080, "server port")
 	var mode = flag.String("mode", gin.ReleaseMode, "gin run mode")
 	flag.Parse()
