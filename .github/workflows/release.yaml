@@ -27,7 +27,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --clean
+          args: release --clean --timeout 90m
           workdir: backend
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
