@@ -53,16 +53,16 @@ export const options = {
         {
             name: "Tutorials",
             url: 'https://raw.githubusercontent.com/kyverno/policies/main/',
-            color: 'warning',
+            color: 'orange-darken-3',
             subgroups: [
                 {
                     name: 'RuleTypes',
-                    url: '/tutorials',
+                    url: '/tutorials/policies',
                     policies: [
-                        { path: 'validate', title: 'Validation' },
-                        { path: 'mutation', title: 'Mutation' },
-                        { path: 'generation', title: 'Generation' },
-                        { path: 'verify-images', title: 'Verify Images' },
+                        { path: 'validate', title: 'Validate Pod Labels' },
+                        { path: 'mutation', title: 'Mutate Pod Annotations' },
+                        { path: 'generation', title: 'Generate Quotas' },
+                        { path: 'verify-images', title: 'Verify Image Signatures' },
                     ]
                 },
                 {
@@ -175,7 +175,6 @@ export const options = {
                 "add-default-resources",
                 "add-labels",
                 "allowed-annotations",
-                "allowed-pod-priorities",
                 "check-env-vars",
                 "require-base-image",
             ]
