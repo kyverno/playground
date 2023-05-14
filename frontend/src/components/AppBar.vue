@@ -5,10 +5,14 @@
     </template>
     <div class="toolbar-container">
       <router-link class="py-1 app-logo d-block" to="/">
-        <v-img src="/kyverno-logo.png" />
-        <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px"
-          >v1.10</v-chip
-        >
+        <template v-if="display.mdAndUp.value">
+          <v-img src="/kyverno-logo.png" />
+          <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px">v1.10</v-chip>
+        </template>
+        <template v-if="display.smAndDown.value">
+          <v-img src="/favicon.png" width="80" />
+          <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px">Kyverno v1.10</v-chip>
+        </template>
       </router-link>
       <h1 class="text-h4 d-none d-lg-inline" style="padding-left: 200px">Playground</h1>
     </div>
@@ -18,6 +22,7 @@
         target="_blank"
         class="mr-1"
         title="Kyverno Documentation"
+        v-if="display.mdAndUp.value"
       >
         <v-img src="/favicon.png" :height="24" :width="24" alt="Kyverno Logo" class="mr-2" /> Docs
       </v-btn>

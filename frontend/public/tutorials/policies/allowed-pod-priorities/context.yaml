@@ -1,0 +1,13 @@
+context:
+  username: ''
+  groups: []
+  roles: []
+  clusterRoles: []
+  namespaceLabels: {}
+  operation: 'CREATE'
+
+variables:
+  podprioritydict:
+    data:
+      default: "[\"high-priority\", \"moderate-priority\", \"low-priority\"]"
+      production: "[\"high-priority\", \"moderate-priority\", \"low-priority\"]"

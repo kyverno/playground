@@ -53,6 +53,7 @@
             </v-card>
           </v-col>
         </v-row>
+        <HelpButton />
         <ValidationButton
           @on-response="handleResponse"
           @on-error="handleError"
@@ -85,6 +86,7 @@ import ContextEditor from "@/components/ContextEditor.vue";
 import ResourceEditor from "@/components/ResourceEditor.vue";
 import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
+import HelpButton from '@/components/HelpButton.vue';
 import AppBar from "@/components/AppBar.vue";
 
 import {
@@ -111,11 +113,13 @@ const resource = ref<string>(ResourceTemplate);
 
 const state = useState()
 
-const setExample = (values: [string, string]) => {
+const setExample = (values: [string, string, string]) => {
   policy.value = values[0];
+  context.value = values[2];
   resource.value = values[1];
 
   state.policy.value = values[0];
+  state.context.value = values[2];
   state.resource.value = values[1];
   state.name.value = "";
 };

@@ -7,7 +7,7 @@
     class="play"
     rounded
     @click="submit"
-    >Start Validation</v-btn
+    >Start</v-btn
   >
 </template>
 
@@ -108,6 +108,6 @@ const submit = (): void => {
 .play {
   position: fixed;
   bottom: 45px;
-  right: 40px;
+  right: 50px;
 }
 </style>

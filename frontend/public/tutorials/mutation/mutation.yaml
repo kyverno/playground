@@ -1,0 +1,36 @@
+####################
+# Mutation Example #
+####################
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: backup-all-volumes
+  annotations:
+    policies.kyverno.io/title: Backup All Volumes
+    policies.kyverno.io/category: Velero
+spec:
+  rules:
+  - name: backup-velero-pv
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    preconditions:
+      all:
+      - key: "{{ request.object.spec.volumes[?contains(keys(@), 'persistentVolumeClaim')] | length(@) }}"
+        operator: GreaterThanOrEquals
+        value: 1
+      - key: "{{request.operation}}"
+        operator: Equals
+        value: CREATE
+    context:
+      - name: volumes
+        variable:
+          jmesPath: join(',',request.object.spec.volumes[?persistentVolumeClaim].name)
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          annotations:
+            backup.velero.io/backup-volumes: "{{ volumes }}"
