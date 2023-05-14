@@ -79,7 +79,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@echo Generate openapi schema... >&2
 	@rm -rf ./schemas
 	@mkdir -p ./schemas/openapi/v2
-	@mkdir -p ./schemas/openapi/v3
+	@mkdir -p ./schemas/openapi/v3/apis/kyverno.io
 	@$(KIND) create cluster --name schema --image $(KIND_IMAGE)
 	@$(HELM) upgrade --install --wait --timeout 15m --atomic \
   		--version $(KYVERNO_VERSION) \
@@ -87,6 +87,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
   		--repo https://kyverno.github.io/kyverno kyverno kyverno
 	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
+	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
 	@$(KIND) delete cluster --name schema
 
 #########
