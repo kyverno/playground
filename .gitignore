@@ -4,3 +4,4 @@ frontend/.vite
 frontend/dist
 backend/data/dist
 backend/backend
+/values.yaml

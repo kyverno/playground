@@ -1,13 +1,9 @@
-name: helm-test
+name: helm
 
 on:
   pull_request:
     branches:
-      - main
-      - release*
-    paths:
-      - charts/**
-      - .github/workflows/helm-test.yaml
+      - '*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,11 +22,7 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@e8788873172cb653a90ca2e819d79d65a66d4e76 # v2.4.0
       - name: Run chart-testing (lint)
-        run: |
-          if [[ $(ct list-changed --target-branch=main) ]];
-          then
-            ct lint --target-branch=main --check-version-increment=false
-          fi
+        run: ct lint --target-branch=main --check-version-increment=false
 
   ah-lint:
     runs-on: ubuntu-latest
