@@ -13,6 +13,18 @@ builds:
     ldflags:
       - -s -w
 
+kos:
+  - repository: ghcr.io/kyverno/playground
+    tags:
+      - '{{.Version}}'
+    bare: true
+    preserve_import_paths: false
+    sbom: none
+    platforms:
+      - all
+    ldflags:
+      - -s -w
+
 archives:
   - name_template: >-
       {{ .ProjectName }}_
@@ -20,15 +32,6 @@ archives:
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
-
-kos:
-  - repository: ghcr.io/kyverno/playground
-    tags:
-      - '{{.Version}}'
-    bare: true
-    preserve_import_paths: false
-    platforms:
-      - all
 
 checksum:
   name_template: 'checksums.txt'
