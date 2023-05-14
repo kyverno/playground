@@ -3,6 +3,7 @@
 ############
 
 KIND_IMAGE           ?= kindest/node:v1.26.3
+KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
 
@@ -42,7 +43,7 @@ TOOLS_DIR                          := $(PWD)/.tools
 HELM                               := $(TOOLS_DIR)/helm
 HELM_VERSION                       := v3.10.1
 KIND                               := $(TOOLS_DIR)/kind
-KIND_VERSION                       := v0.17.0
+KIND_VERSION                       := v0.18.0
 KO                                 := $(TOOLS_DIR)/ko
 KO_VERSION                         := main #e93dbee8540f28c45ec9a2b8aec5ef8e43123966
 TOOLS                              := $(KIND) $(HELM) $(KO)
@@ -141,6 +142,20 @@ docker-build: ## Build playground image (with docker)
 run: build-backend-assets ## Run locally
 	@echo Run backend... >&2
 	@cd backend && go run .
+
+########
+# KIND #
+########
+
+.PHONY: kind-create-cluster
+kind-create-cluster: $(KIND) ## Create kind cluster
+	@echo Create kind cluster... >&2
+	@$(KIND) create cluster --name $(KIND_NAME) --image $(KIND_IMAGE) --config ./scripts/config/kind.yaml
+
+.PHONY: kind-delete-cluster
+kind-delete-cluster: $(KIND) ## Delete kind cluster
+	@echo Delete kind cluster... >&2
+	@$(KIND) delete cluster --name $(KIND_NAME)
 
 ########
 # HELP #
