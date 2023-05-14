@@ -1,10 +1,11 @@
 ingress:
   enabled: true
-  # annotations:
-  #   nginx.ingress.kubernetes.io/rewrite-target: $1$2
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: $1$2
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^(/playground)$ $1/ redirect;
   hosts:
     - host: ~
       paths:
-        # - path: /playground(/|$)(.*)
-        - path: /
+        - path: /playground(/|$)(.*)
           pathType: Prefix
