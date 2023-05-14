@@ -1,0 +1,31 @@
+name: helm
+
+on:
+  push:
+    tags:
+      - 'kyverno-playground-chart-v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    needs: helm-tests
+    permissions:
+      contents: write
+      packages: write
+      id-token: write 
+      pages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - name: Setup build env
+        uses: ./.github/actions/setup-build-env
+      - name: Install Helm
+        uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3.5
+        with:
+          version: v3.10.3
+      - name: Run chart-releaser
+        uses: stefanprodan/helm-gh-pages@0ad2bb377311d61ac04ad9eb6f252fb68e207260 #v1.7.0
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          linting: off
+          charts_dir: charts
