@@ -264,6 +264,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 			return nil, err
 		}
 		store.SetMock(true)
+		store.SetRegistryAccess(true)
 		engine := engine.NewEngine(
 			cfg,
 			config.NewDefaultMetricsConfiguration(),
