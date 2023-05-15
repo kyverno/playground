@@ -64,8 +64,8 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | securityContext | object | See [values.yaml](values.yaml) | Container security context |
 | service.type | string | `"ClusterIP"` | Service type |
 | service.port | int | `8080` | Service port |
-| livenessProbe | object | `{}` |  |
-| readinessProbe | object | `{}` |  |
+| livenessProbe | object | `{"httpGet":{"path":"/","port":"http"}}` | Liveness probe |
+| readinessProbe | object | `{"httpGet":{"path":"/","port":"http"}}` | Readiness probe |
 | ingress.enabled | bool | `false` | Enable ingress |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.annotations | object | `{}` | Ingress annotations |
