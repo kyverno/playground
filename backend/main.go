@@ -238,13 +238,11 @@ func (r apiRequest) loadResources(kubeVersion string) ([]unstructured.Unstructur
 	} else {
 		var resources []unstructured.Unstructured
 		for _, document := range documents {
-			var resource unstructured.Unstructured
-			if resourceJSON, err := yaml.YAMLToJSON(document); err != nil {
+			if untyped, err := loadUnstructured(kubeVersion, document); err != nil {
 				return nil, err
-			} else if err := resource.UnmarshalJSON(resourceJSON); err != nil {
-				continue
+			} else {
+				resources = append(resources, untyped)
 			}
-			resources = append(resources, resource)
 		}
 		return resources, nil
 	}
