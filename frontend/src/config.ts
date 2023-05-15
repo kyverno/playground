@@ -42,7 +42,7 @@ export const options = {
     panels: {
         policyInfo: 'Kyverno Policy Resource',
         resourceInfo: 'Kubernetes resources to apply the policies on',
-        contextInfo: 'Context information like operation conext, variables and kubernetes version',
+        contextInfo: 'Context information like admission context, variables and kubernetes version',
     },
     onboarding: {
         text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.',

@@ -26,19 +26,19 @@ export const useOnboarding = (drawer: Ref<boolean>) => {
         },
         {
             attachTo: { element: '#policy-panel' },
-            content: { title: "Policy Panel", description: "Write and modify your Kyverno Policy." }
+            content: { title: "Policy Panel", description: "Write and modify your Kyverno Policies." }
         },
         {
             attachTo: { element: '#context-panel' },
-            content: { title: "Context Panel", description: "Define or change your Conext." }
+            content: { title: "Context Panel", description: "Define or change your Context." }
         },
         {
             attachTo: { element: '#resource-panel' },
-            content: { title: "Resource Panel", description: "Write and modify resources which your policy is applied to." }
+            content: { title: "Resource Panel", description: "Write and modify Resources which your Policies are applied to." }
         },
         {
             attachTo: { element: '#start-btn' },
-            content: { title: "Start Button", description: "Runs your actual Policy against the Resources with the given Context." }
+            content: { title: "Start Button", description: "Evaluates Policies against Resources with the given Context." }
         },
     ]
 
