@@ -10,7 +10,6 @@
 </template>
 
 <script setup lang="ts">
-
 const emit = defineEmits(['select'])
 
 const templates = [
@@ -23,7 +22,7 @@ const templates = [
 ]
 
 const loadTemplate = (template: string) => {
-  return fetch(`/templates/${template.toLocaleLowerCase()}.yaml`).then((resp) => {
+  return fetch(`templates/${template.toLocaleLowerCase()}.yaml`).then((resp) => {
     if (resp.status !== 200) return
 
     return resp.text().then(content => emit('select', content))

@@ -1,3 +1,7 @@
+# Define the kubernetes cluster infos
+kubernetes:
+  version: '1.27'
+
 # Define the executed operation and user context
 context:
   username: ''
@@ -5,7 +9,7 @@ context:
   roles: []
   clusterRoles: []
   namespaceLabels: {}
-  operation: 'CREATE'
+  operation: CREATE
 
 # Custom variables to mock references to 
 # ConfigMaps, Secrets or APICalls

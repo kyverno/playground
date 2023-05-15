@@ -10,7 +10,14 @@
         :title="`Restore ${title}`"
       />
     </template>
-    <v-toolbar-title :class="restoreValue ? 'ml-0' : ''">{{ title }}</v-toolbar-title>
+    <v-toolbar-title :class="restoreValue ? 'ml-0' : ''">
+      {{ title }}
+      <v-tooltip :text="info" content-class="no-opacity-tooltip" v-if="info">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" icon="mdi-information-outline" variant="text" size="small" />
+        </template>
+      </v-tooltip>
+    </v-toolbar-title>
     <v-spacer />
     <v-toolbar-items>
       <slot name="prepend-actions" />
@@ -28,6 +35,7 @@ defineProps({
   restoreValue: { type: String, default: "" },
   modelValue: { type: String, default: "" },
   title: { type: String, required: true },
+  info: { type: String },
 });
 
 const emit = defineEmits(["update:modelValue"]);

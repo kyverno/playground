@@ -1,10 +1,13 @@
+kubernetes:
+  version: '1.27'
+
 context:
   username: ''
   groups: []
   roles: []
   clusterRoles: []
   namespaceLabels: {}
-  operation: 'CREATE'
+  operation: CREATE
 
 variables:
   namespacefilters:

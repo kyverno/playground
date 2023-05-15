@@ -5,6 +5,7 @@
     :value="props.modelValue"
     @update:value="(event: string) => emit('update:modelValue', event)"
     :options="options"
+    ref="monaco"
     :uri="uri"
   />
 </template>
@@ -14,9 +15,22 @@ import MonacoEditor from "./MonacoEditor.vue";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
 import { Uri } from "monaco-editor";
 import { editorTheme } from "../config";
+import { loadedContext } from "@/composables";
+import { ref } from "vue";
+import { watch } from "vue";
 
 const props = defineProps({
     modelValue: { type: String, default: '' }
+})
+
+const monaco = ref<typeof MonacoEditor | null>(null);
+
+watch(loadedContext, () => {
+  if (!monaco.value) return
+
+  const edit: editor.ICodeEditor = monaco.value._getEditor();
+
+  edit.setScrollPosition({scrollTop: 0});
 })
 
 const emit = defineEmits(["update:modelValue"])

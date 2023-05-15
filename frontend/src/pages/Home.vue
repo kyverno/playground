@@ -23,9 +23,10 @@
           <v-col :md="7" :sm="12">
             <v-card style="height: 800px">
               <EditorToolbar
-                title="ClusterPolicy"
+                title="Policies"
                 v-model="policy"
                 :restore-value="state.policy.value"
+                :info="options.panels.policyInfo"
               />
               <PolicyEditor v-model="policy" />
             </v-card>
@@ -34,6 +35,7 @@
             <v-card style="height: 300px">
               <EditorToolbar
                 title="Context"
+                :info="options.panels.contextInfo"
                 v-model="context"
                 :restore-value="state.context.value"
               />
@@ -41,7 +43,8 @@
             </v-card>
             <v-card style="height: 487px" class="mt-3">
               <EditorToolbar
-                title="Resource"
+                title="Resources"
+                :info="options.panels.resourceInfo"
                 v-model="resource"
                 :restore-value="state.resource.value"
               >
@@ -88,6 +91,7 @@ import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
 import HelpButton from '@/components/HelpButton.vue';
 import AppBar from "@/components/AppBar.vue";
+import { options } from '@/config'
 
 import {
   TemplateButton,
