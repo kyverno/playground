@@ -38,14 +38,15 @@ service:
   port: 8080
 
 
-livenessProbe: {}
-#  httpGet:
-#    path: /
-#    port: http
-readinessProbe: {}
-#  httpGet:
-#    path: /
-#    port: http
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
 
 ingress:
   enabled: false
