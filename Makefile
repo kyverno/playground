@@ -48,7 +48,9 @@ KIND                               := $(TOOLS_DIR)/kind
 KIND_VERSION                       := v0.18.0
 KO                                 := $(TOOLS_DIR)/ko
 KO_VERSION                         := main #e93dbee8540f28c45ec9a2b8aec5ef8e43123966
-TOOLS                              := $(KIND) $(HELM) $(KO)
+HELM_DOCS                          := $(TOOLS_DIR)/helm-docs
+HELM_DOCS_VERSION                  := v1.11.0
+TOOLS                              := $(KIND) $(HELM) $(KO) $(HELM_DOCS)
 
 $(HELM):
 	@echo Install helm... >&2
@@ -62,6 +64,10 @@ $(KO):
 	@echo Install ko... >&2
 	@GOBIN=$(TOOLS_DIR) go install github.com/google/ko@$(KO_VERSION)
 
+$(HELM_DOCS):
+	@echo Install helm-docs... >&2
+	@GOBIN=$(TOOLS_DIR) go install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION)
+
 .PHONY: install-tools
 install-tools: $(TOOLS) ## Install tools
 
@@ -73,6 +79,11 @@ clean-tools: ## Remove installed tools
 ###########
 # CODEGEN #
 ###########
+
+.PHONY: codegen-helm-docs
+codegen-helm-docs: ## Generate helm docs
+	@echo Generate helm docs... >&2
+	@docker run -v ${PWD}/charts:/work -w /work jnorwood/helm-docs:v1.11.0 -s file
 
 .PHONY: codegen-schema-openapi
 codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)

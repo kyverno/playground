@@ -1,6 +1,19 @@
 apiVersion: v2
 name: kyverno-playground
-description: Kyverno Playground Web Application
 type: application
 version: 0.0.1-alpha.1
 appVersion: latest
+icon: https://github.com/kyverno/kyverno/raw/main/img/logo.png
+description: Kyverno Playground Web Application
+keywords:
+  - kubernetes
+  - nirmata
+  - policy agent
+  - validating webhook
+  - admissions controller
+sources:
+  - https://github.com/kyverno/playground
+maintainers:
+  - name: Nirmata
+    url: https://kyverno.io/
+kubeVersion: ">=1.16.0-0"
