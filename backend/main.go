@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"net/http"
 
+	"github.com/Masterminds/semver/v3"
 	jsonpatch "github.com/evanphx/json-patch/v5"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -44,9 +45,14 @@ type apiContext struct {
 	NamespaceLabels map[string]string            `json:"namespaceLabels"`
 }
 
+type apiKubernetes struct {
+	Version string `json:"version"`
+}
+
 type apiParameters struct {
-	Context   apiContext             `json:"context"`
-	Variables map[string]interface{} `json:"variables"`
+	Kubernetes apiKubernetes          `json:"kubernetes"`
+	Context    apiContext             `json:"context"`
+	Variables  map[string]interface{} `json:"variables"`
 }
 
 type apiRequest struct {
@@ -145,7 +151,7 @@ func ConvertEngineResponse(in engineapi.EngineResponse) EngineResponse {
 	return out
 }
 
-func loadUnstructured(document []byte) (unstructured.Unstructured, error) {
+func loadUnstructured(kubeVersion string, document []byte) (unstructured.Unstructured, error) {
 	const mediaType = runtime.ContentTypeYAML
 	var result unstructured.Unstructured
 	var metadata metav1.TypeMeta
@@ -156,10 +162,16 @@ func loadUnstructured(document []byte) (unstructured.Unstructured, error) {
 	if gvk.Empty() {
 		return result, fmt.Errorf("GVK cannot be empty")
 	}
+	version, err := semver.NewVersion(kubeVersion)
+	if err != nil {
+		kubeVersion = "1.27"
+	} else {
+		kubeVersion = fmt.Sprint(version.Major(), ".", version.Minor())
+	}
 	if factory, err := validatorfactory.New(
 		openapiclient.NewComposite(
 			openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
-			openapiclient.NewHardcodedBuiltins("1.27"),
+			openapiclient.NewHardcodedBuiltins(kubeVersion),
 		),
 	); err != nil {
 		return result, err
@@ -184,7 +196,7 @@ func fromUnstructured[T any](untyped unstructured.Unstructured) (T, error) {
 	return result, nil
 }
 
-func (r apiRequest) loadPolicies() ([]kyvernov1.PolicyInterface, error) {
+func (r apiRequest) loadPolicies(kubeVersion string) ([]kyvernov1.PolicyInterface, error) {
 	loadPolicy := func(untyped unstructured.Unstructured) (kyvernov1.PolicyInterface, error) {
 		kind := untyped.GetKind()
 		if kind == "Policy" {
@@ -208,7 +220,7 @@ func (r apiRequest) loadPolicies() ([]kyvernov1.PolicyInterface, error) {
 	} else {
 		var policies []kyvernov1.PolicyInterface
 		for _, document := range documents {
-			if untyped, err := loadUnstructured(document); err != nil {
+			if untyped, err := loadUnstructured(kubeVersion, document); err != nil {
 				return nil, err
 			} else if policy, err := loadPolicy(untyped); err != nil {
 				return nil, err
@@ -220,7 +232,7 @@ func (r apiRequest) loadPolicies() ([]kyvernov1.PolicyInterface, error) {
 	}
 }
 
-func (r apiRequest) loadResources() ([]unstructured.Unstructured, error) {
+func (r apiRequest) loadResources(kubeVersion string) ([]unstructured.Unstructured, error) {
 	if documents, err := yamlutils.SplitDocuments([]byte(r.Resources)); err != nil {
 		return nil, err
 	} else {
@@ -238,19 +250,21 @@ func (r apiRequest) loadResources() ([]unstructured.Unstructured, error) {
 	}
 }
 
-func (r apiRequest) loadContext() (apiContext, map[string]interface{}, error) {
+func (r apiRequest) loadParameters() (*apiParameters, error) {
 	params := apiParameters{}
-	err := yaml.Unmarshal([]byte(r.Context), &params)
-
-	return params.Context, params.Variables, err
+	if err := yaml.Unmarshal([]byte(r.Context), &params); err != nil {
+		return nil, err
+	} else {
+		return &params, nil
+	}
 }
 
 func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
-	if policies, err := r.loadPolicies(); err != nil {
+	if apiParameters, err := r.loadParameters(); err != nil {
 		return nil, err
-	} else if resources, err := r.loadResources(); err != nil {
+	} else if policies, err := r.loadPolicies(apiParameters.Kubernetes.Version); err != nil {
 		return nil, err
-	} else if requestContext, variables, err := r.loadContext(); err != nil {
+	} else if resources, err := r.loadResources(apiParameters.Kubernetes.Version); err != nil {
 		return nil, err
 	} else {
 		apiResponse := apiResponse{
@@ -276,13 +290,13 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 		)
 		admissionInfo := kyvernov1beta1.RequestInfo{
 			AdmissionUserInfo: authenticationv1.UserInfo{
-				Username: requestContext.Username,
-				Groups:   requestContext.Groups,
+				Username: apiParameters.Context.Username,
+				Groups:   apiParameters.Context.Groups,
 			},
-			Roles:        requestContext.Roles,
-			ClusterRoles: requestContext.ClusterRoles,
+			Roles:        apiParameters.Context.Roles,
+			ClusterRoles: apiParameters.Context.ClusterRoles,
 		}
-		operation := requestContext.Operation
+		operation := apiParameters.Context.Operation
 		if operation == "" {
 			operation = kyvernov1.Create
 		}
@@ -301,9 +315,9 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 				}
 				policyContext = policyContext.
 					WithPolicy(policy).
-					WithNamespaceLabels(requestContext.NamespaceLabels)
+					WithNamespaceLabels(apiParameters.Context.NamespaceLabels)
 				// WithResourceKind(gvk, subresource)
-				for k, v := range variables {
+				for k, v := range apiParameters.Variables {
 					err = policyContext.JSONContext().AddVariable(k, v)
 					if err != nil {
 						return nil, err

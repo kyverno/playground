@@ -2,6 +2,15 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {
+        "kubernetes": {
+            "type": "object",
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "Kubernetes version of the target cluster."
+                }
+            }
+        },
         "context": {
             "type": "object",
             "properties": {
