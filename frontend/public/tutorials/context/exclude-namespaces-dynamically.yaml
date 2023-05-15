@@ -1,3 +1,6 @@
+kubernetes:
+  version: '1.27'
+
 context:
   username: ''
   groups: []

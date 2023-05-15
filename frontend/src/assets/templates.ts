@@ -18,7 +18,10 @@ spec:
             labels:
               app.kubernetes.io/name: "?*"`
 
-export const ContextTemplate = `context:
+export const ContextTemplate = `kubernetes:
+  version: '1.27'
+
+context:
   username: ''
   groups: []
   roles: []

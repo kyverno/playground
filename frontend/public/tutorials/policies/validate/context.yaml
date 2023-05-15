@@ -1,3 +1,7 @@
+# Define the kubernetes cluster infos
+kubernetes:
+  version: '1.27'
+
 # Define the executed operation and user context
 context:
   username: ''
