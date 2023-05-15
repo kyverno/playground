@@ -41,6 +41,26 @@ The "File" Button loads a local YAML file as input.
 
 The "URL" Button loads a manifest from an external URL, example: https://raw.githubusercontent.com/kyverno/policies/main/best-practices/disallow-latest-tag/disallow-latest-tag.yaml
 
+## Install
+
+Kyverno Playground releases are available at https://github.com/kyverno/playground/releases.
+
+Additionaly we publish docker images at ghcr.io/kyverno/playground and an helm chart repository is available at https://kyverno.github.io/playground.
+
+### Install with Helm
+
+Add `kyverno-playground` Helm repository:
+
+```shell
+helm repo add kyverno-playground https://kyverno.github.io/playground/
+```
+
+Install `kyverno-playground` Helm chart:
+
+```shell
+helm install kyverno-playground --namespace kyverno --create-namespace kyverno-playground/kyverno-playground
+```
+
 ## Screenshots
 
 ![Kyverno Playground - Layout](./frontend/screens/layout.png?raw=true)
