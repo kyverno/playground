@@ -5,7 +5,7 @@ context:
   roles: []
   clusterRoles: []
   namespaceLabels: {}
-  operation: 'CREATE'
+  operation: CREATE
 
 # Custom variables to mock references to 
 # ConfigMaps, Secrets or APICalls
