@@ -313,6 +313,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 			store.ContextLoaderFactory(nil),
 			nil,
 		)
+		contr := generate.NewGenerateControllerWithOnlyClient(dclient.NewEmptyFakeClient(), eng)
 		admissionInfo := kyvernov1beta1.RequestInfo{
 			AdmissionUserInfo: authenticationv1.UserInfo{
 				Username: apiParameters.Context.Username,
@@ -419,10 +420,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 						apiResponse.Generation = append(apiResponse.Generation, ConvertEngineResponse(response))
 						continue
 					}
-
-					contr := generate.NewGenerateControllerWithOnlyClient(dclient.NewEmptyFakeClient(), eng)
 					gr := toGenerateRequest(policy, resource)
-
 					ctx, err := engine.NewPolicyContext(jp, resource, operation, &admissionInfo, cfg)
 					if err != nil {
 						return nil, err
@@ -430,19 +428,16 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 					ctx = ctx.
 						WithPolicy(policy).
 						WithNamespaceLabels(apiParameters.Context.NamespaceLabels)
-
 					var newRuleResponse []engineapi.RuleResponse
 					for _, rule := range response.PolicyResponse.Rules {
 						genRes, err := contr.ApplyGeneratePolicy(log.V(2), ctx, gr, []string{rule.Name()})
 						if err != nil {
 							return nil, err
 						}
-
 						unstrGenResource, err := contr.GetUnstrResource(genRes[0])
 						if err != nil {
 							return nil, err
 						}
-
 						newRuleResponse = append(newRuleResponse, *rule.WithGeneratedResource(*unstrGenResource))
 					}
 					response.PolicyResponse.Rules = newRuleResponse
