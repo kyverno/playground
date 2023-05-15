@@ -59,6 +59,7 @@
 import { ref } from "vue";
 import { useConfig, Policy } from "../config";
 import { ContextTemplate } from "@/assets/templates";
+import { resolveAPI } from "@/utils";
 
 const { options } = useConfig()
 
