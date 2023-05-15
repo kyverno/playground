@@ -6,6 +6,7 @@ KIND_IMAGE           ?= kindest/node:v1.26.3
 KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
+USE_CONFIG           ?= standard
 
 #############
 # VARIABLES #
@@ -25,8 +26,9 @@ PLATFORMS           := linux/arm64,linux/amd64
 KO_PLATFORMS        := all
 PLAYGROUND_IMAGE    := playground
 REPO_PLAYGROUND     := $(REGISTRY)/$(REPO)/$(PLAYGROUND_IMAGE)
-
 KO_REGISTRY         := ko.local
+COMMA               := ,
+
 ifndef VERSION
 KO_TAGS             := $(GIT_SHA)
 else ifeq ($(VERSION),main)
@@ -46,7 +48,9 @@ KIND                               := $(TOOLS_DIR)/kind
 KIND_VERSION                       := v0.18.0
 KO                                 := $(TOOLS_DIR)/ko
 KO_VERSION                         := main #e93dbee8540f28c45ec9a2b8aec5ef8e43123966
-TOOLS                              := $(KIND) $(HELM) $(KO)
+HELM_DOCS                          := $(TOOLS_DIR)/helm-docs
+HELM_DOCS_VERSION                  := v1.11.0
+TOOLS                              := $(KIND) $(HELM) $(KO) $(HELM_DOCS)
 
 $(HELM):
 	@echo Install helm... >&2
@@ -60,6 +64,10 @@ $(KO):
 	@echo Install ko... >&2
 	@GOBIN=$(TOOLS_DIR) go install github.com/google/ko@$(KO_VERSION)
 
+$(HELM_DOCS):
+	@echo Install helm-docs... >&2
+	@GOBIN=$(TOOLS_DIR) go install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION)
+
 .PHONY: install-tools
 install-tools: $(TOOLS) ## Install tools
 
@@ -72,12 +80,17 @@ clean-tools: ## Remove installed tools
 # CODEGEN #
 ###########
 
+.PHONY: codegen-helm-docs
+codegen-helm-docs: ## Generate helm docs
+	@echo Generate helm docs... >&2
+	@docker run -v ${PWD}/charts:/work -w /work jnorwood/helm-docs:v1.11.0 -s file
+
 .PHONY: codegen-schema-openapi
 codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@echo Generate openapi schema... >&2
 	@rm -rf ./schemas
 	@mkdir -p ./schemas/openapi/v2
-	@mkdir -p ./schemas/openapi/v3
+	@mkdir -p ./schemas/openapi/v3/apis/kyverno.io
 	@$(KIND) create cluster --name schema --image $(KIND_IMAGE)
 	@$(HELM) upgrade --install --wait --timeout 15m --atomic \
   		--version $(KYVERNO_VERSION) \
@@ -85,6 +98,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
   		--repo https://kyverno.github.io/kyverno kyverno kyverno
 	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
+	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
 	@$(KIND) delete cluster --name schema
 
 #########
@@ -156,6 +170,28 @@ kind-create-cluster: $(KIND) ## Create kind cluster
 kind-delete-cluster: $(KIND) ## Delete kind cluster
 	@echo Delete kind cluster... >&2
 	@$(KIND) delete cluster --name $(KIND_NAME)
+
+.PHONY: kind-load
+kind-load: $(KIND) ko-build ## Build playground image and load it in kind cluster
+	@echo Load playground image... >&2
+	@$(KIND) load docker-image --name $(KIND_NAME) ko.local/github.com/kyverno/playground/backend:$(GIT_SHA)
+
+.PHONY: kind-install
+kind-install: $(HELM) ## Install playground helm chart
+	@echo Install playground chart... >&2
+	@$(HELM) upgrade --install kyverno --namespace kyverno --create-namespace --wait ./charts/kyverno-playground \
+		--set image.registry=$(KO_REGISTRY) \
+		--set image.repository=github.com/kyverno/playground/backend \
+		--set image.tag=$(GIT_SHA) \
+		$(foreach CONFIG,$(subst $(COMMA), ,$(USE_CONFIG)),--values ./scripts/config/$(CONFIG)/kyverno-playground.yaml)
+
+.PHONY: kind-deploy
+kind-deploy: $(HELM) kind-load ## Build image, load it in kind cluster and deploy playground helm chart
+	@echo Install ingress-ngingx... >&2
+	@kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+	@sleep 15
+	@kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
+	@$(MAKE) kind-install
 
 ########
 # HELP #

@@ -24,7 +24,7 @@ export const ContextTemplate = `context:
   roles: []
   clusterRoles: []
   namespaceLabels: {}
-  operation: 'CREATE'
+  operation: CREATE
 
 variables: {}`
 

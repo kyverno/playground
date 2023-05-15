@@ -41,3 +41,29 @@ jobs:
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.0
       - name: Build
         run: make ko-build
+
+  ct-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - name: Setup python
+        uses: actions/setup-python@57ded4d7d5e986d7296eab16560982c6dd7c923b # v4.6.0
+        with:
+          python-version: 3.7
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@e8788873172cb653a90ca2e819d79d65a66d4e76 # v2.4.0
+      - name: Run chart-testing (lint)
+        run: ct lint --target-branch=main --check-version-increment=false
+
+  ah-lint:
+    runs-on: ubuntu-latest
+    container:
+      image: artifacthub/ah
+      options: --user root
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - name: Run ah lint
+        working-directory: ./charts/
+        run: ah lint

@@ -23,6 +23,7 @@ import { ref, watch } from "vue";
 import { Uri, KeyCode } from "monaco-editor";
 import { editorTheme } from "../config";
 import { editor } from 'monaco-editor'
+import { loadedPolicy } from "@/composables";
 
 const props = defineProps({
   modelValue: { type: String, default: "" },
@@ -30,7 +31,7 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const monaco = ref(null);
+const monaco = ref<typeof MonacoEditor | null>(null);
 const uri = Uri.parse("policy.yaml");
 
 watch(props, (props) => {
@@ -42,6 +43,14 @@ watch(props, (props) => {
     monaco.value._setValue(props.modelValue);
   }
 });
+
+watch(loadedPolicy, () => {
+  if (!monaco.value) return
+
+  const edit: editor.ICodeEditor = monaco.value._getEditor();
+
+  edit.setScrollPosition({scrollTop: 0});
+})
 
 const autocompleteOnEnter = ref(true);
 const eventRegistered = ref(false);

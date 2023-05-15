@@ -264,6 +264,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 			return nil, err
 		}
 		store.SetMock(true)
+		store.SetRegistryAccess(true)
 		engine := engine.NewEngine(
 			cfg,
 			config.NewDefaultMetricsConfiguration(),
@@ -375,12 +376,11 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 }
 
 func serveApi(c *gin.Context) {
-	// TODO: error handling
 	var request apiRequest
-	if err := c.BindJSON(&request); err != nil {
-		return
+	if err := c.ShouldBind(&request); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind) //nolint: errcheck
 	} else if response, err := request.process(c.Request.Context()); err != nil {
-		return
+		c.AbortWithError(http.StatusInternalServerError, err).SetType(gin.ErrorTypeAny) //nolint: errcheck
 	} else {
 		c.IndentedJSON(http.StatusOK, response)
 	}
