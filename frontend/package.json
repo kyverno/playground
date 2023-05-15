@@ -15,6 +15,7 @@
     "monaco-yaml": "^4.0.4",
     "object-hash": "^3.0.0",
     "roboto-fontface": "*",
+    "v-onboarding": "^2.4.0",
     "vue": "^3.2.47",
     "vue-router": "^4.0.0",
     "vuetify": "^3.0.0",

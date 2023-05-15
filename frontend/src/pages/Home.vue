@@ -1,11 +1,12 @@
 <template>
   <v-app :theme="layoutTheme">
+    <Onboarding @wrapper="reference => wrapper = reference" :steps="steps" @finish="onboarding = false" :close="finish" />
     <AppBar>
       <template #prepend-actions>
-        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click="drawer = !drawer" id="example-menu"></v-app-bar-nav-icon>
       </template>
       <template #desktop-actions>
-        <PrimeButton variant="outlined" @click="drawer = !drawer" class="mr-2">Examples</PrimeButton>
+        <PrimeButton @click="start" v-if="onboarding" variant="outlined">Onboarding</PrimeButton>
         <ShareButton :policy="policy" :resource="resource" :context="context" />
         <SaveButton :policy="policy" :resource="resource" :context="context" btn-class="ml-2" />
         <LoadButton v-model:policy="policy" v-model:resource="resource" v-model:context="context" btn-class="mx-2" />
@@ -23,6 +24,7 @@
           <v-col :md="7" :sm="12">
             <v-card style="height: 800px">
               <EditorToolbar
+                id="policy-panel"
                 title="Policies"
                 v-model="policy"
                 :restore-value="state.policy.value"
@@ -34,6 +36,7 @@
           <v-col :md="5" :sm="12">
             <v-card style="height: 300px">
               <EditorToolbar
+                id="context-panel"
                 title="Context"
                 :info="options.panels.contextInfo"
                 v-model="context"
@@ -44,6 +47,7 @@
             <v-card style="height: 487px" class="mt-3">
               <EditorToolbar
                 title="Resources"
+                id="resource-panel"
                 :info="options.panels.resourceInfo"
                 v-model="resource"
                 :restore-value="state.resource.value"
@@ -76,11 +80,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import * as lzstring from "lz-string";
+import 'v-onboarding/dist/style.css'
 
 import { layoutTheme } from "@/config";
-import { useState } from "@/composables";
+import { useState, useOnboarding } from "@/composables";
 import ErrorBar from "@/components/ErrorBar.vue";
 import EditorToolbar from "@/components/EditorToolbar.vue";
 import ExampleDrawer from "@/components/ExampleDrawer.vue";
@@ -91,8 +97,8 @@ import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
 import HelpButton from '@/components/HelpButton.vue';
 import AppBar from "@/components/AppBar.vue";
+import Onboarding from "@/components/Onboarding.vue";
 import { options } from '@/config'
-
 import {
   TemplateButton,
   LoadButton,
@@ -105,8 +111,6 @@ import {
 
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "@/assets/templates";
 import { EngineResponse } from "@/types";
-import { onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
@@ -192,4 +196,6 @@ onMounted(() => {
     context.value = state.context.value;
   }
 });
+
+const { finish, start, onboarding, steps, wrapper } = useOnboarding(drawer)
 </script>

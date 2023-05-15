@@ -7,7 +7,7 @@
   >
     <template v-for="({ color, ...example }) in options.examples" :key="example.name">
       <v-list>
-        <v-list-group :value="example.name">
+        <v-list-group :value="example.name" :id="example.name.toLowerCase().replaceAll(' ', '-')">
           <template v-slot:activator="{ props }">
             <v-list-item
               v-bind="props"
@@ -59,7 +59,6 @@
 import { ref } from "vue";
 import { useConfig, Policy } from "../config";
 import { ContextTemplate } from "@/assets/templates";
-import { resolveAPI } from "@/utils";
 
 const { options } = useConfig()
 

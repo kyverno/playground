@@ -1,5 +1,6 @@
 <template>
   <v-btn
+    id="start-btn"
     size="large"
     :prepend-icon="icon"
     :color="color"
