@@ -26,7 +26,7 @@
                   <RuleDetails :details="details" />
                 </v-card-text>
                 <v-card-text v-if="details.status !== 'pass'">{{ details.message }}</v-card-text>
-                <DiffEditor :height="600" language="yaml" :original="details.originalReosurce" :value="details.patchedResource" :theme="editorTheme" :options="options" />
+                <ManocoEditor :height="600" language="yaml" :value="details.generatedResource" :theme="editorTheme" :options="options" />
               </template>
             </v-card>
           </v-col>
@@ -40,11 +40,11 @@
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useSessionStorage } from "@vueuse/core";
-import { RuleStatus } from "@/types";
 import { layoutTheme, editorTheme } from "@/config";
+import { RuleStatus } from "@/types";
 
-import DiffEditor from "@/components/DiffEditor.vue";
 import AppBar from "@/components/AppBar.vue";
+import ManocoEditor from "@/components/MonacoEditor.vue";
 import RuleDetails from "@/components/RuleDetails.vue";
 
 const route = useRoute();
@@ -56,14 +56,13 @@ type Item = {
   policy: string;
   rule: string;
   message: string;
-  originalReosurce: string;
-  patchedResource: string;
+  generatedResource: string;
   status: RuleStatus;
 };
 
 const details = ref<Item | undefined>(undefined);
 
-const content = useSessionStorage<string | null>(`mutation:${route.params.id}`, null);
+const content = useSessionStorage<string | null>(`generation:${route.params.id}`, null);
 watch(content, (n) => {
   if (!n) return;
   details.value = JSON.parse(n) as Item;

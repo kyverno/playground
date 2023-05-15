@@ -25,6 +25,7 @@ export type Rule = {
     ruleType: RuleType;
     message: string;
     status: RuleStatus;
+    generatedResource: string;
 }
 
 export type PolicyResponse = {
@@ -45,10 +46,17 @@ export type Mutation = {
     patchedResource: string;
 }
 
+export type Generation = {
+    resource: Resource;
+    policy: Policy;
+    policyResponse: PolicyResponse;
+}
+
 export type EngineResponse = {
     policies: Policy[];
     resources: Resource[];
     validation?: Validation[];
     mutation?: Mutation[];
     imageVerification?: Mutation[];
+    generation?: Generation[];
 }

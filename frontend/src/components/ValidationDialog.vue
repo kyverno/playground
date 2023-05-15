@@ -21,6 +21,7 @@
         <ValidationTable :results="validations" v-if="hasResults && validations.length" />
         <MutationTable :results="mutations" v-if="hasResults && mutations.length" />
         <MutationTable :results="verifications" v-if="hasResults && verifications.length" title="ImageVerification Results" />
+        <GenerationTable :results="generations" v-if="hasResults && generations.length" />
       <v-card-actions>
         <v-btn color="error" @click="emit('update:modelValue', false)">Close</v-btn>
         <v-spacer />
@@ -55,6 +56,7 @@
 <script setup lang="ts">
 import ValidationTable from './ValidationTable.vue'
 import MutationTable from './MutationTable.vue'
+import GenerationTable from './GenerationTable.vue'
 import { EngineResponse } from "../types";
 import DownloadBtn from "./DownloadBtn.vue";
 import { PropType } from "vue";
@@ -68,14 +70,17 @@ const props = defineProps({
   policy: { type: String, default: "" },
 });
 
-const filename = computed(
-  () => `${(props.results.validation || props.results.mutation || [{}])[0].policy?.metadata.name || "policy"}.yaml`
-);
+const filename = computed(() => {
+    const name: string = (props.results.validation || props.results.mutation || props.results.imageVerification || props.results.generation || [{}])[0].policy?.metadata.name || "policy"
+    
+    return `${name}.yaml`
+  });
 
 const hasResults = computed(() => {
   return (props.results.validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || 
     (props.results.mutation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || 
-    (props.results.imageVerification || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
+    (props.results.imageVerification || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || 
+    (props.results.generation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
 })
 
 const validations = computed(() => {
@@ -100,6 +105,14 @@ const verifications = computed(() => {
   }
 
   return (props.results.imageVerification || [])
+})
+
+const generations = computed(() => {
+  if (hasResults.value) {
+    return (props.results.generation || []).filter(v => v.policyResponse.rules)
+  }
+
+  return (props.results.generation || [])
 })
 
 const { hideNoMatch } = useConfig()
