@@ -8,7 +8,6 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    needs: helm-tests
     permissions:
       pages: write
     steps:
