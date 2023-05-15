@@ -410,7 +410,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 					}
 					ctx = ctx.
 						WithPolicy(policy).
-						WithNamespaceLabels(requestContext.NamespaceLabels)
+						WithNamespaceLabels(apiParameters.Context.NamespaceLabels)
 
 					var newRuleResponse []engineapi.RuleResponse
 					for _, rule := range response.PolicyResponse.Rules {
