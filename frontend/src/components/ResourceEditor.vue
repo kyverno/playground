@@ -11,12 +11,26 @@
 </template>
 
 <script setup lang="ts">
+import { editor } from 'monaco-editor'
 import MonacoEditor from "./MonacoEditor.vue";
 import { editorTheme } from "../config";
 import { Uri } from "monaco-editor";
+import { watch } from "vue";
+import { ref } from "vue";
+import { loadedResource } from "@/composables";
 
 const props = defineProps({
     modelValue: { type: String, default: '' }
+})
+
+const monaco = ref<typeof MonacoEditor | null>(null);
+
+watch(loadedResource, () => {
+  if (!monaco.value) return
+
+  const edit: editor.ICodeEditor = monaco.value._getEditor();
+
+  edit.setScrollPosition({scrollTop: 0});
 })
 
 const uri = Uri.parse('resource.yaml')

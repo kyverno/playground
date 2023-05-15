@@ -12,7 +12,7 @@
     :items-per-page="-1"
   >
     <template v-slot:[`item.status`]="{ item }">
-      <StatusChip :status="item.raw.status" />
+      <StatusChip :status="item.raw.status" :key="item.raw.status" />
     </template>
     <template v-slot:expanded-row="{ columns, item }">
       <tr>
