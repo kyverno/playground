@@ -39,6 +39,11 @@ export const hideNoMatch = useLocalStorage('config:hideNoMatch', false)
 export const showOnboarding = useLocalStorage("onboarding:open", true)
 
 export const options = {
+    panels: {
+        policyInfo: 'Kyverno Policy Resource',
+        resourceInfo: 'Kubernetes resources to apply the policies on',
+        contextInfo: 'Context information like operation conext, variables and kubernetes version',
+    },
     onboarding: {
         text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.',
     },
