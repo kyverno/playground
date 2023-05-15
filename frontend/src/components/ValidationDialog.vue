@@ -25,12 +25,6 @@
       <v-card-actions>
         <v-btn color="error" @click="emit('update:modelValue', false)">Close</v-btn>
         <v-spacer />
-        <DownloadBtn
-          variant="tonal"
-          :content="policy"
-          :filename="filename"
-          label="Download Policy"
-        />
         <v-tooltip
           :model-value="copied"
           location="top"
@@ -58,7 +52,6 @@ import ValidationTable from './ValidationTable.vue'
 import MutationTable from './MutationTable.vue'
 import GenerationTable from './GenerationTable.vue'
 import { EngineResponse } from "../types";
-import DownloadBtn from "./DownloadBtn.vue";
 import { PropType } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { computed } from "vue";
@@ -69,12 +62,6 @@ const props = defineProps({
   results: { type: Object as PropType<EngineResponse>, required: true },
   policy: { type: String, default: "" },
 });
-
-const filename = computed(() => {
-    const name: string = (props.results.validation || props.results.mutation || props.results.imageVerification || props.results.generation || [{}])[0].policy?.metadata.name || "policy"
-    
-    return `${name}.yaml`
-  });
 
 const hasResults = computed(() => {
   return (props.results.validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) || 
