@@ -3,17 +3,15 @@
     <template v-slot:prepend>
       <slot name="prepend-actions" />
     </template>
-    <div class="toolbar-container">
-      <router-link class="py-1 app-logo d-block" to="/">
-        <template v-if="display.mdAndUp.value">
-          <v-img src="/kyverno-logo.png" />
-          <v-chip size="small" style="position: absolute; bottom: 14px; right: -45px">v1.10</v-chip>
-        </template>
-        <template v-if="display.smAndDown.value">
-          <v-img src="/favicon.png" width="80" />
-          <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px">Kyverno v1.10</v-chip>
-        </template>
-      </router-link>
+    <div class="app-logo">
+      <template v-if="display.mdAndUp.value">
+        <v-img src="/kyverno-logo.png" />
+        <v-chip size="small" style="position: absolute; bottom: 12px; right: -55px">v1.10</v-chip>
+      </template>
+      <template v-if="display.smAndDown.value">
+        <v-img src="/favicon.png" width="80" />
+        <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px">Kyverno v1.10</v-chip>
+      </template>
     </div>
     <template v-slot:append>
       <v-btn
@@ -52,18 +50,9 @@ const display = useDisplay();
 <style scoped>
 .app-logo {
   width: 200px;
-  height: 64px;
+  height: 62px;
   position: absolute;
-  left: 0;
+  left: 70px;
 }
 
-.toolbar-container {
-  width: 100%;
-  max-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding-left: 200px;
-}
 </style>

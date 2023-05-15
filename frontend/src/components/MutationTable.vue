@@ -10,10 +10,11 @@
     :items-per-page="-1"
   >
     <template v-slot:[`item.status`]="{ item }">
-      <StatusChip :status="item.raw.status" />
+      <StatusChip :status="item.raw.status" :key="item.raw.status" />
     </template>
     <template v-slot:[`item.details`]="{ item }">
-      <v-btn @click="details(item.raw)" variant="text" icon="mdi-open-in-new" />
+      <v-btn @click="details(item.raw)" variant="text" icon="mdi-open-in-new" v-if="item.raw.status === 'pass'" />
+      <MsgTooltip :msg="item.raw.message" v-else />
     </template>
     <template #bottom></template>
   </v-data-table>
@@ -29,6 +30,7 @@ import { useDisplay } from "vuetify/lib/framework.mjs";
 import { useRouter } from "vue-router";
 import { useSessionStorage } from "@vueuse/core";
 import hash from 'object-hash'
+import MsgTooltip from "./MsgTooltip.vue";
 
 type Item = {
   id: string;
@@ -69,7 +71,7 @@ const headers = computed(() => {
     { title: "Policy", key: "policy", width: "30%" },
     { title: "Rule", key: "rule", width: "30%" },
     { title: "Status", key: "status", width: "10%", align: "end" },
-      { title: "Details", key: "details", width: "5%", align: "end" },
+    { title: "Details", key: "details", width: "5%", align: "end" },
   ];
 });
 
