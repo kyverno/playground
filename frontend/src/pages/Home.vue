@@ -22,42 +22,11 @@
         <OnboardingAlert />
         <v-row>
           <v-col :md="7" :sm="12">
-            <v-card style="height: 800px">
-              <EditorToolbar
-                id="policy-panel"
-                title="Policies"
-                v-model="policy"
-                :restore-value="state.policy.value"
-                :info="options.panels.policyInfo"
-              />
-              <PolicyEditor v-model="policy" />
-            </v-card>
+            <PolicyPanel v-model="policy" />
           </v-col>
           <v-col :md="5" :sm="12">
-            <v-card style="height: 300px">
-              <EditorToolbar
-                id="context-panel"
-                title="Context"
-                :info="options.panels.contextInfo"
-                v-model="context"
-                :restore-value="state.context.value"
-              />
-              <ContextEditor v-model="context" />
-            </v-card>
-            <v-card style="height: 487px" class="mt-3">
-              <EditorToolbar
-                title="Resources"
-                id="resource-panel"
-                :info="options.panels.resourceInfo"
-                v-model="resource"
-                :restore-value="state.resource.value"
-              >
-                <template #prepend-actions>
-                  <TemplateButton @select="(template: string) => resource = template" />
-                </template>
-              </EditorToolbar>
-              <ResourceEditor v-model="resource" />
-            </v-card>
+            <ContextPanel v-model="context" @collapse="(v: boolean) => resourceHeight = v ? 691 : 441" />
+            <ResourcePanel v-model="resource" :height="resourceHeight" />
           </v-col>
         </v-row>
         <HelpButton />
@@ -88,19 +57,15 @@ import 'v-onboarding/dist/style.css'
 import { layoutTheme } from "@/config";
 import { useState, useOnboarding } from "@/composables";
 import ErrorBar from "@/components/ErrorBar.vue";
-import EditorToolbar from "@/components/EditorToolbar.vue";
 import ExampleDrawer from "@/components/ExampleDrawer.vue";
-import PolicyEditor from "@/components/PolicyEditor.vue";
-import ContextEditor from "@/components/ContextEditor.vue";
-import ResourceEditor from "@/components/ResourceEditor.vue";
 import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
 import HelpButton from '@/components/HelpButton.vue';
 import AppBar from "@/components/AppBar.vue";
 import Onboarding from "@/components/Onboarding.vue";
-import { options } from '@/config'
+import ContextPanel from "@/components/ContextPanel.vue";
+import ResourcePanel from "@/components/ResourcePanel.vue";
 import {
-  TemplateButton,
   LoadButton,
   SaveButton,
   ShareButton,
@@ -111,6 +76,7 @@ import {
 
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "@/assets/templates";
 import { EngineResponse } from "@/types";
+import PolicyPanel from "@/components/PolicyPanel.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -198,4 +164,6 @@ onMounted(() => {
 });
 
 const { finish, start, onboarding, steps, wrapper } = useOnboarding(drawer)
+
+const resourceHeight = ref(441)
 </script>

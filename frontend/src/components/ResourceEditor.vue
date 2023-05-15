@@ -1,4 +1,4 @@
-<template>
+1<template>
   <MonacoEditor
     language="yaml"
     :theme="editorTheme"
