@@ -11,7 +11,7 @@
           <v-btn :icon="collapse ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggle" />
         </template>
       </EditorToolbar>
-      <ContextEditor v-model="context" v-if="!collapse" style="height: 250px" />
+      <ContextEditor v-model="context" v-show="!collapse" style="height: 250px" />
     </v-card>
 </template>
 

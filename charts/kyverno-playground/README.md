@@ -50,6 +50,7 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | nameOverride | string | `""` | Name override |
 | fullnameOverride | string | `""` | Full name override |
 | replicaCount | int | `1` | Number of pod replicas |
+| sponsor | string | `""` | Optional sponsor text |
 | image.registry | string | `"ghcr.io"` | Image registry |
 | image.repository | string | `"kyverno/playground"` | Image repository |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |

@@ -7,6 +7,9 @@ fullnameOverride: ""
 # -- Number of pod replicas
 replicaCount: 1
 
+# -- Optional sponsor text
+sponsor: ""
+
 image:
   # -- Image registry
   registry: ghcr.io

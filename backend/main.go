@@ -477,7 +477,7 @@ func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.U
 	}
 }
 
-func run(host string, port int) {
+func run(sponsor, host string, port int) {
 	fs, err := fs.Sub(data.StaticFiles(), "dist")
 	if err != nil {
 		panic(err)
@@ -489,7 +489,12 @@ func run(host string, port int) {
 		AllowHeaders:  []string{"Origin", "Content-Type"},
 		ExposeHeaders: []string{"Content-Length"},
 	}))
+
 	router.POST("/engine", serveAPI)
+	router.POST("/sponsor", func(c *gin.Context) {
+		c.String(http.StatusOK, sponsor)
+	})
+
 	router.StaticFS("/", http.FS(fs))
 	address := fmt.Sprintf("%v:%v", host, port)
 	if err := router.Run(address); err != nil {
@@ -501,7 +506,8 @@ func main() {
 	var host = flag.String("host", "0.0.0.0", "server host")
 	var port = flag.Int("port", 8080, "server port")
 	var mode = flag.String("mode", gin.ReleaseMode, "gin run mode")
+	var sponsor = flag.String("sponsor", "", "sponsor text")
 	flag.Parse()
 	gin.SetMode(*mode)
-	run(*host, *port)
+	run(*sponsor, *host, *port)
 }
