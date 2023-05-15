@@ -7,7 +7,7 @@
       </template>
       <template #desktop-actions>
         <PrimeButton @click="start" v-if="onboarding" variant="outlined">Onboarding</PrimeButton>
-        <ShareButton :policy="policy" :resource="resource" :context="context" />
+        <ShareButton :policy="policy" :resource="resource" :context="context" btn-class="ml-2" />
         <SaveButton :policy="policy" :resource="resource" :context="context" btn-class="ml-2" />
         <LoadButton v-model:policy="policy" v-model:resource="resource" v-model:context="context" btn-class="mx-2" />
       </template>
@@ -41,10 +41,11 @@
       </v-container>
       <ErrorBar v-model="showError" :text="errorText" />
       <ValidationDialog v-model="showResults" :results="results" :policy="policy" />
-      <v-card v-if="state.name.value" style="position: fixed; bottom: 0; left: 0;">
-        <v-card-text class="bg-grey-darken-2">Loaded State: {{ state.name.value }}</v-card-text>
+      <v-card v-if="state.name.value" class="state-card">
+        <v-card-text class="text-body-2 font-weight-medium py-2">Loaded State: {{ state.name.value }}</v-card-text>
       </v-card>
     </v-main>
+    <Sponsor />
   </v-app>
 </template>
 
@@ -77,6 +78,7 @@ import {
 import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "@/assets/templates";
 import { EngineResponse } from "@/types";
 import PolicyPanel from "@/components/PolicyPanel.vue";
+import Sponsor from "@/components/Sponsor.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -167,3 +169,12 @@ const { finish, start, onboarding, steps, wrapper } = useOnboarding(drawer)
 
 const resourceHeight = ref(441)
 </script>
+
+<style scoped>
+.state-card {
+  background-color: rgb(var(--v-theme-background));
+  position: fixed; 
+  bottom: 0; 
+  left: 0;
+}
+</style>

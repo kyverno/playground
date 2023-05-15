@@ -7,6 +7,7 @@
         :variant="variant"
         :block="block"
         title="create a shareable URL with the current input"
+        :class="btnClass"
         >Share</v-btn
       >
     </template>
@@ -52,6 +53,7 @@ const props = defineProps({
   policy: { type: String, default: "" },
   resource: { type: String, default: "" },
   context: { type: String, default: "" },
+  btnClass: { type: String, default: "" },
   variant: { type: String as PropType<"outlined" | "text"> },
   block: { type: Boolean },
 });
