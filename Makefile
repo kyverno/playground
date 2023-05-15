@@ -3,8 +3,10 @@
 ############
 
 KIND_IMAGE           ?= kindest/node:v1.26.3
+KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
+USE_CONFIG           ?= standard
 
 #############
 # VARIABLES #
@@ -24,8 +26,9 @@ PLATFORMS           := linux/arm64,linux/amd64
 KO_PLATFORMS        := all
 PLAYGROUND_IMAGE    := playground
 REPO_PLAYGROUND     := $(REGISTRY)/$(REPO)/$(PLAYGROUND_IMAGE)
-
 KO_REGISTRY         := ko.local
+COMMA               := ,
+
 ifndef VERSION
 KO_TAGS             := $(GIT_SHA)
 else ifeq ($(VERSION),main)
@@ -42,7 +45,7 @@ TOOLS_DIR                          := $(PWD)/.tools
 HELM                               := $(TOOLS_DIR)/helm
 HELM_VERSION                       := v3.10.1
 KIND                               := $(TOOLS_DIR)/kind
-KIND_VERSION                       := v0.17.0
+KIND_VERSION                       := v0.18.0
 KO                                 := $(TOOLS_DIR)/ko
 KO_VERSION                         := main #e93dbee8540f28c45ec9a2b8aec5ef8e43123966
 TOOLS                              := $(KIND) $(HELM) $(KO)
@@ -76,7 +79,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@echo Generate openapi schema... >&2
 	@rm -rf ./schemas
 	@mkdir -p ./schemas/openapi/v2
-	@mkdir -p ./schemas/openapi/v3
+	@mkdir -p ./schemas/openapi/v3/apis/kyverno.io
 	@$(KIND) create cluster --name schema --image $(KIND_IMAGE)
 	@$(HELM) upgrade --install --wait --timeout 15m --atomic \
   		--version $(KYVERNO_VERSION) \
@@ -84,6 +87,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
   		--repo https://kyverno.github.io/kyverno kyverno kyverno
 	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
+	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
 	@$(KIND) delete cluster --name schema
 
 #########
@@ -141,6 +145,42 @@ docker-build: ## Build playground image (with docker)
 run: build-backend-assets ## Run locally
 	@echo Run backend... >&2
 	@cd backend && go run .
+
+########
+# KIND #
+########
+
+.PHONY: kind-create-cluster
+kind-create-cluster: $(KIND) ## Create kind cluster
+	@echo Create kind cluster... >&2
+	@$(KIND) create cluster --name $(KIND_NAME) --image $(KIND_IMAGE) --config ./scripts/config/kind.yaml
+
+.PHONY: kind-delete-cluster
+kind-delete-cluster: $(KIND) ## Delete kind cluster
+	@echo Delete kind cluster... >&2
+	@$(KIND) delete cluster --name $(KIND_NAME)
+
+.PHONY: kind-load
+kind-load: $(KIND) ko-build ## Build playground image and load it in kind cluster
+	@echo Load playground image... >&2
+	@$(KIND) load docker-image --name $(KIND_NAME) ko.local/github.com/kyverno/playground/backend:$(GIT_SHA)
+
+.PHONY: kind-install
+kind-install: $(HELM) ## Install playground helm chart
+	@echo Install playground chart... >&2
+	@$(HELM) upgrade --install kyverno --namespace kyverno --create-namespace --wait ./charts/kyverno-playground \
+		--set image.registry=$(KO_REGISTRY) \
+		--set image.repository=github.com/kyverno/playground/backend \
+		--set image.tag=$(GIT_SHA) \
+		$(foreach CONFIG,$(subst $(COMMA), ,$(USE_CONFIG)),--values ./scripts/config/$(CONFIG)/kyverno-playground.yaml)
+
+.PHONY: kind-deploy
+kind-deploy: $(HELM) kind-load ## Build image, load it in kind cluster and deploy playground helm chart
+	@echo Install ingress-ngingx... >&2
+	@kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+	@sleep 15
+	@kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
+	@$(MAKE) kind-install
 
 ########
 # HELP #

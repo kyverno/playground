@@ -3,7 +3,23 @@ import { watch, computed } from "vue";
 
 export type Config = {
     editorThemes: { name: string; theme: string; }[];
-    examples: { [group: string]: { path: string; policies: string[] } }[]
+    layoutThemes: string[];
+    onboarding: { text: string };
+}
+
+export type Policy = {
+    url?: string;
+    contextPath?: string;
+    path: string;
+    title: string;
+}
+
+type Example = {
+    name: string;
+    color?: string;
+    url: string;
+    subgroups?: { name: string; policies: Policy[]; url?: string; }[]
+    policies?: Policy[] | string[];
 }
 
 const isDark = usePreferredDark()
@@ -33,9 +49,56 @@ export const options = {
         { name: 'HC Black', theme: 'hc-black' }, 
         { name: 'HC Light', theme: 'hc-light' }
     ],
-    examples: {
-        "Best Practices": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/best-practices',
+    examples: [
+        {
+            name: "Tutorials",
+            url: 'https://raw.githubusercontent.com/kyverno/policies/main/',
+            color: 'orange-darken-3',
+            subgroups: [
+                {
+                    name: 'RuleTypes',
+                    url: '/tutorials/policies',
+                    policies: [
+                        { path: 'validate', title: 'Validate Pod Labels' },
+                        { path: 'mutation', title: 'Mutate Pod Annotations' },
+                        { path: 'generation', title: 'Generate Quotas' },
+                        { path: 'verify-images', title: 'Verify Image Signatures' },
+                    ]
+                },
+                {
+                    name: 'ConfigMap Context',
+                    policies: [
+                        { url: '/tutorials/policies', path: 'allowed-pod-priorities', title: 'Allowed Pod Priorities' },
+                        { path: 'other/exclude-namespaces-dynamically', contextPath: '/tutorials/context', title: 'Exclude Namespaces Dynamically' },
+                    ]
+                },
+                {
+                    name: 'API Call Context',
+                    policies: [
+                        { path: 'other/restrict-pod-count-per-node', contextPath: '/tutorials/context', title: 'Restrict Pod Count per Node' },
+                        { path: 'other/restrict-ingress-host', contextPath: '/tutorials/context', title: 'Unique Ingress Host' },
+                        { path: 'other/require-netpol', contextPath: '/tutorials/context', title: 'Require NetworkPolicy' },
+                    ]
+                },
+                {
+                    name: 'UPDATE Operations',
+                    policies: [
+                        { path: 'other/allowed-label-changes', contextPath: '/tutorials/context', title: 'Allowed Label Changes' },
+                        { path: 'other/block-updates-deletes', contextPath: '/tutorials/context', title: 'Block Updates and Deletes' },
+                    ]
+                },
+                {
+                    name: 'Subject Configuration',
+                    policies: [
+                        { path: 'other/check-serviceaccount', contextPath: '/tutorials/context', title: 'Check ServiceAccount' },
+                    ]
+                }
+            ]
+        },
+        {
+            name: "Best Practices",
+            url: 'https://raw.githubusercontent.com/kyverno/policies/main/best-practices',
+            color: undefined,
             policies: [
                 "disallow-cri-sock-mount",
                 "disallow-default-namespace",
@@ -53,8 +116,10 @@ export const options = {
                 "restrict-service-external-ips",
             ]
         },
-        "Pod Security Baseline": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/baseline',
+        {
+            name: "Pod Security Baseline",
+            url: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/baseline',
+            color: undefined,
             policies: [
                 "disallow-capabilities",
                 "disallow-host-namespaces",
@@ -70,8 +135,10 @@ export const options = {
                 "restrict-sysctls",
             ]
         },
-        "Pod Security Restricted": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/restricted',
+        {
+            name: "Pod Security Restricted",
+            url: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/restricted',
+            color: undefined,
             policies: [
                 "disallow-capabilities-strict",
                 "disallow-privilege-escalation",
@@ -81,57 +148,38 @@ export const options = {
                 "restrict-volume-types",
             ]
         },
-        "Pod Security Subrule": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule',
+        {
+            name: "Pod Security Subrule",
+            url: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule',
+            color: undefined,
             policies: [
                 "podsecurity-subrule-baseline",
             ]
         },
-        "Pod Security Subrule Restricted": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule/restricted',
+        {
+            name: "Pod Security Subrule Restricted",
+            url: 'https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule/restricted',
+            color: undefined,
             policies: [
                 "restricted-exclude-capabilities",
                 "restricted-exclude-seccomp",
                 "restricted-latest",
             ]
         },
-        "Cert Manager": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/cert-manager',
-            policies: [
-                "limit-dnsnames",
-                "limit-duration",
-                "restrict-issuer",
-            ]
-        },
-        "NGINX Ingress": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/nginx-ingress',
-            policies: [
-                "disallow-ingress-nginx-custom-snippets",
-                "restrict-annotations",
-                "restrict-ingress-paths",
-            ]
-        },
-        "Velero": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/velero',
-            policies: [
-                "block-velero-restore",
-                "validate-cron-schedule",
-                "backup-all-volumes",
-            ]
-        },
-        "Other": {
-            path: 'https://raw.githubusercontent.com/kyverno/policies/main/other',
+        {
+            name: "Other",
+            url: 'https://raw.githubusercontent.com/kyverno/policies/main/other',
+            color: undefined,
             policies: [
                 "add-certificates-volume",
                 "add-default-resources",
                 "add-labels",
                 "allowed-annotations",
-                "allowed-pod-priorities",
                 "check-env-vars",
                 "require-base-image",
             ]
         },
-    }
+    ] as Example[]
 }
 
 export const useConfig = () => ({

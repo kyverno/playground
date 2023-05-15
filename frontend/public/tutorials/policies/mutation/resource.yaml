@@ -1,0 +1,21 @@
+# Validated Resource
+apiVersion: v1
+kind: Pod
+metadata:
+  name: first
+  namespace: foo
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: mypvc
+  containers:
+    - name: task-pv-container
+      image: nothinghere:123
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: task-pv-storage
+      resources: {}

@@ -5,23 +5,38 @@
     width="400"
     @update:modelValue="(event: boolean) => emit('update:modelValue', event)"
   >
-    <template v-for="(value, group) in options.examples" :key="group">
+    <template v-for="({ color, ...example }) in options.examples" :key="example.name">
       <v-list>
-        <v-list-group :value="group">
+        <v-list-group :value="example.name">
           <template v-slot:activator="{ props }">
             <v-list-item
               v-bind="props"
               prepend-icon="mdi-folder"
-              :title="group"
+              :title="example.name"
+              :class="color ? `text-${color}` : ''"
             ></v-list-item>
           </template>
 
-          <v-list-item
-            v-for="policy in value.policies"
-            :key="policy"
-            :title="policy.replaceAll('-', ' ')"
-            @click="() => loadExample(value.path, policy)"
-          ></v-list-item>
+          <template  v-if="example.subgroups">
+            <template v-for="(subgroup, j) in example.subgroups" :key="j">
+              <v-list-subheader>{{ subgroup.name }}</v-list-subheader>
+              <v-list-item
+                v-for="(policy, i) in subgroup.policies"
+                :key="i"
+                :title="formatTitle(policy)"
+                @click="() => loadExample(policy.url || subgroup.url || example.url, policy)"
+              />
+            </template>
+          </template>
+
+          <template v-else>
+            <v-list-item
+              v-for="(policy, i) in example.policies"
+              :key="i"
+              :title="formatTitle(policy)"
+              @click="() => loadExample(example.url, policy)"
+            />
+          </template>
         </v-list-group>
       </v-list>
     </template>
@@ -42,7 +57,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useConfig } from "../config";
+import { useConfig, Policy } from "../config";
+import { ContextTemplate } from "@/assets/templates";
 
 const { options } = useConfig()
 
@@ -53,19 +69,50 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue", "select:example"]);
 const overlay = ref<boolean>(false);
 
-const loadExample = async (path: string, name: string) => {
+const formatTitle = (policy: Policy | string) => {
+  if (typeof policy === 'object') {
+    return policy.title
+  }
+
+  return policy.replaceAll('-', ' ')
+}
+
+const loadExample = async (url: string, policy: Policy | string) => {
+  let folder: string = ''
+  let contextPath: string | undefined
+
+  if (typeof policy === 'object') {
+    folder = policy.path
+    contextPath = policy.contextPath
+  } else {
+    folder = policy
+  }
+
+  const name = folder.split('/').pop()
+
   try {
-    overlay.value = true;
-    const values = await Promise.all([
-      fetch(`${path}/${name}/${name}.yaml`).then((resp) => resp.text()),
-      fetch(`${path}/${name}/resource.yaml`).then((resp) => {
+    const contextURL = contextPath ? `${contextPath}/${name}.yaml` : `${url}/${folder}/context.yaml`
+
+    const promises = [
+      fetch(`${url}/${folder}/${name}.yaml`).then((resp) => resp.text()),
+      fetch(`${url}/${folder}/resource.yaml`).then((resp) => {
         if (resp.status === 404) {
-          return fetch(`${path}/${name}/resources.yaml`)
+          return fetch(`${url}/${folder}/resources.yaml`)
         }
 
         return resp
       }).then((resp) => resp.text()),
-    ]);
+      fetch(contextURL).then((resp) => {
+        if (resp.status === 404) {
+          return ContextTemplate
+        }
+
+        return resp.text()
+      }),
+    ]
+
+    overlay.value = true;
+    const values = await Promise.all(promises);
 
     emit("select:example", values);
     emit("update:modelValue", false);

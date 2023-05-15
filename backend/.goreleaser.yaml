@@ -1,0 +1,47 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    binary: kyverno-playground
+    ldflags:
+      - -s -w
+
+kos:
+  - repository: ghcr.io/kyverno/playground
+    tags:
+      - '{{.Tag}}'
+    bare: true
+    preserve_import_paths: false
+    sbom: none
+    platforms:
+      - all
+    ldflags:
+      - -s -w
+
+archives:
+  - name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'

@@ -272,6 +272,7 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 			return nil, err
 		}
 		store.SetMock(true)
+		store.SetRegistryAccess(true)
 		eng := engine.NewEngine(
 			cfg,
 			config.NewDefaultMetricsConfiguration(),
@@ -423,12 +424,11 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 }
 
 func serveAPI(c *gin.Context) {
-	// TODO: error handling
 	var request apiRequest
-	if err := c.BindJSON(&request); err != nil {
-		return
+	if err := c.ShouldBind(&request); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind) //nolint: errcheck
 	} else if response, err := request.process(c.Request.Context()); err != nil {
-		return
+		c.AbortWithError(http.StatusInternalServerError, err).SetType(gin.ErrorTypeAny) //nolint: errcheck
 	} else {
 		c.IndentedJSON(http.StatusOK, response)
 	}
@@ -470,7 +470,7 @@ func run(host string, port int) {
 }
 
 func main() {
-	var host = flag.String("host", "localhost", "server host")
+	var host = flag.String("host", "0.0.0.0", "server host")
 	var port = flag.Int("port", 8080, "server port")
 	var mode = flag.String("mode", gin.ReleaseMode, "gin run mode")
 	flag.Parse()
