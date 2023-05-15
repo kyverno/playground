@@ -41,3 +41,11 @@ jobs:
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.0
       - name: Build
         run: make ko-build
+
+  codegen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.0
+      - name: Verify codegen
+        run: make verify-codegen
