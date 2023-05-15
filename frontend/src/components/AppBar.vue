@@ -14,7 +14,6 @@
           <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px">Kyverno v1.10</v-chip>
         </template>
       </router-link>
-      <h1 class="text-h4 d-none d-lg-inline" style="padding-left: 200px">Kyverno Playground</h1>
     </div>
     <template v-slot:append>
       <v-btn
