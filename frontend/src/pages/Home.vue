@@ -23,7 +23,7 @@
           <v-col :md="7" :sm="12">
             <v-card style="height: 800px">
               <EditorToolbar
-                title="ClusterPolicy"
+                title="Policies"
                 v-model="policy"
                 :restore-value="state.policy.value"
               />
@@ -41,7 +41,7 @@
             </v-card>
             <v-card style="height: 487px" class="mt-3">
               <EditorToolbar
-                title="Resource"
+                title="Resources"
                 v-model="resource"
                 :restore-value="state.resource.value"
               >
