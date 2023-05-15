@@ -196,6 +196,23 @@ func fromUnstructured[T any](untyped unstructured.Unstructured) (T, error) {
 	return result, nil
 }
 
+func validate(params *apiParameters, policies []kyvernov1.PolicyInterface, resources []unstructured.Unstructured) error {
+	if params != nil {
+		for _, policy := range policies {
+			for _, rule := range policy.GetSpec().Rules {
+				for _, variable := range rule.Context {
+					if variable.APICall != nil || variable.ConfigMap != nil {
+						if _, ok := params.Variables[variable.Name]; !ok {
+							return fmt.Errorf("Variable %s is not defined in the context", variable.Name)
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
 func (r apiRequest) loadPolicies(kubeVersion string) ([]kyvernov1.PolicyInterface, error) {
 	loadPolicy := func(untyped unstructured.Unstructured) (kyvernov1.PolicyInterface, error) {
 		kind := untyped.GetKind()
@@ -263,6 +280,8 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 	} else if policies, err := r.loadPolicies(apiParameters.Kubernetes.Version); err != nil {
 		return nil, err
 	} else if resources, err := r.loadResources(apiParameters.Kubernetes.Version); err != nil {
+		return nil, err
+	} else if err := validate(apiParameters, policies, resources); err != nil {
 		return nil, err
 	} else {
 		apiResponse := apiResponse{
@@ -390,9 +409,11 @@ func (r apiRequest) process(ctx context.Context) (*apiResponse, error) {
 func serveApi(c *gin.Context) {
 	var request apiRequest
 	if err := c.ShouldBind(&request); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err).SetType(gin.ErrorTypeBind) //nolint: errcheck
+		c.AbortWithStatus(http.StatusBadRequest)
+		c.Writer.WriteString(err.Error()) //nolint: errcheck
 	} else if response, err := request.process(c.Request.Context()); err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err).SetType(gin.ErrorTypeAny) //nolint: errcheck
+		c.AbortWithStatus(http.StatusInternalServerError)
+		c.Writer.WriteString(err.Error()) //nolint: errcheck
 	} else {
 		c.IndentedJSON(http.StatusOK, response)
 	}
