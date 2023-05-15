@@ -47,44 +47,40 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| replicaCount | int | `1` |  |
-| image.registry | string | `"ghcr.io"` |  |
-| image.repository | string | `"kyverno/playground"` |  |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.tag | string | `""` |  |
-| imagePullSecrets | list | `[]` |  |
-| nameOverride | string | `""` |  |
-| fullnameOverride | string | `""` |  |
-| priorityClassName | string | `""` |  |
-| serviceAccount.create | bool | `true` |  |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.name | string | `""` |  |
-| podAnnotations | object | `{}` |  |
-| podSecurityContext.fsGroup | int | `2000` |  |
-| securityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| securityContext.readOnlyRootFilesystem | bool | `true` |  |
-| securityContext.runAsNonRoot | bool | `true` |  |
-| securityContext.runAsUser | int | `1000` |  |
-| securityContext.privileged | bool | `false` |  |
-| securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| service.type | string | `"ClusterIP"` |  |
-| service.port | int | `8080` |  |
+| nameOverride | string | `""` | Name override |
+| fullnameOverride | string | `""` | Full name override |
+| replicaCount | int | `1` | Number of pod replicas |
+| image.registry | string | `"ghcr.io"` | Image registry |
+| image.repository | string | `"kyverno/playground"` | Image repository |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| image.tag | string | `nil` | Image tag (will default to app version if not set) |
+| imagePullSecrets | list | `[]` | Image pull secrets |
+| priorityClassName | string | `""` | Priority class name |
+| serviceAccount.create | bool | `true` | Create service account |
+| serviceAccount.annotations | object | `{}` | Service account annotations |
+| serviceAccount.name | string | `""` | Service account name (required if `serviceAccount.create` is `false`) |
+| podAnnotations | object | `{}` | Pod annotations |
+| podSecurityContext | object | `{"fsGroup":2000}` | Pod security context |
+| securityContext | object | See [values.yaml](values.yaml) | Container security context |
+| service.type | string | `"ClusterIP"` | Service type |
+| service.port | int | `8080` | Service port |
 | livenessProbe | object | `{}` |  |
 | readinessProbe | object | `{}` |  |
-| ingress.enabled | bool | `false` |  |
-| ingress.className | string | `""` |  |
-| ingress.annotations | object | `{}` |  |
-| ingress.hosts | list | `[]` |  |
-| ingress.tls | list | `[]` |  |
-| resources | object | `{}` |  |
-| autoscaling.enabled | bool | `false` |  |
-| autoscaling.minReplicas | int | `1` |  |
-| autoscaling.maxReplicas | int | `100` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
-| nodeSelector | object | `{}` |  |
-| tolerations | list | `[]` |  |
-| affinity | object | `{}` |  |
+| ingress.enabled | bool | `false` | Enable ingress |
+| ingress.className | string | `""` | Ingress class name |
+| ingress.annotations | object | `{}` | Ingress annotations |
+| ingress.hosts | list | `[]` | Ingress hosts |
+| ingress.tls | list | `[]` | Ingress tls |
+| resources.limits | string | `nil` | Container resource limits |
+| resources.requests | string | `nil` | Container resource requests |
+| autoscaling.enabled | bool | `false` | Enable autoscaling |
+| autoscaling.minReplicas | int | `1` | Min number of replicas |
+| autoscaling.maxReplicas | int | `100` | Max number of replicas |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilisation |
+| autoscaling.targetMemoryUtilizationPercentage | string | `nil` | Target Memory utilisation |
+| nodeSelector | object | `{}` | Node selector |
+| tolerations | list | `[]` | Tolerations |
+| affinity | object | `{}` | Affinity |
 
 ## Source Code
 
