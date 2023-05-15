@@ -61,16 +61,17 @@ service:
   # -- Service port
   port: 8080
 
+# -- Liveness probe
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
 
-livenessProbe: {}
-#  httpGet:
-#    path: /
-#    port: http
-
-readinessProbe: {}
-#  httpGet:
-#    path: /
-#    port: http
+# -- Readiness probe
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
 
 ingress:
   # -- Enable ingress
