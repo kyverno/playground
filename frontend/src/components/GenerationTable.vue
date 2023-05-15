@@ -10,10 +10,11 @@
     :items-per-page="-1"
   >
     <template v-slot:[`item.status`]="{ item }">
-      <StatusChip :status="item.raw.status" />
+      <StatusChip :status="item.raw.status" :key="item.raw.status" />
     </template>
     <template v-slot:[`item.details`]="{ item }">
-      <v-btn @click="details(item.raw)" variant="text" icon="mdi-open-in-new" />
+      <v-btn @click="details(item.raw)" variant="text" icon="mdi-open-in-new" v-if="item.raw.status === 'pass'" />
+      <MsgTooltip :msg="item.raw.message" v-else />
     </template>
     <template #bottom></template>
   </v-data-table>
@@ -22,13 +23,14 @@
 
 <script setup lang="ts">
 import { Generation, RuleStatus } from "../types";
-import StatusChip from "./StatusChip.vue";
 import { PropType } from "vue";
 import { computed } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import { useRouter } from "vue-router";
 import { useSessionStorage } from "@vueuse/core";
 import hash from 'object-hash'
+import StatusChip from "./StatusChip.vue";
+import MsgTooltip from "./MsgTooltip.vue";
 
 type Item = {
   id: string;
