@@ -7,7 +7,7 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-logr/logr v1.2.4
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20230512141448-83840a24620a
+	github.com/kyverno/kyverno v1.10.0-beta.1
 	go.etcd.io/etcd/client/pkg/v3 v3.6.0-alpha.0
 	k8s.io/api v0.27.1
 	k8s.io/apiextensions-apiserver v0.27.1
