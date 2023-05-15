@@ -15,6 +15,7 @@
 import { ref, watch } from "vue";
 import { MarkerSeverity, editor } from "monaco-editor";
 import { EngineResponse } from "@/types";
+import { resolveAPI } from "@/utils";
 
 const props = defineProps({
   policy: { type: String, default: "" },
@@ -40,7 +41,7 @@ watch(props, ({ errorState }: { errorState: boolean }) => {
   icon.value = "mdi-play";
 });
 
-const api: string = import.meta.env.VITE_API_HOST || "";
+const api: string = resolveAPI();
 
 const handleEditorErrors = () => {
   const markers = editor
