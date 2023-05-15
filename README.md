@@ -45,7 +45,7 @@ The "URL" Button loads a manifest from an external URL, example: https://raw.git
 
 Kyverno Playground releases are available at https://github.com/kyverno/playground/releases.
 
-Additionaly we publish docker images at ghcr.io/kyverno/playground and an helm chart repository is available at https://kyverno.github.io/playground.
+Additionaly we publish docker images at [ghcr.io/kyverno/playground](https://github.com/kyverno/playground/pkgs/container/playground) and an helm chart repository is available at https://kyverno.github.io/playground.
 
 ### Install with Helm
 
