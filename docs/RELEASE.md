@@ -10,9 +10,11 @@ The [release workflow](../.github/workflows/release.yaml) will take care of crea
 
 ```shell
 VERSION="v0.0.2-alpha.1"
+TAG=$VERSION
 
-git tag $VERSION -m "tag $VERSION" -a
-git push origin $VERSION
+git tag -d $TAG
+git tag $TAG -m "tag $TAG" -a
+git push origin $TAG
 ```
 
 ## Create an Helm release
@@ -22,8 +24,10 @@ Creating an Helm release can be done by pushing a tag to the GitHub repository (
 The [helm workflow](../.github/workflows/helm.yaml) will take care of creating the Helm release and will publish it to https://kyverno.github.io/playground.
 
 ```shell
-VERSION="v0.0.2-alpha.1"
+VERSION="0.0.1-alpha.1"
+TAG=kyverno-playground-chart-v$VERSION
 
-git tag kyverno-playground-chart-v$VERSION -m "tag kyverno-playground-chart-v$VERSION" -a
-git push origin kyverno-playground-chart-v$VERSION
+git tag -d $TAG
+git tag $TAG -m "tag $TAG" -a
+git push origin $TAG
 ```
