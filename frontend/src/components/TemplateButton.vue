@@ -1,31 +1,71 @@
 <template>
-  <v-menu location="bottom">
+  <v-menu location="bottom" :close-on-content-click="false" v-model="menu">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props" prepend-icon="mdi-note-text">template</v-btn>
     </template>
     <v-list>
-      <v-list-item v-for="(item, key) in templates" :key="key" @click="() => loadTemplate(item)" :title="item" />
+      <v-list-item>
+        <v-text-field variant="outlined" density="compact" hide-details placeholder="Search" class="pb-2" v-model="search" />
+      </v-list-item>
+      <v-divider />
+      <v-virtual-scroll :items="templates" :height="350" width="210">
+        <template v-slot:default="{ item }">
+            <v-list-item @click="() => loadTemplate(item)" :title="item" />
+        </template>
+      </v-virtual-scroll>
     </v-list>
   </v-menu>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 const emit = defineEmits(['select'])
 
-const templates = [
+const menu = ref(false)
+const search = ref('')
+
+const list = [
   'Pod',
   'Deployment',
+  'StatefulSet',
+  'DaemonSet',
+  'ReplicaSet',
+  'Job',
+  'CronJob',
   'Service',
   'Ingress',
+  'NetworkPolicy',
+  'Namespace',
   'ConfigMap',
-  'Secret'
+  'Secret',
+  'Role',
+  'RoleBinding',
+  'ClusterRole',
+  'ClusterRoleBinding',
+  'PersistedVolume',
+  'PersistedVolumeClaim',
+  'ServiceAccount',
+  'PodDisruptionBudget',
+  'PriorityClass',
+  'ResourceQuota',
 ]
+
+const templates = computed(() => {
+  if (!search.value) return list
+
+  console.log(search.value.toLowerCase())
+
+  return list.filter(i => i.toLowerCase().search(search.value.toLowerCase()) !== -1)
+})
 
 const loadTemplate = (template: string) => {
   return fetch(`templates/${template.toLocaleLowerCase()}.yaml`).then((resp) => {
     if (resp.status !== 200) return
 
     return resp.text().then(content => emit('select', content))
+  }).then(() => {
+    menu.value = false
+    search.value = ''
   }).catch(console.error)
 }
 </script>
