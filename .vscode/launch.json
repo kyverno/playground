@@ -7,7 +7,9 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/backend",
-            "args": [],
+            "args": [
+                "--log"
+            ],
         }
     ]
 }
