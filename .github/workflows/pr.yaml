@@ -18,11 +18,16 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
       - name: Check go.mod
-        run: cd backend && go mod tidy && git diff --exit-code
+        run: |
+          set -e
+          cd backend && go mod tidy && git diff --exit-code
       - name: Build
-        run: make build-backend
+        run: |
+          set -e
+          make build-backend
       - name: Check code format
         run: |
+          set -e
           diff=$(gofmt -s -d backend)
           if [[ -n "${diff}" ]]; then echo "${diff}"; exit 1; fi
 
@@ -32,7 +37,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.0
       - name: Build
-        run: make build-frontend
+        run: |
+          set -e
+          make build-frontend
 
   ko:
     runs-on: ubuntu-latest
@@ -40,7 +47,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.0
       - name: Build
-        run: make ko-build
+        run: |
+          set -e
+          make ko-build
 
   ct-lint:
     runs-on: ubuntu-latest
@@ -58,7 +67,9 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@e8788873172cb653a90ca2e819d79d65a66d4e76 # v2.4.0
       - name: Run chart-testing (lint)
-        run: ct lint --target-branch=main --check-version-increment=false
+        run: |
+          set -e
+          ct lint --target-branch=main --check-version-increment=false
 
   ah-lint:
     runs-on: ubuntu-latest
@@ -70,7 +81,9 @@ jobs:
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Run ah lint
         working-directory: ./charts/
-        run: ah lint
+        run: |
+          set -e
+          ah lint
 
   codegen:
     runs-on: ubuntu-latest
@@ -78,7 +91,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.0
       - name: Verify codegen
-        run: make verify-codegen
+        run: |
+          set -e
+          make verify-codegen
 
   golangci-lint:
     runs-on: ubuntu-latest
@@ -88,7 +103,9 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
       - name: Build assets
-        run: make build-backend-assets
+        run: |
+          set -e
+          make build-backend-assets
       - name: golangci-lint
         uses: golangci/golangci-lint-action@08e2f20817b15149a52b5b3ebe7de50aff2ba8c5 # v3.4.0
         with:
@@ -102,6 +119,10 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
       - name: Create cluster
-        run: make kind-create-cluster
+        run: |
+          set -e
+          make kind-create-cluster
       - name: Install chart
-        run: make kind-install
+        run: |
+          set -e
+          make kind-install
