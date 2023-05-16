@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
+	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	jsonpatch "github.com/evanphx/json-patch/v5"
@@ -220,7 +221,29 @@ func validate(params *apiParameters, policies []kyvernov1.PolicyInterface, resou
 	}
 	return nil
 }
+func splitDocuments(yamlBytes []byte) ([][]byte, error) {
+	if documents, err := yamlutils.SplitDocuments(yamlBytes); err != nil {
+		return nil, err
+	} else {
+		var results [][]byte
+		for _, document := range documents {
+			onlyComments := true
+			for _, line := range strings.Split(string(document), "\n") {
+				if strings.TrimSpace(line) == "" {
+					continue
+				} else if !strings.HasPrefix(line, "#") {
+					onlyComments = false
+					break
+				}
+			}
+			if !onlyComments {
+				results = append(results, document)
+			}
+		}
+		return results, nil
+	}
 
+}
 func (r apiRequest) loadPolicies(kubeVersion string) ([]kyvernov1.PolicyInterface, error) {
 	loadPolicy := func(untyped unstructured.Unstructured) (kyvernov1.PolicyInterface, error) {
 		kind := untyped.GetKind()
@@ -240,7 +263,7 @@ func (r apiRequest) loadPolicies(kubeVersion string) ([]kyvernov1.PolicyInterfac
 			return nil, fmt.Errorf("invalid kind: %s", kind)
 		}
 	}
-	if documents, err := yamlutils.SplitDocuments([]byte(r.Policies)); err != nil {
+	if documents, err := splitDocuments([]byte(r.Policies)); err != nil {
 		return nil, err
 	} else {
 		var policies []kyvernov1.PolicyInterface
@@ -258,7 +281,7 @@ func (r apiRequest) loadPolicies(kubeVersion string) ([]kyvernov1.PolicyInterfac
 }
 
 func (r apiRequest) loadResources(kubeVersion string) ([]unstructured.Unstructured, error) {
-	if documents, err := yamlutils.SplitDocuments([]byte(r.Resources)); err != nil {
+	if documents, err := splitDocuments([]byte(r.Resources)); err != nil {
 		return nil, err
 	} else {
 		var resources []unstructured.Unstructured
