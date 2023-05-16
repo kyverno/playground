@@ -1,6 +1,9 @@
 <template>
-<v-card class="sponsor" width="150" flat :theme="layoutTheme" style="background-color: rgb(var(--v-theme-background))" v-if="sponsor">
-    <v-card-text class="text-body-2 font-weight-bold pa-2 text-center">
+<v-card class="sponsor background" width="170" flat :theme="layoutTheme" v-if="sponsor">
+    <v-card-text class="text-body-2 font-weight-bold pa-2 text-center" v-if="sponsor === 'nirmata'">
+        Hosted by <a href="https://nirmata.com" target="_blank"><img :src="`nirmata_${layoutTheme}.png`" height="14" style="margin-bottom: -3px;" /></a>
+    </v-card-text>
+    <v-card-text class="text-body-2 font-weight-bold pa-2 text-center" v-else>
         <span v-html="sponsor"></span>
     </v-card-text>
 </v-card>
@@ -32,7 +35,11 @@ fetch(`${api}/sponsor`, {
   }).catch(console.error)
 </script>
 
-<style>
+<style scoped>
+.background {
+    background-color: rgb(var(--v-theme-background))
+}
+
 .sponsor {
   position: fixed;
   left: 50%;
