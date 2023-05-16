@@ -1,4 +1,4 @@
-name: helm
+name: release
 
 on:
   push:
