@@ -507,7 +507,9 @@ func run(sponsor, host string, port int) {
 	if err != nil {
 		panic(err)
 	}
-	router := gin.Default()
+
+	router := gin.New()
+	router.Use(gin.Recovery())
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:  []string{"*"},
 		AllowMethods:  []string{"POST"},
