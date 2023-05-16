@@ -502,13 +502,15 @@ func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.U
 	}
 }
 
-func run(sponsor, host string, port int) {
+func run(sponsor, host string, port int, log bool) {
 	fs, err := fs.Sub(data.StaticFiles(), "dist")
 	if err != nil {
 		panic(err)
 	}
-
 	router := gin.New()
+	if log {
+		router.Use(gin.Logger())
+	}
 	router.Use(gin.Recovery())
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:  []string{"*"},
@@ -533,8 +535,9 @@ func main() {
 	var host = flag.String("host", "0.0.0.0", "server host")
 	var port = flag.Int("port", 8080, "server port")
 	var mode = flag.String("mode", gin.ReleaseMode, "gin run mode")
+	var log = flag.Bool("log", false, "enable gin logger")
 	var sponsor = flag.String("sponsor", "", "sponsor text")
 	flag.Parse()
 	gin.SetMode(*mode)
-	run(*sponsor, *host, *port)
+	run(*sponsor, *host, *port, *log)
 }
