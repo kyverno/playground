@@ -187,6 +187,9 @@ run: build-backend-assets ## Run locally
 kind-create-cluster: $(KIND) ## Create kind cluster
 	@echo Create kind cluster... >&2
 	@$(KIND) create cluster --name $(KIND_NAME) --image $(KIND_IMAGE) --config ./scripts/config/kind.yaml
+	@kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+	@sleep 15
+	@kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
 
 .PHONY: kind-delete-cluster
 kind-delete-cluster: $(KIND) ## Delete kind cluster
@@ -199,21 +202,13 @@ kind-load: $(KIND) ko-build ## Build playground image and load it in kind cluste
 	@$(KIND) load docker-image --name $(KIND_NAME) ko.local/github.com/kyverno/playground/backend:$(GIT_SHA)
 
 .PHONY: kind-install
-kind-install: $(HELM) ## Install playground helm chart
+kind-install: $(HELM) kind-load ## Build image, load it in kind cluster and deploy playground helm chart
 	@echo Install playground chart... >&2
 	@$(HELM) upgrade --install kyverno --namespace kyverno --create-namespace --wait ./charts/kyverno-playground \
 		--set image.registry=$(KO_REGISTRY) \
 		--set image.repository=github.com/kyverno/playground/backend \
 		--set image.tag=$(GIT_SHA) \
 		$(foreach CONFIG,$(subst $(COMMA), ,$(USE_CONFIG)),--values ./scripts/config/$(CONFIG)/kyverno-playground.yaml)
-
-.PHONY: kind-deploy
-kind-deploy: $(HELM) kind-load ## Build image, load it in kind cluster and deploy playground helm chart
-	@echo Install ingress-ngingx... >&2
-	@kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-	@sleep 15
-	@kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
-	@$(MAKE) kind-install
 
 ########
 # HELP #
