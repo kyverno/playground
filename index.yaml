@@ -2,10 +2,10 @@ apiVersion: v1
 entries:
   kyverno-playground:
   - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2023-05-16T19:54:07.498589634Z"
+    appVersion: v0.1.0
+    created: "2023-05-16T20:21:36.946382889Z"
     description: Kyverno Playground Web Application
-    digest: f356afea132d16fe55c3b79644a454ad1611055b706790e52d35f8fc49bf890d
+    digest: 3797ff611172d409f048cc2f8846e6261790bb3502d8b1134c159bb4012cb279
     icon: https://github.com/kyverno/kyverno/raw/main/img/logo.png
     keywords:
     - kubernetes
@@ -34,4 +34,4 @@ entries:
     urls:
     - https://kyverno.github.io/playground/kyverno-playground-v0.0.1-alpha.1.tgz
     version: v0.0.1-alpha.1
-generated: "2023-05-16T19:54:07.497679619Z"
+generated: "2023-05-16T20:21:36.944883875Z"
