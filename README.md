@@ -58,7 +58,17 @@ helm repo add kyverno-playground https://kyverno.github.io/playground/
 Install `kyverno-playground` Helm chart:
 
 ```shell
-helm install kyverno-playground --namespace kyverno --create-namespace kyverno-playground/kyverno-playground
+helm upgrade --install kyverno-playground --namespace kyverno --create-namespace --wait kyverno-playground/kyverno-playground
+```
+
+Install `kyverno-playground` Helm chart (without configuring an Helm repository):
+```shell
+helm upgrade --install kyverno-playground --namespace kyverno --create-namespace --wait --repo https://kyverno.github.io/playground kyverno-playground
+```
+
+Install `kyverno-playground` local Helm chart:
+```shell
+helm upgrade --install kyverno-playground --namespace kyverno --create-namespace --wait ./charts/kyverno-playground
 ```
 
 ## Screenshots
