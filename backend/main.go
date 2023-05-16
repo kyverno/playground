@@ -221,6 +221,7 @@ func validate(params *apiParameters, policies []kyvernov1.PolicyInterface, resou
 	}
 	return nil
 }
+
 func splitDocuments(yamlBytes []byte) ([][]byte, error) {
 	if documents, err := yamlutils.SplitDocuments(yamlBytes); err != nil {
 		return nil, err
@@ -244,6 +245,7 @@ func splitDocuments(yamlBytes []byte) ([][]byte, error) {
 	}
 
 }
+
 func (r apiRequest) loadPolicies(kubeVersion string) ([]kyvernov1.PolicyInterface, error) {
 	loadPolicy := func(untyped unstructured.Unstructured) (kyvernov1.PolicyInterface, error) {
 		kind := untyped.GetKind()
@@ -505,7 +507,9 @@ func run(sponsor, host string, port int) {
 	if err != nil {
 		panic(err)
 	}
-	router := gin.Default()
+
+	router := gin.New()
+	router.Use(gin.Recovery())
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:  []string{"*"},
 		AllowMethods:  []string{"POST"},
