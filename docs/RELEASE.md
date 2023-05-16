@@ -9,7 +9,7 @@ Creating a release can be done by pushing a tag to the GitHub repository (begini
 The [release workflow](../.github/workflows/release.yaml) will take care of creating the GitHub release and will publish docker images.
 
 ```shell
-VERSION="v0.0.2-alpha.1"
+VERSION="v0.1.0"
 TAG=$VERSION
 
 git tag -d $TAG
@@ -24,8 +24,8 @@ Creating an Helm release can be done by pushing a tag to the GitHub repository (
 The [helm workflow](../.github/workflows/helm.yaml) will take care of creating the Helm release and will publish it to https://kyverno.github.io/playground.
 
 ```shell
-VERSION="0.0.1-alpha.1"
-TAG=kyverno-playground-chart-v$VERSION
+VERSION="v0.1.0"
+TAG=kyverno-playground-chart-$VERSION
 
 git tag -d $TAG
 git tag $TAG -m "tag $TAG" -a
