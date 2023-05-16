@@ -8,6 +8,7 @@
         :block="block"
         title="create a shareable URL with the current input"
         :class="btnClass"
+        id="share-button"
         >Share</v-btn
       >
     </template>
