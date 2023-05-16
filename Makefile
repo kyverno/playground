@@ -177,7 +177,7 @@ docker-build: ## Build playground image (with docker)
 .PHONY: run
 run: build-backend-assets ## Run locally
 	@echo Run backend... >&2
-	@cd backend && go run .
+	@cd backend && go run . --log=false
 
 ########
 # KIND #
