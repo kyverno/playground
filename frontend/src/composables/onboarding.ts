@@ -37,6 +37,18 @@ export const useOnboarding = (drawer: Ref<boolean>) => {
             content: { title: "Resource Panel", description: "Write and modify Resources which your Policies are applied to." }
         },
         {
+            attachTo: { element: '#share-button' },
+            content: { title: "Share Button", description: "Share your policies, resources and context with the community." }
+        },
+        {
+            attachTo: { element: '#save-button' },
+            content: { title: "Save Button", description: "Save your tests locally as named profiles for further testing at a later time." }
+        },
+        {
+            attachTo: { element: '#load-button' },
+            content: { title: "Load Button", description: "Load your local persisted profiles or reset your inputs with the default profile." }
+        },
+        {
             attachTo: { element: '#start-btn' },
             content: { title: "Start Button", description: "Evaluates Policies against Resources with the given Context." }
         },

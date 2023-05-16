@@ -7,6 +7,7 @@
         v-bind="props"
         :block="block"
         :variant="variant"
+        id="save-button"
         >Save</v-btn
       >
     </template>

@@ -7,6 +7,7 @@
         v-bind="props"
         :block="block"
         :variant="variant"
+        id="load-button"
         >Load</v-btn
       >
     </template>
