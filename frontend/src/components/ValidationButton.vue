@@ -17,11 +17,9 @@ import { ref, watch } from "vue";
 import { MarkerSeverity, editor } from "monaco-editor";
 import { EngineResponse } from "@/types";
 import { resolveAPI } from "@/utils";
+import { inputs } from "@/store";
 
 const props = defineProps({
-  policy: { type: String, default: "" },
-  resource: { type: String, default: "" },
-  context: { type: String, default: "" },
   errorState: { type: Boolean, default: false },
 });
 
@@ -63,12 +61,12 @@ const submit = (): void => {
     return;
   }
 
-  if (!props.policy.trim()) {
+  if (!inputs.policy.trim()) {
     emit("on-error", new Error("Policy is required"));
     return;
   }
 
-  if (!props.resource.trim()) {
+  if (!inputs.resource.trim()) {
     emit("on-error", new Error("Resource is required"));
     return;
   }
@@ -77,9 +75,9 @@ const submit = (): void => {
 
   fetch(`${api}/engine`, {
     body: JSON.stringify({
-      policies: props.policy,
-      resources: props.resource,
-      context: props.context,
+      policies: inputs.policy,
+      resources: inputs.resource,
+      context: inputs.context,
     }),
     method: "POST",
     mode: "cors",

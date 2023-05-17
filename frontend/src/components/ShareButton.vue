@@ -49,11 +49,9 @@ import { useRouter } from "vue-router";
 import { useClipboard } from "@vueuse/core";
 import { PropType } from "vue";
 import { btnColor } from '@/config'
+import { inputs } from "@/store";
 
-const props = defineProps({
-  policy: { type: String, default: "" },
-  resource: { type: String, default: "" },
-  context: { type: String, default: "" },
+defineProps({
   btnClass: { type: String, default: "" },
   variant: { type: String as PropType<"outlined" | "text"> },
   block: { type: Boolean },
@@ -69,18 +67,16 @@ const { copy, copied, isSupported } = useClipboard({ source: url });
 
 const share = () => {
   loading.value = true;
+  
   const content = JSON.stringify({
-    policy: props.policy,
-    resource: props.resource,
-    context: props.context,
+    policy: inputs.policy,
+    resource: inputs.resource,
+    context: inputs.context,
   });
 
   const compressed = lzstring.compressToBase64(content);
 
-  url.value =
-    window.location.origin +
-    "/" +
-    router.resolve({ name: "home", query: { content: compressed } }).href;
+  url.value = `${window.location.origin}/${router.resolve({ name: "home", query: { content: compressed } }).href}`
   dialog.value = true;
   loading.value = false;
 };

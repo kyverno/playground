@@ -1,6 +1,8 @@
 import { useLocalStorage } from "@vueuse/core"
 import { Ref, ref, watch } from "vue"
 
+export type Inputs = { name?: string, policy?: string | null, resource?: string | null; context?: string | null }
+
 const persisted = useLocalStorage<string>('persist:list', '')
 
 export const getPersisted = (): Ref<string[]> => {
@@ -13,11 +15,11 @@ export const getPersisted = (): Ref<string[]> => {
     return list
 }
 
-export const createInput = (name: string) => {
+export const createInput = (name: string, defaults?: Inputs) => {
     name = name.replaceAll(';;', ';').trim()
-    const policy = useLocalStorage<string>(`persist:policy:${name}`, null)
-    const resource = useLocalStorage<string>(`persist:resource:${name}`, null)
-    const context = useLocalStorage<string>(`persist:context:${name}`, null)
+    const policy = useLocalStorage<string | null>(`persist:policy:${name}`, defaults?.policy || null)
+    const resource = useLocalStorage<string | null>(`persist:resource:${name}`, defaults?.resource || null)
+    const context = useLocalStorage<string | null>(`persist:context:${name}`, defaults?.context || null)
 
     persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
 
