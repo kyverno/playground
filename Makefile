@@ -161,7 +161,7 @@ ko-build: $(KO) build-backend-assets ## Build playground image (with ko)
 		$(KO) build . --preserve-import-paths --tags=$(KO_TAGS) --platform=$(LOCAL_PLATFORM)
 
 .PHONY: ko-publish
-ko-publish: $(KO) build-backend-assets ## Build and publish playground image (with ko)
+ko-publish: $(KO) ## Build and publish playground image (with ko)
 	@echo Publishing image with ko... >&2
 	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(REPO_PLAYGROUND) \
 		$(KO) build . --bare --tags=$(KO_TAGS) --platform=$(KO_PLATFORMS)
