@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   define: { 
     'process.env': {},
-    APP_VERSION: JSON.stringify(process.env.APP_VERSION || 'dev')
+    APP_VERSION: JSON.stringify(process.env.APP_VERSION || '')
   },
   resolve: {
     alias: {

@@ -43,6 +43,7 @@
       </v-card>
     </v-main>
     <Sponsor />
+    <AppVersion />
   </v-app>
 </template>
 
@@ -66,6 +67,7 @@ import { ResourcePanel, ContextPanel, PolicyPanel } from "@/components/Panel";
 import { LoadButton, SaveButton, ShareButton, MobileMenu, AppBar } from "@/components/AppBar";
 import { StartButton, ResultDialog } from "@/components/Results";
 import { parseContent } from "@/functions/share";
+import AppVersion from "@/components/AppVersion.vue";
 
 const route = useRoute();
 const router = useRouter();
