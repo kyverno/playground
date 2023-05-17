@@ -22,8 +22,8 @@
           >Default</v-btn
         >
       </v-list-item>
-      <v-divider v-if="list.length" />
-      <template v-for="(item, i) in list" :key="item">
+      <v-divider />
+      <template v-for="item in list" :key="item">
         <v-list-item class="py-0 pl-0">
           <v-btn
             prepend-icon="mdi-open-in-app"
@@ -44,23 +44,24 @@
             />
           </template>
         </v-list-item>
-        <v-divider v-if="i < list.length - 1" />
+        <v-divider />
       </template>
+      <v-list-item class="py-0 pl-0">
+        <import-button block variant="text" btn-class="mr-2 text-left justify-start" />
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
 
 <script setup lang="ts">
-import { ContextTemplate, PolicyTemplate, ResourceTemplate } from "@/assets/templates";
 import { useState } from "@/composables";
 import { createInput, removeInput, getPersisted } from "@/composables";
+import { setDefaults, init } from "@/store";
 import { ref } from "vue";
+import ImportButton from "./ImportButton.vue";
 
 defineProps({
   btnClass: { type: String, default: "" },
-  policy: { type: String, default: "" },
-  resource: { type: String, default: "" },
-  context: { type: String, default: "" },
   variant: { type: String },
   block: { type: Boolean, default: false },
 });
@@ -69,19 +70,10 @@ const menu = ref<boolean>(false);
 
 const list = getPersisted();
 
-const emit = defineEmits(["update:policy", "update:resource", "update:context"]);
-
-const { name: state, policy, resource, context } = useState();
+const { name: state } = useState();
 
 const loadDefault = () => {
-  emit("update:policy", PolicyTemplate);
-  policy.value = PolicyTemplate;
-
-  emit("update:resource", ResourceTemplate);
-  resource.value = ResourceTemplate;
-
-  emit("update:context", ContextTemplate);
-  context.value = ContextTemplate;
+  setDefaults()
 
   menu.value = false;
   state.value = '';
@@ -90,21 +82,14 @@ const loadDefault = () => {
 const load = (name: string) => {
   const input = createInput(name);
 
-  if (input.policy.value) {
-    emit("update:policy", input.policy.value);
-    policy.value = input.policy.value;
-  }
-  if (input.resource.value) {
-    emit("update:resource", input.resource.value);
-    resource.value = input.resource.value;
-  }
-  if (input.context.value) {
-    emit("update:context", input.context.value);
-    context.value = input.context.value;
-  }
+  init({
+    policy: input.policy.value,
+    resource: input.resource.value,
+    context: input.context.value,
+    name: input.name,
+  })
 
   menu.value = false;
-  state.value = input.name;
 };
 
 const remove = (name: string) => removeInput(name);

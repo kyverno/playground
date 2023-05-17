@@ -7,13 +7,13 @@
       </template>
       <template #desktop-actions>
         <PrimeButton @click="start" v-if="onboarding" variant="outlined">Onboarding</PrimeButton>
-        <ShareButton :policy="policy" :resource="resource" :context="context" btn-class="ml-2" />
-        <SaveButton :policy="policy" :resource="resource" :context="context" btn-class="ml-2" />
-        <LoadButton v-model:policy="policy" v-model:resource="resource" v-model:context="context" btn-class="mx-2" />
+        <ShareButton btn-class="ml-2" />
+        <SaveButton btn-class="ml-2" />
+        <LoadButton btn-class="mx-2" />
       </template>
 
       <template #mobile-actions>
-        <MobileMenu v-model:policy="policy" v-model:resource="resource" v-model:context="context" />
+        <MobileMenu v-model:policy="inputs.policy" v-model:resource="inputs.resource" v-model:context="inputs.context" />
       </template>
     </AppBar>
     <ExampleDrawer v-model="drawer" @select:example="setExample" />
@@ -22,25 +22,22 @@
         <OnboardingAlert />
         <v-row>
           <v-col :md="7" :sm="12">
-            <PolicyPanel v-model="policy" />
+            <PolicyPanel v-model="inputs.policy" />
           </v-col>
           <v-col :md="5" :sm="12">
-            <ContextPanel v-model="context" @collapse="(v: boolean) => resourceHeight = v ? 691 : 441" />
-            <ResourcePanel v-model="resource" :height="resourceHeight" />
+            <ContextPanel v-model="inputs.context" @collapse="(v: boolean) => resourceHeight = v ? 691 : 441" />
+            <ResourcePanel v-model="inputs.resource" :height="resourceHeight" />
           </v-col>
         </v-row>
         <HelpButton />
         <ValidationButton
           @on-response="handleResponse"
           @on-error="handleError"
-          :policy="policy"
-          :resource="resource"
-          :context="context"
           :error-state="showError"
         />
       </v-container>
       <ErrorBar v-model="showError" :text="errorText" />
-      <ValidationDialog v-model="showResults" :results="results" :policy="policy" />
+      <ValidationDialog v-model="showResults" :results="results" :policy="inputs.policy" />
       <v-card v-if="state.name.value" class="state-card">
         <v-card-text class="text-body-2 font-weight-medium py-2">Loaded State: {{ state.name.value }}</v-card-text>
       </v-card>
@@ -57,6 +54,7 @@ import 'v-onboarding/dist/style.css'
 
 import { layoutTheme } from "@/config";
 import { useState, useOnboarding } from "@/composables";
+import { inputs, init, populate } from "@/store"
 import ErrorBar from "@/components/ErrorBar.vue";
 import ExampleDrawer from "@/components/ExampleDrawer.vue";
 import ValidationDialog from "@/components/ValidationDialog.vue";
@@ -75,7 +73,6 @@ import {
   ValidationButton,
 } from "@/components/buttons";
 
-import { PolicyTemplate, ContextTemplate, ResourceTemplate } from "@/assets/templates";
 import { EngineResponse } from "@/types";
 import PolicyPanel from "@/components/PolicyPanel.vue";
 import Sponsor from "@/components/Sponsor.vue";
@@ -83,21 +80,10 @@ import Sponsor from "@/components/Sponsor.vue";
 const route = useRoute();
 const router = useRouter();
 
-const policy = ref<string>(PolicyTemplate);
-const context = ref<string>(ContextTemplate);
-const resource = ref<string>(ResourceTemplate);
-
 const state = useState()
 
 const setExample = (values: [string, string, string]) => {
-  policy.value = values[0];
-  context.value = values[2];
-  resource.value = values[1];
-
-  state.policy.value = values[0];
-  state.context.value = values[2];
-  state.resource.value = values[1];
-  state.name.value = "";
+  init({ policy: values[0], resource: values[1], context: values[2] })
 };
 
 const showResults = ref<boolean>(false);
@@ -134,14 +120,7 @@ watchEffect(() => {
       context: string;
     };
 
-    policy.value = content.policy;
-    resource.value = content.resource;
-    context.value = content.context;
-
-    state.policy.value = content.policy;
-    state.resource.value = content.resource;
-    state.context.value = content.context;
-    state.name.value = "";
+    init(content)
 
     router.replace({ ...route, query: {} });
   } catch (err) {
@@ -154,15 +133,7 @@ onMounted(() => {
     return;
   }
 
-  if (state.policy.value) {
-    policy.value = state.policy.value;
-  }
-  if (state.resource.value) {
-    resource.value = state.resource.value;
-  }
-  if (state.context.value) {
-    context.value = state.context.value;
-  }
+  populate()
 });
 
 const { finish, start, onboarding, steps, wrapper } = useOnboarding(drawer)
