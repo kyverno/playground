@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { mapStatus } from '../mapper'
 import { PropType } from 'vue';
+import { mapStatus } from '@/mapper'
 import { RuleStatus } from '@/types';
 
 const props = defineProps({

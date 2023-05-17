@@ -48,14 +48,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed, PropType } from "vue";
+import { EngineResponse } from "@/types";
+import { useClipboard } from "@vueuse/core";
+import { useConfig, btnColor } from "@/config";
 import ValidationTable from './ValidationTable.vue'
 import MutationTable from './MutationTable.vue'
 import GenerationTable from './GenerationTable.vue'
-import { EngineResponse } from "../types";
-import { PropType } from "vue";
-import { useClipboard } from "@vueuse/core";
-import { computed } from "vue";
-import { useConfig, btnColor } from "@/config";
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },

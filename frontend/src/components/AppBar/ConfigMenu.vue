@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { useDisplay } from "vuetify/lib/framework.mjs";
-import { useConfig } from "../config";
+import { useConfig } from "@/config";
 import { usePreferredDark } from '@vueuse/core'
 
 const { options, layoutTheme, editorTheme, showOnboarding } = useConfig()

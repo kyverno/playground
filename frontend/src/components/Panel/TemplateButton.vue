@@ -19,8 +19,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-const emit = defineEmits(['select'])
 
+const emit = defineEmits(['select'])
 const menu = ref(false)
 const search = ref('')
 

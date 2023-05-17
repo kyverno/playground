@@ -18,12 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import MonacoEditor from "./MonacoEditor.vue";
 import { ref, watch } from "vue";
-import { Uri, KeyCode } from "monaco-editor";
-import { editorTheme } from "../config";
-import { editor } from 'monaco-editor'
+import { editor, Uri, KeyCode } from "monaco-editor";
+import { editorTheme } from "@/config";
 import { loadedPolicy } from "@/composables";
+import MonacoEditor from "./MonacoEditor.vue";
 
 const props = defineProps({
   modelValue: { type: String, default: "" },

@@ -16,12 +16,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { options } from '@/config';
+import { useState } from '@/composables';
+import TemplateButton from './TemplateButton.vue';
 import ResourceEditor from './ResourceEditor.vue';
 import EditorToolbar from './EditorToolbar.vue';
-import { useState } from '@/composables';
-import { computed } from 'vue';
-import { TemplateButton } from './buttons';
 
 const state = useState()
 

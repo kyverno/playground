@@ -42,10 +42,9 @@ import { useRoute } from "vue-router";
 import { useSessionStorage } from "@vueuse/core";
 import { layoutTheme, editorTheme } from "@/config";
 import { RuleStatus } from "@/types";
-
-import AppBar from "@/components/AppBar.vue";
-import ManocoEditor from "@/components/MonacoEditor.vue";
-import RuleDetails from "@/components/RuleDetails.vue";
+import { AppBar } from "@/components/AppBar";
+import { RuleDetails } from "@/components/Details";
+import ManocoEditor from "@/components/Panel/MonacoEditor.vue";
 
 const route = useRoute();
 

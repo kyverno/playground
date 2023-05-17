@@ -23,7 +23,7 @@
               <v-list-item
                 v-for="(policy, i) in subgroup.policies"
                 :key="i"
-                :title="formatTitle(policy)"
+                :title="policy.title"
                 @click="() => loadExample(policy.url || subgroup.url || example.url, policy)"
               />
             </template>
@@ -33,7 +33,7 @@
             <v-list-item
               v-for="(policy, i) in example.policies"
               :key="i"
-              :title="formatTitle(policy)"
+              :title="policy.title"
               @click="() => loadExample(example.url, policy)"
             />
           </template>
@@ -47,9 +47,7 @@
 
     <template v-slot:append>
       <div class="pa-2">
-        <v-btn flat color="primary" block @click="() => emit('update:modelValue', false)"
-          >Close</v-btn
-        >
+        <v-btn flat color="primary" block @click="() => emit('update:modelValue', false)">Close</v-btn>
       </div>
     </template>
   </v-navigation-drawer>
@@ -57,9 +55,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useConfig, Policy } from "../config";
-import { ContextTemplate } from "@/assets/templates";
-
+import { useConfig } from "../config";
+import { Policy, loadPolicy } from "@/functions/github";
+import { init } from "@/store";
 const { options } = useConfig()
 
 const props = defineProps({
@@ -69,57 +67,16 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue", "select:example"]);
 const overlay = ref<boolean>(false);
 
-const formatTitle = (policy: Policy | string) => {
-  if (typeof policy === 'object') {
-    return policy.title
-  }
 
-  return policy.replaceAll('-', ' ')
-}
-
-const loadExample = async (url: string, policy: Policy | string) => {
-  let folder: string = ''
-  let contextPath: string | undefined
-
-  if (typeof policy === 'object') {
-    folder = policy.path
-    contextPath = policy.contextPath
-  } else {
-    folder = policy
-  }
-
-  const name = folder.split('/').pop()
-
-  try {
-    const contextURL = contextPath ? `${contextPath}/${name}.yaml` : `${url}/${folder}/context.yaml`
-
-    const promises = [
-      fetch(`${url}/${folder}/${name}.yaml`).then((resp) => resp.text()),
-      fetch(`${url}/${folder}/resource.yaml`).then((resp) => {
-        if (resp.status === 404) {
-          return fetch(`${url}/${folder}/resources.yaml`)
-        }
-
-        return resp
-      }).then((resp) => resp.text()),
-      fetch(contextURL).then((resp) => {
-        if (resp.status === 404) {
-          return ContextTemplate
-        }
-
-        return resp.text()
-      }),
-    ]
-
-    overlay.value = true;
-    const values = await Promise.all(promises);
-
-    emit("select:example", values);
-    emit("update:modelValue", false);
-  } catch (err) {
-    console.error(err);
-  } finally {
-    overlay.value = false;
-  }
+const loadExample = async (url: string, policy: Policy) => {
+  loadPolicy(url, policy, {
+    start: () => { overlay.value = true },
+    success: ([policy, resource, context]) => {
+      init({ policy, resource, context })
+      emit("update:modelValue", false);
+    },
+    error: (err) => console.error(err),
+    finished: () => { overlay.value = false; }
+  })
 };
 </script>

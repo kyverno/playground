@@ -11,13 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import MonacoEditor from "./MonacoEditor.vue";
+import { ref, watch } from "vue";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
 import { Uri } from "monaco-editor";
-import { editorTheme } from "../config";
+import { editorTheme } from "@/config";
 import { loadedContext } from "@/composables";
-import { ref } from "vue";
-import { watch } from "vue";
+import MonacoEditor from "./MonacoEditor.vue";
 
 const props = defineProps({
     modelValue: { type: String, default: '' }

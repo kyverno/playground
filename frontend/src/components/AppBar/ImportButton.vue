@@ -15,11 +15,8 @@
 
 <script setup lang="ts">
 import { PropType, ref } from "vue";
-import { createInput } from "@/composables";
-import { parse } from 'yaml'
-import { ProfileExport } from '@/types';
-import { init } from "@/store";
 import { watch } from "vue";
+import { importProfiles } from "@/functions/export";
 
 const props = defineProps({
     variant: { type: String as PropType<"outlined" | "text"> },
@@ -32,42 +29,6 @@ const input = ref<HTMLInputElement | null>(null)
 const loading = ref<boolean>(false)
 const color = ref<string | undefined>(undefined)
 const error = ref<string>('')
-
-const importPlayground = async (content: string) => {
-    const state: ProfileExport | undefined = parse(content)
-    if (!state || typeof state !== 'object') {
-        throw new Error('invalid import file')
-    }
-
-    if (!Array.isArray(state.profiles)) {
-        throw new Error('invalid import file')
-    }
-
-    if (!state.profiles.length) return;
-
-    if (state.profiles[0]?.name === 'current-state') {
-        const currentState = state.profiles.shift()
-
-        init({
-            policy: currentState?.policies,
-            resource: currentState?.resources,
-            context: currentState?.context,
-        })
-    }
-
-    state.profiles.filter((p => !!p)).forEach((profile) => {
-        if (!profile.name) {
-            console.warn('invalid profile, no name found')
-            return;
-        }
-
-        createInput(profile.name, {
-            policy: profile.policies,
-            resource: profile.resources,
-            context: profile.context
-        })
-    })
-}
 
 const emit = defineEmits(['finished'])
 
@@ -85,7 +46,7 @@ const send = (event: Event) => {
     
     const reader = new FileReader();
     reader.onload = (res) => {
-        importPlayground(res?.target?.result?.toString() || '')
+        importProfiles(res?.target?.result?.toString() || '')
             .then(() => {
                 emit('finished')
             })

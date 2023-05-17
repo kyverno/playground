@@ -42,10 +42,8 @@ import { useRoute } from "vue-router";
 import { useSessionStorage } from "@vueuse/core";
 import { RuleStatus } from "@/types";
 import { layoutTheme, editorTheme } from "@/config";
-
-import DiffEditor from "@/components/DiffEditor.vue";
-import AppBar from "@/components/AppBar.vue";
-import RuleDetails from "@/components/RuleDetails.vue";
+import { DiffEditor, RuleDetails } from "@/components/Details";
+import { AppBar } from "@/components/AppBar";
 
 const route = useRoute();
 

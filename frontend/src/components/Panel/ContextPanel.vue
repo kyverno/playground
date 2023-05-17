@@ -16,12 +16,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue';
 import { options } from '@/config';
+import { useState } from '@/composables';
 import ContextEditor from './ContextEditor.vue';
 import EditorToolbar from './EditorToolbar.vue';
-import { useState } from '@/composables';
-import { ref } from 'vue';
-import { computed } from 'vue';
 
 const state = useState()
 const collapse = ref(false)
