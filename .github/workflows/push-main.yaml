@@ -5,6 +5,9 @@ on:
     branches:
       - 'main'
 
+permissions:
+  id-token: write
+
 jobs:
   ko:
     runs-on: ubuntu-latest
@@ -17,5 +20,14 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build
-        run: VERSION=${{ github.ref_name }} make ko-publish
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@204a51a57a74d190b284a0ce69b44bc37201f343 # v3.0.3
+      - name: Publish image
+        id: ko-publish
+        run: |
+          set -e
+          echo "digest=$(VERSION=${{ github.ref_name }} make ko-publish)" >> $GITHUB_OUTPUT
+      - shell: Sign image
+        run: |
+          set -e
+          cosign sign ${{ steps.ko-publish.outputs.digest }} --yes

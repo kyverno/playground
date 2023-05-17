@@ -25,6 +25,13 @@ kos:
     ldflags:
       - -s -w
 
+docker_signs:
+  - artifacts: all
+    args:
+      - 'sign'
+      - '${artifact}'
+      - "--yes"
+
 archives:
   - name_template: >-
       {{ .ProjectName }}_

@@ -103,13 +103,13 @@ ingress:
 resources:
   # -- Container resource limits
   limits:
-  #   cpu: 100m
-  #   memory: 128Mi
+    # cpu: 100m
+    # memory: 128Mi
 
   # -- Container resource requests
   requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+    # cpu: 100m
+    # memory: 128Mi
 
 autoscaling:
   # -- Enable autoscaling
