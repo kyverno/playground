@@ -46,12 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import { createInput, getPersisted } from "@/composables";
+import { getPersisted } from "@/composables";
 import { btnColor } from "@/config";
 import { computed } from "vue";
 import { PropType, ref } from "vue";
-import { stringify } from 'yaml'
-import { inputs } from "@/store";
+import { convertProfiles } from "@/functions/export";
 
 defineProps({
   variant: { type: String as PropType<"outlined" | "text"> },
@@ -98,41 +97,11 @@ const close = () => {
 
 const persist = () => {
   loading.value = true
-  const exports = []
-
-  if (current.value) {
-    exports.push({
-      name: 'current-state',
-      policies: inputs.policy,
-      resources: inputs.resource,
-      context: inputs.context,
-    })
-  }
-
-  profiles.value.map(p => {
-    const { policy, resource, context } = createInput(p)
-
-    exports.push({
-      name: p,
-      policies: policy.value,
-      resources: resource.value,
-      context: context.value
-    })
-  })
-
-  const state = {
-    date: (new Date()).toISOString().slice(0, 10),
-    version: APP_VERSION,
-    profiles: exports
-  }
+  
+  const content = convertProfiles(current.value, profiles.value)
 
   const a = window.document.createElement("a");
-  a.href = window.URL.createObjectURL(
-    new Blob(
-      [stringify(state, null, { lineWidth: 0 })], 
-      { type: "application/yaml" },
-    )
-  );
+  a.href = window.URL.createObjectURL(new Blob([content], { type: "application/yaml" }));
   a.download = `playground.yaml`;
 
   document.body.appendChild(a);

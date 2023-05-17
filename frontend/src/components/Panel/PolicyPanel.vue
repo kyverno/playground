@@ -12,11 +12,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { options } from '@/config';
+import { useState } from '@/composables';
 import PolicyEditor from './PolicyEditor.vue';
 import EditorToolbar from './EditorToolbar.vue';
-import { useState } from '@/composables';
-import { computed } from 'vue';
 
 const state = useState()
 

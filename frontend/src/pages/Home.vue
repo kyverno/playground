@@ -16,9 +16,9 @@
         <MobileMenu v-model:policy="inputs.policy" v-model:resource="inputs.resource" v-model:context="inputs.context" />
       </template>
     </AppBar>
-    <ExampleDrawer v-model="drawer" @select:example="setExample" />
+    <ExampleDrawer v-model="drawer" />
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="pr-lg-4 pr-md-4 pr-sm-8 pr-8">
         <OnboardingAlert />
         <v-row>
           <v-col :md="7" :sm="12">
@@ -30,61 +30,50 @@
           </v-col>
         </v-row>
         <HelpButton />
-        <ValidationButton
+        <StartButton
           @on-response="handleResponse"
           @on-error="handleError"
           :error-state="showError"
         />
       </v-container>
       <ErrorBar v-model="showError" :text="errorText" />
-      <ValidationDialog v-model="showResults" :results="results" :policy="inputs.policy" />
+      <ResultDialog v-model="showResults" :results="results" :policy="inputs.policy" />
       <v-card v-if="state.name.value" class="state-card">
         <v-card-text class="text-body-2 font-weight-medium py-2">Loaded State: {{ state.name.value }}</v-card-text>
       </v-card>
     </v-main>
     <Sponsor />
+    <AppVersion />
   </v-app>
 </template>
 
 <script setup lang="ts">
 import { ref, watchEffect, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import * as lzstring from "lz-string";
 import 'v-onboarding/dist/style.css'
 
 import { layoutTheme } from "@/config";
 import { useState, useOnboarding } from "@/composables";
-import { inputs, init, populate } from "@/store"
+import { inputs, populate } from "@/store"
+import { EngineResponse } from "@/types";
 import ErrorBar from "@/components/ErrorBar.vue";
 import ExampleDrawer from "@/components/ExampleDrawer.vue";
-import ValidationDialog from "@/components/ValidationDialog.vue";
 import OnboardingAlert from "@/components/OnboardingAlert.vue";
 import HelpButton from '@/components/HelpButton.vue';
-import AppBar from "@/components/AppBar.vue";
 import Onboarding from "@/components/Onboarding.vue";
-import ContextPanel from "@/components/ContextPanel.vue";
-import ResourcePanel from "@/components/ResourcePanel.vue";
-import {
-  LoadButton,
-  SaveButton,
-  ShareButton,
-  PrimeButton,
-  MobileMenu,
-  ValidationButton,
-} from "@/components/buttons";
-
-import { EngineResponse } from "@/types";
-import PolicyPanel from "@/components/PolicyPanel.vue";
 import Sponsor from "@/components/Sponsor.vue";
+import PrimeButton from "@/components/PrimeButton.vue";
+import { ResourcePanel, ContextPanel, PolicyPanel } from "@/components/Panel";
+import { LoadButton, SaveButton, ShareButton, MobileMenu, AppBar } from "@/components/AppBar";
+import { StartButton, ResultDialog } from "@/components/Results";
+import { parseContent } from "@/functions/share";
+import AppVersion from "@/components/AppVersion.vue";
+import { loadFromRepo } from "@/functions/github";
 
 const route = useRoute();
 const router = useRouter();
 
 const state = useState()
-
-const setExample = (values: [string, string, string]) => {
-  init({ policy: values[0], resource: values[1], context: values[2] })
-};
 
 const showResults = ref<boolean>(false);
 const results = ref<EngineResponse>({ policies: [], resources: [] });
@@ -111,20 +100,22 @@ const drawer = ref<boolean>(false);
 
 watchEffect(() => {
   const query = route.query.content as string;
-  if (!query) return;
+  if (query) {
+    try {
+      parseContent(query)
 
-  try {
-    const content = JSON.parse(lzstring.decompressFromBase64(query)) as {
-      policy: string;
-      resource: string;
-      context: string;
-    };
+      router.replace({ ...route, query: {} });
+      return
+    } catch (err) {
+      console.error("could not parse content string", err);
+    }
+  }
 
-    init(content)
-
-    router.replace({ ...route, query: {} });
-  } catch (err) {
-    console.error("could not parse content string", err);
+  const policy = route.query.policy as string;
+  if (policy) {
+    loadFromRepo(policy, route.query.resource as string).finally(() => {
+      router.replace({ ...route, query: {} });
+    })
   }
 });
 
