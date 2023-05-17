@@ -18,7 +18,7 @@
     </AppBar>
     <ExampleDrawer v-model="drawer" />
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="pr-lg-4 pr-md-4 pr-sm-8 pr-8">
         <OnboardingAlert />
         <v-row>
           <v-col :md="7" :sm="12">
@@ -68,6 +68,7 @@ import { LoadButton, SaveButton, ShareButton, MobileMenu, AppBar } from "@/compo
 import { StartButton, ResultDialog } from "@/components/Results";
 import { parseContent } from "@/functions/share";
 import AppVersion from "@/components/AppVersion.vue";
+import { loadFromRepo } from "@/functions/github";
 
 const route = useRoute();
 const router = useRouter();
@@ -99,14 +100,22 @@ const drawer = ref<boolean>(false);
 
 watchEffect(() => {
   const query = route.query.content as string;
-  if (!query) return;
+  if (query) {
+    try {
+      parseContent(query)
 
-  try {
-    parseContent(query)
+      router.replace({ ...route, query: {} });
+      return
+    } catch (err) {
+      console.error("could not parse content string", err);
+    }
+  }
 
-    router.replace({ ...route, query: {} });
-  } catch (err) {
-    console.error("could not parse content string", err);
+  const policy = route.query.policy as string;
+  if (policy) {
+    loadFromRepo(policy, route.query.resource as string).finally(() => {
+      router.replace({ ...route, query: {} });
+    })
   }
 });
 
