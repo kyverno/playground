@@ -44,12 +44,11 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import * as lzstring from "lz-string";
 import { useRouter } from "vue-router";
 import { useClipboard } from "@vueuse/core";
 import { PropType } from "vue";
 import { btnColor } from '@/config'
-import { inputs } from "@/store";
+import { generateContent } from "@/functions/share";
 
 defineProps({
   btnClass: { type: String, default: "" },
@@ -68,15 +67,9 @@ const { copy, copied, isSupported } = useClipboard({ source: url });
 const share = () => {
   loading.value = true;
   
-  const content = JSON.stringify({
-    policy: inputs.policy,
-    resource: inputs.resource,
-    context: inputs.context,
-  });
+  const content = generateContent()
 
-  const compressed = lzstring.compressToBase64(content);
-
-  url.value = `${window.location.origin}/${router.resolve({ name: "home", query: { content: compressed } }).href}`
+  url.value = `${window.location.origin}/${router.resolve({ name: "home", query: { content } }).href}`
   dialog.value = true;
   loading.value = false;
 };

@@ -1,5 +1,5 @@
 <template>
-  <v-card-title class="my-2 text-subtitle-1">{{ title }}</v-card-title>
+  <v-card-title class="my-2 text-subtitle-1">Validation Results</v-card-title>
   <v-divider />
   <v-data-table
     density="default"
@@ -7,14 +7,19 @@
     :items="items"
     :headers="headers"
     class="result-table"
+    show-expand
+    v-model:expanded="expanded"
     :items-per-page="-1"
   >
     <template v-slot:[`item.status`]="{ item }">
       <StatusChip :status="item.raw.status" :key="item.raw.status" />
     </template>
-    <template v-slot:[`item.details`]="{ item }">
-      <v-btn @click="details(item.raw)" variant="text" icon="mdi-open-in-new" v-if="item.raw.status === 'pass'" />
-      <MsgTooltip :msg="item.raw.message" v-else />
+    <template v-slot:expanded-row="{ columns, item }">
+      <tr>
+        <td :colspan="columns.length" class="py-2 table-expansion">
+          {{ item.raw.message }}
+        </td>
+      </tr>
     </template>
     <template #bottom></template>
   </v-data-table>
@@ -22,33 +27,27 @@
 </template>
 
 <script setup lang="ts">
-import { Mutation, RuleStatus } from "../types";
-import StatusChip from "./StatusChip.vue";
-import { PropType } from "vue";
-import { computed } from "vue";
+import { PropType, computed, ref } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
-import { useRouter } from "vue-router";
-import { useSessionStorage } from "@vueuse/core";
-import hash from 'object-hash'
-import MsgTooltip from "./MsgTooltip.vue";
+import { useConfig } from "@/config";
+import { Validation, RuleStatus } from "@/types";
+import StatusChip from "./StatusChip.vue";
 
 type Item = {
-  id: string;
   apiVersion: string;
   kind: string;
   resource: string;
   policy: string;
   rule: string;
   message: string;
-  patchedResource: string;
-  originalReosurce: string;
   status: RuleStatus;
 };
 
 const props = defineProps({
-  results: { type: Array as PropType<Mutation[]>, default: () => [] },
-  title: { type: String, default: 'Mutation Results' }
+  results: { type: Array as PropType<Validation[]>, default: () => [] },
 });
+
+const expanded = ref<number[]>([]);
 
 const display = useDisplay();
 
@@ -58,10 +57,9 @@ const headers = computed(() => {
       { title: "APIVersion", key: "apiVersion", width: "15%" },
       { title: "Kind", key: "kind", width: "10%" },
       { title: "Resource", key: "resource", width: "20%" },
-      { title: "Policy", key: "policy", width: "20%" },
+      { title: "Policy", key: "policy", width: "25%" },
       { title: "Rule", key: "rule", width: "25%" },
       { title: "Status", key: "status", width: "5%", align: "end" },
-      { title: "Details", key: "details", width: "5%", align: "end" },
     ];
   }
 
@@ -71,48 +69,51 @@ const headers = computed(() => {
     { title: "Policy", key: "policy", width: "30%" },
     { title: "Rule", key: "rule", width: "30%" },
     { title: "Status", key: "status", width: "10%", align: "end" },
-    { title: "Details", key: "details", width: "5%", align: "end" },
   ];
 });
 
+const { hideNoMatch } = useConfig()
+
 const items = computed(() => {
-  return (props.results || []).reduce<Item[]>((results, mutation) => {
-    (mutation.policyResponse.rules || []).forEach((rule) => {
-      const item = {
-        id: '',
-        apiVersion: mutation.resource.apiVersion,
-        kind: mutation.resource.kind,
+  return (props.results || []).reduce<Item[]>((results, validation) => {
+    if (!validation.policyResponse.rules && !hideNoMatch.value) {
+      results.push({
+        apiVersion: validation.resource.apiVersion,
+        kind: validation.resource.kind,
         resource: [
-          mutation.resource.metadata.namespace,
-          mutation.resource.metadata.name,
+          validation.resource.metadata.namespace,
+          validation.resource.metadata.name,
         ]
           .filter((s) => !!s)
           .join("/"),
-        policy: mutation.policy.metadata.name,
+        policy: validation.policy.metadata.name,
+        rule: 'resource does not match any rule',
+        message: 'no validation triggered',
+        status: 'no match',
+      })
+      return results
+    }
+
+    (validation.policyResponse.rules || []).forEach((rule) => {
+      results.push({
+        apiVersion: validation.resource.apiVersion,
+        kind: validation.resource.kind,
+        resource: [
+          validation.resource.metadata.namespace,
+          validation.resource.metadata.name,
+        ]
+          .filter((s) => !!s)
+          .join("/"),
+        policy: validation.policy.metadata.name,
         rule: rule.name,
         message: rule.message,
-        patchedResource: mutation.patchedResource,
-        originalReosurce: mutation.originalResource,
         status: rule.status,
-      }
-      item.id = hash(item)
-
-      results.push(item);
+      });
     });
 
     return results;
   }, []);
 });
-
-const router = useRouter()
-
-const details = (mutation: Item) => {
-  useSessionStorage(`mutation:${mutation.id}`, mutation)
-
-  const url = router.resolve({ name: 'mutation-details', params: { id: mutation.id }})
-
-  window.open(url.href, '_blank')
-}
 </script>
 
 <style>

@@ -22,15 +22,14 @@
 </template>
 
 <script setup lang="ts">
-import { Generation, RuleStatus } from "../types";
-import { PropType } from "vue";
-import { computed } from "vue";
+import { computed, PropType } from "vue";
+import hash from 'object-hash'
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import { useRouter } from "vue-router";
+import { Mutation, RuleStatus } from "@/types";
 import { useSessionStorage } from "@vueuse/core";
-import hash from 'object-hash'
-import StatusChip from "./StatusChip.vue";
 import MsgTooltip from "./MsgTooltip.vue";
+import StatusChip from "./StatusChip.vue";
 
 type Item = {
   id: string;
@@ -40,13 +39,14 @@ type Item = {
   policy: string;
   rule: string;
   message: string;
-  generatedResource: string;
+  patchedResource: string;
+  originalReosurce: string;
   status: RuleStatus;
 };
 
 const props = defineProps({
-  results: { type: Array as PropType<Generation[]>, default: () => [] },
-  title: { type: String, default: 'Generation Results' }
+  results: { type: Array as PropType<Mutation[]>, default: () => [] },
+  title: { type: String, default: 'Mutation Results' }
 });
 
 const display = useDisplay();
@@ -75,22 +75,23 @@ const headers = computed(() => {
 });
 
 const items = computed(() => {
-  return (props.results || []).reduce<Item[]>((results, generation) => {
-    (generation.policyResponse.rules || []).forEach((rule) => {
+  return (props.results || []).reduce<Item[]>((results, mutation) => {
+    (mutation.policyResponse.rules || []).forEach((rule) => {
       const item = {
         id: '',
-        apiVersion: generation.resource.apiVersion,
-        kind: generation.resource.kind,
+        apiVersion: mutation.resource.apiVersion,
+        kind: mutation.resource.kind,
         resource: [
-          generation.resource.metadata.namespace,
-          generation.resource.metadata.name,
+          mutation.resource.metadata.namespace,
+          mutation.resource.metadata.name,
         ]
           .filter((s) => !!s)
           .join("/"),
-        policy: generation.policy.metadata.name,
+        policy: mutation.policy.metadata.name,
         rule: rule.name,
         message: rule.message,
-        generatedResource: rule.generatedResource,
+        patchedResource: mutation.patchedResource,
+        originalReosurce: mutation.originalResource,
         status: rule.status,
       }
       item.id = hash(item)
@@ -104,10 +105,10 @@ const items = computed(() => {
 
 const router = useRouter()
 
-const details = (generation: Item) => {
-  useSessionStorage(`generation:${generation.id}`, generation)
+const details = (mutation: Item) => {
+  useSessionStorage(`mutation:${mutation.id}`, mutation)
 
-  const url = router.resolve({ name: 'generation-details', params: { id: generation.id }})
+  const url = router.resolve({ name: 'mutation-details', params: { id: mutation.id }})
 
   window.open(url.href, '_blank')
 }

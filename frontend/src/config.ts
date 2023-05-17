@@ -1,5 +1,6 @@
 import { useLocalStorage, usePreferredDark } from "@vueuse/core";
 import { watch, computed } from "vue";
+import { Policy } from "./functions/github";
 
 export type Config = {
     editorThemes: { name: string; theme: string; }[];
@@ -7,19 +8,12 @@ export type Config = {
     onboarding: { text: string };
 }
 
-export type Policy = {
-    url?: string;
-    contextPath?: string;
-    path: string;
-    title: string;
-}
-
 type Example = {
     name: string;
     color?: string;
     url: string;
     subgroups?: { name: string; policies: Policy[]; url?: string; }[]
-    policies?: Policy[] | string[];
+    policies?: Policy[];
 }
 
 const isDark = usePreferredDark()

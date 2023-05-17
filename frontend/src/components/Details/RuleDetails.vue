@@ -23,8 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { RuleStatus } from '@/types';
 import { PropType } from 'vue';
+import { RuleStatus } from '@/types';
 
 type Details = {
   apiVersion: string;

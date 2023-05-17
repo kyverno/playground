@@ -60,14 +60,3 @@ export type EngineResponse = {
     imageVerification?: Mutation[];
     generation?: Generation[];
 }
-
-export type ProfileExport = {
-    date: string;
-    version: string;
-    profiles?: {
-        name?: string;
-        policies?: string;
-        resources?: string;
-        context?: string;
-    }[]
-}
