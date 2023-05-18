@@ -12,7 +12,7 @@ require (
 	go.etcd.io/etcd/client/pkg/v3 v3.6.0-alpha.0
 	k8s.io/api v0.27.1
 	k8s.io/apiextensions-apiserver v0.27.1
-	k8s.io/apimachinery v0.27.1
+	k8s.io/apimachinery v0.27.2
 	sigs.k8s.io/kubectl-validate v0.0.0-20230515161929-454fc9a19112
 	sigs.k8s.io/yaml v1.3.0
 )
