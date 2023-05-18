@@ -10,6 +10,9 @@ replicaCount: 1
 # -- Optional sponsor text
 sponsor: ""
 
+# -- A writable volume to use for the TUF root initialization.
+tufRootMountPath: /.sigstore
+
 image:
   # -- Image registry
   registry: ghcr.io

@@ -2,7 +2,7 @@
 
 Kyverno Playground Web Application
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.1.0](https://img.shields.io/badge/AppVersion-v0.1.0-informational?style=flat-square)
 
 ## About
 
@@ -51,6 +51,7 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | fullnameOverride | string | `""` | Full name override |
 | replicaCount | int | `1` | Number of pod replicas |
 | sponsor | string | `""` | Optional sponsor text |
+| tufRootMountPath | string | `"/.sigstore"` | A writable volume to use for the TUF root initialization. |
 | image.registry | string | `"ghcr.io"` | Image registry |
 | image.repository | string | `"kyverno/playground"` | Image repository |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
