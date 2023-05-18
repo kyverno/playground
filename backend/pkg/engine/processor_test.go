@@ -73,6 +73,7 @@ metadata:
 			fatalOnError(t, "loader.Policies", err)
 
 			processor, err := engine.NewProcessor(params)
+			fatalOnError(t, "engine.NewProcessor", err)
 
 			if _, err := processor.Run(context.TODO(), policies, resources); (err != nil) != tt.wantErr {
 				t.Errorf("engineRequest.process() error = %v, wantErr %v", err, tt.wantErr)

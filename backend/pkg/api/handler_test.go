@@ -19,7 +19,7 @@ func Test_Serve(t *testing.T) {
 	}
 
 	body := new(bytes.Buffer)
-	json.NewEncoder(body).Encode(jsonBody)
+	json.NewEncoder(body).Encode(jsonBody) //nolint: errcheck
 	w := httptest.NewRecorder()
 
 	req := httptest.NewRequest(http.MethodPost, "/", body)
@@ -32,7 +32,7 @@ func Test_Serve(t *testing.T) {
 
 	if w.Result().StatusCode != http.StatusOK {
 		buf := new(bytes.Buffer)
-		buf.ReadFrom(w.Result().Body)
+		buf.ReadFrom(w.Result().Body) //nolint: errcheck
 
 		t.Errorf("unexpected error: %s", buf.String())
 	}

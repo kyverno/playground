@@ -3,6 +3,7 @@ package engine
 import (
 	"context"
 	"fmt"
+	"time"
 
 	jsonpatch "github.com/evanphx/json-patch/v5"
 	"github.com/go-logr/logr"
@@ -21,6 +22,9 @@ import (
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 var log = logging.WithName("playground")
@@ -43,21 +47,23 @@ func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterfac
 	for _, resource := range resources {
 		// mutate
 		for _, policy := range policies {
-			result, err := p.mutate(ctx, policy, resource)
+			result, res, err := p.mutate(ctx, policy, resource)
 			if err != nil {
 				return nil, err
 			}
 
+			resource = res
 			response.Mutation = append(response.Mutation, result)
 		}
 
 		// verify images
 		for _, policy := range policies {
-			result, err := p.verifyImages(ctx, policy, resource)
+			result, res, err := p.verifyImages(ctx, policy, resource)
 			if err != nil {
 				return nil, err
 			}
 
+			resource = res
 			response.ImageVerification = append(response.ImageVerification, result)
 		}
 
@@ -85,22 +91,21 @@ func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterfac
 	return response, nil
 }
 
-func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, error) {
+func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
 	policyContext, err := p.newPolicyContext(policy, resource)
 	if err != nil {
-		return Response{}, err
+		return Response{}, resource, err
 	}
 
 	response := p.engine.Mutate(ctx, policyContext)
-	resource = response.PatchedResource
 
-	return ConvertResponse(response), nil
+	return ConvertResponse(response), response.PatchedResource, nil
 }
 
-func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, error) {
+func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
 	policyContext, err := p.newPolicyContext(policy, resource)
 	if err != nil {
-		return Response{}, err
+		return Response{}, resource, err
 	}
 
 	response, verifiedImageData := p.engine.VerifyAndPatchImages(ctx, policyContext)
@@ -109,7 +114,7 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 	if !verifiedImageData.IsEmpty() {
 		annotationPatches, err := verifiedImageData.Patches(len(resource.GetAnnotations()) != 0, logr.Discard())
 		if err != nil {
-			return Response{}, err
+			return Response{}, resource, err
 		}
 
 		// add annotation patches first
@@ -120,24 +125,23 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 		patch := jsonutils.JoinPatches(patches...)
 		decoded, err := jsonpatch.DecodePatch(patch)
 		if err != nil {
-			return Response{}, err
+			return Response{}, resource, err
 		}
 		options := &jsonpatch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
 		resourceBytes, err := resource.MarshalJSON()
 		if err != nil {
-			return Response{}, err
+			return Response{}, resource, err
 		}
 		patchedResourceBytes, err := decoded.ApplyWithOptions(resourceBytes, options)
 		if err != nil {
-			return Response{}, err
+			return Response{}, resource, err
 		}
 		if err := response.PatchedResource.UnmarshalJSON(patchedResourceBytes); err != nil {
-			return Response{}, err
+			return Response{}, resource, err
 		}
 	}
 
-	resource = response.PatchedResource
-	return ConvertResponse(response), nil
+	return ConvertResponse(response), response.PatchedResource, nil
 }
 
 func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, error) {
@@ -251,7 +255,7 @@ func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.U
 	}
 }
 
-func NewEngine(cfg config.Configuration, jp jmespath.Interface) (engineapi.Engine, error) {
+func newEngine(cfg config.Configuration, jp jmespath.Interface, client dclient.Interface) (engineapi.Engine, error) {
 	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
 	if err != nil {
 		return nil, err
@@ -264,7 +268,7 @@ func NewEngine(cfg config.Configuration, jp jmespath.Interface) (engineapi.Engin
 		cfg,
 		config.NewDefaultMetricsConfiguration(),
 		jp,
-		nil,
+		client,
 		rclient,
 		store.ContextLoaderFactory(nil),
 		nil,
@@ -275,12 +279,21 @@ func NewProcessor(params *Parameters) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	jp := jmespath.New(cfg)
 
-	engine, err := NewEngine(cfg, jp)
+	dClient, err := newClient(params.Kubernetes.KubeConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	contr := generate.NewGenerateControllerWithOnlyClient(dclient.NewEmptyFakeClient(), engine)
+	engine, err := newEngine(cfg, jp, dClient)
+	if err != nil {
+		return nil, err
+	}
+
+	if dClient == nil {
+		dClient = dclient.NewEmptyFakeClient()
+	}
+
+	contr := generate.NewGenerateControllerWithOnlyClient(dClient, engine)
 
 	return &Processor{
 		params:        params,
@@ -289,4 +302,29 @@ func NewProcessor(params *Parameters) (*Processor, error) {
 		config:        cfg,
 		jmesPath:      jp,
 	}, nil
+}
+
+func newClient(kubeConfig string) (dclient.Interface, error) {
+	if kubeConfig == "" {
+		return nil, nil
+	}
+
+	restConfig, err := clientcmd.RESTConfigFromKubeConfig([]byte(kubeConfig))
+	if err != nil {
+		return nil, nil
+	}
+	kubeClient, err := kubernetes.NewForConfig(restConfig)
+	if err != nil {
+		return nil, err
+	}
+	dynamicClient, err := dynamic.NewForConfig(restConfig)
+	if err != nil {
+		return nil, err
+	}
+	dClient, err := dclient.NewClient(context.Background(), dynamicClient, kubeClient, 15*time.Minute)
+	if err != nil {
+		return nil, err
+	}
+
+	return dClient, nil
 }
