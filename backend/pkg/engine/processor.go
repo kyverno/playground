@@ -15,6 +15,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/config"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	"github.com/kyverno/kyverno/pkg/engine/context/resolvers"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	"github.com/kyverno/kyverno/pkg/logging"
@@ -24,7 +25,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/rest"
 )
 
 var log = logging.WithName("playground")
@@ -35,11 +36,14 @@ type Processor struct {
 	genController *generate.GenerateController
 	config        config.Configuration
 	jmesPath      jmespath.Interface
+	cluster       bool
 }
 
 func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterface, resources []unstructured.Unstructured) (*Results, error) {
-	if err := validateParams(p.params, policies); err != nil {
-		return nil, err
+	if !p.cluster {
+		if err := validateParams(p.params, policies); err != nil {
+			return nil, err
+		}
 	}
 
 	response := &Results{}
@@ -170,14 +174,24 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 
 	var newRuleResponse []engineapi.RuleResponse
 	for _, rule := range response.PolicyResponse.Rules {
-		genRes, err := p.genController.ApplyGeneratePolicy(log.V(2), policyContext, gr, []string{rule.Name()})
+		genRes, err := p.genController.ApplyGeneratePolicy(log.V(5), policyContext, gr, []string{rule.Name()})
 		if err != nil {
 			return Response{}, err
 		}
 		unstrGenResource, err := p.genController.GetUnstrResource(genRes[0])
+		if len(genRes) == 0 {
+			continue
+		}
+
 		if err != nil {
 			return Response{}, err
 		}
+
+		// cleanup metadata
+		if meta, ok := unstrGenResource.Object["metadata"]; ok {
+			delete(meta.(map[string]any), "managedFields")
+		}
+
 		newRuleResponse = append(newRuleResponse, *rule.WithGeneratedResource(*unstrGenResource))
 	}
 	response.PolicyResponse.Rules = newRuleResponse
@@ -255,7 +269,7 @@ func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.U
 	}
 }
 
-func newEngine(cfg config.Configuration, jp jmespath.Interface, client dclient.Interface) (engineapi.Engine, error) {
+func newEngine(cfg config.Configuration, jp jmespath.Interface, client dclient.Interface, cmResolver engineapi.ConfigmapResolver) (engineapi.Engine, error) {
 	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
 	if err != nil {
 		return nil, err
@@ -264,36 +278,44 @@ func newEngine(cfg config.Configuration, jp jmespath.Interface, client dclient.I
 	store.SetMock(true)
 	store.SetRegistryAccess(true)
 
+	factory := store.ContextLoaderFactory(nil)
+	if cmResolver != nil {
+		factory = ContextLoaderFactory(cmResolver)
+	}
+
 	return kyvernoengine.NewEngine(
 		cfg,
 		config.NewDefaultMetricsConfiguration(),
 		jp,
 		client,
 		rclient,
-		store.ContextLoaderFactory(nil),
+		factory,
 		nil,
 	), nil
 }
 
-func NewProcessor(params *Parameters) (*Processor, error) {
+func NewProcessor(params *Parameters, k8sConfig *rest.Config) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	jp := jmespath.New(cfg)
+	cluster := false
 
-	dClient, err := newClient(params.Kubernetes.KubeConfig)
+	dClient, cmResolver, err := newClients(k8sConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	engine, err := newEngine(cfg, jp, dClient)
+	engine, err := newEngine(cfg, jp, dClient, cmResolver)
 	if err != nil {
 		return nil, err
 	}
 
 	if dClient == nil {
 		dClient = dclient.NewEmptyFakeClient()
+	} else {
+		cluster = true
 	}
 
-	contr := generate.NewGenerateControllerWithOnlyClient(dClient, engine)
+	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, log.V(5), jp)
 
 	return &Processor{
 		params:        params,
@@ -301,30 +323,39 @@ func NewProcessor(params *Parameters) (*Processor, error) {
 		genController: contr,
 		config:        cfg,
 		jmesPath:      jp,
+		cluster:       cluster,
 	}, nil
 }
 
-func newClient(kubeConfig string) (dclient.Interface, error) {
-	if kubeConfig == "" {
-		return nil, nil
+func newClients(restConfig *rest.Config) (dclient.Interface, engineapi.ConfigmapResolver, error) {
+	if restConfig == nil {
+		return nil, nil, nil
 	}
 
-	restConfig, err := clientcmd.RESTConfigFromKubeConfig([]byte(kubeConfig))
-	if err != nil {
-		return nil, nil
-	}
 	kubeClient, err := kubernetes.NewForConfig(restConfig)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	dynamicClient, err := dynamic.NewForConfig(restConfig)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	dClient, err := dclient.NewClient(context.Background(), dynamicClient, kubeClient, 15*time.Minute)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+	cmResolver, err := resolvers.NewClientBasedResolver(kubeClient)
+	if err != nil {
+		return nil, nil, err
 	}
 
-	return dClient, nil
+	return NewWrapper(dClient), cmResolver, nil
+}
+
+func ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory {
+	return func(policy kyvernov1.PolicyInterface, rule kyvernov1.Rule) engineapi.ContextLoader {
+		inner := engineapi.DefaultContextLoaderFactory(cmResolver)
+
+		return inner(policy, rule)
+	}
 }

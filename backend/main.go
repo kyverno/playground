@@ -8,12 +8,14 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
 
 	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/api"
 )
 
-func run(sponsor, host string, port int, log bool) {
+func run(sponsor, host string, port int, kubeConfig string, log bool) {
 	fs, err := fs.Sub(data.StaticFiles(), "dist")
 	if err != nil {
 		panic(err)
@@ -30,7 +32,17 @@ func run(sponsor, host string, port int, log bool) {
 		ExposeHeaders: []string{"Content-Length"},
 	}))
 
-	router.POST("/engine", api.Serve)
+	var k8sConfig *rest.Config
+	if kubeConfig != "" {
+		k8sConfig, err = clientcmd.BuildConfigFromFlags("", kubeConfig)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	server := api.NewServer(k8sConfig)
+
+	router.POST("/engine", server.Serve)
 	router.POST("/sponsor", func(c *gin.Context) {
 		c.String(http.StatusOK, sponsor)
 	})
@@ -47,8 +59,9 @@ func main() {
 	port := flag.Int("port", 8080, "server port")
 	mode := flag.String("mode", gin.ReleaseMode, "gin run mode")
 	log := flag.Bool("log", false, "enable gin logger")
+	kubeConfig := flag.String("kubeconfig", "", "enable gin logger")
 	sponsor := flag.String("sponsor", "", "sponsor text")
 	flag.Parse()
 	gin.SetMode(*mode)
-	run(*sponsor, *host, *port, *log)
+	run(*sponsor, *host, *port, *kubeConfig, *log)
 }

@@ -4,11 +4,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"k8s.io/client-go/rest"
 
 	"github.com/kyverno/playground/backend/pkg/engine"
 )
 
-func Serve(c *gin.Context) {
+type Server struct {
+	k8sConfig *rest.Config
+}
+
+func (s *Server) Serve(c *gin.Context) {
 	var request Request
 	err := c.ShouldBind(&request)
 	if err != nil {
@@ -41,7 +46,7 @@ func Serve(c *gin.Context) {
 		return
 	}
 
-	processor, err := engine.NewProcessor(params)
+	processor, err := engine.NewProcessor(params, s.k8sConfig)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "failed to initialize processor")
 		return
@@ -64,4 +69,8 @@ func Serve(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, response)
+}
+
+func NewServer(k8sConfig *rest.Config) *Server {
+	return &Server{k8sConfig: k8sConfig}
 }

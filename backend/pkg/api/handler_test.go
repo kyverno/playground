@@ -28,7 +28,7 @@ func Test_Serve(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
 
-	api.Serve(c)
+	api.NewServer(nil).Serve(c)
 
 	if w.Result().StatusCode != http.StatusOK {
 		buf := new(bytes.Buffer)

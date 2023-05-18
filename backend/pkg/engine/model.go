@@ -25,8 +25,7 @@ type Context struct {
 }
 
 type Kubernetes struct {
-	Version    string `json:"version"`
-	KubeConfig string `json:"kubeConfig"`
+	Version string `json:"version"`
 }
 
 type Results struct {
