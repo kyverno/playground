@@ -53,8 +53,17 @@ spec:
           readinessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          env:
+          - name: TUF_ROOT
+            value: {{ .Values.tufRootMountPath }}
+          volumeMounts:
+            - mountPath: {{ .Values.tufRootMountPath }}
+              name: sigstore
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: sigstore
+        emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"sync"
 
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -18,6 +19,7 @@ import (
 type Client struct {
 	inner   dclient.Interface
 	created map[string]*unstructured.Unstructured
+	mx      *sync.RWMutex
 }
 
 func (c *Client) GetKubeClient() kubernetes.Interface {
@@ -48,7 +50,7 @@ func (c *Client) RawAbsPath(ctx context.Context, path string, method string, dat
 }
 
 func (c *Client) GetResource(ctx context.Context, apiVersion string, kind string, namespace string, name string, subresources ...string) (*unstructured.Unstructured, error) {
-	if obj, ok := c.created[keyFromValues(apiVersion, kind, namespace, name)]; ok {
+	if obj, ok := c.getObject(apiVersion, kind, namespace, name); ok {
 		return obj, nil
 	}
 
@@ -69,7 +71,7 @@ func (c *Client) DeleteResource(_ context.Context, _ string, _ string, _ string,
 
 func (c *Client) CreateResource(_ context.Context, _ string, _ string, _ string, obj interface{}, _ bool) (*unstructured.Unstructured, error) {
 	if o, ok := obj.(*unstructured.Unstructured); ok {
-		c.created[keyFromObj(o)] = o
+		c.addObject(o)
 		return o, nil
 	}
 
@@ -78,7 +80,7 @@ func (c *Client) CreateResource(_ context.Context, _ string, _ string, _ string,
 
 func (c *Client) UpdateResource(_ context.Context, _ string, _ string, _ string, obj interface{}, _ bool, _ ...string) (*unstructured.Unstructured, error) {
 	if o, ok := obj.(*unstructured.Unstructured); ok {
-		c.created[keyFromObj(o)] = o
+		c.addObject(o)
 		return o, nil
 	}
 
@@ -87,17 +89,35 @@ func (c *Client) UpdateResource(_ context.Context, _ string, _ string, _ string,
 
 func (c *Client) UpdateStatusResource(_ context.Context, _ string, _ string, _ string, obj interface{}, _ bool) (*unstructured.Unstructured, error) {
 	if o, ok := obj.(*unstructured.Unstructured); ok {
-		c.created[keyFromObj(o)] = o
+		c.addObject(o)
 		return o, nil
 	}
 
 	return nil, nil
 }
 
+func (c *Client) addObject(obj *unstructured.Unstructured) {
+	c.mx.Lock()
+	defer c.mx.Unlock()
+
+	c.created[keyFromObj(obj)] = obj
+}
+
+func (c *Client) getObject(apiVersion, kind, namespace, name string) (*unstructured.Unstructured, bool) {
+	c.mx.RLock()
+	defer c.mx.RUnlock()
+	if obj, ok := c.created[keyFromValues(apiVersion, kind, namespace, name)]; ok {
+		return obj, ok
+	}
+
+	return nil, false
+}
+
 func NewWrapper(client dclient.Interface) dclient.Interface {
 	return &Client{
 		inner:   client,
 		created: make(map[string]*unstructured.Unstructured),
+		mx:      new(sync.RWMutex),
 	}
 }
 
