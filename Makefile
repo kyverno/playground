@@ -37,6 +37,12 @@ else
 KO_TAGS             := $(GIT_SHA),$(subst /,-,$(VERSION))
 endif
 
+ifndef VERSION
+APP_VERSION         := $(GIT_SHA)
+else
+APP_VERSION         := $(VERSION)
+endif
+
 #########
 # TOOLS #
 #########
@@ -138,7 +144,7 @@ build-clean: ## Clean built files
 .PHONY: build-frontend
 build-frontend: ## Build frontend
 	@echo Building frontend... >&2
-	@cd frontend && npm install && npm run build
+	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets
 build-backend-assets: build-frontend ## Build backend assets
