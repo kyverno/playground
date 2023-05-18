@@ -9,10 +9,9 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-logr/logr v1.2.4
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20230512141448-83840a24620a
-	go.etcd.io/etcd/client/pkg/v3 v3.6.0-alpha.0
 	k8s.io/api v0.27.2
-	k8s.io/apiextensions-apiserver v0.27.1
 	k8s.io/apimachinery v0.27.2
+	k8s.io/client-go v0.27.1
 	sigs.k8s.io/kubectl-validate v0.0.0-20230515161929-454fc9a19112
 	sigs.k8s.io/yaml v1.3.0
 )
@@ -256,6 +255,7 @@ require (
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	github.com/zeebo/errs v1.3.0 // indirect
 	go.etcd.io/etcd/api/v3 v3.6.0-alpha.0 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.6.0-alpha.0 // indirect
 	go.etcd.io/etcd/client/v3 v3.6.0-alpha.0 // indirect
 	go.mongodb.org/mongo-driver v1.11.6 // indirect
 	go.opencensus.io v0.24.0 // indirect
@@ -300,9 +300,9 @@ require (
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	k8s.io/apiextensions-apiserver v0.27.1 // indirect
 	k8s.io/apiserver v0.27.1 // indirect
 	k8s.io/cli-runtime v0.27.1 // indirect
-	k8s.io/client-go v0.27.1 // indirect
 	k8s.io/component-base v0.27.1 // indirect
 	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20230501164219-8b0f38b5fd1f // indirect
