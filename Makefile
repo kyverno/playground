@@ -74,6 +74,15 @@ $(HELM_DOCS):
 	@echo Install helm-docs... >&2
 	@GOBIN=$(TOOLS_DIR) go install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION)
 
+
+.PHONY: fmt
+fmt:
+	$(call print-target)
+	@echo "Running gci"
+	@GOBIN=$(TOOLS_DIR) go run github.com/daixiang0/gci@v0.9.1 write -s standard -s default -s "prefix(github.com/kyverno/playground/backend)" ./backend
+	@echo "Running gofumpt"
+	@GOBIN=$(TOOLS_DIR) go run mvdan.cc/gofumpt@v0.4.0 -w ./backend
+
 .PHONY: install-tools
 install-tools: $(TOOLS) ## Install tools
 
