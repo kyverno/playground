@@ -78,6 +78,7 @@ const submit = (): void => {
       policies: inputs.policy,
       resources: inputs.resource,
       context: inputs.context,
+      config: inputs.config,
     }),
     method: "POST",
     mode: "cors",

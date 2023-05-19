@@ -5,6 +5,7 @@ import { parse, stringify } from "yaml"
 export type ProfileExport = {
     date: string;
     version: string;
+    config?: string;
     profiles?: {
         name?: string;
         policies?: string;
@@ -13,7 +14,7 @@ export type ProfileExport = {
     }[]
 }
 
-export const convertProfiles = (current: boolean, profiles: string[]): string => {
+export const convertProfiles = (current: boolean, profiles: string[], config: boolean): string => {
     const exports = []
 
     if (current) {
@@ -36,10 +37,14 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
         })
     })
 
-    const state = {
+    const state: ProfileExport = {
         date: (new Date()).toISOString().slice(0, 10),
         version: APP_VERSION,
         profiles: exports
+    }
+
+    if (config) {
+        state.config = inputs.config
     }
 
     return stringify(state, null, { lineWidth: 0 })
@@ -65,6 +70,10 @@ export const importProfiles = async (content: string) => {
             resource: currentState?.resources,
             context: currentState?.context,
         })
+    }
+
+    if (state.config) {
+        inputs.config = state.config
     }
 
     state.profiles.filter((p => !!p)).forEach((profile) => {

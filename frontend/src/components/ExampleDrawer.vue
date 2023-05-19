@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useConfig } from "../config";
+import { useConfig } from "@/config";
 import { Policy, loadPolicy } from "@/functions/github";
 import { init } from "@/store";
 const { options } = useConfig()
@@ -64,7 +64,7 @@ const props = defineProps({
   modelValue: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["update:modelValue", "select:example"]);
+const emit = defineEmits(["update:modelValue"]);
 const overlay = ref<boolean>(false);
 
 

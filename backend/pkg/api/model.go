@@ -11,6 +11,7 @@ type Request struct {
 	Policies  string `json:"policies"`
 	Resources string `json:"resources"`
 	Context   string `json:"context"`
+	Config    string `json:"config"`
 }
 
 type Response struct {

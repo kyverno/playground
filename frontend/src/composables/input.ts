@@ -1,7 +1,7 @@
 import { useLocalStorage } from "@vueuse/core"
 import { Ref, ref, watch } from "vue"
 
-export type Inputs = { name?: string, policy?: string | null, resource?: string | null; context?: string | null }
+export type Inputs = { name?: string, policy?: string | null, resource?: string | null; context?: string | null; config?: string | null }
 
 const persisted = useLocalStorage<string>('persist:list', '')
 

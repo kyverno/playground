@@ -46,7 +46,13 @@ func (s *Server) Serve(c *gin.Context) {
 		return
 	}
 
-	processor, err := engine.NewProcessor(params, s.k8sConfig)
+	config, err := loader.ConfigMap(request.Config)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "failed parse kyverno configmap")
+		return
+	}
+
+	processor, err := engine.NewProcessor(params, config, s.k8sConfig)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "failed to initialize processor")
 		return
@@ -54,8 +60,7 @@ func (s *Server) Serve(c *gin.Context) {
 
 	results, err := processor.Run(c, policies, resources)
 	if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
-		c.Writer.WriteString(err.Error()) //nolint: errcheck
+		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 

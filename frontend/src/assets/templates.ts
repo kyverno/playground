@@ -43,3 +43,44 @@ spec:
     - image: nginx
       name: nginx
       resources: {}`
+
+export const ConfigTemplate = `apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kyverno
+  namespace: kyverno
+data:
+  defaultRegistry: docker.io
+  resourceFilters: |
+    [*,kyverno,*]
+    [Event,*,*]
+    [*,kube-system,*]
+    [*,kube-public,*]
+    [*,kube-node-lease,*]
+    [Node,*,*]
+    [APIService,*,*]
+    [TokenReview,*,*]
+    [SubjectAccessReview,*,*]
+    [SelfSubjectAccessReview,*,*]
+    [Binding,*,*]
+    [ReplicaSet,*,*]
+    [AdmissionReport,*,*]
+    [ClusterAdmissionReport,*,*]
+    [BackgroundScanReport,*,*]
+    [ClusterBackgroundScanReport,*,*]
+    [ClusterRole,*,kyverno:*]
+    [ClusterRoleBinding,*,kyverno:*]
+    [ServiceAccount,kyverno,kyverno]
+    [ConfigMap,kyverno,kyverno]
+    [ConfigMap,kyverno,kyverno-metrics]
+    [Deployment,kyverno,kyverno]
+    [Job,kyverno,kyverno-hook-pre-delete]
+    [NetworkPolicy,kyverno,kyverno]
+    [PodDisruptionBudget,kyverno,kyverno]
+    [Role,kyverno,kyverno:*]
+    [RoleBinding,kyverno,kyverno:*]
+    [Secret,kyverno,kyverno-svc.kyverno.svc.*]
+    [Service,kyverno,kyverno-svc]
+    [Service,kyverno,kyverno-svc-metrics]
+    [ServiceMonitor,kyverno,kyverno-svc-service-monitor]
+    [Pod,kyverno,kyverno-test]`

@@ -25,6 +25,7 @@ type Client struct {
 func (c *Client) GetKubeClient() kubernetes.Interface {
 	return c.inner.GetKubeClient()
 }
+
 func (c *Client) GetEventsInterface() corev1.EventInterface {
 	return c.inner.GetEventsInterface()
 }

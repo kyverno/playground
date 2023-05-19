@@ -22,6 +22,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
 	authenticationv1 "k8s.io/api/authentication/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
@@ -178,10 +179,10 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 		if err != nil {
 			return Response{}, err
 		}
-		unstrGenResource, err := p.genController.GetUnstrResource(genRes[0])
 		if len(genRes) == 0 {
 			continue
 		}
+		unstrGenResource, err := p.genController.GetUnstrResource(genRes[0])
 
 		if err != nil {
 			return Response{}, err
@@ -294,8 +295,12 @@ func newEngine(cfg config.Configuration, jp jmespath.Interface, client dclient.I
 	), nil
 }
 
-func NewProcessor(params *Parameters, k8sConfig *rest.Config) (*Processor, error) {
+func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, k8sConfig *rest.Config) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
+	if kyvernoConfig != nil {
+		cfg.Load(kyvernoConfig)
+	}
+
 	jp := jmespath.New(cfg)
 	cluster := false
 
