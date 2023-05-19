@@ -11,7 +11,7 @@ require (
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20230512141448-83840a24620a
 	k8s.io/api v0.27.2
 	k8s.io/apimachinery v0.27.2
-	k8s.io/client-go v0.27.1
+	k8s.io/client-go v0.27.2
 	sigs.k8s.io/kubectl-validate v0.0.0-20230515161929-454fc9a19112
 	sigs.k8s.io/yaml v1.3.0
 )
