@@ -18,7 +18,6 @@
         </template>
       </v-tooltip>
     </v-toolbar-title>
-    <v-spacer />
     <v-toolbar-items>
       <slot name="prepend-actions" />
       <UploadButton @click="(content: string) => emit('update:modelValue', content)" />

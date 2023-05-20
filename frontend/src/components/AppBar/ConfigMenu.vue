@@ -31,6 +31,10 @@
           class="mt-4"
         />
         <v-btn @click="reset" prepend-icon="mdi-delete" block class="mt-4" variant="outlined" color="error">Reset Options</v-btn>
+
+        <v-chip v-if="version" style="width: 100%" class="mt-3 justify-center font-weight-medium" size="small" label>
+          Version: {{ version.substring(0, 10) }}
+        </v-chip>
       </v-card-text>
     </v-card>
   </v-menu>
@@ -52,4 +56,5 @@ const reset = () => {
 }
 
 const display = useDisplay();
+const version = APP_VERSION
 </script>

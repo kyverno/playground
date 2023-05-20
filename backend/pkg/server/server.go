@@ -9,9 +9,11 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/kyverno/playground/backend/pkg/api"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+
+	"github.com/kyverno/playground/backend/pkg/api"
+	"github.com/kyverno/playground/backend/pkg/config"
 )
 
 //go:embed dist
@@ -50,11 +52,33 @@ func New(log bool, kubeConfig string, sponsor string) (Server, error) {
 			return nil, err
 		}
 	}
-	apiServer := api.NewServer(k8sConfig)
-	router.POST("/engine", apiServer.Serve)
-	router.POST("/sponsor", func(c *gin.Context) {
-		c.String(http.StatusOK, sponsor)
-	})
+
+	resolver, err := config.NewResolver(k8sConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	dClient, err := resolver.DClient()
+	if err != nil {
+		return nil, err
+	}
+
+	cmResolver, err := resolver.CMResolver()
+	if err != nil {
+		return nil, err
+	}
+
+	kubeClient, err := resolver.KubeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	router.POST("/config", api.NewConfigHandler(kubeConfig != "", sponsor))
+	router.POST("/engine", api.NewEngineHandler(dClient, cmResolver))
+	router.POST("/namespaces", api.NewNamespaceHandler(kubeClient))
+	router.POST("/resources", api.NewResourceListHandler(dClient))
+	router.POST("/resource", api.NewResourceHandler(dClient))
+
 	router.StaticFS("/", http.FS(fs))
 	return server{router}, nil
 }

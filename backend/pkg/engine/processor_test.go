@@ -54,7 +54,7 @@ metadata:
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := api.Request{
+			r := api.EngineRequest{
 				Policies:  tt.fields.Policy,
 				Resources: tt.fields.Resources,
 				Context:   tt.fields.Context,
@@ -72,7 +72,7 @@ metadata:
 			policies, err := loader.Policies(r.Policies)
 			fatalOnError(t, "loader.Policies", err)
 
-			processor, err := engine.NewProcessor(params, nil, nil)
+			processor, err := engine.NewProcessor(params, nil, nil, nil)
 			fatalOnError(t, "engine.NewProcessor", err)
 
 			if _, err := processor.Run(context.TODO(), policies, resources); (err != nil) != tt.wantErr {

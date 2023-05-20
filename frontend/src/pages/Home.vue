@@ -47,8 +47,7 @@
       </v-card>
       <AdvancedDrawer v-model="advanced" />
     </v-main>
-    <Sponsor />
-    <AppVersion />
+    <Sponsor :sponsor="config.sponsor" />
   </v-app>
 </template>
 
@@ -72,14 +71,16 @@ import { ResourcePanel, ContextPanel, PolicyPanel } from "@/components/Panel";
 import { LoadButton, SaveButton, ShareButton, MobileMenu, AppBar } from "@/components/AppBar";
 import { StartButton, ResultDialog } from "@/components/Results";
 import { parseContent } from "@/functions/share";
-import AppVersion from "@/components/AppVersion.vue";
 import { loadFromRepo } from "@/functions/github";
 import AdvancedDrawer from "@/components/AdvancedDrawer.vue";
+import { useAPIConfig } from "@/composables/api";
 
 const route = useRoute();
 const router = useRouter();
+const { fetch } = useAPIConfig();
 
 const state = useState()
+const { config } = fetch()
 
 const showResults = ref<boolean>(false);
 const results = ref<EngineResponse>({ policies: [], resources: [] });

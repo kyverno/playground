@@ -3,7 +3,6 @@ package engine
 import (
 	"context"
 	"fmt"
-	"time"
 
 	jsonpatch "github.com/evanphx/json-patch/v5"
 	"github.com/go-logr/logr"
@@ -15,7 +14,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/config"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
-	"github.com/kyverno/kyverno/pkg/engine/context/resolvers"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	"github.com/kyverno/kyverno/pkg/logging"
@@ -24,9 +22,6 @@ import (
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
 )
 
 var log = logging.WithName("playground")
@@ -183,7 +178,6 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 			continue
 		}
 		unstrGenResource, err := p.genController.GetUnstrResource(genRes[0])
-
 		if err != nil {
 			return Response{}, err
 		}
@@ -295,7 +289,7 @@ func newEngine(cfg config.Configuration, jp jmespath.Interface, client dclient.I
 	), nil
 }
 
-func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, k8sConfig *rest.Config) (*Processor, error) {
+func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, dClient dclient.Interface, cmResolver engineapi.ConfigmapResolver) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	if kyvernoConfig != nil {
 		cfg.Load(kyvernoConfig)
@@ -303,11 +297,6 @@ func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, k8sConfig
 
 	jp := jmespath.New(cfg)
 	cluster := false
-
-	dClient, cmResolver, err := newClients(k8sConfig)
-	if err != nil {
-		return nil, err
-	}
 
 	engine, err := newEngine(cfg, jp, dClient, cmResolver)
 	if err != nil {
@@ -320,7 +309,7 @@ func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, k8sConfig
 		cluster = true
 	}
 
-	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, log.V(5), jp)
+	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, log.V(1), jp)
 
 	return &Processor{
 		params:        params,
@@ -330,31 +319,6 @@ func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, k8sConfig
 		jmesPath:      jp,
 		cluster:       cluster,
 	}, nil
-}
-
-func newClients(restConfig *rest.Config) (dclient.Interface, engineapi.ConfigmapResolver, error) {
-	if restConfig == nil {
-		return nil, nil, nil
-	}
-
-	kubeClient, err := kubernetes.NewForConfig(restConfig)
-	if err != nil {
-		return nil, nil, err
-	}
-	dynamicClient, err := dynamic.NewForConfig(restConfig)
-	if err != nil {
-		return nil, nil, err
-	}
-	dClient, err := dclient.NewClient(context.Background(), dynamicClient, kubeClient, 15*time.Minute)
-	if err != nil {
-		return nil, nil, err
-	}
-	cmResolver, err := resolvers.NewClientBasedResolver(kubeClient)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return NewWrapper(dClient), cmResolver, nil
 }
 
 func ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory {

@@ -6,7 +6,11 @@
     v-model="policy"
     :restore-value="state.policy.value"
     :info="options.panels.policyInfo"
-  />
+  >
+    <template #append-actions v-if="config.cluster">
+      <ClusterPolicyButton />
+    </template>
+  </EditorToolbar>
   <PolicyEditor v-model="policy" />
 </v-card>
 </template>
@@ -17,6 +21,8 @@ import { options } from '@/config';
 import { useState } from '@/composables';
 import PolicyEditor from './PolicyEditor.vue';
 import EditorToolbar from './EditorToolbar.vue';
+import { config } from '@/composables/api';
+import ClusterPolicyButton from './ClusterPolicyButton.vue';
 
 const state = useState()
 
