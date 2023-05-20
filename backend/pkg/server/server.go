@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"embed"
 	"fmt"
 	"io/fs"
@@ -16,8 +17,10 @@ import (
 //go:embed dist
 var staticFiles embed.FS
 
+type Shutdown = func(context.Context) error
+
 type Server interface {
-	Run(string, int) error
+	Run(context.Context, string, int) Shutdown
 }
 
 type server struct {
@@ -56,7 +59,16 @@ func New(log bool, kubeConfig string, sponsor string) (Server, error) {
 	return server{router}, nil
 }
 
-func (s server) Run(host string, port int) error {
+func (s server) Run(ctx context.Context, host string, port int) Shutdown {
 	address := fmt.Sprintf("%v:%v", host, port)
-	return s.Engine.Run(address)
+	srv := &http.Server{
+		Addr:    address,
+		Handler: s.Engine.Handler(),
+	}
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			panic(err)
+		}
+	}()
+	return srv.Shutdown
 }
