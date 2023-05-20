@@ -30,10 +30,6 @@ type server struct {
 }
 
 func New(log bool, kubeConfig string, sponsor string) (Server, error) {
-	fs, err := fs.Sub(staticFiles, "dist")
-	if err != nil {
-		return nil, err
-	}
 	router := gin.New()
 	if log {
 		router.Use(gin.Logger())
@@ -45,41 +41,14 @@ func New(log bool, kubeConfig string, sponsor string) (Server, error) {
 		AllowHeaders:  []string{"Origin", "Content-Type"},
 		ExposeHeaders: []string{"Content-Length"},
 	}))
-	var k8sConfig *rest.Config
-	if kubeConfig != "" {
-		k8sConfig, err = clientcmd.BuildConfigFromFlags("", kubeConfig)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	resolver, err := config.NewResolver(k8sConfig)
-	if err != nil {
+	apiGroup := router.Group("/api")
+	if err := addApiRoutes(apiGroup, kubeConfig, sponsor); err != nil {
 		return nil, err
 	}
-
-	dClient, err := resolver.DClient()
-	if err != nil {
+	uiGroup := router.Group("/")
+	if err := addUiRoutes(uiGroup); err != nil {
 		return nil, err
 	}
-
-	cmResolver, err := resolver.CMResolver()
-	if err != nil {
-		return nil, err
-	}
-
-	kubeClient, err := resolver.KubeClient()
-	if err != nil {
-		return nil, err
-	}
-
-	router.POST("/config", api.NewConfigHandler(kubeConfig != "", sponsor))
-	router.POST("/engine", api.NewEngineHandler(dClient, cmResolver))
-	router.POST("/namespaces", api.NewNamespaceHandler(kubeClient))
-	router.POST("/resources", api.NewResourceListHandler(dClient))
-	router.POST("/resource", api.NewResourceHandler(dClient))
-
-	router.StaticFS("/", http.FS(fs))
 	return server{router}, nil
 }
 
@@ -95,4 +64,46 @@ func (s server) Run(ctx context.Context, host string, port int) Shutdown {
 		}
 	}()
 	return srv.Shutdown
+}
+
+func addApiRoutes(group *gin.RouterGroup, kubeConfig, sponsor string) error {
+	var k8sConfig *rest.Config
+	var err error
+	if kubeConfig != "" {
+		k8sConfig, err = clientcmd.BuildConfigFromFlags("", kubeConfig)
+		if err != nil {
+			return err
+		}
+	}
+	resolver, err := config.NewResolver(k8sConfig)
+	if err != nil {
+		return err
+	}
+	dClient, err := resolver.DClient()
+	if err != nil {
+		return err
+	}
+	cmResolver, err := resolver.CMResolver()
+	if err != nil {
+		return err
+	}
+	kubeClient, err := resolver.KubeClient()
+	if err != nil {
+		return err
+	}
+	group.POST("/config", api.NewConfigHandler(kubeConfig != "", sponsor))
+	group.POST("/namespaces", api.NewNamespaceHandler(kubeClient))
+	group.POST("/resources", api.NewResourceListHandler(dClient))
+	group.POST("/resource", api.NewResourceHandler(dClient))
+	group.POST("/engine", api.NewEngineHandler(dClient, cmResolver))
+	return nil
+}
+
+func addUiRoutes(group *gin.RouterGroup) error {
+	fs, err := fs.Sub(staticFiles, "dist")
+	if err != nil {
+		return err
+	}
+	group.StaticFS("/", http.FS(fs))
+	return nil
 }
