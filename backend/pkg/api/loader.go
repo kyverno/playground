@@ -7,6 +7,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -64,6 +65,29 @@ func (l *Loader) Policies(policyContent string) ([]kyvernov1.PolicyInterface, er
 	}
 
 	return policies, nil
+}
+
+func (l *Loader) ConfigMap(content string) (*corev1.ConfigMap, error) {
+	documents, err := splitDocuments([]byte(content))
+	if err != nil {
+		return nil, err
+	}
+
+	if len(documents) == 0 {
+		return nil, nil
+	}
+
+	untyped, err := l.Unstructured(documents[0])
+	if err != nil {
+		return nil, err
+	}
+
+	configMap, err := fromUnstructured[corev1.ConfigMap](untyped)
+	if err != nil {
+		return nil, err
+	}
+
+	return &configMap, nil
 }
 
 func (l *Loader) Unstructured(document []byte) (unstructured.Unstructured, error) {

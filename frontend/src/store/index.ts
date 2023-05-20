@@ -6,6 +6,7 @@ export const inputs = reactive({
     policy: PolicyTemplate,
     resource: ResourceTemplate,
     context: ContextTemplate,
+    config: '',
 })
 
 export const reset = () => {
@@ -14,7 +15,7 @@ export const reset = () => {
     inputs.context = ContextTemplate
 }
 
-export const setDefaults = () => init({ policy: PolicyTemplate, resource: ResourceTemplate, context: ContextTemplate })
+export const setDefaults = () => init({ policy: PolicyTemplate, resource: ResourceTemplate, context: ContextTemplate, })
 
 export const init = (values: Inputs) => {
     const state = useState()
@@ -62,5 +63,8 @@ export const populate = () => {
     }
     if (state.context.value) {
         inputs.context = state.context.value;
+    }
+    if (state.config.value) {
+        inputs.config = state.config.value;
     }
 }

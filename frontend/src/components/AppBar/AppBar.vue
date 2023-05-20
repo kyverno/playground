@@ -34,6 +34,9 @@
         <slot name="desktop-actions" />
       </template>
       <ConfigMenu />
+      <template v-if="display.mdAndUp.value">
+        <slot name="desktop-append" />
+      </template>
         <slot name="append-actions" />
       <slot name="mobile-actions" v-if="display.smAndDown.value" />
     </template>

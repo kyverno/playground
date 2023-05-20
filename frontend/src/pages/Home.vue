@@ -15,6 +15,10 @@
       <template #mobile-actions>
         <MobileMenu v-model:policy="inputs.policy" v-model:resource="inputs.resource" v-model:context="inputs.context" />
       </template>
+
+      <template #desktop-append>
+        <v-btn @click="() => advanced = !advanced" prepend-icon="mdi-application-settings">Advanced</v-btn>
+      </template>
     </AppBar>
     <ExampleDrawer v-model="drawer" />
     <v-main>
@@ -41,6 +45,7 @@
       <v-card v-if="state.name.value" class="state-card">
         <v-card-text class="text-body-2 font-weight-medium py-2">Loaded State: {{ state.name.value }}</v-card-text>
       </v-card>
+      <AdvancedDrawer v-model="advanced" />
     </v-main>
     <Sponsor />
     <AppVersion />
@@ -69,6 +74,7 @@ import { StartButton, ResultDialog } from "@/components/Results";
 import { parseContent } from "@/functions/share";
 import AppVersion from "@/components/AppVersion.vue";
 import { loadFromRepo } from "@/functions/github";
+import AdvancedDrawer from "@/components/AdvancedDrawer.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -97,6 +103,7 @@ const handleError = (error: Error) => {
 };
 
 const drawer = ref<boolean>(false);
+const advanced = ref<boolean>(false);
 
 watchEffect(() => {
   const query = route.query.content as string;

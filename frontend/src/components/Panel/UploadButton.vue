@@ -1,13 +1,19 @@
 <template>
     <input type="file" ref="input" style="display: none;" :accept="props.accept" @change="send" />
-    <v-btn @click="select" prepend-icon="mdi-upload" :loading="loading" :color="color">file</v-btn>
+    <v-btn @click="select" prepend-icon="mdi-upload" :loading="loading" :color="btnColor" :variant="variant" :width="width" :class="btnClass">{{ label }}</v-btn>
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue';
 import { ref } from 'vue';
 
 const props = defineProps({
-    accept: { type: String, default: '.yaml,.yml,text/yaml,application/x-yaml' }
+    accept: { type: String, default: '.yaml,.yml,text/yaml,application/x-yaml' },
+    label: { type: String, default: 'file' },
+    width: { type: [String, Number] },
+    variant: { type: String as PropType<'flat' | 'text'> },
+    color: { type: String },
+    btnClass: { type: String }
 })
 
 const input = ref<HTMLInputElement | null>(null)
@@ -15,7 +21,7 @@ const input = ref<HTMLInputElement | null>(null)
 const emit = defineEmits(['click'])
 
 const loading = ref<boolean>(false)
-const color = ref<string>('white')
+const btnColor = ref<string | undefined>(props.color)
 
 const send = (event: Event) => {
     loading.value = true
@@ -35,7 +41,7 @@ const send = (event: Event) => {
         loading.value = false;
     };
     reader.onerror = () => {
-        color.value = "warning"
+        btnColor.value = "warning"
         loading.value = false;
     };
     reader.readAsText(file);
