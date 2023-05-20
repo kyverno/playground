@@ -147,7 +147,7 @@ build-clean: ## Clean built files
 	@echo Cleaning built files... >&2
 	@rm -rf frontend/dist
 	@rm -rf backend/backend
-	@rm -rf backend/data/dist
+	@rm -rf backend/pkg/server/dist
 	@rm -rf backend/data/schemas
 
 .PHONY: build-frontend
@@ -158,7 +158,7 @@ build-frontend: ## Build frontend
 .PHONY: build-backend-assets
 build-backend-assets: build-frontend ## Build backend assets
 	@echo Building backend assets... >&2
-	@rm -rf backend/data/dist && cp -r frontend/dist backend/data/dist
+	@rm -rf backend/pkg/server/dist && cp -r frontend/dist backend/pkg/server/dist
 	@rm -rf backend/data/schemas && cp -r schemas/openapi/v3 backend/data/schemas
 
 .PHONY: build-backend
