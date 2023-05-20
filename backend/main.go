@@ -2,66 +2,39 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"io/fs"
-	"net/http"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/clientcmd"
 
-	"github.com/kyverno/playground/backend/data"
-	"github.com/kyverno/playground/backend/pkg/api"
+	"github.com/kyverno/playground/backend/pkg/server"
 )
 
-func run(sponsor, host string, port int, kubeConfig string, log bool) {
-	fs, err := fs.Sub(data.StaticFiles(), "dist")
-	if err != nil {
-		panic(err)
-	}
-	router := gin.New()
-	if log {
-		router.Use(gin.Logger())
-	}
-	router.Use(gin.Recovery())
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{"*"},
-		AllowMethods:  []string{"POST"},
-		AllowHeaders:  []string{"Origin", "Content-Type"},
-		ExposeHeaders: []string{"Content-Length"},
-	}))
+type options struct {
+	host       string
+	port       int
+	mode       string
+	log        bool
+	kubeConfig string
+	sponsor    string
+}
 
-	var k8sConfig *rest.Config
-	if kubeConfig != "" {
-		k8sConfig, err = clientcmd.BuildConfigFromFlags("", kubeConfig)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	server := api.NewServer(k8sConfig)
-
-	router.POST("/engine", server.Serve)
-	router.POST("/sponsor", func(c *gin.Context) {
-		c.String(http.StatusOK, sponsor)
-	})
-
-	router.StaticFS("/", http.FS(fs))
-	address := fmt.Sprintf("%v:%v", host, port)
-	if err := router.Run(address); err != nil {
-		panic(err)
-	}
+func getOptions() options {
+	var options options
+	flag.StringVar(&options.host, "host", "0.0.0.0", "server host")
+	flag.IntVar(&options.port, "port", 8080, "server port")
+	flag.StringVar(&options.mode, "mode", gin.ReleaseMode, "gin run mode")
+	flag.BoolVar(&options.log, "log", false, "enable gin logger")
+	flag.StringVar(&options.kubeConfig, "kubeconfig", "", "enable gin logger")
+	flag.StringVar(&options.sponsor, "sponsor", "", "sponsor text")
+	flag.Parse()
+	return options
 }
 
 func main() {
-	host := flag.String("host", "0.0.0.0", "server host")
-	port := flag.Int("port", 8080, "server port")
-	mode := flag.String("mode", gin.ReleaseMode, "gin run mode")
-	log := flag.Bool("log", false, "enable gin logger")
-	kubeConfig := flag.String("kubeconfig", "", "enable gin logger")
-	sponsor := flag.String("sponsor", "", "sponsor text")
-	flag.Parse()
-	gin.SetMode(*mode)
-	run(*sponsor, *host, *port, *kubeConfig, *log)
+	options := getOptions()
+	gin.SetMode(options.mode)
+	if server, err := server.New(options.log, options.kubeConfig, options.sponsor); err != nil {
+		panic(err)
+	} else if err := server.Run(options.host, options.port); err != nil {
+		panic(err)
+	}
 }
