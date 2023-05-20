@@ -6,6 +6,7 @@ export const generateContent = (): string => {
         policy: inputs.policy,
         resource: inputs.resource,
         context: inputs.context,
+        config: inputs.config,
     }));
 }
 
@@ -14,6 +15,7 @@ export const parseContent = (decoded: string): void => {
         policy: string;
         resource: string;
         context: string;
+        config: string;
     };
 
     init(content)

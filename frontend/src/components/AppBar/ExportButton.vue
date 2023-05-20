@@ -35,10 +35,6 @@
           </v-list-item-action>
         </template>
       </v-list-item>
-      <v-divider />
-      <v-list-item>
-        <v-checkbox-btn v-model="config" label="Kyverno Configuration" />
-      </v-list-item>
     </v-list>
     <v-divider />
     <v-card-text>
@@ -65,15 +61,14 @@ defineProps({
 const profiles = ref<string[]>([]);
 const dialog = ref<boolean>(false);
 const current = ref<boolean>(false);
-const config = ref<boolean>(false);
 const loading = ref<boolean>(false);
 
 const all = computed(() => {
-  if (config.value && current.value && list.value.length === profiles.value.length) {
+  if (current.value && list.value.length === profiles.value.length) {
     return { modelValue: true, indeterminate: undefined }
   }
 
-  if (config.value || current.value || profiles.value.length) {
+  if (current.value || profiles.value.length) {
     return { indeterminate: true, modelValue: undefined }
   }
 
@@ -83,12 +78,10 @@ const all = computed(() => {
 const selectAll = ({ modelValue }: { modelValue: boolean | undefined }) => {
   if (modelValue) {
     current.value = false;
-    config.value = false;
     profiles.value = [];
     return;
   }
 
-  config.value = true;
   current.value = true;
   profiles.value = [...list.value]
 }
@@ -105,7 +98,7 @@ const close = () => {
 const persist = () => {
   loading.value = true
   
-  const content = convertProfiles(current.value, profiles.value, config.value)
+  const content = convertProfiles(current.value, profiles.value)
 
   const a = window.document.createElement("a");
   a.href = window.URL.createObjectURL(new Blob([content], { type: "application/yaml" }));
