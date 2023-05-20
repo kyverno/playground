@@ -13,7 +13,7 @@ import (
 )
 
 func Test_Serve(t *testing.T) {
-	jsonBody := api.Request{
+	jsonBody := api.EngineRequest{
 		Resources: singleResource,
 		Policies:  singlePolicy,
 	}
@@ -28,7 +28,7 @@ func Test_Serve(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
 
-	api.NewServer(nil).Serve(c)
+	api.NewEngineHandler(nil, nil)(c)
 
 	if w.Result().StatusCode != http.StatusOK {
 		buf := new(bytes.Buffer)

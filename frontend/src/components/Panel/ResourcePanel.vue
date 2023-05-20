@@ -10,6 +10,9 @@
       <template #prepend-actions>
         <TemplateButton @select="(template: string) => resource = template" />
       </template>
+      <template #append-actions v-if="config.cluster">
+        <ClusterResourceButton />
+      </template>
     </EditorToolbar>
     <ResourceEditor v-model="resource" :height="height" />
   </v-card>
@@ -22,6 +25,8 @@ import { useState } from '@/composables';
 import TemplateButton from './TemplateButton.vue';
 import ResourceEditor from './ResourceEditor.vue';
 import EditorToolbar from './EditorToolbar.vue';
+import ClusterResourceButton from './ClusterResourceButton.vue';
+import { config } from '@/composables/api';
 
 const state = useState()
 

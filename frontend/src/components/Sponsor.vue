@@ -1,5 +1,5 @@
 <template>
-<v-card class="sponsor background" width="170" flat :theme="layoutTheme" v-if="sponsor">
+<v-card class="sponsor background rounded-b-0" width="170" flat :theme="layoutTheme" v-if="sponsor">
     <v-card-text class="text-body-2 font-weight-bold pa-2 text-center" v-if="sponsor === 'nirmata'">
         Hosted by <a href="https://nirmata.com" target="_blank"><img :src="`nirmata_${layoutTheme}.png`" height="14" style="margin-bottom: -3px;" /></a>
     </v-card-text>
@@ -11,28 +11,10 @@
 
 <script setup lang="ts">
 import { layoutTheme } from '@/config';
-import { resolveAPI } from '@/utils';
-import { ref } from 'vue';
 
-const api = resolveAPI()
-const sponsor = ref('')
-
-fetch(`${api}/../sponsor`, {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    headers: {
-      "Content-Type": "text/plain",
-    },
-  }).then((resp) => {
-    if (resp.status > 200) {
-        return '';
-    }
-
-    return resp.text()
-  }).then((text) => {
-    sponsor.value = text
-  }).catch(console.error)
+defineProps({
+  sponsor: { type: String }
+})
 </script>
 
 <style scoped>
