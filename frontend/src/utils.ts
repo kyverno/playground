@@ -3,3 +3,9 @@ export const resolveAPI = () => {
 
     return api.trim().replace(/\/+$/, '')
 }
+
+export const mergeResources = (a: string, b: string): string => {
+    return `${a.trim()}
+    ---
+    ${b.trim()}`
+}

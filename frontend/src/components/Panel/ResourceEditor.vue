@@ -14,7 +14,6 @@
 import { editor, Uri } from 'monaco-editor'
 import { editorTheme } from "@/config";
 import { ref, watch } from "vue";
-import { loadedResource } from "@/composables";
 import MonacoEditor from "./MonacoEditor.vue";
 
 const props = defineProps({
@@ -23,12 +22,17 @@ const props = defineProps({
 
 const monaco = ref<typeof MonacoEditor | null>(null);
 
-watch(loadedResource, () => {
+watch(() => props.modelValue, (current, old) => {
   if (!monaco.value) return
 
   const edit: editor.ICodeEditor = monaco.value._getEditor();
 
-  edit.setScrollPosition({scrollTop: 0});
+  const currentLines = current.split(/\r\n|\r|\n/).length
+  const oldLines = old.split(/\r\n|\r|\n/).length
+
+  if (currentLines + 10 < oldLines) {
+    edit.setScrollPosition({scrollTop: 0});
+  }
 })
 
 const uri = Uri.parse('resource.yaml')

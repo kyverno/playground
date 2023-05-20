@@ -12,9 +12,10 @@
                 <MonacoEditor :value="inputs.config" @update:value="(event: string) => inputs.config = event" :height="500" :theme="editorTheme" language="yaml" />
             </v-card-text>
             <v-card-actions class="px-0 pt-0" style="min-height: 36px!important;">
-                <v-btn variant="flat" class="rounded-0 mx-0" width="33.3%" color="warning" @click="() => inputs.config = ''">Clear Config</v-btn>
-                <v-btn variant="flat" class="rounded-0 mx-0" width="33.3%" color="primary" @click="() => inputs.config = ConfigTemplate">Load Default Config</v-btn>
-                <UploadButton btn-class="rounded-0 mx-0" label="Upload ConfigMap" @click="(event: string) => inputs.config = event" width="33.3%" color="secondary" variant="flat" />
+                <v-btn variant="flat" class="rounded-0 mx-0" :width="width" color="warning" @click="() => inputs.config = ''">Clear Config</v-btn>
+                <v-btn variant="flat" class="rounded-0 mx-0" :width="width" color="primary" @click="() => inputs.config = ConfigTemplate">Load Default Config</v-btn>
+                <UploadButton btn-class="rounded-0 mx-0" label="Upload ConfigMap" @click="(event: string) => inputs.config = event" :width="width" color="secondary" variant="flat" />
+                <ClusterConfigButton v-if="config.cluster" />
             </v-card-actions>
         </v-card>
 
@@ -27,13 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
+import { watch, ref } from 'vue';
 import { inputs } from '@/store';
 import { MonacoEditor } from './Panel';
 import { editorTheme } from '@/config';
 import { ConfigTemplate } from '@/assets/templates';
-import UploadButton from './Panel/UploadButton.vue';
 import { loadedConfig } from '@/composables';
+import { config } from '@/composables/api';
+import UploadButton from './Panel/UploadButton.vue';
+import ClusterConfigButton from './ClusterConfigButton.vue';
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
@@ -42,6 +45,8 @@ const props = defineProps({
 watch(() => inputs.config, (config: string) => {
     loadedConfig.value = config
 })
+
+const width = ref<string>(config.cluster ? '25%' : '33.33%')
 
 const emit = defineEmits(["update:modelValue"]);
 
