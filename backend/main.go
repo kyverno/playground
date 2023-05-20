@@ -1,7 +1,11 @@
 package main
 
 import (
+	"context"
 	"flag"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -34,7 +38,18 @@ func main() {
 	gin.SetMode(options.mode)
 	if server, err := server.New(options.log, options.kubeConfig, options.sponsor); err != nil {
 		panic(err)
-	} else if err := server.Run(options.host, options.port); err != nil {
-		panic(err)
+	} else {
+		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+		defer stop()
+		shutdown := server.Run(ctx, options.host, options.port)
+		<-ctx.Done()
+		stop()
+		if shutdown != nil {
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			if err := shutdown(ctx); err != nil {
+				panic(err)
+			}
+		}
 	}
 }
