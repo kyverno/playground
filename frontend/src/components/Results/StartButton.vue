@@ -73,7 +73,7 @@ const submit = (): void => {
 
   loading.value = true;
 
-  fetch(`${api}/engine`, {
+  fetch(`${api}/../engine`, {
     body: JSON.stringify({
       policies: inputs.policy,
       resources: inputs.resource,

@@ -17,7 +17,7 @@ import { ref } from 'vue';
 const api = resolveAPI()
 const sponsor = ref('')
 
-fetch(`${api}/sponsor`, {
+fetch(`${api}/../sponsor`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",

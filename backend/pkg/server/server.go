@@ -55,7 +55,8 @@ func New(log bool, kubeConfig string, sponsor string) (Server, error) {
 	router.POST("/sponsor", func(c *gin.Context) {
 		c.String(http.StatusOK, sponsor)
 	})
-	router.StaticFS("/", http.FS(fs))
+	ui := router.Group("/ui")
+	ui.StaticFS("/", http.FS(fs))
 	return server{router}, nil
 }
 

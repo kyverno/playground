@@ -9,8 +9,9 @@ import { registerPlugins } from '@/plugins'
 
 import clusterpolicy from './schemas/clusterpolicy.json'
 import context from './schemas/context.json'
+import { resolveAPI } from './utils';
 
-const baseURL = `${window.location.protocol}//${window.location.host}`
+const api = resolveAPI()
 
 setDiagnosticsOptions({
     enableSchemaRequest: true,
@@ -19,8 +20,8 @@ setDiagnosticsOptions({
     validate: true,
     format: true,
     schemas: [
-        { ...clusterpolicy, uri: `${baseURL}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] },
-        { ...context, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
+        { ...clusterpolicy, uri: `${api}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] },
+        { ...context, uri: `${api}/schemas/context.json`, fileMatch: ['context.yaml'] }
     ]
 });
 
