@@ -31,7 +31,7 @@ const fetchConfig = (api: string, loading: Ref<boolean>, error: Ref<Error | unde
     error.value = undefined
 
     fetch(`${api}/config`, {
-        method: "POST",
+        method: "GET",
         mode: "cors",
         cache: "no-cache",
         headers: {
@@ -66,9 +66,9 @@ export const useAPIConfig = () => {
     }
 }
 
-const fetchWrapper = <T, R = undefined>(api: string, request: R): Promise<T> => {
+const fetchWrapper = <T, R = undefined>(method: string, api: string, request: R): Promise<T> => {
     return fetch(api, {
-        method: "POST",
+        method: method,
         mode: "cors",
         cache: "no-cache",
         headers: {
@@ -84,11 +84,11 @@ const fetchWrapper = <T, R = undefined>(api: string, request: R): Promise<T> => 
     })
 }
 
-const fetchNamespaces = (api: string) => () => fetchWrapper<string[]>(`${api}/namespaces`, undefined)
+const fetchNamespaces = (api: string) => () => fetchWrapper<string[]>('GET', `${api}/namespaces`, undefined)
 
-const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{ namespace?: string, name: string }[], ListRequest>(`${api}/resources`, request)
+const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{ namespace?: string, name: string }[], ListRequest>('POST', `${api}/resources`, request)
 
-const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object, ResourceRequest>(`${api}/resource`, request)
+const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object, ResourceRequest>('POST', `${api}/resource`, request)
 
 export const useAPI = <T>() => {
     const api = resolveAPI()
