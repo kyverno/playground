@@ -6,6 +6,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/evanphx/json-patch/v5 v5.6.0
 	github.com/gin-contrib/cors v1.4.0
+	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-logr/logr v1.2.4
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20230512141448-83840a24620a
