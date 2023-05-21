@@ -2,15 +2,9 @@ package api
 
 import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
 	"github.com/kyverno/playground/backend/pkg/engine"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
-
-type ConfigResponse struct {
-	Cluster bool   `json:"cluster"`
-	Sponsor string `json:"sponsor"`
-}
 
 type ListResourcesRequest struct {
 	APIVersion string            `json:"apiVersion"`
