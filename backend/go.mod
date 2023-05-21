@@ -8,7 +8,6 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-logr/logr v1.2.4
-	github.com/golobby/container/v3 v3.3.2
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20230512141448-83840a24620a
 	k8s.io/api v0.27.2
 	k8s.io/apimachinery v0.27.2
