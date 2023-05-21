@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/kyverno/playground/backend/pkg/config"
 	"github.com/kyverno/playground/backend/pkg/server"
 )
 
@@ -36,7 +37,9 @@ func getOptions() options {
 func main() {
 	options := getOptions()
 	gin.SetMode(options.mode)
-	if server, err := server.New(options.log, options.kubeConfig, options.sponsor); err != nil {
+	if config, err := config.NewContainer(options.kubeConfig); err != nil {
+		panic(err)
+	} else if server, err := server.New(config, options.log, options.sponsor); err != nil {
 		panic(err)
 	} else {
 		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)

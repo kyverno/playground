@@ -9,8 +9,6 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/clientcmd"
 
 	"github.com/kyverno/playground/backend/pkg/api"
 	"github.com/kyverno/playground/backend/pkg/config"
@@ -29,7 +27,7 @@ type server struct {
 	*gin.Engine
 }
 
-func New(log bool, kubeConfig string, sponsor string) (Server, error) {
+func New(config config.Config, log bool, sponsor string) (Server, error) {
 	router := gin.New()
 	if log {
 		router.Use(gin.Logger())
@@ -42,7 +40,7 @@ func New(log bool, kubeConfig string, sponsor string) (Server, error) {
 		ExposeHeaders: []string{"Content-Length"},
 	}))
 	apiGroup := router.Group("/api")
-	if err := addApiRoutes(apiGroup, kubeConfig, sponsor); err != nil {
+	if err := addApiRoutes(apiGroup, config, sponsor); err != nil {
 		return nil, err
 	}
 	uiGroup := router.Group("/")
@@ -66,37 +64,25 @@ func (s server) Run(ctx context.Context, host string, port int) Shutdown {
 	return srv.Shutdown
 }
 
-func addApiRoutes(group *gin.RouterGroup, kubeConfig, sponsor string) error {
-	var k8sConfig *rest.Config
-	var err error
-	if kubeConfig != "" {
-		k8sConfig, err = clientcmd.BuildConfigFromFlags("", kubeConfig)
-		if err != nil {
-			return err
+func addApiRoutes(group *gin.RouterGroup, config config.Config, sponsor string) error {
+	if dClient, err := config.DClient(); err != nil {
+		return err
+	} else if cmResolver, err := config.CMResolver(); err != nil {
+		return err
+	} else if kubeClient, err := config.KubeClient(); err != nil {
+		return err
+	} else {
+		if kubeClient != nil {
+			group.POST("/namespaces", api.NewNamespaceHandler(kubeClient))
 		}
+		if dClient != nil {
+			group.POST("/resources", api.NewResourceListHandler(dClient))
+			group.POST("/resource", api.NewResourceHandler(dClient))
+		}
+		group.POST("/config", api.NewConfigHandler(kubeClient != nil, sponsor))
+		group.POST("/engine", api.NewEngineHandler(dClient, cmResolver))
+		return nil
 	}
-	resolver, err := config.NewResolver(k8sConfig)
-	if err != nil {
-		return err
-	}
-	dClient, err := resolver.DClient()
-	if err != nil {
-		return err
-	}
-	cmResolver, err := resolver.CMResolver()
-	if err != nil {
-		return err
-	}
-	kubeClient, err := resolver.KubeClient()
-	if err != nil {
-		return err
-	}
-	group.POST("/config", api.NewConfigHandler(kubeConfig != "", sponsor))
-	group.POST("/namespaces", api.NewNamespaceHandler(kubeClient))
-	group.POST("/resources", api.NewResourceListHandler(dClient))
-	group.POST("/resource", api.NewResourceHandler(dClient))
-	group.POST("/engine", api.NewEngineHandler(dClient, cmResolver))
-	return nil
 }
 
 func addUiRoutes(group *gin.RouterGroup) error {
