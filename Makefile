@@ -7,6 +7,7 @@ KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard
+KUBECONFIG           ?= ""
 
 #############
 # VARIABLES #
@@ -192,7 +193,7 @@ docker-build: ## Build playground image (with docker)
 .PHONY: run
 run: build-backend-assets ## Run locally
 	@echo Run backend... >&2
-	@cd backend && go run . --log=true
+	@cd backend && go run . --log=true --kubeconfig=$(KUBECONFIG)
 
 ########
 # KIND #
