@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
-	"strings"
 
 	"github.com/gin-contrib/cors"
-	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
 	"github.com/kyverno/playground/backend/pkg/api"
@@ -20,6 +18,7 @@ import (
 var staticFiles embed.FS
 
 const apiPrefix = "/api"
+const uiPrefix = "/ui"
 
 type Shutdown = func(context.Context) error
 
@@ -43,14 +42,17 @@ func New(config config.Config, log bool, sponsor string) (Server, error) {
 		AllowHeaders:  []string{"Origin", "Content-Type"},
 		ExposeHeaders: []string{"Content-Length"},
 	}))
-
 	apiGroup := router.Group(apiPrefix)
 	if err := addAPIRoutes(apiGroup, config, sponsor); err != nil {
 		return nil, err
 	}
-	if err := addUIRoutes(router); err != nil {
+	uiGroup := router.Group(uiPrefix)
+	if err := addUIRoutes(uiGroup); err != nil {
 		return nil, err
 	}
+	router.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, uiPrefix)
+	})
 	return server{router}, nil
 }
 
@@ -89,40 +91,11 @@ func addAPIRoutes(group *gin.RouterGroup, config config.Config, sponsor string) 
 	}
 }
 
-func addUIRoutes(router *gin.Engine) error {
+func addUIRoutes(group *gin.RouterGroup) error {
 	fs, err := fs.Sub(staticFiles, "dist")
 	if err != nil {
 		return err
 	}
-
-	router.Use(static.Serve("/", static.ServeFileSystem(&fileSystem{http.FS(fs)})))
-
-	fileServer := http.FileServer(http.FS(fs))
-	router.NoRoute(func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.RequestURI, apiPrefix) {
-			return
-		}
-
-		fileServer.ServeHTTP(c.Writer, c.Request)
-	})
-
+	group.StaticFS("/", http.FS(fs))
 	return nil
-}
-
-type fileSystem struct {
-	fs http.FileSystem
-}
-
-func (b *fileSystem) Open(name string) (http.File, error) {
-	return b.fs.Open(name)
-}
-
-func (b *fileSystem) Exists(prefix string, filepath string) bool {
-	if p := strings.TrimPrefix(filepath, prefix); len(p) < len(filepath) {
-		if _, err := b.fs.Open(p); err != nil {
-			return false
-		}
-		return true
-	}
-	return false
 }

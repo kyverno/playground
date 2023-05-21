@@ -24,7 +24,7 @@ type config struct {
 	cmResolver engineapi.ConfigmapResolver
 }
 
-func NewContainer(kubeConfig string) (Config, error) {
+func New(kubeConfig string) (Config, error) {
 	restConfig, err := utils.RestConfig(kubeConfig)
 	if err != nil {
 		return nil, err
