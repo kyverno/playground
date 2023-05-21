@@ -7,7 +7,7 @@ export const loadedResource = useLocalStorage<string>('loaded:resource', Resourc
 export const loadedConfig = useLocalStorage<string>('loaded:config', '');
 export const loadedState = useLocalStorage<string>('loaded:state', '')
 
-export type State = { name: string; policy?: string, resource?: string; context?: string }
+export type State = { name: string; policy?: string, resource?: string; context?: string; config?: string; }
 
 const update = (values: State) => {
     if (values.policy) {
@@ -20,6 +20,10 @@ const update = (values: State) => {
 
     if (values.context) {
         loadedContext.value = values.context;
+    }
+
+    if (values.config) {
+        loadedConfig.value = values.config;
     }
     
     loadedState.value = values.name;

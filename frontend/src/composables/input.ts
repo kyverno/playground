@@ -20,6 +20,7 @@ export const createInput = (name: string, defaults?: Inputs) => {
     const policy = useLocalStorage<string | null>(`persist:policy:${name}`, defaults?.policy || null)
     const resource = useLocalStorage<string | null>(`persist:resource:${name}`, defaults?.resource || null)
     const context = useLocalStorage<string | null>(`persist:context:${name}`, defaults?.context || null)
+    const config = useLocalStorage<string | null>(`persist:config:${name}`, defaults?.context || null)
 
     persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
 
@@ -27,6 +28,7 @@ export const createInput = (name: string, defaults?: Inputs) => {
         policy,
         resource,
         context,
+        config,
         name
     }
 }
@@ -37,6 +39,7 @@ export const removeInput = (name: string) => {
     input.policy.value = null
     input.resource.value = null
     input.context.value = null
+    input.config.value = null
 
     name = name.replaceAll(';;', ';').trim()
     const list = getPersisted()
@@ -49,6 +52,7 @@ export const useLocalInput = (name: string) => {
     const policy = useLocalStorage<string>(`persist:policy:${name}`, null)
     const resource = useLocalStorage<string>(`persist:resource:${name}`, null)
     const context = useLocalStorage<string>(`persist:context:${name}`, null)
+    const config = useLocalStorage<string | null>(`persist:config:${name}`, null)
 
     const list = getPersisted()
 
@@ -59,7 +63,8 @@ export const useLocalInput = (name: string) => {
             policy,
             resource,
             context,
-            name
+            config,
+            name,
         },
         remove: () => {
             policy.value = null

@@ -95,6 +95,7 @@ const persist = (name: string) => {
     policy: inputs.policy,
     resource: inputs.resource,
     context: inputs.context,
+    config: inputs.config,
     name: persistedInput.name,
   })
 

@@ -1,4 +1,4 @@
-import { ContextTemplate, PolicyTemplate, ResourceTemplate } from "@/assets/templates";
+import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate } from "@/assets/templates";
 import { reactive } from "vue";
 import { useState, Inputs } from "@/composables";
 
@@ -6,16 +6,24 @@ export const inputs = reactive({
     policy: PolicyTemplate,
     resource: ResourceTemplate,
     context: ContextTemplate,
-    config: '',
+    config: ConfigTemplate,
 })
 
 export const reset = () => {
     inputs.policy = PolicyTemplate
     inputs.resource = ResourceTemplate
     inputs.context = ContextTemplate
+    inputs.context = ConfigTemplate
 }
 
-export const setDefaults = () => init({ policy: PolicyTemplate, resource: ResourceTemplate, context: ContextTemplate, })
+export const setDefaults = () => {
+    init({ 
+        policy: PolicyTemplate,
+        resource: ResourceTemplate,
+        context: ContextTemplate,
+        config: ConfigTemplate,
+    })
+}
 
 export const init = (values: Inputs) => {
     const state = useState()
@@ -33,6 +41,11 @@ export const init = (values: Inputs) => {
     if (values.context) {
         state.context.value = values.context;
         inputs.context = values.context;
+    }
+
+    if (values.config) {
+        state.config.value = values.config;
+        inputs.config = values.config;
     }
     
     state.name.value = values.name || "";

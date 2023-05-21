@@ -5,16 +5,16 @@ import { parse, stringify } from "yaml"
 export type ProfileExport = {
     date: string;
     version: string;
-    config?: string;
     profiles?: {
         name?: string;
         policies?: string;
         resources?: string;
         context?: string;
+        config?: string;
     }[]
 }
 
-export const convertProfiles = (current: boolean, profiles: string[], config: boolean): string => {
+export const convertProfiles = (current: boolean, profiles: string[]): string => {
     const exports = []
 
     if (current) {
@@ -23,17 +23,19 @@ export const convertProfiles = (current: boolean, profiles: string[], config: bo
             policies: inputs.policy,
             resources: inputs.resource,
             context: inputs.context,
+            config: inputs.config,
         })
     }
 
     profiles.map(p => {
-        const { policy, resource, context } = createInput(p)
+        const { policy, resource, context, config } = createInput(p)
 
         exports.push({
             name: p,
             policies: policy.value,
             resources: resource.value,
-            context: context.value
+            context: context.value,
+            config: config.value,
         })
     })
 
@@ -41,10 +43,6 @@ export const convertProfiles = (current: boolean, profiles: string[], config: bo
         date: (new Date()).toISOString().slice(0, 10),
         version: APP_VERSION,
         profiles: exports
-    }
-
-    if (config) {
-        state.config = inputs.config
     }
 
     return stringify(state, null, { lineWidth: 0 })
@@ -69,11 +67,8 @@ export const importProfiles = async (content: string) => {
             policy: currentState?.policies,
             resource: currentState?.resources,
             context: currentState?.context,
+            config: currentState?.config,
         })
-    }
-
-    if (state.config) {
-        inputs.config = state.config
     }
 
     state.profiles.filter((p => !!p)).forEach((profile) => {
@@ -85,7 +80,8 @@ export const importProfiles = async (content: string) => {
         createInput(profile.name, {
             policy: profile.policies,
             resource: profile.resources,
-            context: profile.context
+            context: profile.context,
+            config: profile?.config,
         })
     })
 } 
