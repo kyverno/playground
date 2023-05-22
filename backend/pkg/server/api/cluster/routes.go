@@ -29,7 +29,7 @@ func AddRoutes(group *gin.RouterGroup, cluster Cluster) error {
 		}
 		c.JSON(http.StatusOK, namespaces)
 	})
-	group.POST("/resources", func(c *gin.Context) {
+	group.POST("/search", func(c *gin.Context) {
 		var request SearchRequest
 		if err := c.ShouldBind(&request); err != nil {
 			c.String(http.StatusBadRequest, err.Error())

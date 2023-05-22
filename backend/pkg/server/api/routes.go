@@ -13,7 +13,7 @@ func AddRoutes(group *gin.RouterGroup, config config.Config, cluster apicluster.
 		return err
 	}
 	if cluster != nil {
-		if err := apicluster.AddRoutes(group, cluster); err != nil {
+		if err := apicluster.AddRoutes(group.Group("/cluster"), cluster); err != nil {
 			return err
 		}
 	}
