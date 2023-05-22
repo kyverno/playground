@@ -14,7 +14,15 @@
             <v-card-actions class="px-0 pt-0" style="min-height: 36px!important;">
                 <v-btn variant="flat" class="rounded-0 mx-0" :width="width" color="warning" @click="() => inputs.config = ''">Clear Config</v-btn>
                 <v-btn variant="flat" class="rounded-0 mx-0" :width="width" color="primary" @click="() => inputs.config = ConfigTemplate">Load Default Config</v-btn>
-                <UploadButton btn-class="rounded-0 mx-0" label="Upload ConfigMap" @click="(event: string) => inputs.config = event" :width="width" color="secondary" variant="flat" />
+                <UploadButton 
+                    btn-class="rounded-0 mx-0" 
+                    label="Upload ConfigMap" 
+                    @click="(event: string) => inputs.config = event" 
+                    :width="width" 
+                    color="secondary" 
+                    variant="flat"
+                    :tooltip="false"
+                />
                 <ClusterConfigButton v-if="config.cluster" />
             </v-card-actions>
         </v-card>
@@ -28,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue';
+import { watch, computed } from 'vue';
 import { inputs } from '@/store';
 import { MonacoEditor } from './Panel';
 import { editorTheme } from '@/config';
@@ -46,7 +54,7 @@ watch(() => inputs.config, (config: string) => {
     loadedConfig.value = config
 })
 
-const width = ref<string>(config.cluster ? '25%' : '33.33%')
+const width = computed(() => config.cluster ? '25%' : '33.33%')
 
 const emit = defineEmits(["update:modelValue"]);
 

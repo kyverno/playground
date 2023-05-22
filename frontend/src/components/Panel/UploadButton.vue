@@ -1,10 +1,11 @@
 <template>
     <input type="file" ref="input" style="display: none;" :accept="props.accept" @change="send" />
-    <v-tooltip location="bottom" content-class="no-opacity-tooltip" text="Import from File">
+    <v-tooltip location="bottom" content-class="no-opacity-tooltip" text="Import from File" v-if="tooltip">
         <template v-slot:activator="{ props }">
             <v-btn v-bind="props" @click="select" icon="mdi-upload" :loading="loading" :color="btnColor" :variant="variant" :width="width" :class="btnClass" />
         </template>
     </v-tooltip>
+    <v-btn v-else v-bind="props" @click="select" prepend-icon="mdi-upload" :loading="loading" :color="btnColor" :variant="variant" :width="width" :class="btnClass">{{ label }}</v-btn>
 </template>
 
 <script setup lang="ts">
@@ -17,6 +18,7 @@ const props = defineProps({
     width: { type: [String, Number] },
     variant: { type: String as PropType<'flat' | 'text'> },
     color: { type: String },
+    tooltip: { type: Boolean, default: true },
     btnClass: { type: String }
 })
 
