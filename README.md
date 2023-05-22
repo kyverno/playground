@@ -1,6 +1,8 @@
 # Kyverno Playground
 
-The Kyverno Playground is a web service that simulates [Kyverno](https://github.com/kyverno/kyverno) behaviuor, you can experiment and play with Kyverno policies directly in your browser
+The **public version of the Playground** is available at https://playground.kyverno.io.
+
+The Kyverno Playground is a web service that simulates [Kyverno](https://github.com/kyverno/kyverno) behaviour, you can experiment and play with Kyverno policies directly in your browser
 
 The service receives a configuration, resource and policies definitions, runs the Kyverno engine, and returns the results of evaluating policies against resources.
 
