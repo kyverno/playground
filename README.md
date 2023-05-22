@@ -82,6 +82,12 @@ Install `kyverno-playground` local Helm chart:
 helm upgrade --install kyverno-playground --namespace kyverno --create-namespace --wait ./charts/kyverno-playground
 ```
 
+### Install and run locally
+
+Alternatively, you can install and run the Playground locally. This will allow you to connect the Playground to a real cluster.
+
+Please read the [Cluster connected docs](./docs/CLUSTER.md).
+
 ## Build
 
 Instructions for building and running the Playground from source code is available in the [docs](./docs) section.
