@@ -42,7 +42,7 @@ func New(enableLogger bool, enableCors bool) (Server, error) {
 	if enableCors {
 		router.Use(cors.New(cors.Config{
 			AllowOrigins:  []string{"*"},
-			AllowMethods:  []string{"POST"},
+			AllowMethods:  []string{"POST", "GET", "HEAD"},
 			AllowHeaders:  []string{"Origin", "Content-Type"},
 			ExposeHeaders: []string{"Content-Length"},
 		}))
