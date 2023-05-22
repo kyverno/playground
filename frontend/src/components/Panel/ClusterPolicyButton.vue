@@ -33,7 +33,6 @@
             <v-btn @click="dialog = false">Close</v-btn>
             <v-spacer />
             <v-btn 
-              :disabled="!resourceAPI" 
               @click="search" 
               :loading="loadingResources" 
               :color="errorResources ? 'error': undefined"
@@ -42,7 +41,7 @@
               </v-btn>
             <v-btn 
               :loading="loading" 
-              :disabled="!name || !resourceAPI" 
+              :disabled="!name" 
               @click="() => load([{ name: name || '', namespace }])" 
               :color="error ? 'error': undefined"
             >
@@ -112,7 +111,7 @@ const search = () => {
   const { apiVersion, kind } = resourceAPI.value
 
   loadingResources.value = true
-  loadResources({ apiVersion, kind, namespace: namespace.value })
+  loadResources({ apiVersion, kind, namespace: namespace.value || '' })
     .then((resources) => {
       foundings.value = resources
 
@@ -133,7 +132,7 @@ const { loading, error, resource: loadResource } = useAPI<object[]>()
 const load = (res: Resource[]) => {
   const { apiVersion, kind } = resourceAPI.value
 
-  const promises = res.map(({ namespace, name }) => loadResource({ apiVersion, kind, namespace, name }))
+  const promises = res.map(({ namespace, name }) => loadResource({ apiVersion, kind, namespace: namespace || '', name }))
 
   loading.value = true
   Promise.all(promises).then((response) => {

@@ -11,7 +11,7 @@ type SearchRequest struct {
 	APIVersion string            `query:"apiVersion"`
 	Kind       string            `query:"kind"`
 	Namespace  string            `query:"namespace"`
-	Selector   map[string]string `query:"namespace"`
+	Selector   map[string]string `query:"selector"`
 }
 
 type SearchResponse = []SearchResult
