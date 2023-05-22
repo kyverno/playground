@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kyverno/playground/backend/pkg/config"
 	"github.com/kyverno/playground/backend/pkg/server/api"
+	"github.com/kyverno/playground/backend/pkg/server/api/cluster"
 )
 
 //go:embed dist
@@ -23,6 +24,8 @@ const apiPrefix = "/api"
 type Shutdown = func(context.Context) error
 
 type Server interface {
+	AddUIRoutes() error
+	AddAPIRoutes(config.Config, cluster.Cluster, string) error
 	Run(context.Context, string, int) Shutdown
 }
 
@@ -30,7 +33,7 @@ type server struct {
 	*gin.Engine
 }
 
-func New(config config.Config, log bool, sponsor string) (Server, error) {
+func New(log bool) (Server, error) {
 	router := gin.New()
 	if log {
 		router.Use(gin.Logger())
@@ -42,13 +45,31 @@ func New(config config.Config, log bool, sponsor string) (Server, error) {
 		AllowHeaders:  []string{"Origin", "Content-Type"},
 		ExposeHeaders: []string{"Content-Length"},
 	}))
-	if err := api.AddRoutes(router.Group(apiPrefix), config, sponsor); err != nil {
-		return nil, err
-	}
-	if err := addUIRoutes(router); err != nil {
-		return nil, err
-	}
 	return server{router}, nil
+}
+
+func (s server) AddAPIRoutes(config config.Config, cluster cluster.Cluster, sponsor string) error {
+	return api.AddRoutes(s.Group(apiPrefix), config, cluster, sponsor)
+}
+
+func (s server) AddUIRoutes() error {
+	fs, err := fs.Sub(staticFiles, "dist")
+	if err != nil {
+		return err
+	}
+
+	s.Use(static.Serve("/", static.ServeFileSystem(&fileSystem{http.FS(fs)})))
+
+	fileServer := http.FileServer(http.FS(fs))
+	s.NoRoute(func(c *gin.Context) {
+		if strings.HasPrefix(c.Request.RequestURI, apiPrefix) {
+			return
+		}
+
+		fileServer.ServeHTTP(c.Writer, c.Request)
+	})
+
+	return nil
 }
 
 func (s server) Run(_ context.Context, host string, port int) Shutdown {
@@ -63,26 +84,6 @@ func (s server) Run(_ context.Context, host string, port int) Shutdown {
 		}
 	}()
 	return srv.Shutdown
-}
-
-func addUIRoutes(router *gin.Engine) error {
-	fs, err := fs.Sub(staticFiles, "dist")
-	if err != nil {
-		return err
-	}
-
-	router.Use(static.Serve("/", static.ServeFileSystem(&fileSystem{http.FS(fs)})))
-
-	fileServer := http.FileServer(http.FS(fs))
-	router.NoRoute(func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.RequestURI, apiPrefix) {
-			return
-		}
-
-		fileServer.ServeHTTP(c.Writer, c.Request)
-	})
-
-	return nil
 }
 
 type fileSystem struct {

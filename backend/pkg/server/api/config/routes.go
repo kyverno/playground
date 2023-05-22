@@ -11,11 +11,12 @@ type ConfigResponse struct {
 	Sponsor string `json:"sponsor"`
 }
 
-func AddRoutes(group *gin.RouterGroup, cluster bool, sponsor string) {
+func AddRoutes(group *gin.RouterGroup, cluster bool, sponsor string) error {
 	group.GET("/config", func(c *gin.Context) {
 		c.JSON(http.StatusOK, ConfigResponse{
 			Cluster: cluster,
 			Sponsor: sponsor,
 		})
 	})
+	return nil
 }
