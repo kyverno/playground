@@ -99,7 +99,11 @@ const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{
     undefined
 )
 
-const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object, ResourceRequest>('POST', `${api}/cluster/resource`, request)
+const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object>(
+    'GET',
+    `${api}/cluster/resource?apiVersion=${request.apiVersion}&kind=${request.kind}&namespace=${request.namespace || ''}&name=${request.name}`,
+    undefined,
+)
 
 const fetchKinds = (api: string) => () => fetchWrapper<ResourceKind[]>('GET', `${api}/cluster/kinds`, undefined)
 
