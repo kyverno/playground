@@ -11,9 +11,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-
-	"github.com/kyverno/playground/backend/pkg/api"
 	"github.com/kyverno/playground/backend/pkg/config"
+	"github.com/kyverno/playground/backend/pkg/server/api"
 )
 
 //go:embed dist
@@ -43,9 +42,7 @@ func New(config config.Config, log bool, sponsor string) (Server, error) {
 		AllowHeaders:  []string{"Origin", "Content-Type"},
 		ExposeHeaders: []string{"Content-Length"},
 	}))
-
-	apiGroup := router.Group(apiPrefix)
-	if err := addAPIRoutes(apiGroup, config, sponsor); err != nil {
+	if err := api.AddRoutes(router.Group(apiPrefix), config, sponsor); err != nil {
 		return nil, err
 	}
 	if err := addUIRoutes(router); err != nil {
@@ -66,27 +63,6 @@ func (s server) Run(_ context.Context, host string, port int) Shutdown {
 		}
 	}()
 	return srv.Shutdown
-}
-
-func addAPIRoutes(group *gin.RouterGroup, config config.Config, sponsor string) error {
-	if dClient, err := config.DClient(); err != nil {
-		return err
-	} else if cmResolver, err := config.CMResolver(); err != nil {
-		return err
-	} else if kubeClient, err := config.KubeClient(); err != nil {
-		return err
-	} else {
-		if kubeClient != nil {
-			group.GET("/namespaces", api.NewNamespaceHandler(kubeClient))
-		}
-		if dClient != nil {
-			group.POST("/resources", api.NewResourceListHandler(dClient))
-			group.POST("/resource", api.NewResourceHandler(dClient))
-		}
-		group.GET("/config", api.NewConfigHandler(kubeClient != nil, sponsor))
-		group.POST("/engine", api.NewEngineHandler(dClient, cmResolver))
-		return nil
-	}
 }
 
 func addUIRoutes(router *gin.Engine) error {
