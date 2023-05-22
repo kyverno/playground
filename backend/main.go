@@ -37,7 +37,7 @@ func getOptions() options {
 func main() {
 	options := getOptions()
 	gin.SetMode(options.mode)
-	if config, err := config.NewContainer(options.kubeConfig); err != nil {
+	if config, err := config.New(options.kubeConfig); err != nil {
 		panic(err)
 	} else if server, err := server.New(config, options.log, options.sponsor); err != nil {
 		panic(err)

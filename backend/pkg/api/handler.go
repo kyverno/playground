@@ -179,12 +179,3 @@ func NewResourceHandler(dClient dclient.Interface) gin.HandlerFunc {
 		c.JSON(http.StatusOK, resource.Object)
 	}
 }
-
-func NewConfigHandler(cluster bool, sponsor string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, ConfigResponse{
-			Cluster: cluster,
-			Sponsor: sponsor,
-		})
-	}
-}
