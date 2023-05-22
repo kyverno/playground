@@ -33,18 +33,20 @@ type server struct {
 	*gin.Engine
 }
 
-func New(log bool) (Server, error) {
+func New(enableLogger bool, enableCors bool) (Server, error) {
 	router := gin.New()
-	if log {
+	if enableLogger {
 		router.Use(gin.Logger())
 	}
 	router.Use(gin.Recovery())
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{"*"},
-		AllowMethods:  []string{"POST"},
-		AllowHeaders:  []string{"Origin", "Content-Type"},
-		ExposeHeaders: []string{"Content-Length"},
-	}))
+	if enableCors {
+		router.Use(cors.New(cors.Config{
+			AllowOrigins:  []string{"*"},
+			AllowMethods:  []string{"POST"},
+			AllowHeaders:  []string{"Origin", "Content-Type"},
+			ExposeHeaders: []string{"Content-Length"},
+		}))
+	}
 	return server{router}, nil
 }
 
