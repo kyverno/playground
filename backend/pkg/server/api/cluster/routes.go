@@ -21,6 +21,14 @@ type ResourceRequest struct {
 }
 
 func AddRoutes(group *gin.RouterGroup, cluster Cluster) error {
+	group.GET("/kinds", func(c *gin.Context) {
+		kinds, err := cluster.Kinds(c, "kyverno.io", "wgpolicyk8s.io")
+		if err != nil {
+			c.String(http.StatusInternalServerError, "failed to fetch kinds")
+			return
+		}
+		c.JSON(http.StatusOK, kinds)
+	})
 	group.GET("/namespaces", func(c *gin.Context) {
 		namespaces, err := cluster.Namespaces(c)
 		if err != nil {
