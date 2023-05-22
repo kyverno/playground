@@ -21,6 +21,8 @@ type Cluster interface {
 	Namespaces(context.Context) ([]string, error)
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
+	KubeClient() kubernetes.Interface
+	DClient() dclient.Interface
 }
 
 type cluster struct {
@@ -78,4 +80,12 @@ func (c cluster) Search(ctx context.Context, apiVersion string, kind string, nam
 
 func (c cluster) Get(ctx context.Context, apiVersion string, kind string, namespace string, name string) (*unstructured.Unstructured, error) {
 	return c.dClient.GetResource(ctx, apiVersion, kind, namespace, name)
+}
+
+func (c cluster) KubeClient() kubernetes.Interface {
+	return c.kubeClient
+}
+
+func (c cluster) DClient() dclient.Interface {
+	return c.dClient
 }
