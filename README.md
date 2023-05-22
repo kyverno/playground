@@ -7,7 +7,11 @@
 ![License: Apache-2.0](https://img.shields.io/github/license/kyverno/playground?color=blue)
 [![GitHub Repo stars](https://img.shields.io/github/stars/kyverno/playground)](https://github.com/kyverno/playground/stargazers)
 
-The Kyverno Playground is a web service that simulates [Kyverno](https://github.com/kyverno/kyverno) behaviuor, you can experiment and play with Kyverno policies directly in your browser
+The **public version of the Playground** is available at https://playground.kyverno.io.
+
+## About
+
+The Kyverno Playground is a web service that simulates [Kyverno](https://github.com/kyverno/kyverno) behaviour, you can experiment and play with Kyverno policies directly in your browser
 
 The service receives a configuration, resource and policies definitions, runs the Kyverno engine, and returns the results of evaluating policies against resources.
 
@@ -77,6 +81,10 @@ Install `kyverno-playground` local Helm chart:
 ```shell
 helm upgrade --install kyverno-playground --namespace kyverno --create-namespace --wait ./charts/kyverno-playground
 ```
+
+## Build
+
+Instructions for building and running the Playground from source code is available in the [docs](./docs) section.
 
 ## Screenshots
 
