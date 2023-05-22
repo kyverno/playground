@@ -7,9 +7,9 @@ import (
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/kyverno/pkg/engine/context/resolvers"
-	"github.com/kyverno/playground/backend/pkg/utils"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 )
 
 type Config interface {
@@ -24,14 +24,7 @@ type config struct {
 	cmResolver engineapi.ConfigmapResolver
 }
 
-func New(kubeConfig string) (Config, error) {
-	restConfig, err := utils.RestConfig(kubeConfig)
-	if err != nil {
-		return nil, err
-	}
-	if restConfig == nil {
-		return &config{}, nil
-	}
+func New(restConfig *rest.Config) (Config, error) {
 	kubeClient, err := kubernetes.NewForConfig(restConfig)
 	if err != nil {
 		return nil, err

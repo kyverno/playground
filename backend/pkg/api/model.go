@@ -6,25 +6,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-type ListResourcesRequest struct {
-	APIVersion string            `json:"apiVersion"`
-	Kind       string            `json:"kind"`
-	Namespace  string            `json:"namespace"`
-	Selector   map[string]string `json:"selector"`
-}
-
-type ListResourcesResponse struct {
-	Namespace string `json:"namespace"`
-	Name      string `json:"name"`
-}
-
-type GetResourceRequest struct {
-	APIVersion string `json:"apiVersion"`
-	Kind       string `json:"kind"`
-	Namespace  string `json:"namespace"`
-	Name       string `json:"name"`
-}
-
 type EngineRequest struct {
 	Policies  string `json:"policies"`
 	Resources string `json:"resources"`

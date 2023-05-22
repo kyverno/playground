@@ -11,6 +11,8 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/config"
 	"github.com/kyverno/playground/backend/pkg/server"
+	"github.com/kyverno/playground/backend/pkg/server/api/cluster"
+	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
 type options struct {
@@ -35,24 +37,57 @@ func getOptions() options {
 }
 
 func main() {
+	// get options from command line parameters
 	options := getOptions()
+	// initialise gin framework
 	gin.SetMode(options.mode)
-	if config, err := config.New(options.kubeConfig); err != nil {
+	// create server
+	server, err := server.New(options.log)
+	if err != nil {
 		panic(err)
-	} else if server, err := server.New(config, options.log, options.sponsor); err != nil {
+	}
+	// register UI routes
+	if err := server.AddUIRoutes(); err != nil {
 		panic(err)
+	}
+	// register API routes (with/without cluster support)
+	if options.kubeConfig != "" {
+		// create rest config
+		restConfig, err := utils.RestConfig(options.kubeConfig)
+		if err != nil {
+			panic(err)
+		}
+		// create config
+		config, err := config.New(restConfig)
+		if err != nil {
+			panic(err)
+		}
+		// create cluster
+		cluster, err := cluster.New(restConfig)
+		if err != nil {
+			panic(err)
+		}
+		// register API routes
+		if err := server.AddAPIRoutes(config, cluster, options.sponsor); err != nil {
+			panic(err)
+		}
 	} else {
-		ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-		defer stop()
-		shutdown := server.Run(ctx, options.host, options.port)
-		<-ctx.Done()
-		stop()
-		if shutdown != nil {
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
-			if err := shutdown(ctx); err != nil {
-				panic(err)
-			}
+		// register API routes
+		if err := server.AddAPIRoutes(nil, nil, options.sponsor); err != nil {
+			panic(err)
+		}
+	}
+	// run server
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+	shutdown := server.Run(ctx, options.host, options.port)
+	<-ctx.Done()
+	stop()
+	if shutdown != nil {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := shutdown(ctx); err != nil {
+			panic(err)
 		}
 	}
 }
