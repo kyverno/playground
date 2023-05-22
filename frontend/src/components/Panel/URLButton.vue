@@ -1,10 +1,14 @@
 <template>
   <v-dialog v-model="dialog" width="600px" :theme="layoutTheme">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" prepend-icon="mdi-web">URL</v-btn>
+      <v-tooltip location="bottom" content-class="no-opacity-tooltip" text="Import from URL" theme="dark">
+          <template v-slot:activator="{ props: tooltip }">
+            <v-btn v-bind="{ ...tooltip, ...props }" icon="mdi-web"></v-btn>
+        </template>
+      </v-tooltip>
     </template>
 
-    <v-card :theme="layoutTheme">
+    <v-card :theme="layoutTheme" title="Import from URL">
       <v-card-text>
         <v-text-field label="URL" v-model="url" />
       </v-card-text>
