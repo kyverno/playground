@@ -4,14 +4,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/loopfz/gadgeto/tonic"
 )
 
 type SearchRequest struct {
-	APIVersion string            `json:"apiVersion"`
-	Kind       string            `json:"kind"`
-	Namespace  string            `json:"namespace"`
-	Selector   map[string]string `json:"selector"`
+	APIVersion string            `query:"apiVersion"`
+	Kind       string            `query:"kind"`
+	Namespace  string            `query:"namespace"`
+	Selector   map[string]string `query:"namespace"`
 }
+
+type SearchResponse = []SearchResult
 
 type ResourceRequest struct {
 	APIVersion string `json:"apiVersion"`
@@ -29,19 +32,9 @@ func AddRoutes(group *gin.RouterGroup, cluster Cluster) error {
 		}
 		c.JSON(http.StatusOK, namespaces)
 	})
-	group.POST("/search", func(c *gin.Context) {
-		var request SearchRequest
-		if err := c.ShouldBind(&request); err != nil {
-			c.String(http.StatusBadRequest, err.Error())
-			return
-		}
-		list, err := cluster.Search(c, request.APIVersion, request.Kind, request.Namespace, request.Selector)
-		if err != nil {
-			c.String(http.StatusInternalServerError, "failed to fetch resources")
-			return
-		}
-		c.JSON(http.StatusOK, list)
-	})
+	group.GET("/search", tonic.Handler(func(c *gin.Context, in *SearchRequest) (SearchResponse, error) {
+		return cluster.Search(c, in.APIVersion, in.Kind, in.Namespace, in.Selector)
+	}, http.StatusOK))
 	group.POST("/resource", func(c *gin.Context) {
 		var request ResourceRequest
 		if err := c.ShouldBind(&request); err != nil {
