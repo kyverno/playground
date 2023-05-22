@@ -1,6 +1,15 @@
 # Kyverno Playground
 
+![release](https://github.com/kyverno/playground/workflows/release/badge.svg)
+![ci](https://github.com/kyverno/playground/workflows/ci/badge.svg)
+![image](https://github.com/kyverno/playground/workflows/image/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kyverno/playground/backend)](https://goreportcard.com/report/github.com/kyverno/playground/backend)
+![License: Apache-2.0](https://img.shields.io/github/license/kyverno/playground?color=blue)
+[![GitHub Repo stars](https://img.shields.io/github/stars/kyverno/playground)](https://github.com/kyverno/playground/stargazers)
+
 The **public version of the Playground** is available at https://playground.kyverno.io.
+
+## About
 
 The Kyverno Playground is a web service that simulates [Kyverno](https://github.com/kyverno/kyverno) behaviour, you can experiment and play with Kyverno policies directly in your browser
 
