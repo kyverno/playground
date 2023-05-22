@@ -50,7 +50,7 @@ const fetchConfig = (api: string, loading: Ref<boolean>, error: Ref<Error | unde
         }
 
         return resp.json()
-    }).then(({ sponsor, cluster}: Config) => {
+    }).then(({ sponsor, cluster }: Config) => {
         config.sponsor = sponsor
         config.cluster = cluster
     }).catch((err) => {
@@ -93,7 +93,11 @@ const fetchWrapper = <T, R = undefined>(method: string, api: string, request: R)
 
 const fetchNamespaces = (api: string) => () => fetchWrapper<string[]>('GET', `${api}/cluster/namespaces`, undefined)
 
-const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{ namespace?: string, name: string }[], ListRequest>('POST', `${api}/cluster/search`, request)
+const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{ namespace?: string, name: string }[]>(
+    'GET',
+    `${api}/cluster/search?apiVersion=${request.apiVersion}&kind=${request.kind}&namespace=${request.namespace || ''}`,
+    undefined
+)
 
 const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object, ResourceRequest>('POST', `${api}/cluster/resource`, request)
 
