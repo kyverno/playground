@@ -84,11 +84,11 @@ const fetchWrapper = <T, R = undefined>(method: string, api: string, request: R)
     })
 }
 
-const fetchNamespaces = (api: string) => () => fetchWrapper<string[]>('GET', `${api}/namespaces`, undefined)
+const fetchNamespaces = (api: string) => () => fetchWrapper<string[]>('GET', `${api}/cluster/namespaces`, undefined)
 
-const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{ namespace?: string, name: string }[], ListRequest>('POST', `${api}/resources`, request)
+const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{ namespace?: string, name: string }[], ListRequest>('POST', `${api}/cluster/search`, request)
 
-const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object, ResourceRequest>('POST', `${api}/resource`, request)
+const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object, ResourceRequest>('POST', `${api}/cluster/resource`, request)
 
 export const useAPI = <T>() => {
     const api = resolveAPI()
