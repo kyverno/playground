@@ -34,9 +34,9 @@ export const showOnboarding = useLocalStorage("onboarding:open", true)
 
 export const options = {
     panels: {
-        policyInfo: 'Kyverno Policy Resource',
-        resourceInfo: 'Kubernetes resources to apply the policies on',
-        contextInfo: 'Context information like admission context, variables and kubernetes version',
+        policyInfo: 'Kyverno Policy',
+        resourceInfo: 'Kubernetes resources which get applied to policies',
+        contextInfo: 'Context information like admission context, variables, and Kubernetes version',
     },
     onboarding: {
         text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.',
