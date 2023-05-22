@@ -1,6 +1,10 @@
 <template>
     <input type="file" ref="input" style="display: none;" :accept="props.accept" @change="send" />
-    <v-btn @click="select" prepend-icon="mdi-upload" :loading="loading" :color="btnColor" :variant="variant" :width="width" :class="btnClass">{{ label }}</v-btn>
+    <v-tooltip location="bottom" content-class="no-opacity-tooltip" text="Import from File">
+        <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" @click="select" icon="mdi-upload" :loading="loading" :color="btnColor" :variant="variant" :width="width" :class="btnClass" />
+        </template>
+    </v-tooltip>
 </template>
 
 <script setup lang="ts">

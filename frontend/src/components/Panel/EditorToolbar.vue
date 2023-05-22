@@ -20,6 +20,7 @@
     </v-toolbar-title>
     <v-toolbar-items>
       <slot name="prepend-actions" />
+      <CopyButton :value="modelValue" />
       <UploadButton @click="(content: string) => emit('update:modelValue', content)" />
       <URLButton @click="(content: string) => emit('update:modelValue', content)" />
       <slot name="append-actions" />
@@ -28,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import CopyButton from "./CopyButton.vue";
 import UploadButton from "./UploadButton.vue";
 import URLButton from "./URLButton.vue";
 
