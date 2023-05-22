@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/kyverno/playground/backend/pkg/config"
 	"github.com/kyverno/playground/backend/pkg/server"
 	"github.com/kyverno/playground/backend/pkg/server/api/cluster"
 	"github.com/kyverno/playground/backend/pkg/utils"
@@ -57,23 +55,18 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		// create config
-		config, err := config.New(restConfig)
-		if err != nil {
-			panic(err)
-		}
 		// create cluster
 		cluster, err := cluster.New(restConfig)
 		if err != nil {
 			panic(err)
 		}
 		// register API routes
-		if err := server.AddAPIRoutes(config, cluster, options.sponsor); err != nil {
+		if err := server.AddAPIRoutes(cluster, options.sponsor); err != nil {
 			panic(err)
 		}
 	} else {
 		// register API routes
-		if err := server.AddAPIRoutes(nil, nil, options.sponsor); err != nil {
+		if err := server.AddAPIRoutes(nil, options.sponsor); err != nil {
 			panic(err)
 		}
 	}
