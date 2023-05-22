@@ -19,7 +19,7 @@
             <simple-row>
               <resource-type-select v-model="resourceAPI" />
             </simple-row>
-            <simple-row>
+            <simple-row v-if="!resourceAPI.clusterScoped">
               <namespace-select v-model="namespace" />
             </simple-row>
             <simple-row>
@@ -32,7 +32,7 @@
           <v-card-actions>
             <v-btn @click="dialog = false">Close</v-btn>
             <v-spacer />
-            <v-btn :disabled="!resourceAPI" @click="search" :loading="loadingResources" :color="errorResources ? 'error': undefined">Search</v-btn>
+            <v-btn @click="search" :loading="loadingResources" :color="errorResources ? 'error': undefined">Search</v-btn>
             <v-btn :loading="loading" :disabled="!name || !resourceAPI" @click="() => load([{ name: name || '', namespace }])" :color="error ? 'error': undefined">Load Resource</v-btn>
           </v-card-actions>
         </v-window-item>
@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { layoutTheme } from "@/config"
-import { useAPI, resourcesToYAML } from "@/composables/api";
+import { useAPI, resourcesToYAML, ResourceKind } from "@/composables/api";
 import { inputs } from "@/store";
 import { mergeResources } from "@/utils";
 import ClusterSearchList from "@/components/Panel/ClusterSearchList.vue";
@@ -76,11 +76,17 @@ type Resource = { namespace?: string; name: string };
 const window = ref<number>(0);
 const dialog = ref<boolean>(false);
 
-const resourceAPI = ref<{ apiVersion: string; kind: string; }>({ apiVersion: 'v1', kind: 'Pod' });
+const resourceAPI = ref<ResourceKind & { title: string; }>({ apiVersion: 'v1', kind: 'Pod', title: 'v1 Pod', clusterScoped: false });
 const namespace = ref<string>()
 const name = ref<string>()
-
 const mode = ref<string>('replace')
+
+watch(resourceAPI, (api) => {
+  if (api.clusterScoped) {
+    namespace.value = undefined
+  }
+})
+
 
 const { loading: loadingResources, error: errorResources, resources: loadResources, data: foundings } = useAPI<Resource[]>()
 

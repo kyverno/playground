@@ -21,6 +21,13 @@ export type ResourceRequest = {
     name: string;
 }
 
+export type ResourceKind = {
+    apiVersion: string;
+    kind: string;
+    clusterScoped: boolean;
+}
+
+
 export const config = reactive<Config>({
     sponsor: '',
     cluster: false,
@@ -90,6 +97,8 @@ const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{
 
 const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object, ResourceRequest>('POST', `${api}/cluster/resource`, request)
 
+const fetchKinds = (api: string) => () => fetchWrapper<ResourceKind[]>('GET', `${api}/cluster/kinds`, undefined)
+
 export const useAPI = <T>() => {
     const api = resolveAPI()
 
@@ -99,7 +108,8 @@ export const useAPI = <T>() => {
         data: ref<T>(),
         namespaces: fetchNamespaces(api),
         resources: fetchResources(api),
-        resource: fetchResource(api)
+        resource: fetchResource(api),
+        kinds: fetchKinds(api)
     }
 }
 
