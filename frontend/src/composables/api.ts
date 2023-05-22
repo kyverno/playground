@@ -10,14 +10,13 @@ export type Config = {
 export type ListRequest = {
     apiVersion: string;
     kind: string;
-    namespace?: string;
-    selector?: { [key: string]: string };
+    namespace: string;
 }
 
 export type ResourceRequest = {
     apiVersion: string;
     kind: string;
-    namespace?: string;
+    namespace: string;
     name: string;
 }
 
@@ -27,6 +26,7 @@ export type ResourceKind = {
     clusterScoped: boolean;
 }
 
+export type SearchResult = { namespace: string, name: string };
 
 export const config = reactive<Config>({
     sponsor: '',
@@ -73,7 +73,7 @@ export const useAPIConfig = () => {
     }
 }
 
-const fetchWrapper = <T, R = undefined>(method: string, api: string, request: R): Promise<T> => {
+const fetchWrapper = <T, R = undefined>(method: string, api: string, request?: R): Promise<T> => {
     return fetch(api, {
         method: method,
         mode: "cors",
@@ -91,21 +91,17 @@ const fetchWrapper = <T, R = undefined>(method: string, api: string, request: R)
     })
 }
 
-const fetchNamespaces = (api: string) => () => fetchWrapper<string[]>('GET', `${api}/cluster/namespaces`, undefined)
+const fetchNamespaces = (api: string) => () => fetchWrapper<string[]>('GET', `${api}/cluster/namespaces`)
 
-const fetchResources = (api: string) => (request: ListRequest) => fetchWrapper<{ namespace?: string, name: string }[]>(
-    'GET',
-    `${api}/cluster/search?apiVersion=${request.apiVersion}&kind=${request.kind}&namespace=${request.namespace || ''}`,
-    undefined
-)
+const fetchResources = (api: string) => (request: ListRequest) => {
+    return fetchWrapper<SearchResult[]>('GET', `${api}/cluster/search?` + (new URLSearchParams(request)).toString())
+}
 
-const fetchResource = (api: string) => (request: ResourceRequest) => fetchWrapper<object>(
-    'GET',
-    `${api}/cluster/resource?apiVersion=${request.apiVersion}&kind=${request.kind}&namespace=${request.namespace || ''}&name=${request.name}`,
-    undefined,
-)
+const fetchResource = (api: string) => (request: ResourceRequest) => {
+    return fetchWrapper<object>('GET', `${api}/cluster/resource?` + (new URLSearchParams(request)).toString())
+}
 
-const fetchKinds = (api: string) => () => fetchWrapper<ResourceKind[]>('GET', `${api}/cluster/kinds`, undefined)
+const fetchKinds = (api: string) => () => fetchWrapper<ResourceKind[]>('GET', `${api}/cluster/kinds`)
 
 export const useAPI = <T>() => {
     const api = resolveAPI()
