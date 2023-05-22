@@ -26,9 +26,6 @@
         </v-list-item>
         <v-divider />
       </template>
-      <v-list-item class="py-0 pl-0">
-        <export-button block variant="text" />
-      </v-list-item>
       <v-divider />
       <v-list-item class="py-0 pl-0">
         <v-dialog v-model="dialog" width="600px" transition="fade-transition">
@@ -54,6 +51,9 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+      </v-list-item>
+      <v-list-item class="py-0 pl-0">
+        <export-button block variant="text" />
       </v-list-item>
     </v-list>
   </v-menu>

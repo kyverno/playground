@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="300px">
     <template v-slot:activator="{ props }">
   <v-btn
-    prepend-icon="mdi-download"
+    prepend-icon="mdi-export"
     :variant="variant"
     :block="block"
     class="mr-2 text-left justify-start"
