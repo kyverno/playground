@@ -18,9 +18,9 @@
             No resource matched any rule of the provided policies. Please check your manifests.
           </v-alert>
         </v-card-text>
-        <ValidationTable :results="validations" v-if="hasResults && validations.length" />
         <MutationTable :results="mutations" v-if="hasResults && mutations.length" />
         <MutationTable :results="verifications" v-if="hasResults && verifications.length" title="ImageVerification Results" />
+        <ValidationTable :results="validations" v-if="hasResults && validations.length" />
         <GenerationTable :results="generations" v-if="hasResults && generations.length" />
       <v-card-actions>
         <v-btn color="error" @click="emit('update:modelValue', false)">Close</v-btn>
