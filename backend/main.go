@@ -18,6 +18,7 @@ type options struct {
 	port       int
 	mode       string
 	log        bool
+	cors       bool
 	kubeConfig string
 	sponsor    string
 }
@@ -28,6 +29,7 @@ func getOptions() options {
 	flag.IntVar(&options.port, "port", 8080, "server port")
 	flag.StringVar(&options.mode, "mode", gin.ReleaseMode, "gin run mode")
 	flag.BoolVar(&options.log, "log", false, "enable gin logger")
+	flag.BoolVar(&options.cors, "cors", true, "enable gin cors")
 	flag.StringVar(&options.kubeConfig, "kubeconfig", "", "enable gin logger")
 	flag.StringVar(&options.sponsor, "sponsor", "", "sponsor text")
 	flag.Parse()
@@ -40,7 +42,7 @@ func main() {
 	// initialise gin framework
 	gin.SetMode(options.mode)
 	// create server
-	server, err := server.New(options.log)
+	server, err := server.New(options.log, options.cors)
 	if err != nil {
 		panic(err)
 	}
