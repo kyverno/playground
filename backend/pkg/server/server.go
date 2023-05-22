@@ -11,7 +11,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-	"github.com/kyverno/playground/backend/pkg/config"
 	"github.com/kyverno/playground/backend/pkg/server/api"
 	"github.com/kyverno/playground/backend/pkg/server/api/cluster"
 )
@@ -25,7 +24,7 @@ type Shutdown = func(context.Context) error
 
 type Server interface {
 	AddUIRoutes() error
-	AddAPIRoutes(config.Config, cluster.Cluster, string) error
+	AddAPIRoutes(cluster.Cluster, string) error
 	Run(context.Context, string, int) Shutdown
 }
 
@@ -50,8 +49,8 @@ func New(enableLogger bool, enableCors bool) (Server, error) {
 	return server{router}, nil
 }
 
-func (s server) AddAPIRoutes(config config.Config, cluster cluster.Cluster, sponsor string) error {
-	return api.AddRoutes(s.Group(apiPrefix), config, cluster, sponsor)
+func (s server) AddAPIRoutes(cluster cluster.Cluster, sponsor string) error {
+	return api.AddRoutes(s.Group(apiPrefix), cluster, sponsor)
 }
 
 func (s server) AddUIRoutes() error {

@@ -2,32 +2,28 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kyverno/playground/backend/pkg/api"
-	"github.com/kyverno/playground/backend/pkg/config"
 	apicluster "github.com/kyverno/playground/backend/pkg/server/api/cluster"
 	apiconfig "github.com/kyverno/playground/backend/pkg/server/api/config"
+	apiengine "github.com/kyverno/playground/backend/pkg/server/api/engine"
 )
 
-func AddRoutes(group *gin.RouterGroup, config config.Config, cluster apicluster.Cluster, sponsor string) error {
+const clusterPrefix = "/cluster"
+
+func AddRoutes(group *gin.RouterGroup, cluster apicluster.Cluster, sponsor string) error {
 	if err := apiconfig.AddRoutes(group, cluster != nil, sponsor); err != nil {
 		return err
 	}
 	if cluster != nil {
-		if err := apicluster.AddRoutes(group.Group("/cluster"), cluster); err != nil {
+		if err := apicluster.AddRoutes(group.Group(clusterPrefix), cluster); err != nil {
 			return err
 		}
-	}
-	if config != nil {
-		if dClient, err := config.DClient(); err != nil {
+		if err := apiengine.AddRoutes(group, cluster.KubeClient(), cluster.DClient()); err != nil {
 			return err
-		} else if cmResolver, err := config.CMResolver(); err != nil {
-			return err
-		} else {
-			group.POST("/engine", api.NewEngineHandler(dClient, cmResolver))
-			return nil
 		}
 	} else {
-		group.POST("/engine", api.NewEngineHandler(nil, nil))
-		return nil
+		if err := apiengine.AddRoutes(group, nil, nil); err != nil {
+			return err
+		}
 	}
+	return nil
 }
