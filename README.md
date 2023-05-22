@@ -71,6 +71,10 @@ Install `kyverno-playground` local Helm chart:
 helm upgrade --install kyverno-playground --namespace kyverno --create-namespace --wait ./charts/kyverno-playground
 ```
 
+## Build
+
+Instructions for building and running the Playground from source code is available in the [docs](./docs) section.
+
 ## Screenshots
 
 ![Kyverno Playground - Layout](./frontend/screens/layout.png?raw=true)
