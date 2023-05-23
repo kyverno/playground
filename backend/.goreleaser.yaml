@@ -47,6 +47,9 @@ archives:
 checksum:
   name_template: 'checksums.txt'
 
+source:
+  enabled: true
+
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 
