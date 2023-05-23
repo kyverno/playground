@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { PropType, ref, watch } from "vue";
 import { btnColor } from "@/config"
-import { createInput, getPersisted, useState } from "@/composables";
+import { updateInput, getPersisted, useState } from "@/composables";
 import { computed } from "vue";
 import ExportButton from "./ExportButton.vue";
 import { inputs } from "@/store";
@@ -89,7 +89,7 @@ const list = computed(() => {
 })
 
 const persist = (name: string) => {
-  const persistedInput = createInput(name, inputs)
+  const persistedInput = updateInput(name, inputs)
 
   state.update({
     policy: inputs.policy,

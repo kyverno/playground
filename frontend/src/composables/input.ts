@@ -33,6 +33,25 @@ export const createInput = (name: string, defaults?: Inputs) => {
     }
 }
 
+export const updateInput = (name: string, values: Inputs) => {
+    const input = createInput(name)
+
+    if (input.policy.value !== values.policy) {
+        input.policy.value = values.policy
+    }
+    if (input.resource.value !== values.resource) {
+        input.resource.value = values.resource
+    }
+    if (input.context.value !== values.context) {
+        input.context.value = values.context
+    }
+    if (input.config.value !== values.config) {
+        input.config.value = values.config
+    }
+
+    return input
+}
+
 export const removeInput = (name: string) => {
     const input = createInput(name)
 
