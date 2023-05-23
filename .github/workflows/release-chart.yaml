@@ -6,7 +6,7 @@ on:
       - 'kyverno-playground-chart-v*'
 
 jobs:
-  release:
+  helm-chart:
     runs-on: ubuntu-latest
     permissions:
       contents: write
