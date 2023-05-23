@@ -12,7 +12,6 @@ The [release workflow](../.github/workflows/release.yaml) will take care of crea
 VERSION="v0.1.0"
 TAG=$VERSION
 
-git tag -d $TAG
 git tag $TAG -m "tag $TAG" -a
 git push origin $TAG
 ```
@@ -27,7 +26,6 @@ The [helm workflow](../.github/workflows/helm.yaml) will take care of creating t
 VERSION="v0.1.0"
 TAG=kyverno-playground-chart-$VERSION
 
-git tag -d $TAG
 git tag $TAG -m "tag $TAG" -a
 git push origin $TAG
 ```
