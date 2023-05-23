@@ -10,6 +10,8 @@ builds:
       - windows
       - darwin
     binary: kyverno-playground
+    flags:
+      - -trimpath
     ldflags:
       - -s -w
 
@@ -22,6 +24,8 @@ kos:
     sbom: none
     platforms:
       - all
+    flags:
+      - -trimpath
     ldflags:
       - -s -w
 
