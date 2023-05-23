@@ -29,12 +29,30 @@ kos:
     ldflags:
       - -s -w
 
-docker_signs:
-  - artifacts: all
+signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: '${artifact}.pem'
     args:
-      - 'sign'
-      - '${artifact}'
-      - "--yes"
+      - sign-blob
+      - --output-certificate=${certificate}
+      - --output-signature=${signature}
+      - ${artifact}
+      - --yes
+    artifacts: checksum
+    output: true
+
+docker_signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    artifacts: images
+    output: true
+    args:
+      - sign
+      - ${artifact}
+      - --yes
 
 archives:
   - name_template: >-
@@ -51,7 +69,7 @@ source:
   enabled: true
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  name_template: '{{ incpatch .Version }}-next'
 
 changelog:
   sort: asc
