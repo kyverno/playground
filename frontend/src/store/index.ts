@@ -28,22 +28,22 @@ export const setDefaults = () => {
 export const init = (values: Inputs) => {
     const state = useState()
 
-    if (values.policy) {
+    if (typeof values.policy === 'string') {
         state.policy.value = values.policy;
         inputs.policy = values.policy;
     }
 
-    if (values.resource) {
+    if (typeof values.resource === 'string') {
         state.resource.value = values.resource;
         inputs.resource = values.resource;
     }
 
-    if (values.context) {
+    if (typeof values.context === 'string') {
         state.context.value = values.context;
         inputs.context = values.context;
     }
 
-    if (values.config) {
+    if (typeof values.config === 'string') {
         state.config.value = values.config;
         inputs.config = values.config;
     }
