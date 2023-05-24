@@ -59,7 +59,7 @@ spec:
 )
 
 func Test_LoadResources(t *testing.T) {
-	l, err := loader.New(nil, "1.27")
+	l, err := loader.NewLocal("1.27")
 	if err != nil {
 		t.Fatal(err)
 	}
