@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
@@ -25,7 +24,7 @@ type Loader struct {
 }
 
 func (l *Loader) Resources(resourcesContent string) ([]unstructured.Unstructured, error) {
-	documents, err := splitDocuments([]byte(resourcesContent))
+	documents, err := yamlutils.SplitDocuments(([]byte(resourcesContent)))
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +43,7 @@ func (l *Loader) Resources(resourcesContent string) ([]unstructured.Unstructured
 }
 
 func (l *Loader) Policies(policyContent string) ([]kyvernov1.PolicyInterface, error) {
-	documents, err := splitDocuments([]byte(policyContent))
+	documents, err := yamlutils.SplitDocuments([]byte(policyContent))
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +67,7 @@ func (l *Loader) Policies(policyContent string) ([]kyvernov1.PolicyInterface, er
 }
 
 func (l *Loader) ConfigMap(content string) (*corev1.ConfigMap, error) {
-	documents, err := splitDocuments([]byte(content))
+	documents, err := yamlutils.SplitDocuments([]byte(content))
 	if err != nil {
 		return nil, err
 	}
@@ -146,30 +145,6 @@ func fromUnstructured[T any](untyped unstructured.Unstructured) (T, error) {
 	var result T
 	err := runtime.DefaultUnstructuredConverter.FromUnstructured(untyped.UnstructuredContent(), &result)
 	return result, err
-}
-
-func splitDocuments(yamlBytes []byte) ([][]byte, error) {
-	documents, err := yamlutils.SplitDocuments(yamlBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	var results [][]byte
-	for _, document := range documents {
-		onlyComments := true
-		for _, line := range strings.Split(string(document), "\n") {
-			if strings.TrimSpace(line) == "" {
-				continue
-			} else if !strings.HasPrefix(line, "#") {
-				onlyComments = false
-				break
-			}
-		}
-		if !onlyComments {
-			results = append(results, document)
-		}
-	}
-	return results, nil
 }
 
 func NewLoader(kubeVersion string) (*Loader, error) {
