@@ -1,9 +1,9 @@
-name: security
+name: trivy
 
 on:
   pull_request:
     branches:
-      - '*'
+      - main
   push:
     branches:
       - main
@@ -16,7 +16,7 @@ permissions:
   security-events: write
 
 jobs:
-  trivy-scan:
+  scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
