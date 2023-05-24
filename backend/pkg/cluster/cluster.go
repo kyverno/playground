@@ -31,11 +31,13 @@ type Cluster interface {
 	Namespaces(context.Context) ([]string, error)
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
+	Config() *rest.Config
 	KubeClient() kubernetes.Interface
 	DClient() dclient.Interface
 }
 
 type cluster struct {
+	restConfig *rest.Config
 	kubeClient kubernetes.Interface
 	dClient    dclient.Interface
 }
@@ -53,7 +55,7 @@ func New(restConfig *rest.Config) (Cluster, error) {
 	if err != nil {
 		return nil, err
 	}
-	return cluster{kubeClient, dClient}, nil
+	return cluster{restConfig, kubeClient, dClient}, nil
 }
 
 func (c cluster) Kinds(ctx context.Context, excludeGroups ...string) ([]Resource, error) {
@@ -120,6 +122,10 @@ func (c cluster) Search(ctx context.Context, apiVersion string, kind string, nam
 
 func (c cluster) Get(ctx context.Context, apiVersion string, kind string, namespace string, name string) (*unstructured.Unstructured, error) {
 	return c.dClient.GetResource(ctx, apiVersion, kind, namespace, name)
+}
+
+func (c cluster) Config() *rest.Config {
+	return c.restConfig
 }
 
 func (c cluster) KubeClient() kubernetes.Interface {

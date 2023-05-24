@@ -65,7 +65,7 @@ metadata:
 			params, err := engine.ParseParameters(r.Context)
 			fatalOnError(t, "engine.ParseParameters", err)
 
-			l, err := loader.New(params.Kubernetes.Version)
+			l, err := loader.NewLocal(params.Kubernetes.Version)
 			fatalOnError(t, "loader.New", err)
 
 			resources, err := loader.LoadResources(l, []byte(r.Resources))

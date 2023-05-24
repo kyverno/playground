@@ -8,8 +8,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/server/api"
-	"github.com/kyverno/playground/backend/pkg/server/api/cluster"
 	"github.com/kyverno/playground/backend/pkg/server/ui"
 )
 

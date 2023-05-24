@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cobra"
 	"k8s.io/client-go/tools/clientcmd"
 
+	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/server"
-	"github.com/kyverno/playground/backend/pkg/server/api/cluster"
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 

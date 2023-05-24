@@ -5,6 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/loopfz/gadgeto/tonic"
+
+	"github.com/kyverno/playground/backend/pkg/cluster"
 )
 
 type SearchRequest struct {
@@ -14,7 +16,7 @@ type SearchRequest struct {
 	Selector   map[string]string `query:"selector"`
 }
 
-type SearchResponse = []SearchResult
+type SearchResponse = []cluster.SearchResult
 
 type ResourceRequest struct {
 	APIVersion string `query:"apiVersion"`
@@ -23,7 +25,7 @@ type ResourceRequest struct {
 	Name       string `query:"name"`
 }
 
-func AddRoutes(group *gin.RouterGroup, cluster Cluster) error {
+func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster) error {
 	group.GET("/kinds", func(c *gin.Context) {
 		kinds, err := cluster.Kinds(c, "kyverno.io", "wgpolicyk8s.io")
 		if err != nil {
