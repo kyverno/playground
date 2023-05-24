@@ -4,8 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/engine/context/resolvers"
-	"github.com/kyverno/playground/backend/pkg/api"
 	"k8s.io/client-go/kubernetes"
+
+	"github.com/kyverno/playground/backend/pkg/api"
 )
 
 func AddRoutes(group *gin.RouterGroup, kubeClient kubernetes.Interface, dClient dclient.Interface) error {

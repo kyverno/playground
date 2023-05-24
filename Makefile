@@ -57,7 +57,11 @@ KO                                 := $(TOOLS_DIR)/ko
 KO_VERSION                         := main #e93dbee8540f28c45ec9a2b8aec5ef8e43123966
 HELM_DOCS                          := $(TOOLS_DIR)/helm-docs
 HELM_DOCS_VERSION                  := v1.11.0
-TOOLS                              := $(KIND) $(HELM) $(KO) $(HELM_DOCS)
+GCI                                := $(TOOLS_DIR)/gci
+GCI_VERSION                        := v0.9.1
+GOFUMPT                            := $(TOOLS_DIR)/gofumpt
+GOFUMPT_VERSION                    := v0.4.0
+TOOLS                              := $(KIND) $(HELM) $(KO) $(HELM_DOCS) $(GCI) $(GOFUMPT)
 
 $(HELM):
 	@echo Install helm... >&2
@@ -75,14 +79,26 @@ $(HELM_DOCS):
 	@echo Install helm-docs... >&2
 	@GOBIN=$(TOOLS_DIR) go install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION)
 
+$(GCI):
+	@echo Install gci... >&2
+	@GOBIN=$(TOOLS_DIR) go install github.com/daixiang0/gci@$(GCI_VERSION)
+
+$(GOFUMPT):
+	@echo Install gofumpt... >&2
+	@GOBIN=$(TOOLS_DIR) go install mvdan.cc/gofumpt@$(GOFUMPT_VERSION)
+
+.PHONY: gci
+gci: $(GCI)
+	@echo "Running gci"
+	@$(GCI) write -s standard -s default -s "prefix(github.com/kyverno/playground/backend)" ./backend
+
+.PHONY: gofumpt
+gofumpt: $(GOFUMPT)
+	@echo "Running gofumpt"
+	@$(GOFUMPT) -w ./backend
 
 .PHONY: fmt
-fmt:
-	$(call print-target)
-	@echo "Running gci"
-	@GOBIN=$(TOOLS_DIR) go run github.com/daixiang0/gci@v0.9.1 write -s standard -s default -s "prefix(github.com/kyverno/playground/backend)" ./backend
-	@echo "Running gofumpt"
-	@GOBIN=$(TOOLS_DIR) go run mvdan.cc/gofumpt@v0.4.0 -w ./backend
+fmt: gci gofumpt
 
 .PHONY: install-tools
 install-tools: $(TOOLS) ## Install tools

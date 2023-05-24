@@ -5,13 +5,12 @@ on:
     tags:
       - 'v*'
 
-permissions:
-  contents: write
-  id-token: write
-  packages: write
-
 jobs:
   goreleaser:
+    permissions:
+      contents: write
+      id-token: write
+      packages: write
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
     runs-on: ubuntu-latest
