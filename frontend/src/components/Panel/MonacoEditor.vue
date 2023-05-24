@@ -29,7 +29,7 @@ export default defineComponent({
       const fixedWidth = width.value.toString().includes("%")
         ? width.value
         : `${width.value}px`;
-      const fixedHeight = height.value.toString().includes("%")
+      const fixedHeight = typeof height.value === 'string' 
         ? height.value
         : `${height.value}px`;
       return {

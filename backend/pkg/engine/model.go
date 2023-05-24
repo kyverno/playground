@@ -98,9 +98,7 @@ func ConvertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 		PodSecurityChecks: in.PodSecurityChecks(),
 		Exception:         in.Exception(),
 	}
-	for _, patch := range in.Patches() {
-		out.Patches = append(out.Patches, patch)
-	}
+	out.Patches = append(out.Patches, in.Patches()...)
 	return out
 }
 

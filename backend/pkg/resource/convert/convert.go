@@ -6,7 +6,7 @@ import (
 )
 
 func Into[T any](untyped unstructured.Unstructured, result *T) error {
-	return runtime.DefaultUnstructuredConverter.FromUnstructured(untyped.UnstructuredContent(), &result)
+	return runtime.DefaultUnstructuredConverter.FromUnstructured(untyped.UnstructuredContent(), result)
 }
 
 func To[T any](untyped unstructured.Unstructured) (T, error) {
