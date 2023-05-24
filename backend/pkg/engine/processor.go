@@ -15,6 +15,7 @@ import (
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
+	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	"github.com/kyverno/kyverno/pkg/logging"
 	"github.com/kyverno/kyverno/pkg/registryclient"
@@ -122,7 +123,7 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 	}
 
 	if len(patches) != 0 {
-		patch := jsonutils.JoinPatches(patches...)
+		patch := jsonutils.JoinPatches(patch.ConvertPatches(patches...)...)
 		decoded, err := jsonpatch.DecodePatch(patch)
 		if err != nil {
 			return Response{}, resource, err
