@@ -2,8 +2,9 @@ package loader
 
 import (
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
-	"github.com/kyverno/playground/backend/pkg/resource/convert"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+
+	"github.com/kyverno/playground/backend/pkg/resource/convert"
 )
 
 func Load[T any](l Loader, content []byte) (*T, error) {

@@ -24,15 +24,15 @@ jobs:
         run: |
           set -e
           cd backend && go mod tidy && git diff --exit-code
+      - name: Check code format
+        run: |
+          set -e
+          make fmt
+          git diff --exit-code
       - name: Build
         run: |
           set -e
           make build-backend
-      - name: Check code format
-        run: |
-          set -e
-          diff=$(gofmt -s -d backend)
-          if [[ -n "${diff}" ]]; then echo "${diff}"; exit 1; fi
 
   frontend:
     runs-on: ubuntu-latest

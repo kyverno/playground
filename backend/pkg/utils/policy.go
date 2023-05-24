@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+
 	"github.com/kyverno/playground/backend/pkg/resource/convert"
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
 func ToPolicyInterface(untyped unstructured.Unstructured) (kyvernov1.PolicyInterface, error) {

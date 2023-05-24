@@ -4,13 +4,14 @@ import (
 	"fmt"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/kyverno/playground/backend/data"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 	"sigs.k8s.io/kubectl-validate/pkg/validatorfactory"
 	"sigs.k8s.io/yaml"
+
+	"github.com/kyverno/playground/backend/data"
 )
 
 const mediaType = runtime.ContentTypeYAML

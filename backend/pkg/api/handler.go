@@ -7,10 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	corev1 "k8s.io/api/core/v1"
+
 	"github.com/kyverno/playground/backend/pkg/engine"
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
 	"github.com/kyverno/playground/backend/pkg/utils"
-	corev1 "k8s.io/api/core/v1"
 )
 
 func NewEngineHandler(dClient dclient.Interface, cmResolver engineapi.ConfigmapResolver) gin.HandlerFunc {
