@@ -1,9 +1,9 @@
-name: ci
+name: codecov
 
 on:
   pull_request:
     branches:
-      - '*'
+      - main
   push:
     branches:
       - main
@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  backend-codecov:
+  backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,6 +23,10 @@ jobs:
         with:
           go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
+      - name: Build assets
+        run: |
+          set -e
+          make build-backend-assets
       - name: Test
         run: |
           set -e
