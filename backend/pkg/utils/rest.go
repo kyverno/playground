@@ -5,9 +5,8 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func RestConfig(kubeConfig string) (*rest.Config, error) {
-	if kubeConfig == "" {
-		return nil, nil
-	}
-	return clientcmd.BuildConfigFromFlags("", kubeConfig)
+func RestConfig(overrides clientcmd.ConfigOverrides) (*rest.Config, error) {
+	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
+	kubeConfig := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(loadingRules, &overrides)
+	return kubeConfig.ClientConfig()
 }
