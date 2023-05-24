@@ -1,110 +1,21 @@
-package api_test
+package utils_test
 
 import (
 	"testing"
 
-	"github.com/kyverno/playground/backend/pkg/api"
+	"github.com/kyverno/playground/backend/pkg/resource/loader"
+	"github.com/kyverno/playground/backend/pkg/utils"
 )
-
-var loader, _ = api.NewLoader("1.27")
 
 const (
 	singleResource string = `apiVersion: v1
 kind: Namespace
 metadata:
-  name: prod-bus-app1
-  labels:
-    purpose: production`
+	name: prod-bus-app1
+	labels:
+	purpose: production`
 
-	multipleResources string = `
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    run: nginx
-  name: nginx
-  namespace: default
-spec:
-  containers:
-    - image: nginx
-      name: nginx
-      resources: {}
----
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    run: redis
-  name: redis
-  namespace: default
-spec:
-  containers:
-    - image: redis
-      name: redis
-      resources: {}`
-
-	resourceWithComment string = `
-### POD ###
----
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    run: nginx
-  name: nginx
-  namespace: default
-spec:
-  containers:
-    - image: nginx
-      name: nginx
-      resources: {}`
-)
-
-func Test_LoadResources(t *testing.T) {
-	tests := []struct {
-		name       string
-		resources  string
-		wantLoaded int
-		wantErr    bool
-	}{
-		{
-			name:       "load no resource with empy string",
-			resources:  "",
-			wantLoaded: 0,
-			wantErr:    false,
-		},
-		{
-			name:       "load single resource",
-			resources:  singleResource,
-			wantLoaded: 1,
-			wantErr:    false,
-		},
-		{
-			name:       "load multiple resources",
-			resources:  multipleResources,
-			wantLoaded: 2,
-			wantErr:    false,
-		},
-		{
-			name:       "load resource with comment",
-			resources:  resourceWithComment,
-			wantLoaded: 1,
-			wantErr:    false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if res, err := loader.Resources(tt.resources); (err != nil) != tt.wantErr {
-				t.Errorf("loader.Resources() error = %v, wantErr %v", err, tt.wantErr)
-			} else if len(res) != tt.wantLoaded {
-				t.Errorf("loader.Resources() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)
-			}
-		})
-	}
-}
-
-const (
-	singlePolicy = `apiVersion: kyverno.io/v1
+	singlePolicy string = `apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: require-ns-purpose-label
@@ -124,7 +35,7 @@ spec:
           labels:
             purpose: production`
 
-	multiplePolicy = `
+	multiplePolicy string = `
 apiVersion: kyverno.io/v1
 kind: Policy
 metadata:
@@ -165,7 +76,7 @@ spec:
           labels:
             purpose: production`
 
-	policyWithComment = `
+	policyWithComment string = `
 ### Policy ###
 ---
 apiVersion: kyverno.io/v1
@@ -190,6 +101,10 @@ spec:
 )
 
 func Test_LoadPolicies(t *testing.T) {
+	loader, err := loader.New("1.27")
+	if err != nil {
+		t.Fatal(err)
+	}
 	tests := []struct {
 		name       string
 		policies   string
@@ -229,7 +144,7 @@ func Test_LoadPolicies(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if res, err := loader.Policies(tt.policies); (err != nil) != tt.wantErr {
+			if res, err := utils.LoadPolicies(loader, []byte(tt.policies)); (err != nil) != tt.wantErr {
 				t.Errorf("loader.Policies() error = %v, wantErr %v", err, tt.wantErr)
 			} else if len(res) != tt.wantLoaded {
 				t.Errorf("loader.Policies() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)

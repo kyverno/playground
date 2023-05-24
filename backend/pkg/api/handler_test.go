@@ -12,6 +12,35 @@ import (
 	"github.com/kyverno/playground/backend/pkg/api"
 )
 
+const (
+	singleResource string = `apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod-bus-app1
+  labels:
+    purpose: production`
+
+	singlePolicy string = `apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-ns-purpose-label
+spec:
+  validationFailureAction: Enforce
+  rules:
+  - name: require-ns-purpose-label
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+    validate:
+      message: "You must have label 'purpose' with value 'production' set on all new namespaces."
+      pattern:
+        metadata:
+          labels:
+            purpose: production`
+)
+
 func Test_Serve(t *testing.T) {
 	jsonBody := api.EngineRequest{
 		Resources: singleResource,

@@ -7,8 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	corev1 "k8s.io/api/core/v1"
 
 	"github.com/kyverno/playground/backend/pkg/engine"
+	"github.com/kyverno/playground/backend/pkg/resource/loader"
+	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
 func NewEngineHandler(dClient dclient.Interface, cmResolver engineapi.ConfigmapResolver) gin.HandlerFunc {
@@ -26,26 +29,26 @@ func NewEngineHandler(dClient dclient.Interface, cmResolver engineapi.ConfigmapR
 			return
 		}
 
-		loader, err := NewLoader(params.Kubernetes.Version)
+		l, err := loader.New(params.Kubernetes.Version)
 		if err != nil {
 			c.String(http.StatusInternalServerError, "failed to initialize loader")
 			return
 		}
 
-		resources, err := loader.Resources(request.Resources)
+		resources, err := loader.LoadResources(l, []byte(request.Resources))
 		if err != nil {
 			fmt.Println(err)
 			c.String(http.StatusInternalServerError, "failed parse resources")
 			return
 		}
 
-		policies, err := loader.Policies(request.Policies)
+		policies, err := utils.LoadPolicies(l, []byte(request.Policies))
 		if err != nil {
 			c.String(http.StatusInternalServerError, "failed parse policies")
 			return
 		}
 
-		config, err := loader.ConfigMap(request.Config)
+		config, err := loader.Load[corev1.ConfigMap](l, []byte(request.Config))
 		if err != nil {
 			c.String(http.StatusInternalServerError, "failed parse kyverno configmap")
 			return
