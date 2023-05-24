@@ -1,7 +1,11 @@
 <template>
   <v-menu location="bottom" :close-on-content-click="false" v-model="menu">
-    <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" prepend-icon="mdi-note-text">template</v-btn>
+    <template #activator="{ props }">
+      <v-tooltip location="top" content-class="no-opacity-tooltip" text="Load Resource from predefined Templates" theme="dark">
+        <template #activator="{ props: tooltip }">
+          <v-btn v-bind="{ ...tooltip, ...props }" icon="mdi-note-text"></v-btn>
+        </template>
+      </v-tooltip>
     </template>
     <v-list>
       <v-list-item>
@@ -42,8 +46,8 @@ const list = [
   'RoleBinding',
   'ClusterRole',
   'ClusterRoleBinding',
-  'PersistedVolume',
-  'PersistedVolumeClaim',
+  'PersistentVolume',
+  'PersistentVolumeClaim',
   'ServiceAccount',
   'PodDisruptionBudget',
   'PriorityClass',
