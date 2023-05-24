@@ -1,18 +1,10 @@
-package api
+package engine
 
 import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
 	"github.com/kyverno/playground/backend/pkg/engine"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
-
-type EngineRequest struct {
-	Policies  string `json:"policies"`
-	Resources string `json:"resources"`
-	Context   string `json:"context"`
-	Config    string `json:"config"`
-}
 
 type EngineResponse struct {
 	Policies          []kyvernov1.PolicyInterface `json:"policies"`
