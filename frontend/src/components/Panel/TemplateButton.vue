@@ -53,8 +53,6 @@ const list = [
 const templates = computed(() => {
   if (!search.value) return list
 
-  console.log(search.value.toLowerCase())
-
   return list.filter(i => i.toLowerCase().search(search.value.toLowerCase()) !== -1)
 })
 
