@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kyverno/kyverno/pkg/client/clientset/versioned"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -31,19 +32,23 @@ type Cluster interface {
 	Namespaces(context.Context) ([]string, error)
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
-	Config() *rest.Config
 	KubeClient() kubernetes.Interface
+	KyvernoClient() versioned.Interface
 	DClient() dclient.Interface
 }
 
 type cluster struct {
-	restConfig *rest.Config
-	kubeClient kubernetes.Interface
-	dClient    dclient.Interface
+	kubeClient    kubernetes.Interface
+	kyvernoClient versioned.Interface
+	dClient       dclient.Interface
 }
 
 func New(restConfig *rest.Config) (Cluster, error) {
 	kubeClient, err := kubernetes.NewForConfig(restConfig)
+	if err != nil {
+		return nil, err
+	}
+	kyvernoClient, err := versioned.NewForConfig(restConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +60,7 @@ func New(restConfig *rest.Config) (Cluster, error) {
 	if err != nil {
 		return nil, err
 	}
-	return cluster{restConfig, kubeClient, dClient}, nil
+	return cluster{kubeClient, kyvernoClient, dClient}, nil
 }
 
 func (c cluster) Kinds(ctx context.Context, excludeGroups ...string) ([]Resource, error) {
@@ -124,12 +129,12 @@ func (c cluster) Get(ctx context.Context, apiVersion string, kind string, namesp
 	return c.dClient.GetResource(ctx, apiVersion, kind, namespace, name)
 }
 
-func (c cluster) Config() *rest.Config {
-	return c.restConfig
-}
-
 func (c cluster) KubeClient() kubernetes.Interface {
 	return c.kubeClient
+}
+
+func (c cluster) KyvernoClient() versioned.Interface {
+	return c.kyvernoClient
 }
 
 func (c cluster) DClient() dclient.Interface {
