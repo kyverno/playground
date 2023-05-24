@@ -29,7 +29,7 @@ func Test_Serve(t *testing.T) {
 	c.Request = httptest.NewRequest(http.MethodPost, "/", body)
 	c.Request.Header.Add("Content-Type", "application/json")
 
-	handler, err := newEngineHandler(nil)
+	handler, err := newEngineHandler(nil, "")
 	require.NoError(t, err)
 	handler(c)
 

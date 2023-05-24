@@ -18,7 +18,7 @@ import (
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 )
 
-func newEngineHandler(cluster cluster.Cluster) (gin.HandlerFunc, error) {
+func newEngineHandler(cluster cluster.Cluster, crds string) (gin.HandlerFunc, error) {
 	policyClient := openapiclient.NewLocalFiles(data.Schemas(), "schemas")
 	policyLoader, err := loader.New(policyClient)
 	if err != nil {
@@ -33,7 +33,7 @@ func newEngineHandler(cluster cluster.Cluster) (gin.HandlerFunc, error) {
 		if err != nil {
 			return nil, err
 		}
-		resourceLoader, err := resourceLoader(params.Kubernetes.Version)
+		resourceLoader, err := resourceLoader(params.Kubernetes.Version, crds)
 		if err != nil {
 			return nil, err
 		}
@@ -75,12 +75,15 @@ func parseKubeVersion(kubeVersion string) (string, error) {
 	return fmt.Sprint(version.Major(), ".", version.Minor()), nil
 }
 
-func resourceLoader(kubeVersion string) (loader.Loader, error) {
+func resourceLoader(kubeVersion string, crds string) (loader.Loader, error) {
 	kubeVersion, err := parseKubeVersion(kubeVersion)
 	if err != nil {
 		return nil, err
 	}
-	return loader.New(openapiclient.NewHardcodedBuiltins(kubeVersion))
+	return loader.New(
+		openapiclient.NewHardcodedBuiltins(kubeVersion),
+		openapiclient.NewLocalCRDFiles(nil, crds),
+	)
 }
 
 func getProcessor(params *engine.Parameters, config *corev1.ConfigMap, cluster cluster.Cluster) (*engine.Processor, error) {

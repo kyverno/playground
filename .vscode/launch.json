@@ -20,6 +20,7 @@
             "args": [
                 "--gin-log",
                 "--cluster",
+                "--crds-folder=../crds",
             ],
         }
     ]
