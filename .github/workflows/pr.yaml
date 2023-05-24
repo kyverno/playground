@@ -21,6 +21,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
         with:
+          go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
       - name: Check go.mod
         run: |
@@ -35,6 +36,16 @@ jobs:
         run: |
           set -e
           make build-backend
+      - name: Test
+        run: |
+          set -e
+          make test-backend
+      - name: Upload Report to Codecov
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        with:
+          file: ./backend/coverage.out
+          fail_ci_if_error: true
+          verbose: true
 
   frontend:
     runs-on: ubuntu-latest
@@ -108,6 +119,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
         with:
+          go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
       - name: Build assets
         run: |
@@ -126,6 +138,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
         with:
+          go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
       - name: Create cluster
         run: |

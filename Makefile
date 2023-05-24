@@ -209,6 +209,15 @@ ko-publish: $(KO) ## Build and publish playground image (with ko)
 docker-build: ## Build playground image (with docker)
 	@docker buildx build --progress plane --platform $(PLATFORMS) --tag "$(REGISTRY)/$(REPO)/playground:latest" . --build-arg LD_FLAGS=$(LD_FLAGS)
 
+########
+# TEST #
+########
+
+.PHONY: test-backend
+test-backend: ## Test backend
+	@echo Testing backend... >&2
+	@cd backend && go test ./... -race -coverprofile=coverage.out -covermode=atomic
+
 #######
 # RUN #
 #######

@@ -48,10 +48,14 @@ func NewEngineHandler(dClient dclient.Interface, cmResolver engineapi.ConfigmapR
 			return
 		}
 
-		config, err := loader.Load[corev1.ConfigMap](l, []byte(request.Config))
-		if err != nil {
-			c.String(http.StatusInternalServerError, "failed parse kyverno configmap")
-			return
+		var config *corev1.ConfigMap
+		if len(request.Config) != 0 {
+			conf, err := loader.Load[corev1.ConfigMap](l, []byte(request.Config))
+			if err != nil {
+				c.String(http.StatusInternalServerError, "failed parse kyverno configmap")
+				return
+			}
+			config = conf
 		}
 
 		processor, err := engine.NewProcessor(params, config, dClient, cmResolver)
