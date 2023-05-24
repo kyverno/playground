@@ -225,7 +225,7 @@ test-backend: ## Test backend
 .PHONY: run
 run: build-backend-assets ## Run locally
 	@echo Run backend... >&2
-	@cd backend && go run . --log=true --kubeconfig=$(KUBECONFIG)
+	@cd backend && go run . --gin-log=true --cluster
 
 ########
 # KIND #
