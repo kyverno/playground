@@ -216,7 +216,7 @@ docker-build: ## Build playground image (with docker)
 .PHONY: test-backend
 test-backend: ## Test backend
 	@echo Testing backend... >&2
-	@cd backend && go test ./...
+	@cd backend && go test ./... -race -coverprofile=coverage.out -covermode=atomic
 
 #######
 # RUN #
