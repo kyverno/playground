@@ -101,7 +101,7 @@ spec:
 )
 
 func Test_LoadPolicies(t *testing.T) {
-	loader, err := loader.New("1.27")
+	loader, err := loader.New(nil, "1.27")
 	if err != nil {
 		t.Fatal(err)
 	}

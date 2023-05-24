@@ -7,11 +7,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/openapi"
+	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 	"sigs.k8s.io/kubectl-validate/pkg/validatorfactory"
 	"sigs.k8s.io/yaml"
 
 	"github.com/kyverno/playground/backend/data"
+	"github.com/kyverno/playground/backend/pkg/cluster"
 )
 
 const mediaType = runtime.ContentTypeYAML
@@ -24,19 +27,20 @@ type loader struct {
 	factory *validatorfactory.ValidatorFactory
 }
 
-func New(kubeVersion string) (Loader, error) {
+func New(cluster cluster.Cluster, kubeVersion string) (Loader, error) {
 	version, err := semver.NewVersion(kubeVersion)
 	if err != nil {
 		kubeVersion = "1.27"
 	} else {
 		kubeVersion = fmt.Sprint(version.Major(), ".", version.Minor())
 	}
-	factory, err := validatorfactory.New(
-		openapiclient.NewComposite(
-			openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
-			openapiclient.NewHardcodedBuiltins(kubeVersion),
-		),
-	)
+	var clients []openapi.Client
+	if cluster != nil {
+		clients = append(clients, openapiclient.NewKubeConfig(clientcmd.ConfigOverrides{}))
+	}
+	clients = append(clients, openapiclient.NewLocalFiles(data.Schemas(), "schemas"))
+	clients = append(clients, openapiclient.NewHardcodedBuiltins(kubeVersion))
+	factory, err := validatorfactory.New(openapiclient.NewComposite(clients...))
 	if err != nil {
 		return nil, err
 	}

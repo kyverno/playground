@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/kyverno/playground/backend/pkg/cluster"
 )
 
 type ConfigResponse struct {
@@ -11,10 +13,10 @@ type ConfigResponse struct {
 	Sponsor string `json:"sponsor"`
 }
 
-func AddRoutes(group *gin.RouterGroup, cluster bool, sponsor string) error {
+func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster, sponsor string) error {
 	group.GET("/config", func(c *gin.Context) {
 		c.JSON(http.StatusOK, ConfigResponse{
-			Cluster: cluster,
+			Cluster: cluster != nil,
 			Sponsor: sponsor,
 		})
 	})
