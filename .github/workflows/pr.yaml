@@ -33,6 +33,10 @@ jobs:
         run: |
           set -e
           make build-backend
+      - name: Test
+        run: |
+          set -e
+          make test-backend
 
   frontend:
     runs-on: ubuntu-latest
