@@ -12,6 +12,7 @@ require (
 	github.com/loopfz/gadgeto v0.11.2
 	github.com/mattbaird/jsonpatch v0.0.0-20230413205102-771768614e91
 	github.com/spf13/cobra v1.7.0
+	github.com/stretchr/testify v1.8.3
 	k8s.io/api v0.27.2
 	k8s.io/apimachinery v0.27.2
 	k8s.io/client-go v0.27.2
@@ -206,6 +207,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.7 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.15.1 // indirect
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
