@@ -74,7 +74,7 @@ metadata:
 			policies, err := utils.LoadPolicies(l, []byte(r.Policies))
 			fatalOnError(t, "loader.LoadPolicies", err)
 
-			processor, err := engine.NewProcessor(params, nil, nil, nil)
+			processor, err := engine.NewProcessor(params, nil, nil, nil, nil)
 			fatalOnError(t, "engine.NewProcessor", err)
 
 			if _, err := processor.Run(context.TODO(), policies, resources); (err != nil) != tt.wantErr {

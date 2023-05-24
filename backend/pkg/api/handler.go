@@ -22,6 +22,7 @@ func NewEngineHandler(cluster cluster.Cluster) (gin.HandlerFunc, error) {
 	var dClient dclient.Interface
 	var cmResolver engineapi.ConfigmapResolver
 	var resourceLoader loader.Loader
+	var exceptionSelector engineapi.PolicyExceptionSelector
 	if cluster != nil {
 		kubeClient = cluster.KubeClient()
 		dClient = cluster.DClient()
@@ -30,6 +31,7 @@ func NewEngineHandler(cluster cluster.Cluster) (gin.HandlerFunc, error) {
 			return nil, err
 		}
 		resourceLoader = loader
+		exceptionSelector = engine.NewPolicyExceptionSelector(cluster)
 	}
 	if kubeClient != nil {
 		resolver, err := resolvers.NewClientBasedResolver(kubeClient)
@@ -84,7 +86,7 @@ func NewEngineHandler(cluster cluster.Cluster) (gin.HandlerFunc, error) {
 			config = conf
 		}
 
-		processor, err := engine.NewProcessor(params, config, dClient, cmResolver)
+		processor, err := engine.NewProcessor(params, config, dClient, cmResolver, exceptionSelector)
 		if err != nil {
 			c.String(http.StatusInternalServerError, "failed to initialize processor")
 			return

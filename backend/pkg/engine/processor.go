@@ -17,15 +17,12 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
-	"github.com/kyverno/kyverno/pkg/logging"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
-
-var log = logging.WithName("playground")
 
 type Processor struct {
 	params        *Parameters
@@ -171,7 +168,7 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 
 	var newRuleResponse []engineapi.RuleResponse
 	for _, rule := range response.PolicyResponse.Rules {
-		genRes, err := p.genController.ApplyGeneratePolicy(log.V(5), policyContext, gr, []string{rule.Name()})
+		genRes, err := p.genController.ApplyGeneratePolicy(logr.Discard(), policyContext, gr, []string{rule.Name()})
 		if err != nil {
 			return Response{}, err
 		}
@@ -265,7 +262,13 @@ func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.U
 	}
 }
 
-func newEngine(cfg config.Configuration, jp jmespath.Interface, client dclient.Interface, cmResolver engineapi.ConfigmapResolver) (engineapi.Engine, error) {
+func newEngine(
+	cfg config.Configuration,
+	jp jmespath.Interface,
+	client dclient.Interface,
+	cmResolver engineapi.ConfigmapResolver,
+	exceptionSelector engineapi.PolicyExceptionSelector,
+) (engineapi.Engine, error) {
 	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
 	if err != nil {
 		return nil, err
@@ -286,11 +289,17 @@ func newEngine(cfg config.Configuration, jp jmespath.Interface, client dclient.I
 		client,
 		rclient,
 		factory,
-		nil,
+		exceptionSelector,
 	), nil
 }
 
-func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, dClient dclient.Interface, cmResolver engineapi.ConfigmapResolver) (*Processor, error) {
+func NewProcessor(
+	params *Parameters,
+	kyvernoConfig *corev1.ConfigMap,
+	dClient dclient.Interface,
+	cmResolver engineapi.ConfigmapResolver,
+	exceptionSelector engineapi.PolicyExceptionSelector,
+) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	if kyvernoConfig != nil {
 		cfg.Load(kyvernoConfig)
@@ -299,7 +308,7 @@ func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, dClient d
 	jp := jmespath.New(cfg)
 	cluster := false
 
-	engine, err := newEngine(cfg, jp, dClient, cmResolver)
+	engine, err := newEngine(cfg, jp, dClient, cmResolver, exceptionSelector)
 	if err != nil {
 		return nil, err
 	}
@@ -310,7 +319,7 @@ func NewProcessor(params *Parameters, kyvernoConfig *corev1.ConfigMap, dClient d
 		cluster = true
 	}
 
-	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, log.V(1), jp)
+	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, logr.Discard(), jp)
 
 	return &Processor{
 		params:        params,
