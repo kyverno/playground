@@ -1,153 +1,100 @@
 package utils_test
 
 import (
+	"os"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
 const (
-	singleResource string = `apiVersion: v1
-kind: Namespace
-metadata:
-	name: prod-bus-app1
-	labels:
-	purpose: production`
-
-	singlePolicy string = `apiVersion: kyverno.io/v1
-kind: ClusterPolicy
-metadata:
-  name: require-ns-purpose-label
-spec:
-  validationFailureAction: Enforce
-  rules:
-  - name: require-ns-purpose-label
-    match:
-      any:
-      - resources:
-          kinds:
-          - Namespace
-    validate:
-      message: "You must have label 'purpose' with value 'production' set on all new namespaces."
-      pattern:
-        metadata:
-          labels:
-            purpose: production`
-
-	multiplePolicy string = `
-apiVersion: kyverno.io/v1
-kind: Policy
-metadata:
-  name: require-ns-purpose-label
-spec:
-  validationFailureAction: Enforce
-  rules:
-  - name: require-ns-purpose-label
-    match:
-      any:
-      - resources:
-          kinds:
-          - Namespace
-    validate:
-      message: "You must have label 'purpose' with value 'production' set on all new namespaces."
-      pattern:
-        metadata:
-           labels:
-           purpose: production
----
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
-metadata:
-  name: require-ns-purpose-label
-spec:
-  validationFailureAction: Enforce
-  rules:
-  - name: require-ns-purpose-label
-    match:
-      any:
-      - resources:
-          kinds:
-          - Namespace
-    validate:
-      message: "You must have label 'purpose' with value 'production' set on all new namespaces."
-      pattern:
-        metadata:
-          labels:
-            purpose: production`
-
-	policyWithComment string = `
-### Policy ###
----
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
-metadata:
-  name: require-ns-purpose-label
-spec:
-    validationFailureAction: Enforce
-    rules:
-    - name: require-ns-purpose-label
-      match:
-        any:
-        - resources:
-            kinds:
-            - Namespace
-      validate:
-        message: "You must have label 'purpose' with value 'production' set on all new namespaces."
-        pattern:
-          metadata:
-            labels:
-              purpose: production`
+	empty             string = "../../testdata/empty.yaml"
+	singleResource    string = "../../testdata/namespace.yaml"
+	multiplePolicy    string = "../../testdata/multiple-policies.yaml"
+	policyWithComment string = "../../testdata/multiple-policies-with-comment.yaml"
 )
 
 func Test_LoadPolicies(t *testing.T) {
-	loader, err := loader.NewLocal("1.27")
-	if err != nil {
-		t.Fatal(err)
-	}
 	tests := []struct {
 		name       string
 		policies   string
 		wantLoaded int
 		wantErr    bool
-	}{
-		{
-			name:       "load no policy with empy string",
-			policies:   "",
-			wantLoaded: 0,
-			wantErr:    false,
-		},
-		{
-			name:       "load invalid string",
-			policies:   singleResource,
-			wantLoaded: 0,
-			wantErr:    true,
-		},
-		{
-			name:       "load single policy",
-			policies:   singlePolicy,
-			wantLoaded: 1,
-			wantErr:    false,
-		},
-		{
-			name:       "load multiple resources",
-			policies:   multiplePolicy,
-			wantLoaded: 2,
-			wantErr:    false,
-		},
-		{
-			name:       "load policy with comment",
-			policies:   policyWithComment,
-			wantLoaded: 1,
-			wantErr:    false,
-		},
-	}
+	}{{
+		name:     "invalid policy",
+		policies: "../../testdata/invalid-policy.yaml",
+		wantErr:  true,
+	}, {
+		name:     "invalid cluster policy",
+		policies: "../../testdata/invalid-cluster-policy.yaml",
+		wantErr:  true,
+	}, {
+		name:     "load no policy with empy string",
+		policies: empty,
+	}, {
+		name:     "load invalid string",
+		policies: singleResource,
+		wantErr:  true,
+	}, {
+		name:       "load single policy",
+		policies:   "../../testdata/single-policy.yaml",
+		wantLoaded: 1,
+	}, {
+		name:       "load multiple resources",
+		policies:   multiplePolicy,
+		wantLoaded: 2,
+	}, {
+		name:       "load policy with comment",
+		policies:   policyWithComment,
+		wantLoaded: 1,
+	}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if res, err := utils.LoadPolicies(loader, []byte(tt.policies)); (err != nil) != tt.wantErr {
+			data, err := os.ReadFile(tt.policies)
+			require.NoError(t, err)
+			loader, err := loader.NewLocal("1.27")
+			require.NoError(t, err)
+			if res, err := utils.LoadPolicies(loader, data); (err != nil) != tt.wantErr {
 				t.Errorf("loader.Policies() error = %v, wantErr %v", err, tt.wantErr)
 			} else if len(res) != tt.wantLoaded {
 				t.Errorf("loader.Policies() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)
+			}
+		})
+	}
+}
+
+func TestToPolicyInterface(t *testing.T) {
+	tests := []struct {
+		name    string
+		file    string
+		wantErr bool
+	}{{
+		name:    "load single policy",
+		file:    "../../testdata/single-policy.yaml",
+		wantErr: true,
+	}, {
+		name:    "load single cluster policy",
+		file:    "../../testdata/single-cluster-policy.yaml",
+		wantErr: true,
+	}}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := os.ReadFile(tt.file)
+			require.NoError(t, err)
+			loader, err := loader.NewLocal("1.27")
+			require.NoError(t, err)
+			resource, err := loader.Load(data)
+			require.NoError(t, err)
+			err = unstructured.SetNestedField(resource.UnstructuredContent(), "foo", "spec", "bar")
+			require.NoError(t, err)
+			_, err = utils.ToPolicyInterface(resource)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ToPolicyInterface() error = %v, wantErr %v", err, tt.wantErr)
+				return
 			}
 		})
 	}
