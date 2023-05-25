@@ -53,9 +53,9 @@ func (r *EngineRequest) ResourceLoader(kubeVersion string, config APIConfigurati
 	clients := []openapi.Client{
 		openapiclient.NewHardcodedBuiltins(kubeVersion),
 	}
-	// TODO: load crds from request
-	// 	if len(r.CustomResourceDefinitions) != 0 {
-	// }
+	if len(r.CustomResourceDefinitions) != 0 {
+		clients = append(clients, NewInMemory([]byte(r.CustomResourceDefinitions)))
+	}
 	for _, crd := range config.LocalCrds {
 		clients = append(clients, openapiclient.NewLocalCRDFiles(nil, crd))
 	}
