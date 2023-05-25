@@ -1,9 +1,10 @@
 <template>
   <MonacoEditor
+    id="context"
     language="yaml"
     :theme="editorTheme"
-    :value="props.modelValue"
-    @update:value="(event: string) => emit('update:modelValue', event)"
+    :modelValue="props.modelValue"
+    @update:modelValue="(event: string) => emit('update:modelValue', event)"
     :options="options"
     ref="monaco"
     :uri="uri"

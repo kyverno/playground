@@ -1,118 +1,87 @@
 <template>
-  <div class="monaco-editor-vue3" :style="style"></div>
+  <div ref="root" class="monaco-editor-vue3" :style="style"></div>
 </template>
 
-<script>
-import { defineComponent, computed, toRefs } from "vue";
+<script setup lang="ts">
+import { ref, toRefs, computed, onMounted } from 'vue';
 import * as monaco from "monaco-editor";
+import { PropType } from 'vue';
+import { watch } from 'vue';
 
-export default defineComponent({
-  name: "MonacoEditor",
-  props: {
-    uri: { type: Object },
+const props = defineProps({
+    uri: { type: Object as PropType<monaco.Uri> },
     width: { type: [String, Number], default: "100%" },
     height: { type: [String, Number], default: "100%" },
-    value: String,
+    modelValue: { type: String, default: '' },
     language: { type: String, default: "javascript" },
     theme: { type: String, default: "vs" },
-    options: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-  },
-  emits: ["editorWillMount", "editorDidMount", "change", "update:value"],
-  setup(props) {
-    const { width, height } = toRefs(props);
-    const style = computed(() => {
-      const fixedWidth = width.value.toString().includes("%")
-        ? width.value
-        : `${width.value}px`;
-      const fixedHeight = typeof height.value === 'string' 
-        ? height.value
-        : `${height.value}px`;
-      return {
-        width: fixedWidth,
-        height: fixedHeight,
-        "text-align": "left",
-      };
-    });
-    return {
-      style,
-    };
-  },
-  mounted() {
-    this.initMonaco();
-  },
-  beforeUnmount() {
-    this.editor && this.editor.dispose();
-  },
-  methods: {
-    initMonaco() {
-      this.$emit("editorWillMount", monaco);
-      const { value, language, theme, options } = this;
-      let model = null;
-      if (this.uri) {
-        model = monaco.editor.getModel(this.uri);
-      }
-      if (!model) {
-        model = monaco.editor.createModel(value, language, this.uri);
-      }
+    options: { type: Object as PropType<monaco.editor.IStandaloneEditorConstructionOptions>, default: () => ({}) },
+})
 
-      this.editor = monaco.editor.create(this.$el, {
-        value: value,
-        language: language,
-        theme: theme,
-        automaticLayout: true,
-        ...options,
-        model,
-      });
+const emit = defineEmits(["editorWillMount", "editorDidMount", "update:modelValue", "switchWordWrap"])
 
-      // @event `change`
-      const editor = this._getEditor();
-      editor &&
-        editor.onDidChangeModelContent((event) => {
-          const value = editor.getValue();
-          if (this.value !== value) {
-            this.$emit("change", value, event);
-            this.$emit("update:value", value);
-          }
-        });
+const { width, height } = toRefs(props);
 
-      this.$emit("editorDidMount", this.editor);
-    },
-    _setValue(value) {
-      let editor = this._getEditor();
-      if (editor) return editor.setValue(value);
-    },
-    _getValue() {
-      let editor = this._getEditor();
-      if (!editor) return "";
-      return editor.getValue();
-    },
-    _getEditor() {
-      return this.editor;
-    },
-  },
-  watch: {
-    options: {
-      deep: true,
-      handler(options) {
-        this.editor.updateOptions(options);
-      },
-    },
-    value() {
-      this.value !== this._getValue() && this._setValue(this.value);
-    },
-    language() {
-      if (!this.editor) return;
-
-      monaco.editor.setModelLanguage(this.editor.getModel(), this.language);
-    },
-    theme() {
-      monaco.editor.setTheme(this.theme);
-    },
-  },
+const style = computed((): { [key: string]: string } => {
+  const fixedWidth = typeof width.value === 'string'  ? width.value : `${width.value}px`;
+  const fixedHeight = typeof height.value === 'string' ? height.value : `${height.value}px`;
+  return { width: fixedWidth, height: fixedHeight, "text-align": "left" };
 });
+
+const root = ref<HTMLElement>()
+let editor: monaco.editor.IStandaloneCodeEditor | undefined = undefined;
+
+onMounted(() => {
+  emit("editorWillMount", monaco);
+
+  let model: monaco.editor.ITextModel | null = null;
+  if (props.uri) {
+    model = monaco.editor.getModel(props.uri);
+  }
+  if (!model) {
+    model = monaco.editor.createModel(props.modelValue, props.language, props.uri);
+  }
+
+  if (!root.value) return;
+
+  editor = monaco.editor.create(root.value, {
+    value: props.modelValue,
+    language: props.language,
+    theme: props.theme,
+    automaticLayout: true,
+    ...props.options,
+    model,
+  });
+
+  editor.onDidChangeModelContent(() => {
+    const value = editor?.getValue();
+    if (props.modelValue !== value) {
+      emit("update:modelValue", value);
+    }
+  });
+
+  emit("editorDidMount", editor);
+})
+
+watch(() => props.options, (o) => {
+  editor?.updateOptions({ ...o });
+}, { deep: true })
+
+watch(() => props.modelValue, (value) => {
+  if (value === editor?.getValue()) return
+
+  editor?.setValue(value)
+})
+
+watch(() => props.language, (language) => {
+  if (!editor) return;
+  const model = editor.getModel()  
+  if (!model) return;
+
+  monaco.editor.setModelLanguage(model, language);
+})
+
+watch(() => props.theme, (theme) => {
+  monaco.editor.setTheme(theme);
+})
 </script>

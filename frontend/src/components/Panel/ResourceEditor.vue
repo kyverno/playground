@@ -1,11 +1,12 @@
 1<template>
   <MonacoEditor
     language="yaml"
+    id="resource"
     :theme="editorTheme"
-    :value="props.modelValue"
-    @update:value="(event: string) => emit('update:modelValue', event)"
+    :modelValue="props.modelValue"
+    @update:modelValue="(event: string) => emit('update:modelValue', event)"
     :options="options"
-    ref="monaco"
+    @editorDidMount="e => monaco = e"
     :uri="uri"
   />
 </template>
@@ -20,18 +21,16 @@ const props = defineProps({
     modelValue: { type: String, default: '' }
 })
 
-const monaco = ref<typeof MonacoEditor | null>(null);
+const monaco = ref<editor.ICodeEditor>();
 
 watch(() => props.modelValue, (current, old) => {
   if (!monaco.value) return
-
-  const edit: editor.ICodeEditor = monaco.value._getEditor();
 
   const currentLines = current.split(/\r\n|\r|\n/).length
   const oldLines = old.split(/\r\n|\r|\n/).length
 
   if (currentLines + 10 < oldLines) {
-    edit.setScrollPosition({scrollTop: 0});
+    monaco.value.setScrollPosition({scrollTop: 0});
   }
 })
 
