@@ -29,7 +29,7 @@ export const createInput = (name: string, defaults?: Inputs) => {
     const resource = useLocalStorage<string | null>(`persist:resource:${name}`, defaults?.resource || null)
     const oldResource = useLocalStorage<string | null>(`persist:resource:old:${name}`, defaults?.oldResource || null)
     const context = useLocalStorage<string | null>(`persist:context:${name}`, defaults?.context || null)
-    const config = useLocalStorage<string | null>(`persist:config:${name}`, defaults?.context || null)
+    const config = useLocalStorage<string | null>(`persist:config:${name}`, defaults?.config || null)
 
     persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
 

@@ -17,7 +17,7 @@ export const reset = () => {
     inputs.oldResource = ''
     inputs.resource = ResourceTemplate
     inputs.context = ContextTemplate
-    inputs.context = ConfigTemplate
+    inputs.config = ConfigTemplate
 }
 
 export const setDefaults = () => {
