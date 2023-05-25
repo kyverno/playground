@@ -20,7 +20,7 @@ import (
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
 )
 
-func newEngineHandler(cluster cluster.Cluster, builtInCrds ...string) (gin.HandlerFunc, error) {
+func newEngineHandler(cluster cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
 	policyClient := openapiclient.NewLocalFiles(data.Schemas(), "schemas")
 	policyLoader, err := loader.New(policyClient)
 	if err != nil {
@@ -35,7 +35,7 @@ func newEngineHandler(cluster cluster.Cluster, builtInCrds ...string) (gin.Handl
 		if err != nil {
 			return nil, err
 		}
-		resourceLoader, err := resourceLoader(params.Kubernetes.Version, builtInCrds)
+		resourceLoader, err := resourceLoader(params.Kubernetes.Version, config)
 		if err != nil {
 			return nil, err
 		}
@@ -77,7 +77,7 @@ func parseKubeVersion(kubeVersion string) (string, error) {
 	return fmt.Sprint(version.Major(), ".", version.Minor()), nil
 }
 
-func resourceLoader(kubeVersion string, builtInCrds []string) (loader.Loader, error) {
+func resourceLoader(kubeVersion string, config APIConfiguration) (loader.Loader, error) {
 	kubeVersion, err := parseKubeVersion(kubeVersion)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,10 @@ func resourceLoader(kubeVersion string, builtInCrds []string) (loader.Loader, er
 	clients := []openapi.Client{
 		openapiclient.NewHardcodedBuiltins(kubeVersion),
 	}
-	for _, crd := range builtInCrds {
+	for _, crd := range config.LocalCrds {
+		clients = append(clients, openapiclient.NewLocalCRDFiles(nil, crd))
+	}
+	for _, crd := range config.BuiltInCrds {
 		fs, path := data.BuiltInCrds(crd)
 		clients = append(clients, openapiclient.NewLocalCRDFiles(fs, path))
 	}

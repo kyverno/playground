@@ -12,6 +12,7 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/server"
+	"github.com/kyverno/playground/backend/pkg/server/api"
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
@@ -37,6 +38,7 @@ type configFlags struct {
 	cluster     bool
 	sponsor     string
 	builtInCrds []string
+	localCrds   []string
 }
 
 type clusterFlags struct {
@@ -59,6 +61,7 @@ func NewRootCommand() *cobra.Command {
 	res.Flags().StringVar(&command.configFlags.sponsor, "sponsor", "", "sponsor text")
 	res.Flags().BoolVar(&command.configFlags.cluster, "cluster", false, "enable cluster connected mode")
 	res.Flags().StringSliceVar(&command.configFlags.builtInCrds, "builtin-crds", nil, "list of enabled builtin custom resource definitions")
+	res.Flags().StringSliceVar(&command.configFlags.localCrds, "local-crds", nil, "list of folders containing custom resource definitions")
 	// cluster flags
 	clientcmd.BindOverrideFlags(&command.clusterFlags.kubeConfigOverrides, res.Flags(), clientcmd.RecommendedConfigOverrideFlags("kube-"))
 	return res
@@ -76,6 +79,13 @@ func (c *commandFlags) Run(_ *cobra.Command, args []string) error {
 	if err := server.AddUIRoutes(); err != nil {
 		return err
 	}
+	apiConfig := api.APIConfiguration{
+		Sponsor: c.configFlags.sponsor,
+		EngineConfiguration: api.EngineConfiguration{
+			BuiltInCrds: c.configFlags.builtInCrds,
+			LocalCrds:   c.configFlags.localCrds,
+		},
+	}
 	// register API routes (with/without cluster support)
 	if c.configFlags.cluster {
 		// create rest config
@@ -89,12 +99,12 @@ func (c *commandFlags) Run(_ *cobra.Command, args []string) error {
 			return err
 		}
 		// register API routes
-		if err := server.AddAPIRoutes(cluster, c.configFlags.sponsor, c.configFlags.builtInCrds...); err != nil {
+		if err := server.AddAPIRoutes(cluster, apiConfig); err != nil {
 			return err
 		}
 	} else {
 		// register API routes
-		if err := server.AddAPIRoutes(nil, c.configFlags.sponsor, c.configFlags.builtInCrds...); err != nil {
+		if err := server.AddAPIRoutes(nil, apiConfig); err != nil {
 			return err
 		}
 	}

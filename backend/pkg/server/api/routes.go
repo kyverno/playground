@@ -11,11 +11,18 @@ import (
 
 const clusterPrefix = "/cluster"
 
-func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster, sponsor string, builtInCrds ...string) error {
-	if err := apiconfig.AddRoutes(group, cluster, sponsor); err != nil {
+type EngineConfiguration = apiengine.APIConfiguration
+
+type APIConfiguration struct {
+	EngineConfiguration
+	Sponsor string
+}
+
+func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster, config APIConfiguration) error {
+	if err := apiconfig.AddRoutes(group, cluster, config.Sponsor); err != nil {
 		return err
 	}
-	if err := apiengine.AddRoutes(group, cluster, builtInCrds...); err != nil {
+	if err := apiengine.AddRoutes(group, cluster, config.EngineConfiguration); err != nil {
 		return err
 	}
 	// do not register cluster routes if we don't have a cluster
