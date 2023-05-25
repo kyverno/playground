@@ -1,12 +1,13 @@
 <template>
-  <div ref="root" class="monaco-editor-vue3" :style="style"></div>
+  <div ref="root" class="monaco-editor-vue3" :style="style" :id="id"></div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, computed, onMounted } from 'vue';
+import { ref, toRefs, computed, onMounted, reactive } from 'vue';
 import * as monaco from "monaco-editor";
 import { PropType } from 'vue';
 import { watch } from 'vue';
+import { onBeforeUnmount } from 'vue';
 
 const props = defineProps({
     uri: { type: Object as PropType<monaco.Uri> },
@@ -15,6 +16,7 @@ const props = defineProps({
     modelValue: { type: String, default: '' },
     language: { type: String, default: "javascript" },
     theme: { type: String, default: "vs" },
+    id: { type: String, required: true },
     options: { type: Object as PropType<monaco.editor.IStandaloneEditorConstructionOptions>, default: () => ({}) },
 })
 
@@ -29,7 +31,29 @@ const style = computed((): { [key: string]: string } => {
 });
 
 const root = ref<HTMLElement>()
+const options = reactive({ ...props.options })
 let editor: monaco.editor.IStandaloneCodeEditor | undefined = undefined;
+
+function fixAddCommand(editor: monaco.editor.IStandaloneCodeEditor, context: string): { dispose(): void } {
+    const addCommand = editor.addCommand;
+
+    editor.addCommand = function addCommand_hijacked(keybinding, handler, _context) {
+        if (_context !== undefined) {
+            console.error(
+                'editor.addCommand cannot use the context parameter. ' +
+                'This is due to a workaround for an upstream bug: ' +
+                'https://github.com/microsoft/monaco-editor/issues/2947'
+            );
+        }
+        return addCommand.call(this, keybinding, handler, context);
+    };
+
+    return {
+        dispose: () => {
+            editor.addCommand = addCommand;
+        }
+    };
+}
 
 onMounted(() => {
   emit("editorWillMount", monaco);
@@ -53,6 +77,12 @@ onMounted(() => {
     model,
   });
 
+  const editorFocusedContextKeyName = `__isEditorFocused-${props.id}`;
+  const isEditorFocused = editor.createContextKey<boolean>(editorFocusedContextKeyName, false);
+  const onBlurDisposable = editor.onDidBlurEditorWidget(() => isEditorFocused.set(false));
+  const onFocusDisposable = editor.onDidFocusEditorText(() => isEditorFocused.set(true));
+  const disposeAddCommandFix = fixAddCommand(editor, editorFocusedContextKeyName);
+
   editor.onDidChangeModelContent(() => {
     const value = editor?.getValue();
     if (props.modelValue !== value) {
@@ -60,11 +90,38 @@ onMounted(() => {
     }
   });
 
+  watch(() => props.modelValue, (current, old) => {
+      const currentLines = current.split(/\r\n|\r|\n/).length
+      const oldLines = old.split(/\r\n|\r|\n/).length
+
+      if (currentLines + 10 < oldLines) {
+          editor?.setScrollPosition({ scrollTop: 0 });
+      }
+  })
+  
+  editor.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.KeyZ, () => {
+    options.wordWrap = options.wordWrap !== 'on' ? 'on' : 'off'
+  })
+
+  onBeforeUnmount(() => {
+    onBlurDisposable.dispose();
+    onFocusDisposable.dispose();
+    disposeAddCommandFix.dispose();
+  })
+
   emit("editorDidMount", editor);
 })
 
-watch(() => props.options, (o) => {
+watch(options, (o) => {
   editor?.updateOptions({ ...o });
+}, { deep: true })
+
+
+watch(() => props.options, (o: monaco.editor.IEditorOptions) => {
+  for (const config in o) {
+    // @ts-ignore
+    options[config] = o[config]
+  }
 }, { deep: true })
 
 watch(() => props.modelValue, (value) => {

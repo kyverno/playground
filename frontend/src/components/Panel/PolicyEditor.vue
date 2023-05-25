@@ -1,7 +1,6 @@
 <template>
-<div style="height: 100%; position: relative;">
-  <Editor
-    id="policy"
+<div style="position: relative;">
+  <MonacoEditor
     language="yaml"
     :theme="editorTheme"
     :modelValue="props.modelValue"
@@ -9,6 +8,8 @@
     :options="options"
     @editorDidMount="monacoSetup"
     :uri="uri"
+    id="policy"
+    :height="752"
   />
   <v-card class="config" theme="dark" color="black" v-if="false">
     <v-card-text class="my-0 py-1">
@@ -23,8 +24,7 @@ import { ref, watch } from "vue";
 import { editor, Uri, KeyCode } from "monaco-editor";
 import { editorTheme } from "@/config";
 import { loadedPolicy } from "@/composables";
-import Editor from "./Editor.vue";
-import { reactive } from "vue";
+import MonacoEditor from "./MonacoEditor.vue";
 
 const props = defineProps({
   modelValue: { type: String, default: "" },
@@ -37,12 +37,12 @@ const uri = Uri.parse("policy.yaml");
 const autocompleteOnEnter = ref(true);
 const eventRegistered = ref(false);
 
-const options: editor.IStandaloneEditorConstructionOptions = reactive({
+const options: editor.IStandaloneEditorConstructionOptions = {
   wordWrap: 'off',
   colorDecorators: true,
   lineHeight: 24,
   tabSize: 2,
-})
+}
 
 const monacoSetup = (edit: editor.IStandaloneCodeEditor) => {
   watch(loadedPolicy, () => {
