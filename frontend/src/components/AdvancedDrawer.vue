@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { watch, computed } from 'vue';
 import { inputs } from '@/store';
 import { MonacoEditor } from './Panel';
 import { editorTheme } from '@/config';
