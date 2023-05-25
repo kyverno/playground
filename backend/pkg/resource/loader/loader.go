@@ -3,7 +3,6 @@ package loader
 import (
 	"fmt"
 
-	"github.com/Masterminds/semver/v3"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -11,9 +10,6 @@ import (
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 	"sigs.k8s.io/kubectl-validate/pkg/validatorfactory"
 	"sigs.k8s.io/yaml"
-
-	"github.com/kyverno/playground/backend/data"
-	"github.com/kyverno/playground/backend/pkg/cluster"
 )
 
 const mediaType = runtime.ContentTypeYAML
@@ -34,26 +30,6 @@ func New(clients ...openapi.Client) (Loader, error) {
 	return &loader{
 		factory: factory,
 	}, nil
-}
-
-func NewRemote(cluster cluster.Cluster) (Loader, error) {
-	return New(
-		cluster.KubeClient().Discovery().OpenAPIV3(),
-		openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
-	)
-}
-
-func NewLocal(kubeVersion string) (Loader, error) {
-	version, err := semver.NewVersion(kubeVersion)
-	if err != nil {
-		kubeVersion = "1.27"
-	} else {
-		kubeVersion = fmt.Sprint(version.Major(), ".", version.Minor())
-	}
-	return New(
-		openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
-		openapiclient.NewHardcodedBuiltins(kubeVersion),
-	)
 }
 
 func (l *loader) Load(document []byte) (unstructured.Unstructured, error) {

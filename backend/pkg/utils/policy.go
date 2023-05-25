@@ -17,13 +17,13 @@ func ToPolicyInterface(untyped unstructured.Unstructured) (kyvernov1.PolicyInter
 		if err != nil {
 			return nil, err
 		}
-		return &policy, nil
+		return policy, nil
 	} else if kind == "ClusterPolicy" {
 		policy, err := convert.To[kyvernov1.ClusterPolicy](untyped)
 		if err != nil {
 			return nil, err
 		}
-		return &policy, nil
+		return policy, nil
 	}
 	return nil, fmt.Errorf("invalid kind: %s", kind)
 }

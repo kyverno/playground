@@ -3,6 +3,8 @@ package loader_test
 import (
 	"testing"
 
+	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
+
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
 )
 
@@ -59,7 +61,7 @@ spec:
 )
 
 func Test_LoadResources(t *testing.T) {
-	l, err := loader.NewLocal("1.27")
+	l, err := loader.New(openapiclient.NewHardcodedBuiltins("1.27"))
 	if err != nil {
 		t.Fatal(err)
 	}
