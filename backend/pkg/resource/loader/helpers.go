@@ -16,7 +16,7 @@ func Load[T any](l Loader, content []byte) (*T, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &result, nil
+	return result, nil
 }
 
 func LoadResources(l Loader, content []byte) ([]unstructured.Unstructured, error) {
