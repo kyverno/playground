@@ -111,6 +111,7 @@ jobs:
         with:
           go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
+          cache: false
       - name: Build assets
         run: |
           set -e
