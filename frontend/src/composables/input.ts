@@ -9,6 +9,7 @@ export type Inputs = {
     resource?: string | null;
     context?: string | null;
     config?: string | null;
+  customResourceDefinitions?: string | null;
 }
 
 const persisted = useLocalStorage<string>('persist:list', '')

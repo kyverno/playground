@@ -80,6 +80,7 @@ const submit = (): void => {
       oldResources: inputs.oldResource,
       context: inputs.context,
       config: inputs.config,
+      customResourceDefinitions: inputs.customResourceDefinitions,
     }),
     method: "POST",
     mode: "cors",
