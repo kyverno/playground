@@ -1,4 +1,4 @@
-import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate } from "@/assets/templates";
+import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate, CustomResourceDefinitionsTemplate } from "@/assets/templates";
 import { reactive } from "vue";
 import { useState, Inputs } from "@/composables";
 
@@ -9,6 +9,7 @@ export const inputs = reactive({
     resource: ResourceTemplate,
     context: ContextTemplate,
     config: ConfigTemplate,
+    customResourceDefinitions: CustomResourceDefinitionsTemplate,
 })
 
 export const reset = () => {
@@ -18,6 +19,7 @@ export const reset = () => {
     inputs.resource = ResourceTemplate
     inputs.context = ContextTemplate
     inputs.config = ConfigTemplate
+    inputs.customResourceDefinitions = CustomResourceDefinitionsTemplate
 }
 
 export const setDefaults = () => {
@@ -27,6 +29,7 @@ export const setDefaults = () => {
         resource: ResourceTemplate,
         context: ContextTemplate,
         config: ConfigTemplate,
+        customResourceDefinitions: CustomResourceDefinitionsTemplate,
     })
 }
 
@@ -68,6 +71,11 @@ export const init = (values: Inputs) => {
         inputs.config = values.config;
     }
 
+    if (typeof values.customResourceDefinitions === 'string') {
+        state.customResourceDefinitions.value = values.customResourceDefinitions;
+        inputs.customResourceDefinitions = values.customResourceDefinitions;
+    }
+
     state.name.value = values.name || "";
 }
 
@@ -91,6 +99,10 @@ export const update = (values: Inputs) => {
     if (values.config) {
         inputs.config = values.config;
     }
+
+    if (values.customResourceDefinitions) {
+        inputs.customResourceDefinitions = values.customResourceDefinitions;
+    }
 }
 
 export const populate = () => {
@@ -99,17 +111,25 @@ export const populate = () => {
     if (state.policy.value) {
         inputs.policy = state.policy.value;
     }
+
     if (state.oldResource.value) {
         inputs.diffResources = true;
         inputs.oldResource = state.oldResource.value;
     }
+
     if (state.resource.value) {
         inputs.resource = state.resource.value;
     }
+
     if (state.context.value) {
         inputs.context = state.context.value;
     }
+
     if (state.config.value) {
         inputs.config = state.config.value;
+    }
+
+    if (state.customResourceDefinitions.value) {
+        inputs.customResourceDefinitions = state.customResourceDefinitions.value;
     }
 }

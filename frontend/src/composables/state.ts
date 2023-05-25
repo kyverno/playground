@@ -1,20 +1,22 @@
-import { ContextTemplate, PolicyTemplate, ResourceTemplate } from "@/assets/templates";
+import { ContextTemplate, PolicyTemplate, ResourceTemplate, ConfigTemplate, CustomResourceDefinitionsTemplate } from "@/assets/templates";
 import { useLocalStorage } from "@vueuse/core";
 
 export const loadedPolicy = useLocalStorage<string>('loaded:policy', PolicyTemplate);
 export const loadedContext = useLocalStorage<string>('loaded:context', ContextTemplate);
 export const loadedResource = useLocalStorage<string>('loaded:resource', ResourceTemplate);
 export const loadedOldResource = useLocalStorage<string>('loaded:resource:old', '');
-export const loadedConfig = useLocalStorage<string>('loaded:config', '');
+export const loadedConfig = useLocalStorage<string>('loaded:config', ConfigTemplate);
+export const loadedCustomResourceDefinitions = useLocalStorage<string>('loaded:crds', CustomResourceDefinitionsTemplate);
 export const loadedState = useLocalStorage<string>('loaded:state', '')
 
-export type State = { 
-    name: string; 
-    policy?: string, 
+export type State = {
+    name: string;
+    policy?: string;
     resource?: string;
     oldResource?: string;
     context?: string;
     config?: string;
+    customResourceDefinitions?: string;
 }
 
 const update = (values: State) => {
@@ -37,7 +39,11 @@ const update = (values: State) => {
     if (values.config) {
         loadedConfig.value = values.config;
     }
-    
+
+    if (values.customResourceDefinitions) {
+        loadedCustomResourceDefinitions.value = values.customResourceDefinitions;
+    }
+
     loadedState.value = values.name;
 }
 
@@ -47,6 +53,7 @@ export const useState = () => ({
     resource: loadedResource,
     oldResource: loadedOldResource,
     context: loadedContext,
+    customResourceDefinitions: loadedCustomResourceDefinitions,
     name: loadedState,
     update
 })

@@ -12,6 +12,7 @@ export type ProfileExport = {
         oldResources?: string;
         context?: string;
         config?: string;
+        customResourceDefinitions?: string;
     }[]
 }
 
@@ -26,11 +27,12 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
             oldResources: inputs.oldResource,
             context: inputs.context,
             config: inputs.config,
+            customResourceDefinitions: inputs.customResourceDefinitions,
         })
     }
 
     profiles.map(p => {
-        const { policy, resource, context, config, oldResource } = createInput(p)
+        const { policy, resource, context, config, oldResource, customResourceDefinitions } = createInput(p)
 
         exports.push({
             name: p,
@@ -39,6 +41,7 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
             oldResources: oldResource.value,
             context: context.value,
             config: config.value,
+            customResourceDefinitions: customResourceDefinitions.value,
         })
     })
 
@@ -72,6 +75,7 @@ export const importProfiles = async (content: string) => {
             oldResource: currentState?.oldResources,
             context: currentState?.context,
             config: currentState?.config,
+            customResourceDefinitions: currentState?.customResourceDefinitions,
         })
     }
 
@@ -87,6 +91,7 @@ export const importProfiles = async (content: string) => {
             oldResource: profile?.oldResources,
             context: profile.context,
             config: profile?.config,
+            customResourceDefinitions: profile?.customResourceDefinitions,
         })
     })
-} 
+}
