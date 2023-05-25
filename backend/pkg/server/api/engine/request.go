@@ -12,10 +12,11 @@ import (
 )
 
 type EngineRequest struct {
-	Policies  string `json:"policies"`
-	Resources string `json:"resources"`
-	Context   string `json:"context"`
-	Config    string `json:"config"`
+	Policies     string `json:"policies"`
+	Resources    string `json:"resources"`
+	OldResources string `json:"oldResources"`
+	Context      string `json:"context"`
+	Config       string `json:"config"`
 }
 
 func (r *EngineRequest) ParseContext() (*engine.Parameters, error) {
@@ -32,6 +33,10 @@ func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.Po
 
 func (r *EngineRequest) LoadResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
 	return loader.LoadResources(resourceLoader, []byte(r.Resources))
+}
+
+func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
+	return loader.LoadResources(resourceLoader, []byte(r.OldResources))
 }
 
 func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.ConfigMap, error) {
