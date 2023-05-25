@@ -43,6 +43,10 @@ func newEngineHandler(cluster cluster.Cluster, config APIConfiguration) (gin.Han
 		if err != nil {
 			return nil, err
 		}
+		oldResources, err := in.LoadOldResources(resourceLoader)
+		if err != nil {
+			return nil, err
+		}
 		config, err := in.LoadConfig(resourceLoader)
 		if err != nil {
 			return nil, err
@@ -51,7 +55,7 @@ func newEngineHandler(cluster cluster.Cluster, config APIConfiguration) (gin.Han
 		if err != nil {
 			return nil, err
 		}
-		results, err := processor.Run(c, policies, resources)
+		results, err := processor.Run(c, policies, resources, oldResources)
 		if err != nil {
 			return nil, err
 		}

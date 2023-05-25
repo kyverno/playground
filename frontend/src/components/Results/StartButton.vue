@@ -77,6 +77,7 @@ const submit = (): void => {
     body: JSON.stringify({
       policies: inputs.policy,
       resources: inputs.resource,
+      oldResources: inputs.oldResource,
       context: inputs.context,
       config: inputs.config,
     }),

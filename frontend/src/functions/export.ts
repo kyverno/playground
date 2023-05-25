@@ -9,6 +9,7 @@ export type ProfileExport = {
         name?: string;
         policies?: string;
         resources?: string;
+        oldResources?: string;
         context?: string;
         config?: string;
     }[]
@@ -22,18 +23,20 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
             name: 'current-state',
             policies: inputs.policy,
             resources: inputs.resource,
+            oldResources: inputs.oldResource,
             context: inputs.context,
             config: inputs.config,
         })
     }
 
     profiles.map(p => {
-        const { policy, resource, context, config } = createInput(p)
+        const { policy, resource, context, config, oldResource } = createInput(p)
 
         exports.push({
             name: p,
             policies: policy.value,
             resources: resource.value,
+            oldResources: oldResource.value,
             context: context.value,
             config: config.value,
         })
@@ -66,6 +69,7 @@ export const importProfiles = async (content: string) => {
         init({
             policy: currentState?.policies,
             resource: currentState?.resources,
+            oldResource: currentState?.oldResources,
             context: currentState?.context,
             config: currentState?.config,
         })
@@ -80,6 +84,7 @@ export const importProfiles = async (content: string) => {
         createInput(profile.name, {
             policy: profile.policies,
             resource: profile.resources,
+            oldResource: profile?.oldResources,
             context: profile.context,
             config: profile?.config,
         })

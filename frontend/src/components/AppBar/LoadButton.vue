@@ -85,6 +85,7 @@ const load = (name: string) => {
   init({
     policy: input.policy.value,
     resource: input.resource.value,
+    oldResource: input.oldResource.value,
     context: input.context.value,
     config: input.config.value,
     name: input.name,

@@ -21,7 +21,7 @@ export default defineComponent({
       },
     },
   },
-  emits: ["editorWillMount", "editorDidMount", "change", "update:value"],
+  emits: ["editorWillMount", "editorDidMount", "change", "update:value", "update:original"],
   setup(props) {
     const { width, height } = toRefs(props);
     const style = computed(() => {
@@ -64,13 +64,23 @@ export default defineComponent({
       // @event `change`
       const editor = this._getEditor();
       editor &&
-        editor.onDidChangeModelContent((event) => {
+        editor.onDidChangeModelContent(() => {
           const value = editor.getValue();
           if (this.value !== value) {
-            this.$emit("change", value, event);
             this.$emit("update:value", value);
           }
         });
+
+      // @event `change`
+      const orignalEditor = this._getOriginalEditor();
+      orignalEditor &&
+        orignalEditor.onDidChangeModelContent(() => {
+            const value = orignalEditor.getValue();
+            if (this.original !== value) {
+              this.$emit("update:original", value);
+            }
+          });
+
 
       this.$emit("editorDidMount", this.editor);
     },
@@ -92,13 +102,22 @@ export default defineComponent({
       if (!editor) return "";
       return editor.getValue();
     },
+    _getOriginal() {
+      let editor = this._getOriginalEditor();
+      if (!editor) return "";
+      return editor.getValue();
+    },
     _getEditor() {
       if (!this.editor) return null
-      return this.editor.modifiedEditor
+      return this.editor._modifiedEditor
     },
-    _setOriginal() {
-      const { original } = this.editor.getModel();
-      original.setValue(this.original);
+    _getOriginalEditor() {
+      if (!this.editor) return null
+      return this.editor._originalEditor
+    },
+    _setOriginal(value) {
+      let editor = this._getOriginalEditor();
+      if (editor) return editor.setValue(value);
     },
   },
   watch: {
@@ -112,7 +131,7 @@ export default defineComponent({
       this.value !== this._getValue() && this._setValue(this.value);
     },
     original() {
-      this._setOriginal();
+      this.original !== this._getOriginal() && this._setOriginal(this.original);
     },
     language() {
       if (!this.editor) return;
