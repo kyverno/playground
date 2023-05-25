@@ -9,7 +9,7 @@ export type Inputs = {
     resource?: string | null;
     context?: string | null;
     config?: string | null;
-  customResourceDefinitions?: string | null;
+    customResourceDefinitions?: string | null;
 }
 
 const persisted = useLocalStorage<string>('persist:list', '')
@@ -31,6 +31,7 @@ export const createInput = (name: string, defaults?: Inputs) => {
     const oldResource = useLocalStorage<string | null>(`persist:resource:old:${name}`, defaults?.oldResource || null)
     const context = useLocalStorage<string | null>(`persist:context:${name}`, defaults?.context || null)
     const config = useLocalStorage<string | null>(`persist:config:${name}`, defaults?.config || null)
+    const customResourceDefinitions = useLocalStorage<string | null>(`persist:crds:${name}`, defaults?.customResourceDefinitions || null)
 
     persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
 
@@ -40,6 +41,7 @@ export const createInput = (name: string, defaults?: Inputs) => {
         oldResource,
         context,
         config,
+        customResourceDefinitions,
         name
     }
 }
@@ -62,6 +64,9 @@ export const updateInput = (name: string, values: Inputs) => {
     if (input.config.value !== values.config) {
         input.config.value = values.config
     }
+    if (input.customResourceDefinitions.value !== values.customResourceDefinitions) {
+        input.customResourceDefinitions.value = values.customResourceDefinitions
+    }
 
     return input
 }
@@ -74,6 +79,7 @@ export const removeInput = (name: string) => {
     input.oldResource.value = null
     input.context.value = null
     input.config.value = null
+    input.customResourceDefinitions.value = null
 
     name = name.replaceAll(';;', ';').trim()
     const list = getPersisted()
@@ -88,6 +94,7 @@ export const useLocalInput = (name: string) => {
     const oldResource = useLocalStorage<string>(`ppersist:resource:old:${name}`, null)
     const context = useLocalStorage<string>(`persist:context:${name}`, null)
     const config = useLocalStorage<string | null>(`persist:config:${name}`, null)
+    const customResourceDefinitions = useLocalStorage<string | null>(`persist:crds:${name}`, null)
 
     const list = getPersisted()
 
@@ -100,6 +107,7 @@ export const useLocalInput = (name: string) => {
             oldResource,
             context,
             config,
+            customResourceDefinitions,
             name,
         },
         remove: () => {
@@ -107,8 +115,10 @@ export const useLocalInput = (name: string) => {
             resource.value = null
             oldResource.value = null
             context.value = null
+            config.value = null
+            customResourceDefinitions.value = null
 
-            persisted.value = list.value.filter(l => l !== name).join(';;')
+          persisted.value = list.value.filter(l => l !== name).join(';;')
         },
         list
     }
