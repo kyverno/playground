@@ -26,7 +26,7 @@
                   <RuleDetails :details="details" />
                 </v-card-text>
                 <v-card-text v-if="details.status !== 'pass'">{{ details.message }}</v-card-text>
-                <DiffEditor :height="600" language="yaml" :original="details.originalReosurce" :value="details.patchedResource" :theme="editorTheme" :options="options" />
+                <DiffEditor id="mutate" :height="600" language="yaml" :original="details.originalReosurce" :model-value="details.patchedResource" :theme="editorTheme" :options="options" />
               </template>
             </v-card>
           </v-col>
@@ -42,7 +42,8 @@ import { useRoute } from "vue-router";
 import { useSessionStorage } from "@vueuse/core";
 import { RuleStatus } from "@/types";
 import { layoutTheme, editorTheme } from "@/config";
-import { DiffEditor, RuleDetails } from "@/components/Details";
+import { RuleDetails } from "@/components/Details";
+import { DiffEditor } from "@/components/Panel";
 import { AppBar } from "@/components/AppBar";
 
 const route = useRoute();

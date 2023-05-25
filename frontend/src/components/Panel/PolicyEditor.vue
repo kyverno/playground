@@ -1,13 +1,15 @@
 <template>
-<div style="height: 100%; position: relative;">
+<div style="position: relative;">
   <MonacoEditor
     language="yaml"
     :theme="editorTheme"
-    :value="props.modelValue"
-    @update:value="(event: string) => emit('update:modelValue', event)"
+    :modelValue="props.modelValue"
+    @update:modelValue="(event: string) => emit('update:modelValue', event)"
     :options="options"
-    ref="monaco"
+    @editorDidMount="monacoSetup"
     :uri="uri"
+    id="policy"
+    :height="752"
   />
   <v-card class="config" theme="dark" color="black" v-if="false">
     <v-card-text class="my-0 py-1">
@@ -30,34 +32,22 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-const monaco = ref<typeof MonacoEditor | null>(null);
 const uri = Uri.parse("policy.yaml");
-
-watch(props, (props) => {
-  if (!monaco.value) return;
-
-  // @ts-ignore
-  if (props.modelValue !== monaco.value._getValue()) {
-    // @ts-ignore
-    monaco.value._setValue(props.modelValue);
-  }
-});
-
-watch(loadedPolicy, () => {
-  if (!monaco.value) return
-
-  const edit: editor.ICodeEditor = monaco.value._getEditor();
-
-  edit.setScrollPosition({scrollTop: 0});
-})
 
 const autocompleteOnEnter = ref(true);
 const eventRegistered = ref(false);
 
-watch(monaco, (e: any) => {
-  if (!e) return;
+const options: editor.IStandaloneEditorConstructionOptions = {
+  wordWrap: 'off',
+  colorDecorators: true,
+  lineHeight: 24,
+  tabSize: 2,
+}
 
-  const edit: editor.ICodeEditor = e._getEditor();
+const monacoSetup = (edit: editor.IStandaloneCodeEditor) => {
+  watch(loadedPolicy, () => {
+    edit.setScrollPosition({scrollTop: 0});
+  })
 
   if (eventRegistered.value) return;
 
@@ -73,12 +63,6 @@ watch(monaco, (e: any) => {
   });
 
   eventRegistered.value = true
-});
-
-const options = {
-  colorDecorators: true,
-  lineHeight: 24,
-  tabSize: 2,
 };
 </script>
 
