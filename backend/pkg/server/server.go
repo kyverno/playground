@@ -19,7 +19,7 @@ type Shutdown = func(context.Context) error
 
 type Server interface {
 	AddUIRoutes() error
-	AddAPIRoutes(cluster.Cluster, string, string) error
+	AddAPIRoutes(cluster.Cluster, string, ...string) error
 	Run(context.Context, string, int) Shutdown
 }
 
@@ -44,8 +44,8 @@ func New(enableLogger bool, enableCors bool) (Server, error) {
 	return server{router}, nil
 }
 
-func (s server) AddAPIRoutes(cluster cluster.Cluster, sponsor string, crds string) error {
-	return api.AddRoutes(s.Group(apiPrefix), cluster, sponsor, crds)
+func (s server) AddAPIRoutes(cluster cluster.Cluster, sponsor string, builtInCrds ...string) error {
+	return api.AddRoutes(s.Group(apiPrefix), cluster, sponsor, builtInCrds...)
 }
 
 func (s server) AddUIRoutes() error {

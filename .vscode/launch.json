@@ -9,6 +9,7 @@
             "program": "${workspaceFolder}/backend",
             "args": [
                 "--gin-log",
+                "--builtin-crds=cert-manager",
             ],
         },
         {
@@ -20,7 +21,7 @@
             "args": [
                 "--gin-log",
                 "--cluster",
-                "--crds-folder=../crds",
+                "--builtin-crds=cert-manager",
             ],
         }
     ]

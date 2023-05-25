@@ -34,9 +34,9 @@ type ginFlags struct {
 }
 
 type configFlags struct {
-	cluster bool
-	sponsor string
-	crds    string
+	cluster     bool
+	sponsor     string
+	builtInCrds []string
 }
 
 type clusterFlags struct {
@@ -58,7 +58,7 @@ func NewRootCommand() *cobra.Command {
 	// config flags
 	res.Flags().StringVar(&command.configFlags.sponsor, "sponsor", "", "sponsor text")
 	res.Flags().BoolVar(&command.configFlags.cluster, "cluster", false, "enable cluster connected mode")
-	res.Flags().StringVar(&command.configFlags.crds, "crds-folder", "", "folder containing CRDs")
+	res.Flags().StringSliceVar(&command.configFlags.builtInCrds, "builtin-crds", nil, "list of enabled builtin custom resource definitions")
 	// cluster flags
 	clientcmd.BindOverrideFlags(&command.clusterFlags.kubeConfigOverrides, res.Flags(), clientcmd.RecommendedConfigOverrideFlags("kube-"))
 	return res
@@ -89,12 +89,12 @@ func (c *commandFlags) Run(_ *cobra.Command, args []string) error {
 			return err
 		}
 		// register API routes
-		if err := server.AddAPIRoutes(cluster, c.configFlags.sponsor, c.configFlags.crds); err != nil {
+		if err := server.AddAPIRoutes(cluster, c.configFlags.sponsor, c.configFlags.builtInCrds...); err != nil {
 			return err
 		}
 	} else {
 		// register API routes
-		if err := server.AddAPIRoutes(nil, c.configFlags.sponsor, c.configFlags.crds); err != nil {
+		if err := server.AddAPIRoutes(nil, c.configFlags.sponsor, c.configFlags.builtInCrds...); err != nil {
 			return err
 		}
 	}

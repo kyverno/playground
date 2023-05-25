@@ -6,8 +6,8 @@ import (
 	"github.com/kyverno/playground/backend/pkg/cluster"
 )
 
-func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster, crds string) error {
-	handler, err := newEngineHandler(cluster, crds)
+func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster, builtInCrds ...string) error {
+	handler, err := newEngineHandler(cluster, builtInCrds...)
 	if err != nil {
 		return err
 	}
