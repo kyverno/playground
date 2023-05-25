@@ -11,7 +11,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/context/resolvers"
 	"github.com/loopfz/gadgeto/tonic"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/client-go/openapi"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
 	"github.com/kyverno/playground/backend/data"
@@ -27,7 +26,7 @@ func newEngineHandler(cluster cluster.Cluster, config APIConfiguration) (gin.Han
 		return nil, err
 	}
 	return tonic.Handler(func(c *gin.Context, in *EngineRequest) (*EngineResponse, error) {
-		params, err := in.ParseContext()
+		params, err := in.LoadParameters()
 		if err != nil {
 			return nil, err
 		}
@@ -35,7 +34,7 @@ func newEngineHandler(cluster cluster.Cluster, config APIConfiguration) (gin.Han
 		if err != nil {
 			return nil, err
 		}
-		resourceLoader, err := resourceLoader(params.Kubernetes.Version, config)
+		resourceLoader, err := in.ResourceLoader(params.Kubernetes.Version, config)
 		if err != nil {
 			return nil, err
 		}
@@ -79,24 +78,6 @@ func parseKubeVersion(kubeVersion string) (string, error) {
 		return "", err
 	}
 	return fmt.Sprint(version.Major(), ".", version.Minor()), nil
-}
-
-func resourceLoader(kubeVersion string, config APIConfiguration) (loader.Loader, error) {
-	kubeVersion, err := parseKubeVersion(kubeVersion)
-	if err != nil {
-		return nil, err
-	}
-	clients := []openapi.Client{
-		openapiclient.NewHardcodedBuiltins(kubeVersion),
-	}
-	for _, crd := range config.LocalCrds {
-		clients = append(clients, openapiclient.NewLocalCRDFiles(nil, crd))
-	}
-	for _, crd := range config.BuiltInCrds {
-		fs, path := data.BuiltInCrds(crd)
-		clients = append(clients, openapiclient.NewLocalCRDFiles(fs, path))
-	}
-	return loader.New(clients...)
 }
 
 func getProcessor(params *engine.Parameters, config *corev1.ConfigMap, cluster cluster.Cluster) (*engine.Processor, error) {
