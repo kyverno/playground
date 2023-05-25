@@ -4,8 +4,7 @@
         <v-card flat class="px-4 pt-4">
             <v-toolbar color="primary" density="compact" title="Kyverno Configuration"></v-toolbar>
             <v-card-text class="px-0 py-0">
-                <MonacoEditor :value="inputs.config" @update:value="(event: string) => inputs.config = event"
-                    height="calc(100vh - 250px)" :theme="editorTheme" language="yaml" />
+                <MonacoEditor id="config" v-model="inputs.config" height="calc(100vh - 278px)" :theme="editorTheme" language="yaml" />
             </v-card-text>
             <v-card-actions class="px-0 pt-0" style="min-height: 36px!important;">
                 <v-btn variant="flat" class="rounded-0 mx-0" :width="width" color="warning"
@@ -17,11 +16,11 @@
                     :tooltip="false" />
                 <ClusterConfigButton v-if="config.cluster" />
             </v-card-actions>
+            <CustomResourceDefinitions class="mt-2" />
         </v-card>
 
         <template v-slot:append>
             <div class="pa-2">
-                <CustomResourceDefinitions />
                 <v-btn flat color="primary" block @click="() => emit('update:modelValue', false)">Close</v-btn>
             </div>
         </template>

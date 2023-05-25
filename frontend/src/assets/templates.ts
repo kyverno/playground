@@ -85,4 +85,4 @@ data:
     [ServiceMonitor,kyverno,kyverno-svc-service-monitor]
     [Pod,kyverno,kyverno-test]`
 
-export const CustomResourceDefinitionsTemplate = "foo: bar"
+export const CustomResourceDefinitionsTemplate = ""

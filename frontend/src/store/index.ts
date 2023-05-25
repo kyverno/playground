@@ -99,6 +99,10 @@ export const update = (values: Inputs) => {
     if (values.config) {
         inputs.config = values.config;
     }
+
+    if (values.customResourceDefinitions) {
+        inputs.customResourceDefinitions = values.customResourceDefinitions;
+    }
 }
 
 export const populate = () => {
@@ -107,19 +111,24 @@ export const populate = () => {
     if (state.policy.value) {
         inputs.policy = state.policy.value;
     }
+
     if (state.oldResource.value) {
         inputs.diffResources = true;
         inputs.oldResource = state.oldResource.value;
     }
+
     if (state.resource.value) {
         inputs.resource = state.resource.value;
     }
+
     if (state.context.value) {
         inputs.context = state.context.value;
     }
+
     if (state.config.value) {
         inputs.config = state.config.value;
     }
+
     if (state.customResourceDefinitions.value) {
         inputs.customResourceDefinitions = state.customResourceDefinitions.value;
     }

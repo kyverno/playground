@@ -6,10 +6,7 @@
       </v-btn>
     </template>
     <v-card title="Custom Resource Definitions">
-      <v-card-text class="px-0 py-0">
-        <MonacoEditor language="yaml" :theme="editorTheme" :value="content"
-          @update:value="(event: string) => content = event" :height="200" :options="options" />
-      </v-card-text>
+      <MonacoEditor id="crds" language="yaml" :theme="editorTheme" v-model="content" :height="200" :options="options" />
       <v-card-actions>
         <v-btn @click="close">Close</v-btn>
         <v-spacer />
@@ -20,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { editorTheme } from "@/config"
 import { inputs } from "@/store";
 import { MonacoEditor } from '.';
@@ -28,6 +25,12 @@ import { editor } from "monaco-editor/esm/vs/editor/editor.api";
 
 const dialog = ref<boolean>(false);
 const content = ref<string>(inputs.customResourceDefinitions);
+
+watch(dialog, (open) => {
+  if (!open) return;
+
+  content.value = inputs.customResourceDefinitions;
+})
 
 const options: editor.IStandaloneEditorConstructionOptions = {
   colorDecorators: true,

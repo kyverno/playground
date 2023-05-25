@@ -5,8 +5,8 @@ export const loadedPolicy = useLocalStorage<string>('loaded:policy', PolicyTempl
 export const loadedContext = useLocalStorage<string>('loaded:context', ContextTemplate);
 export const loadedResource = useLocalStorage<string>('loaded:resource', ResourceTemplate);
 export const loadedOldResource = useLocalStorage<string>('loaded:resource:old', '');
-export const loadedConfig = useLocalStorage<string>('loaded:config', '');
-export const loadedCustomResourceDefinitions = useLocalStorage<string>('loaded:crds', '');
+export const loadedConfig = useLocalStorage<string>('loaded:config', ConfigTemplate);
+export const loadedCustomResourceDefinitions = useLocalStorage<string>('loaded:crds', CustomResourceDefinitionsTemplate);
 export const loadedState = useLocalStorage<string>('loaded:state', '')
 
 export type State = {
