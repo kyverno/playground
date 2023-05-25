@@ -17,7 +17,7 @@ import (
 type EngineRequest struct {
 	Policies                  string `json:"policies"`
 	Resources                 string `json:"resources"`
-	OldResources string `json:"oldResources"`
+	OldResources              string `json:"oldResources"`
 	Context                   string `json:"context"`
 	Config                    string `json:"config"`
 	CustomResourceDefinitions string `json:"customResourceDefinitions"`
