@@ -7,7 +7,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/openapi"
-	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 	"sigs.k8s.io/kubectl-validate/pkg/validatorfactory"
 	"sigs.k8s.io/yaml"
 )
@@ -22,8 +21,8 @@ type loader struct {
 	factory *validatorfactory.ValidatorFactory
 }
 
-func New(clients ...openapi.Client) (Loader, error) {
-	factory, err := validatorfactory.New(openapiclient.NewComposite(clients...))
+func New(client openapi.Client) (Loader, error) {
+	factory, err := validatorfactory.New(client)
 	if err != nil {
 		return nil, err
 	}

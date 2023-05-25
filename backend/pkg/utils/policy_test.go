@@ -59,8 +59,10 @@ func Test_LoadPolicies(t *testing.T) {
 			bytes, err := os.ReadFile(tt.policies)
 			require.NoError(t, err)
 			loader, err := loader.New(
-				openapiclient.NewHardcodedBuiltins("1.27"),
-				openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
+				openapiclient.NewComposite(
+					openapiclient.NewHardcodedBuiltins("1.27"),
+					openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
+				),
 			)
 			require.NoError(t, err)
 			if res, err := utils.LoadPolicies(loader, bytes); (err != nil) != tt.wantErr {
@@ -91,8 +93,10 @@ func TestToPolicyInterface(t *testing.T) {
 			bytes, err := os.ReadFile(tt.file)
 			require.NoError(t, err)
 			loader, err := loader.New(
-				openapiclient.NewHardcodedBuiltins("1.27"),
-				openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
+				openapiclient.NewComposite(
+					openapiclient.NewHardcodedBuiltins("1.27"),
+					openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
+				),
 			)
 			require.NoError(t, err)
 			resource, err := loader.Load(bytes)

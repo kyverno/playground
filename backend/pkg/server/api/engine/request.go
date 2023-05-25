@@ -68,5 +68,5 @@ func (r *EngineRequest) ResourceLoader(kubeVersion string, config APIConfigurati
 		fs, path := data.BuiltInCrds(crd)
 		clients = append(clients, openapiclient.NewLocalCRDFiles(fs, path))
 	}
-	return loader.New(clients...)
+	return loader.New(openapiclient.NewComposite(clients...))
 }
