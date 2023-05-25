@@ -33,7 +33,7 @@ type Processor struct {
 	cluster       bool
 }
 
-func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterface, resources []unstructured.Unstructured) (*Results, error) {
+func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterface, resources []unstructured.Unstructured, oldResources []unstructured.Unstructured) (*Results, error) {
 	if !p.cluster {
 		if err := validateParams(p.params, policies); err != nil {
 			return nil, err
@@ -42,10 +42,21 @@ func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterfac
 
 	response := &Results{}
 
-	for _, resource := range resources {
+	for i, resource := range resources {
+		oldResource := unstructured.Unstructured{}
+		// @TODO does this make sense or is needed?
+		if p.params.Context.Operation == kyvernov1.Delete {
+			oldResource = resource
+		}
+
+		// @TODO should we also check for NS / kind / name or enforce the same order as resources?
+		if len(oldResources) > i && p.params.Context.Operation == kyvernov1.Update {
+			oldResource = oldResources[i]
+		}
+
 		// mutate
 		for _, policy := range policies {
-			result, res, err := p.mutate(ctx, policy, resource)
+			result, res, err := p.mutate(ctx, policy, resource, oldResource)
 			if err != nil {
 				return nil, err
 			}
@@ -67,7 +78,7 @@ func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterfac
 
 		// validate
 		for _, policy := range policies {
-			result, err := p.validate(ctx, policy, resource)
+			result, err := p.validate(ctx, policy, resource, oldResource)
 			if err != nil {
 				return nil, err
 			}
@@ -77,7 +88,7 @@ func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterfac
 
 		// generation
 		for _, policy := range policies {
-			result, err := p.generate(ctx, policy, resource)
+			result, err := p.generate(ctx, policy, resource, oldResource)
 			if err != nil {
 				return nil, err
 			}
@@ -89,13 +100,15 @@ func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterfac
 	return response, nil
 }
 
-func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
+func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured, oldResource unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
 	policyContext, err := p.newPolicyContext(policy, resource)
 	if err != nil {
 		return Response{}, resource, err
 	}
 
-	response := p.engine.Mutate(ctx, policyContext)
+	_ = policyContext.JSONContext().AddOldResource(oldResource.Object)
+
+	response := p.engine.Mutate(ctx, policyContext.WithOldResource(oldResource))
 
 	return ConvertResponse(response), response.PatchedResource, nil
 }
@@ -142,22 +155,28 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 	return ConvertResponse(response), response.PatchedResource, nil
 }
 
-func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, error) {
+func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured, oldResource unstructured.Unstructured) (Response, error) {
 	policyContext, err := p.newPolicyContext(policy, resource)
 	if err != nil {
 		return Response{}, err
 	}
 
-	response := p.engine.Validate(ctx, policyContext)
+	_ = policyContext.JSONContext().AddOldResource(oldResource.Object)
+
+	response := p.engine.Validate(ctx, policyContext.WithOldResource(oldResource))
 
 	return ConvertResponse(response), nil
 }
 
-func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, error) {
+func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured, oldResource unstructured.Unstructured) (Response, error) {
 	policyContext, err := p.newPolicyContext(policy, resource)
 	if err != nil {
 		return Response{}, err
 	}
+
+	_ = policyContext.JSONContext().AddOldResource(oldResource.Object)
+
+	policyContext = policyContext.WithOldResource(oldResource)
 
 	response := p.engine.Generate(ctx, policyContext)
 	if len(response.PolicyResponse.Rules) == 0 {

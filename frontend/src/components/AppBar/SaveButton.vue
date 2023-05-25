@@ -94,6 +94,7 @@ const persist = (name: string) => {
   state.update({
     policy: inputs.policy,
     resource: inputs.resource,
+    oldResource: inputs.oldResource,
     context: inputs.context,
     config: inputs.config,
     name: persistedInput.name,

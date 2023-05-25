@@ -13,7 +13,7 @@
       </template>
 
       <template #mobile-actions>
-        <MobileMenu v-model:policy="inputs.policy" v-model:resource="inputs.resource" v-model:context="inputs.context" />
+        <MobileMenu />
       </template>
 
       <template #desktop-append>
@@ -25,12 +25,12 @@
       <v-container fluid class="pr-lg-4 pr-md-4 pr-sm-8 pr-8">
         <OnboardingAlert />
         <v-row>
-          <v-col :md="7" :sm="12">
-            <PolicyPanel v-model="inputs.policy" />
+          <v-col :md="6" :sm="12">
+            <PolicyPanel />
           </v-col>
-          <v-col :md="5" :sm="12">
-            <ContextPanel v-model="inputs.context" @collapse="(v: boolean) => resourceHeight = v ? 691 : 441" />
-            <ResourcePanel v-model="inputs.resource" :height="resourceHeight" />
+          <v-col :md="6" :sm="12">
+            <ContextPanel @collapse="(v: boolean) => resourceHeight = v ? 691 : 441" />
+            <ResourcePanel :height="resourceHeight" />
           </v-col>
         </v-row>
         <HelpButton />
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watchEffect, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import 'v-onboarding/dist/style.css'
 
@@ -138,6 +138,20 @@ onMounted(() => {
 const { finish, start, onboarding, steps, wrapper } = useOnboarding(drawer)
 
 const resourceHeight = ref(441)
+
+
+watch(() => inputs.diffResources, (diff: boolean) => {
+    if (!diff) {
+        inputs.oldResource = ''
+        return
+    }
+
+    if (inputs.oldResource) {
+        return
+    }
+
+    inputs.oldResource = inputs.resource;
+})
 </script>
 
 <style scoped>

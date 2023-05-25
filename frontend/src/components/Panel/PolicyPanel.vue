@@ -3,7 +3,7 @@
   <EditorToolbar
     id="policy-panel"
     title="Policies"
-    v-model="policy"
+    v-model="inputs.policy"
     :restore-value="state.policy.value"
     :info="options.panels.policyInfo"
   >
@@ -11,33 +11,18 @@
       <ClusterPolicyButton />
     </template>
   </EditorToolbar>
-  <PolicyEditor v-model="policy" />
+  <PolicyEditor v-model="inputs.policy" />
 </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { options } from '@/config';
 import { useState } from '@/composables';
 import PolicyEditor from './PolicyEditor.vue';
 import EditorToolbar from './EditorToolbar.vue';
 import { config } from '@/composables/api';
 import ClusterPolicyButton from './ClusterPolicyButton.vue';
+import { inputs } from '@/store';
 
 const state = useState()
-
-const props = defineProps({
-    modelValue: { type: String, default: '' }
-})
-
-const emit = defineEmits(["update:modelValue", "collapse"])
-
-const policy = computed({
-    get() {
-        return props.modelValue
-    },
-    set(value: string) {
-        emit('update:modelValue', value)
-    }
-})
 </script>
