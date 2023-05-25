@@ -9,13 +9,14 @@ import (
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/kyverno/pkg/engine/context/resolvers"
+	"github.com/loopfz/gadgeto/tonic"
+	corev1 "k8s.io/api/core/v1"
+	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
+
 	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
-	"github.com/loopfz/gadgeto/tonic"
-	corev1 "k8s.io/api/core/v1"
-	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 )
 
 func newEngineHandler(cluster cluster.Cluster, crds string) (gin.HandlerFunc, error) {
