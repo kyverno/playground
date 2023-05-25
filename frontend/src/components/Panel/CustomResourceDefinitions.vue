@@ -7,13 +7,13 @@
     </template>
     <v-card title="Custom Resource Definitions">
       <v-card-text class="px-0 py-0">
-        <MonacoEditor language="yaml" :theme="editorTheme" :value="inputs.customResourceDefinitions"
-          @update:value="(event: string) => inputs.customResourceDefinitions = event" :height="200" :options="options" />
+        <MonacoEditor language="yaml" :theme="editorTheme" :value="content"
+          @update:value="(event: string) => content = event" :height="200" :options="options" />
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="dialog = false">Close</v-btn>
+        <v-btn @click="close">Close</v-btn>
         <v-spacer />
-        <v-btn @click="dialog = false">Ok</v-btn>
+        <v-btn @click="save">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -27,6 +27,7 @@ import { MonacoEditor } from '.';
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
 
 const dialog = ref<boolean>(false);
+const content = ref<string>(inputs.customResourceDefinitions);
 
 const options: editor.IStandaloneEditorConstructionOptions = {
   colorDecorators: true,
@@ -34,4 +35,13 @@ const options: editor.IStandaloneEditorConstructionOptions = {
   tabSize: 2,
   minimap: { enabled: false },
 };
+
+const close = () => {
+  dialog.value = false
+}
+
+const save = () => {
+  inputs.customResourceDefinitions = content.value
+  close()
+}
 </script>
