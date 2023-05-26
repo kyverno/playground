@@ -1,5 +1,5 @@
 <template>
-    <VOnboardingWrapper ref="wrapper" :steps="steps" @finish="emit('finish')">
+  <VOnboardingWrapper ref="wrapper" :steps="steps" @finish="emit('finish')">
     <template #default="{ previous, next, step, isFirst, isLast }">
       <VOnboardingStep>
         <v-card v-if="step && step.content" :title="step.content.title" :min-width="350" :color="layoutTheme === 'dark' ? 'grey-darken-2' : 'grey-lighten-4'">
@@ -14,17 +14,17 @@
         </v-card>
       </VOnboardingStep>
     </template>
-    </VOnboardingWrapper>
+  </VOnboardingWrapper>
 </template>
 
 <script setup lang="ts">
-import { layoutTheme } from '@/config';
+import { layoutTheme } from '@/config'
 import { VOnboardingWrapper, VOnboardingStep } from 'v-onboarding'
-import { watch, ref } from 'vue';
+import { watch, ref } from 'vue'
 
 defineProps({
-    close: { type: Function },
-    steps: { type: Array }
+  close: { type: Function },
+  steps: { type: Array }
 })
 
 const wrapper = ref(null)

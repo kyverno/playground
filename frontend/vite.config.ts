@@ -10,15 +10,15 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   base: '',
   plugins: [
-    vue({ 
+    vue({
       template: { transformAssetUrls }
     }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
     vuetify({
-      autoImport: true,
-    }),
+      autoImport: true
+    })
   ],
-  define: { 
+  define: {
     'process.env': {},
     APP_VERSION: JSON.stringify(process.env.APP_VERSION || '')
   },
@@ -26,17 +26,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
-    extensions: [
-      '.js',
-      '.json',
-      '.jsx',
-      '.mjs',
-      '.ts',
-      '.tsx',
-      '.vue',
-    ],
+    extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue']
   },
   server: {
-    port: 3000,
-  },
+    port: 3000
+  }
 })

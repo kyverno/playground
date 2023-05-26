@@ -1,1 +1,1 @@
-declare module "monaco-editor-vue3";
+declare module 'monaco-editor-vue3'

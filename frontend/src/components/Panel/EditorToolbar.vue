@@ -7,8 +7,7 @@
         v-if="restoreValue"
         :disabled="restoreValue === modelValue"
         @click="() => emit('update:modelValue', restoreValue)"
-        :title="`Restore ${title}`"
-      />
+        :title="`Restore ${title}`" />
     </template>
     <v-toolbar-title :class="restoreValue ? 'ml-0' : ''">
       {{ title }}
@@ -29,16 +28,16 @@
 </template>
 
 <script setup lang="ts">
-import CopyButton from "./CopyButton.vue";
-import UploadButton from "./UploadButton.vue";
-import URLButton from "./URLButton.vue";
+import CopyButton from './CopyButton.vue'
+import UploadButton from './UploadButton.vue'
+import URLButton from './URLButton.vue'
 
 defineProps({
-  restoreValue: { type: String, default: "" },
-  modelValue: { type: String, default: "" },
+  restoreValue: { type: String, default: '' },
+  modelValue: { type: String, default: '' },
   title: { type: String, required: true },
-  info: { type: String },
-});
+  info: { type: String }
+})
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue'])
 </script>

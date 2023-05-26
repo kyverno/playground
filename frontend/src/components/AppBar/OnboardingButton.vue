@@ -3,6 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import { btnColor } from '@/config';
-
+import { btnColor } from '@/config'
 </script>

@@ -8,9 +8,9 @@
         :block="block"
         title="create a shareable URL with the current input"
         :class="btnClass"
-        id="share-button"
-        >Share</v-btn
-      >
+        id="share-button">
+        Share
+      </v-btn>
     </template>
 
     <v-card title="Share Policy">
@@ -21,21 +21,9 @@
       <v-card-actions>
         <v-btn @click="dialog = false">Close</v-btn>
         <v-spacer />
-        <v-tooltip
-          :model-value="copied"
-          location="top"
-          text="Copied"
-          :open-on-hover="false"
-        >
+        <v-tooltip :model-value="copied" location="top" text="Copied" :open-on-hover="false">
           <template v-slot:activator="{ props }">
-            <v-btn
-              variant="tonal"
-              :color="btnColor"
-              @click="copy(url)"
-              :disabled="!isSupported"
-              v-bind="props"
-              >Copy URL to Clipboard</v-btn
-            >
+            <v-btn variant="tonal" :color="btnColor" @click="copy(url)" :disabled="!isSupported" v-bind="props">Copy URL to Clipboard</v-btn>
           </template>
         </v-tooltip>
       </v-card-actions>
@@ -43,34 +31,34 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useClipboard } from "@vueuse/core";
-import { PropType } from "vue";
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useClipboard } from '@vueuse/core'
+import { PropType } from 'vue'
 import { btnColor } from '@/config'
-import { generateContent } from "@/functions/share";
+import { generateContent } from '@/functions/share'
 
 defineProps({
-  btnClass: { type: String, default: "" },
-  variant: { type: String as PropType<"outlined" | "text"> },
-  block: { type: Boolean },
-});
+  btnClass: { type: String, default: '' },
+  variant: { type: String as PropType<'outlined' | 'text'> },
+  block: { type: Boolean }
+})
 
-const dialog = ref<boolean>(false);
-const loading = ref<boolean>(false);
-const url = ref<string>("");
+const dialog = ref<boolean>(false)
+const loading = ref<boolean>(false)
+const url = ref<string>('')
 
-const router = useRouter();
+const router = useRouter()
 
-const { copy, copied, isSupported } = useClipboard({ source: url });
+const { copy, copied, isSupported } = useClipboard({ source: url })
 
 const share = () => {
-  loading.value = true;
-  
+  loading.value = true
+
   const content = generateContent()
 
-  url.value = `${window.location.origin}/${router.resolve({ name: "home", query: { content } }).href}`
-  dialog.value = true;
-  loading.value = false;
-};
+  url.value = `${window.location.origin}/${router.resolve({ name: 'home', query: { content } }).href}`
+  dialog.value = true
+  loading.value = false
+}
 </script>

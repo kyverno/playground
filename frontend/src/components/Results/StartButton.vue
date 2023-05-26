@@ -1,77 +1,65 @@
 <template>
-  <v-btn
-    id="start-btn"
-    size="large"
-    :prepend-icon="icon"
-    :color="color"
-    :loading="loading"
-    class="play"
-    rounded
-    @click="submit"
-    >Start</v-btn
-  >
+  <v-btn id="start-btn" size="large" :prepend-icon="icon" :color="color" :loading="loading" class="play" rounded @click="submit">Start</v-btn>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { MarkerSeverity, editor } from "monaco-editor";
-import { EngineResponse } from "@/types";
-import { resolveAPI } from "@/utils";
-import { inputs } from "@/store";
+import { ref, watch } from 'vue'
+import { MarkerSeverity, editor } from 'monaco-editor'
+import { EngineResponse } from '@/types'
+import { resolveAPI } from '@/utils'
+import { inputs } from '@/store'
 
 const props = defineProps({
-  errorState: { type: Boolean, default: false },
-});
+  errorState: { type: Boolean, default: false }
+})
 
-const emit = defineEmits(["on-response", "on-error"]);
+const emit = defineEmits(['on-response', 'on-error'])
 
-const loading = ref<boolean>(false);
-const color = ref<string | undefined>("primary");
-const icon = ref<string | undefined>("mdi-play");
+const loading = ref<boolean>(false)
+const color = ref<string | undefined>('primary')
+const icon = ref<string | undefined>('mdi-play')
 
 watch(props, ({ errorState }: { errorState: boolean }) => {
   if (errorState) {
-    color.value = "error";
-    icon.value = "mdi-alert-circle-outline";
-    return;
+    color.value = 'error'
+    icon.value = 'mdi-alert-circle-outline'
+    return
   }
 
-  color.value = "primary";
-  icon.value = "mdi-play";
-});
+  color.value = 'primary'
+  icon.value = 'mdi-play'
+})
 
-const api: string = resolveAPI();
+const api: string = resolveAPI()
 
 const handleEditorErrors = () => {
   const markers = editor
-    .getModelMarkers({ owner: "yaml" })
+    .getModelMarkers({ owner: 'yaml' })
     .filter((m) => m.severity == MarkerSeverity.Error)
-    .map(
-      (m) => `${m.resource.path} L${m.startColumn}:${m.startLineNumber}: ${m.message}`
-    );
+    .map((m) => `${m.resource.path} L${m.startColumn}:${m.startLineNumber}: ${m.message}`)
 
-  return markers;
-};
+  return markers
+}
 
 const submit = (): void => {
-  const errors = handleEditorErrors();
+  const errors = handleEditorErrors()
   if (errors.length) {
     // emit("on-error", new Error(`<b>YAML validation failed, check the errors below.</b><br />${errors.join('<br />')}`));
-    emit("on-error", new Error(`YAML validation failed, please check your manifests.`));
-    return;
+    emit('on-error', new Error(`YAML validation failed, please check your manifests.`))
+    return
   }
 
   if (!inputs.policy.trim()) {
-    emit("on-error", new Error("Policy is required"));
-    return;
+    emit('on-error', new Error('Policy is required'))
+    return
   }
 
   if (!inputs.resource.trim()) {
-    emit("on-error", new Error("Resource is required"));
-    return;
+    emit('on-error', new Error('Resource is required'))
+    return
   }
 
-  loading.value = true;
+  loading.value = true
 
   fetch(`${api}/engine`, {
     body: JSON.stringify({
@@ -80,31 +68,31 @@ const submit = (): void => {
       oldResources: inputs.oldResource,
       context: inputs.context,
       config: inputs.config,
-      customResourceDefinitions: inputs.customResourceDefinitions,
+      customResourceDefinitions: inputs.customResourceDefinitions
     }),
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
     headers: {
-      "Content-Type": "application/json",
-    },
+      'Content-Type': 'application/json'
+    }
   })
     .then((resp) => {
       if (resp.status > 300) {
-        resp.text().then((err) => emit("on-error", new Error(`ServerError: ${err}`)));
-        return;
+        resp.text().then((err) => emit('on-error', new Error(`ServerError: ${err}`)))
+        return
       }
 
       return resp
         .json()
         .catch(() => ({}))
         .then((content: EngineResponse) => {
-          emit("on-response", content);
-        });
+          emit('on-response', content)
+        })
     })
-    .catch((err) => emit("on-error", err))
-    .finally(() => (loading.value = false));
-};
+    .catch((err) => emit('on-error', err))
+    .finally(() => (loading.value = false))
+}
 </script>
 
 <style scoped>

@@ -3,61 +3,61 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, computed, onMounted, reactive } from 'vue';
-import * as monaco from "monaco-editor";
-import { PropType } from 'vue';
-import { watch } from 'vue';
-import { onBeforeUnmount } from 'vue';
+import { ref, toRefs, computed, onMounted, reactive } from 'vue'
+import * as monaco from 'monaco-editor'
+import { PropType } from 'vue'
+import { watch } from 'vue'
+import { onBeforeUnmount } from 'vue'
 import { useEditorFix } from '@/functions/editor'
 
 const props = defineProps({
-    uri: { type: Object as PropType<monaco.Uri> },
-    width: { type: [String, Number], default: "100%" },
-    height: { type: [String, Number], default: "100%" },
-    modelValue: { type: String, default: '' },
-    original: { type: String, default: '' },
-    language: { type: String, default: "javascript" },
-    theme: { type: String, default: "vs" },
-    id: { type: String, required: true },
-    options: { type: Object as PropType<monaco.editor.IStandaloneDiffEditorConstructionOptions>, default: () => ({}) },
+  uri: { type: Object as PropType<monaco.Uri> },
+  width: { type: [String, Number], default: '100%' },
+  height: { type: [String, Number], default: '100%' },
+  modelValue: { type: String, default: '' },
+  original: { type: String, default: '' },
+  language: { type: String, default: 'javascript' },
+  theme: { type: String, default: 'vs' },
+  id: { type: String, required: true },
+  options: { type: Object as PropType<monaco.editor.IStandaloneDiffEditorConstructionOptions>, default: () => ({}) }
 })
 
-const emit = defineEmits(["editorWillMount", "editorDidMount", "update:modelValue", "update:original", "switchWordWrap"])
+const emit = defineEmits(['editorWillMount', 'editorDidMount', 'update:modelValue', 'update:original', 'switchWordWrap'])
 
-const { width, height } = toRefs(props);
+const { width, height } = toRefs(props)
 
 const style = computed((): { [key: string]: string } => {
-  const fixedWidth = typeof width.value === 'string'  ? width.value : `${width.value}px`;
-  const fixedHeight = typeof height.value === 'string' ? height.value : `${height.value}px`;
-  return { width: fixedWidth, height: fixedHeight, "text-align": "left" };
-});
+  const fixedWidth = typeof width.value === 'string' ? width.value : `${width.value}px`
+  const fixedHeight = typeof height.value === 'string' ? height.value : `${height.value}px`
+  return { width: fixedWidth, height: fixedHeight, 'text-align': 'left' }
+})
 
 const root = ref<HTMLElement>()
 const options = reactive({ ...props.options })
-let editor: monaco.editor.IStandaloneDiffEditor | undefined = undefined;
+let editor: monaco.editor.IStandaloneDiffEditor | undefined = undefined
 
 onMounted(() => {
-  emit("editorWillMount", monaco);
+  emit('editorWillMount', monaco)
 
-  let model: monaco.editor.ITextModel | null = null;
+  let model: monaco.editor.ITextModel | null = null
   if (props.uri) {
-    model = monaco.editor.getModel(props.uri);
+    model = monaco.editor.getModel(props.uri)
   }
   if (!model) {
-    model = monaco.editor.createModel(props.modelValue, props.language, props.uri);
+    model = monaco.editor.createModel(props.modelValue, props.language, props.uri)
   }
 
-  if (!root.value) return;
+  if (!root.value) return
 
   editor = monaco.editor.createDiffEditor(root.value, {
     theme: props.theme,
     automaticLayout: true,
-    ...props.options,
-  });
+    ...props.options
+  })
 
   editor.setModel({
     original: monaco.editor.createModel(props.original, props.language),
-    modified: monaco.editor.createModel(props.modelValue, props.language),
+    modified: monaco.editor.createModel(props.modelValue, props.language)
   })
 
   const modifiedEditor = editor.getModifiedEditor()
@@ -67,44 +67,50 @@ onMounted(() => {
   const disposeOriginal = useEditorFix(originalEditor, `original-${props.id}`)
 
   modifiedEditor.onDidChangeModelContent(() => {
-    const value = modifiedEditor.getValue();
+    const value = modifiedEditor.getValue()
     if (props.modelValue !== value) {
-      emit("update:modelValue", value);
+      emit('update:modelValue', value)
     }
-  });
+  })
 
   originalEditor.onDidChangeModelContent(() => {
-    const value = originalEditor.getValue();
+    const value = originalEditor.getValue()
     if (props.original !== value) {
-      emit("update:original", value);
-    }
-  });
-
-  watch(() => props.modelValue, (current, old) => {
-    const currentLines = current.split(/\r\n|\r|\n/).length
-    const oldLines = old.split(/\r\n|\r|\n/).length
-
-    if (currentLines + 10 < oldLines) {
-      modifiedEditor?.setScrollPosition({ scrollTop: 0 });
-    }
-      
-    if (current !== modifiedEditor.getValue()) {
-      modifiedEditor.setValue(current)
+      emit('update:original', value)
     }
   })
 
-  watch(() => props.original, (current, old) => {
-    const currentLines = current.split(/\r\n|\r|\n/).length
-    const oldLines = old.split(/\r\n|\r|\n/).length
+  watch(
+    () => props.modelValue,
+    (current, old) => {
+      const currentLines = current.split(/\r\n|\r|\n/).length
+      const oldLines = old.split(/\r\n|\r|\n/).length
 
-    if (currentLines + 10 < oldLines) {
-      originalEditor?.setScrollPosition({ scrollTop: 0 });
-    }
+      if (currentLines + 10 < oldLines) {
+        modifiedEditor?.setScrollPosition({ scrollTop: 0 })
+      }
 
-    if (current !== originalEditor.getValue()) {
-      originalEditor.setValue(current)
+      if (current !== modifiedEditor.getValue()) {
+        modifiedEditor.setValue(current)
+      }
     }
-  })
+  )
+
+  watch(
+    () => props.original,
+    (current, old) => {
+      const currentLines = current.split(/\r\n|\r|\n/).length
+      const oldLines = old.split(/\r\n|\r|\n/).length
+
+      if (currentLines + 10 < oldLines) {
+        originalEditor?.setScrollPosition({ scrollTop: 0 })
+      }
+
+      if (current !== originalEditor.getValue()) {
+        originalEditor.setValue(current)
+      }
+    }
+  )
 
   modifiedEditor.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.KeyZ, () => {
     options.wordWrap = options.wordWrap !== 'on' ? 'on' : 'off'
@@ -120,22 +126,32 @@ onMounted(() => {
     editor?.dispose()
   })
 
-  emit("editorDidMount", editor);
+  emit('editorDidMount', editor)
 })
 
-watch(options, (o) => {
-  editor?.updateOptions({ ...o });
-}, { deep: true })
+watch(
+  options,
+  (o) => {
+    editor?.updateOptions({ ...o })
+  },
+  { deep: true }
+)
 
+watch(
+  () => props.options,
+  (o: monaco.editor.IEditorOptions) => {
+    for (const config in o) {
+      // @ts-ignore
+      options[config] = o[config]
+    }
+  },
+  { deep: true }
+)
 
-watch(() => props.options, (o: monaco.editor.IEditorOptions) => {
-  for (const config in o) {
-    // @ts-ignore
-    options[config] = o[config]
+watch(
+  () => props.theme,
+  (theme) => {
+    monaco.editor.setTheme(theme)
   }
-}, { deep: true })
-
-watch(() => props.theme, (theme) => {
-  monaco.editor.setTheme(theme);
-})
+)
 </script>

@@ -4,7 +4,7 @@
 
 <style>
 .no-opacity-tooltip {
-  background: rgba(var(--v-theme-surface-variant), 0.9)!important;
+  background: rgba(var(--v-theme-surface-variant), 0.9) !important;
 }
 
 :root {

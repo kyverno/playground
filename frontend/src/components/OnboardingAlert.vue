@@ -5,7 +5,7 @@
         {{ options.onboarding.text }}
 
         <template #append>
-          <v-btn flat color="info" :min-width="150" size="large"  @click="() => showOnboarding = false">Close</v-btn>
+          <v-btn flat color="info" :min-width="150" size="large" @click="() => (showOnboarding = false)">Close</v-btn>
         </template>
       </v-alert>
     </v-col>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { useConfig } from "@/config";
+import { useConfig } from '@/config'
 
-const { options, showOnboarding } = useConfig();
+const { options, showOnboarding } = useConfig()
 </script>
