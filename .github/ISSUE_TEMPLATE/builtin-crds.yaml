@@ -1,0 +1,34 @@
+name: Request built-in custom resources definition support
+description: Ask for built-in CRD support
+title: '[BUILTIN-CRD] '
+labels:
+- builtin-crd
+body:
+  - type: input
+    id: crd
+    attributes:
+      label: Name
+      description: Custom resource definitions name (prometheus operator, cert manager, etc...)
+    validations:
+      required: false
+  - type: input
+    id: repo
+    attributes:
+      label: Repository
+      description: Repository where we can get the CRD definitions from
+    validations:
+      required: false
+  - type: input
+    id: slack
+    attributes:
+      label: Slack discussion
+      description: If this issue is the result of a discussion thread on Slack, please provide the link to the discussion for reference
+    validations:
+      required: false
+  - type: textarea
+    id: explanations
+    attributes:
+      label: Explanations
+      description: Please, explain why we should support these CRDs in a built-in way
+    validations:
+      required: false
