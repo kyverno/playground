@@ -11,8 +11,6 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-const mediaType = runtime.ContentTypeYAML
-
 type Loader interface {
 	Load([]byte) (unstructured.Unstructured, error)
 }
@@ -32,27 +30,30 @@ func New(client openapi.Client) (Loader, error) {
 }
 
 func (l *loader) Load(document []byte) (unstructured.Unstructured, error) {
-	var result unstructured.Unstructured
 	var metadata metav1.TypeMeta
 	if err := yaml.Unmarshal(document, &metadata); err != nil {
-		return result, err
+		return unstructured.Unstructured{}, err
 	}
 	gvk := metadata.GetObjectKind().GroupVersionKind()
 	if gvk.Empty() {
-		return result, fmt.Errorf("GVK cannot be empty")
+		return unstructured.Unstructured{}, fmt.Errorf("GVK cannot be empty")
 	}
 	validator, err := l.factory.ValidatorsForGVK(gvk)
 	if err != nil {
-		return result, err
+		return unstructured.Unstructured{}, err
 	}
 	decoder, err := validator.Decoder(gvk)
 	if err != nil {
-		return result, err
+		return unstructured.Unstructured{}, err
 	}
-	info, ok := runtime.SerializerInfoForMediaType(decoder.SupportedMediaTypes(), mediaType)
+	info, ok := runtime.SerializerInfoForMediaType(decoder.SupportedMediaTypes(), runtime.ContentTypeYAML)
 	if !ok {
-		return result, fmt.Errorf("unsupported media type %q", mediaType)
+		return unstructured.Unstructured{}, fmt.Errorf("unsupported media type %q", runtime.ContentTypeYAML)
 	}
+	var result unstructured.Unstructured
 	_, _, err = decoder.DecoderToVersion(info.StrictSerializer, gvk.GroupVersion()).Decode(document, &gvk, &result)
+	if err != nil {
+		return unstructured.Unstructured{}, err
+	}
 	return result, err
 }
