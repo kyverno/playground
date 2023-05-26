@@ -44,35 +44,39 @@ jobs:
         uses: anchore/sbom-action/download-syft@4d571ad1038a9cc29d676154ef265ab8f9027042 # v0.14.2
       - name: Run GoReleaser
         id: goreleaser
-        uses: goreleaser/goreleaser-action@f82d6c1c344bcacabba2c841718984797f664a6b # v4.2.0
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release --clean --timeout 90m
-          workdir: backend
+        # uses: goreleaser/goreleaser-action@f82d6c1c344bcacabba2c841718984797f664a6b # v4.2.0
+        # with:
+        #   distribution: goreleaser
+        #   version: latest
+        #   args: release --clean --timeout 90m
+        #   workdir: backend
+        run: |
+          go install github.com/goreleaser/goreleaser@6de7ce799e20465544b62233ea4ab197e5d57a22
+          cd backend && goreleaser release --clean --timeout 90m
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Generate subject
-        id: hash
-        env:
-          ARTIFACTS: "${{ steps.goreleaser.outputs.artifacts }}"
-        run: |
-          set -euo pipefail
-          hashes=$(echo $ARTIFACTS | jq --raw-output '.[] | {name, "digest": (.extra.Digest // .extra.Checksum)} | select(.digest) | {digest} + {name} | join("  ") | sub("^sha256:";"")' | base64 -w0)
-          if test "$hashes" = ""; then # goreleaser < v1.13.0
-            checksum_file=$(echo "$ARTIFACTS" | jq -r '.[] | select (.type=="Checksum") | .path')
-            hashes=$(cat $checksum_file | base64 -w0)
-          fi
-          echo "hashes=$hashes" >> $GITHUB_OUTPUT
 
-  provenance:
-    needs:
-      - goreleaser
-    permissions:
-      actions: read
-      id-token: write
-      contents: write
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.6.0
-    with:
-      base64-subjects: "${{ needs.goreleaser.outputs.hashes }}"
-      upload-assets: true
+      # - name: Generate subject
+      #   id: hash
+      #   env:
+      #     ARTIFACTS: "${{ steps.goreleaser.outputs.artifacts }}"
+      #   run: |
+      #     set -euo pipefail
+      #     hashes=$(echo $ARTIFACTS | jq --raw-output '.[] | {name, "digest": (.extra.Digest // .extra.Checksum)} | select(.digest) | {digest} + {name} | join("  ") | sub("^sha256:";"")' | base64 -w0)
+      #     if test "$hashes" = ""; then # goreleaser < v1.13.0
+      #       checksum_file=$(echo "$ARTIFACTS" | jq -r '.[] | select (.type=="Checksum") | .path')
+      #       hashes=$(cat $checksum_file | base64 -w0)
+      #     fi
+      #     echo "hashes=$hashes" >> $GITHUB_OUTPUT
+
+  # provenance:
+  #   needs:
+  #     - goreleaser
+  #   permissions:
+  #     actions: read
+  #     id-token: write
+  #     contents: write
+  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.6.0
+  #   with:
+  #     base64-subjects: "${{ needs.goreleaser.outputs.hashes }}"
+  #     upload-assets: true
