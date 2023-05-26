@@ -19,6 +19,7 @@ kos:
   - repository: ghcr.io/kyverno/playground
     tags:
       - '{{.Tag}}'
+      - '{{ if not .PreRelease }}latest{{ end }}' 
     bare: true
     preserve_import_paths: false
     sbom: none
