@@ -25,18 +25,11 @@ LD_FLAGS            := "-s -w"
 LOCAL_PLATFORM      := linux/$(GOARCH)
 PLATFORMS           := linux/arm64,linux/amd64
 KO_PLATFORMS        := all
+KO_TAGS             := $(GIT_SHA)
 PLAYGROUND_IMAGE    := playground
 REPO_PLAYGROUND     := $(REGISTRY)/$(REPO)/$(PLAYGROUND_IMAGE)
 KO_REGISTRY         := ko.local
 COMMA               := ,
-
-ifndef VERSION
-KO_TAGS             := $(GIT_SHA)
-else ifeq ($(VERSION),main)
-KO_TAGS             := $(GIT_SHA),latest
-else
-KO_TAGS             := $(GIT_SHA),$(subst /,-,$(VERSION))
-endif
 
 ifndef VERSION
 APP_VERSION         := $(GIT_SHA)
@@ -204,10 +197,6 @@ ko-publish: $(KO) ## Build and publish playground image (with ko)
 	@echo Publishing image with ko... >&2
 	@cd backend && LDFLAGS=$(LD_FLAGS) KOCACHE=$(KOCACHE) KO_DOCKER_REPO=$(REPO_PLAYGROUND) \
 		$(KO) build . --bare --tags=$(KO_TAGS) --platform=$(KO_PLATFORMS)
-
-.PHONY: docker-build
-docker-build: ## Build playground image (with docker)
-	@docker buildx build --progress plane --platform $(PLATFORMS) --tag "$(REGISTRY)/$(REPO)/playground:latest" . --build-arg LD_FLAGS=$(LD_FLAGS)
 
 ########
 # TEST #
