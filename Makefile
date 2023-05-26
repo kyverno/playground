@@ -228,7 +228,8 @@ run: build-backend-assets ## Run locally
 	@cd backend && go run . \
 		--gin-log \
 		--cluster \
-		--builtin-crds=cert-manager
+		--builtin-crds=cert-manager \
+		--builtin-crds=prometheus-operator
 
 ########
 # KIND #
