@@ -10,6 +10,7 @@
             "args": [
                 "--gin-log",
                 "--builtin-crds=cert-manager",
+                "--builtin-crds=tekton-pipeline",
             ],
         },
         {
@@ -22,6 +23,7 @@
                 "--gin-log",
                 "--cluster",
                 "--builtin-crds=cert-manager",
+                "--builtin-crds=tekton-pipeline",
             ],
         }
     ]
