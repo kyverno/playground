@@ -11,6 +11,7 @@
                 "--gin-log",
                 "--builtin-crds=cert-manager",
                 "--builtin-crds=prometheus-operator",
+                "--builtin-crds=tekton-pipeline",
             ],
         },
         {
@@ -24,6 +25,7 @@
                 "--cluster",
                 "--builtin-crds=cert-manager",
                 "--builtin-crds=prometheus-operator",
+                "--builtin-crds=tekton-pipeline",
             ],
         }
     ]

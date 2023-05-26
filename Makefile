@@ -229,7 +229,8 @@ run: build-backend-assets ## Run locally
 		--gin-log \
 		--cluster \
 		--builtin-crds=cert-manager \
-		--builtin-crds=prometheus-operator
+		--builtin-crds=prometheus-operator \
+		--builtin-crds=tekton-pipeline
 
 ########
 # KIND #
