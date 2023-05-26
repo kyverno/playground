@@ -32,19 +32,8 @@
           <v-card-actions>
             <v-btn @click="dialog = false">Close</v-btn>
             <v-spacer />
-            <v-btn 
-              @click="search" 
-              :loading="loadingResources" 
-              :color="errorResources ? 'error': undefined"
-              >
-                Search
-              </v-btn>
-            <v-btn 
-              :loading="loading" 
-              :disabled="!name" 
-              @click="() => load([{ name: name || '', namespace }])" 
-              :color="error ? 'error': undefined"
-            >
+            <v-btn @click="search" :loading="loadingResources" :color="errorResources ? 'error' : undefined">Search</v-btn>
+            <v-btn :loading="loading" :disabled="!name" @click="() => load([{ name: name || '', namespace }])" :color="error ? 'error' : undefined">
               Load Resource
             </v-btn>
           </v-card-actions>
@@ -65,35 +54,33 @@
             <v-btn @click="dialog = false">Close</v-btn>
             <v-btn @click="window = 0">Back</v-btn>
             <v-spacer />
-            <v-btn 
-              :loading="loading" 
-              :disabled="!selections.length || !resourceAPI" 
-              @click="() => load(selections)" :color="error ? 'error': undefined"
-            >Load Resources</v-btn>
+            <v-btn :loading="loading" :disabled="!selections.length || !resourceAPI" @click="() => load(selections)" :color="error ? 'error' : undefined">
+              Load Resources
+            </v-btn>
           </v-card-actions>
         </v-window-item>
-    </v-window>
+      </v-window>
     </v-card>
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { layoutTheme } from "@/config"
-import { useAPI, resourcesToYAML } from "@/composables/api";
-import { inputs } from "@/store";
-import { mergeResources } from "@/utils";
-import SimpleRow from "@/components/SimpleRow.vue";
-import NamespaceSelect from "../NamespaceSelect.vue";
-import PolicyTypeSelect from "../PolicyTypeSelect.vue";
-import ModeSelect from "../ModeSelect.vue";
-import ClusterSearchList from "./ClusterSearchList.vue";
+import { ref, watch } from 'vue'
+import { layoutTheme } from '@/config'
+import { useAPI, resourcesToYAML } from '@/composables/api'
+import { inputs } from '@/store'
+import { mergeResources } from '@/utils'
+import SimpleRow from '@/components/SimpleRow.vue'
+import NamespaceSelect from '../NamespaceSelect.vue'
+import PolicyTypeSelect from '../PolicyTypeSelect.vue'
+import ModeSelect from '../ModeSelect.vue'
+import ClusterSearchList from './ClusterSearchList.vue'
 
-type Resource = { namespace?: string; name: string };
+type Resource = { namespace?: string; name: string }
 
-const window = ref<number>(0);
-const dialog = ref<boolean>(false);
+const window = ref<number>(0)
+const dialog = ref<boolean>(false)
 
-const resourceAPI = ref({ title: 'kyverno.io/v1 ClusterPolicy', apiVersion: 'kyverno.io/v1', kind: 'ClusterPolicy', clusterScoped: true });
+const resourceAPI = ref({ title: 'kyverno.io/v1 ClusterPolicy', apiVersion: 'kyverno.io/v1', kind: 'ClusterPolicy', clusterScoped: true })
 const namespace = ref<string>()
 const name = ref<string>()
 
@@ -117,7 +104,7 @@ const search = () => {
 
       window.value = 1
     })
-    .catch(err => {
+    .catch((err) => {
       errorResources.value = err
     })
     .finally(() => {
@@ -135,20 +122,23 @@ const load = (res: Resource[]) => {
   const promises = res.map(({ namespace, name }) => loadResource({ apiVersion, kind, namespace: namespace || '', name }))
 
   loading.value = true
-  Promise.all(promises).then((response) => {
-    const results = resourcesToYAML(response)
+  Promise.all(promises)
+    .then((response) => {
+      const results = resourcesToYAML(response)
 
-    if (mode.value === 'append') {
-      inputs.policy = mergeResources(inputs.policy, results)
-    } else {
-      inputs.policy = results
-    }
-    dialog.value = false
-  }).catch((err) => {
-    error.value = err
-  }).finally(() => {
-    loading.value = false
-  })
+      if (mode.value === 'append') {
+        inputs.policy = mergeResources(inputs.policy, results)
+      } else {
+        inputs.policy = results
+      }
+      dialog.value = false
+    })
+    .catch((err) => {
+      error.value = err
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
 watch(dialog, (value: boolean) => {
@@ -167,5 +157,4 @@ watch(dialog, (value: boolean) => {
     errorResources.value = undefined
   }, 300)
 })
-
 </script>

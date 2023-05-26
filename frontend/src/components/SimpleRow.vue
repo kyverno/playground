@@ -1,14 +1,14 @@
 <template>
-<v-row :class="rowClass">
+  <v-row :class="rowClass">
     <v-col :class="colClass">
-        <slot />
+      <slot />
     </v-col>
-</v-row>
+  </v-row>
 </template>
 
 <script setup lang="ts">
 defineProps({
-    rowClass: { type: String },
-    colClass: { type: String },
+  rowClass: { type: String },
+  colClass: { type: String }
 })
 </script>

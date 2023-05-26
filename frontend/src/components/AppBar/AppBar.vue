@@ -14,22 +14,11 @@
       </template>
     </div>
     <template v-slot:append>
-      <v-btn
-        href="http://kyverno.io"
-        target="_blank"
-        class="mr-1"
-        title="Kyverno Documentation"
-        v-if="display.mdAndUp.value"
-      >
-        <v-img src="/favicon.png" :height="24" :width="24" alt="Kyverno Logo" class="mr-2" /> Docs
+      <v-btn href="http://kyverno.io" target="_blank" class="mr-1" title="Kyverno Documentation" v-if="display.mdAndUp.value">
+        <v-img src="/favicon.png" :height="24" :width="24" alt="Kyverno Logo" class="mr-2" />
+        Docs
       </v-btn>
-      <v-btn
-        icon="mdi-github"
-        href="https://github.com/kyverno/playground"
-        target="_blank"
-        class="mr-2"
-        title="GitHub: Kyverno Playground"
-      />
+      <v-btn icon="mdi-github" href="https://github.com/kyverno/playground" target="_blank" class="mr-2" title="GitHub: Kyverno Playground" />
       <template v-if="display.mdAndUp.value">
         <slot name="desktop-actions" />
       </template>
@@ -37,17 +26,17 @@
       <template v-if="display.mdAndUp.value">
         <slot name="desktop-append" />
       </template>
-        <slot name="append-actions" />
+      <slot name="append-actions" />
       <slot name="mobile-actions" v-if="display.smAndDown.value" />
     </template>
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from "vuetify/lib/framework.mjs";
-import ConfigMenu from "./ConfigMenu.vue";
+import { useDisplay } from 'vuetify/lib/framework.mjs'
+import ConfigMenu from './ConfigMenu.vue'
 
-const display = useDisplay();
+const display = useDisplay()
 </script>
 
 <style scoped>
@@ -57,5 +46,4 @@ const display = useDisplay();
   position: absolute;
   left: 70px;
 }
-
 </style>

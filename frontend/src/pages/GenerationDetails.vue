@@ -37,45 +37,49 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
-import { useSessionStorage } from "@vueuse/core";
-import { layoutTheme, editorTheme } from "@/config";
-import { RuleStatus } from "@/types";
-import { AppBar } from "@/components/AppBar";
-import { RuleDetails } from "@/components/Details";
-import ManocoEditor from "@/components/Panel/MonacoEditor.vue";
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useSessionStorage } from '@vueuse/core'
+import { layoutTheme, editorTheme } from '@/config'
+import { RuleStatus } from '@/types'
+import { AppBar } from '@/components/AppBar'
+import { RuleDetails } from '@/components/Details'
+import ManocoEditor from '@/components/Panel/MonacoEditor.vue'
 
-const route = useRoute();
+const route = useRoute()
 
 type Item = {
-  apiVersion: string;
-  kind: string;
-  resource: string;
-  policy: string;
-  rule: string;
-  message: string;
-  generatedResource: string;
-  status: RuleStatus;
-};
+  apiVersion: string
+  kind: string
+  resource: string
+  policy: string
+  rule: string
+  message: string
+  generatedResource: string
+  status: RuleStatus
+}
 
-const details = ref<Item | undefined>(undefined);
+const details = ref<Item | undefined>(undefined)
 
-const content = useSessionStorage<string | null>(`generation:${route.params.id}`, null);
-watch(content, (n) => {
-  if (!n) return;
-  details.value = JSON.parse(n) as Item;
-}, { immediate: true });
+const content = useSessionStorage<string | null>(`generation:${route.params.id}`, null)
+watch(
+  content,
+  (n) => {
+    if (!n) return
+    details.value = JSON.parse(n) as Item
+  },
+  { immediate: true }
+)
 
 const close = () => {
-  content.value = null;
-  window.close();
-};
+  content.value = null
+  window.close()
+}
 
 const options = {
   readOnly: true,
   colorDecorators: true,
   lineHeight: 24,
-  tabSize: 2,
-};
+  tabSize: 2
+}
 </script>

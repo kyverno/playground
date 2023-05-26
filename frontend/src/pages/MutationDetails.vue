@@ -26,7 +26,14 @@
                   <RuleDetails :details="details" />
                 </v-card-text>
                 <v-card-text v-if="details.status !== 'pass'">{{ details.message }}</v-card-text>
-                <DiffEditor id="mutate" :height="600" language="yaml" :original="details.originalReosurce" :model-value="details.patchedResource" :theme="editorTheme" :options="options" />
+                <DiffEditor
+                  id="mutate"
+                  :height="600"
+                  language="yaml"
+                  :original="details.originalReosurce"
+                  :model-value="details.patchedResource"
+                  :theme="editorTheme"
+                  :options="options" />
               </template>
             </v-card>
           </v-col>
@@ -37,46 +44,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
-import { useSessionStorage } from "@vueuse/core";
-import { RuleStatus } from "@/types";
-import { layoutTheme, editorTheme } from "@/config";
-import { RuleDetails } from "@/components/Details";
-import { DiffEditor } from "@/components/Panel";
-import { AppBar } from "@/components/AppBar";
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useSessionStorage } from '@vueuse/core'
+import { RuleStatus } from '@/types'
+import { layoutTheme, editorTheme } from '@/config'
+import { RuleDetails } from '@/components/Details'
+import { DiffEditor } from '@/components/Panel'
+import { AppBar } from '@/components/AppBar'
 
-const route = useRoute();
+const route = useRoute()
 
 type Item = {
-  apiVersion: string;
-  kind: string;
-  resource: string;
-  policy: string;
-  rule: string;
-  message: string;
-  originalReosurce: string;
-  patchedResource: string;
-  status: RuleStatus;
-};
+  apiVersion: string
+  kind: string
+  resource: string
+  policy: string
+  rule: string
+  message: string
+  originalReosurce: string
+  patchedResource: string
+  status: RuleStatus
+}
 
-const details = ref<Item | undefined>(undefined);
+const details = ref<Item | undefined>(undefined)
 
-const content = useSessionStorage<string | null>(`mutation:${route.params.id}`, null);
-watch(content, (n) => {
-  if (!n) return;
-  details.value = JSON.parse(n) as Item;
-}, { immediate: true });
+const content = useSessionStorage<string | null>(`mutation:${route.params.id}`, null)
+watch(
+  content,
+  (n) => {
+    if (!n) return
+    details.value = JSON.parse(n) as Item
+  },
+  { immediate: true }
+)
 
 const close = () => {
-  content.value = null;
-  window.close();
-};
+  content.value = null
+  window.close()
+}
 
 const options = {
   readOnly: true,
   colorDecorators: true,
   lineHeight: 24,
-  tabSize: 2,
-};
+  tabSize: 2
+}
 </script>

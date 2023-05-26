@@ -14,7 +14,7 @@
       <v-divider />
       <v-virtual-scroll :items="templates" :height="350" width="210">
         <template v-slot:default="{ item }">
-            <v-list-item @click="() => loadTemplate(item)" :title="item" />
+          <v-list-item @click="() => loadTemplate(item)" :title="item" />
         </template>
       </v-virtual-scroll>
     </v-list>
@@ -51,23 +51,26 @@ const list = [
   'ServiceAccount',
   'PodDisruptionBudget',
   'PriorityClass',
-  'ResourceQuota',
+  'ResourceQuota'
 ]
 
 const templates = computed(() => {
   if (!search.value) return list
 
-  return list.filter(i => i.toLowerCase().search(search.value.toLowerCase()) !== -1)
+  return list.filter((i) => i.toLowerCase().search(search.value.toLowerCase()) !== -1)
 })
 
 const loadTemplate = (template: string) => {
-  return fetch(`templates/${template.toLocaleLowerCase()}.yaml`).then((resp) => {
-    if (resp.status !== 200) return
+  return fetch(`templates/${template.toLocaleLowerCase()}.yaml`)
+    .then((resp) => {
+      if (resp.status !== 200) return
 
-    return resp.text().then(content => emit('select', content))
-  }).then(() => {
-    menu.value = false
-    search.value = ''
-  }).catch(console.error)
+      return resp.text().then((content) => emit('select', content))
+    })
+    .then(() => {
+      menu.value = false
+      search.value = ''
+    })
+    .catch(console.error)
 }
 </script>

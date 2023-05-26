@@ -16,8 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import ShareButton from "./ShareButton.vue";
-import SaveButton from "./SaveButton.vue";
-import LoadButton from "./LoadButton.vue";
-
+import ShareButton from './ShareButton.vue'
+import SaveButton from './SaveButton.vue'
+import LoadButton from './LoadButton.vue'
 </script>

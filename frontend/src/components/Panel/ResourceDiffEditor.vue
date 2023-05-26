@@ -1,4 +1,5 @@
-1<template>
+1
+<template>
   <DiffEditor
     id="diff-policy"
     language="yaml"
@@ -6,15 +7,14 @@
     v-model="inputs.resource"
     v-model:original="inputs.oldResource"
     :options="options"
-    :uri="uri"
-  />
+    :uri="uri" />
 </template>
 
 <script setup lang="ts">
 import { Uri } from 'monaco-editor'
-import { editorTheme } from "@/config";
-import DiffEditor from "./DiffEditor.vue";
-import { inputs } from '@/store';
+import { editorTheme } from '@/config'
+import DiffEditor from './DiffEditor.vue'
+import { inputs } from '@/store'
 
 const uri = Uri.parse('resource.yaml')
 
@@ -23,6 +23,6 @@ const options = {
   originalEditable: true,
   colorDecorators: true,
   lineHeight: 24,
-  tabSize: 2,
-};
+  tabSize: 2
+}
 </script>

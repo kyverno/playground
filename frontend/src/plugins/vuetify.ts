@@ -14,15 +14,15 @@ export default createVuetify({
       light: {
         colors: {
           primary: '#1867C0',
-          secondary: '#5CBBF6',
-        },
+          secondary: '#5CBBF6'
+        }
       },
       dark: {
         colors: {
           primary: '#1867C0',
-          secondary: '#5CBBF6',
-        },
+          secondary: '#5CBBF6'
+        }
       }
-    },
-  },
+    }
+  }
 })

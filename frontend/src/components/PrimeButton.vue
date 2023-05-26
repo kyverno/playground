@@ -1,7 +1,7 @@
 <template>
-    <v-btn :color="btnColor"><slot /></v-btn>
+  <v-btn :color="btnColor"><slot /></v-btn>
 </template>
 
 <script setup lang="ts">
-import { btnColor } from '@/config';
+import { btnColor } from '@/config'
 </script>
