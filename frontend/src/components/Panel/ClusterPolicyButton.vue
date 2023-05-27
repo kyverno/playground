@@ -127,7 +127,7 @@ const load = (res: Resource[]) => {
       const results = resourcesToYAML(response)
 
       if (mode.value === 'append') {
-        inputs.policy = mergeResources(inputs.policy, results)
+        inputs.policy = mergeResources(inputs.policy || '', results)
       } else {
         inputs.policy = results
       }

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mt-3">
+  <v-card :height="height">
     <EditorToolbar title="Resources" id="resource-panel" :info="options.panels.resourceInfo" v-model="inputs.resource" :restore-value="state.resource.value">
       <template #prepend-actions>
         <TemplateButton @select="onSelect" />
@@ -18,9 +18,9 @@
         <span class="d-inline-block pl-11 text-subtitle-2" style="width: 50%">Old Resource</span>
         <span class="d-inline-block pl-8 text-subtitle-2" style="width: 50%">New Resource</span>
       </v-toolbar>
-      <ResourceDiffEditor v-model="inputs.resource" :height="height - 24" />
+      <ResourceDiffEditor v-model="inputs.resource" />
     </template>
-    <ResourceEditor v-model="inputs.resource" :height="height" v-show="!inputs.diffResources" />
+    <ResourceEditor v-model="inputs.resource" v-show="!inputs.diffResources" />
   </v-card>
 </template>
 
