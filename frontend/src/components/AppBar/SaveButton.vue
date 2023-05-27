@@ -37,6 +37,7 @@
           </v-card>
         </v-dialog>
       </v-list-item>
+      <v-divider />
       <v-list-item class="py-0 pl-0">
         <export-button block variant="text" />
       </v-list-item>

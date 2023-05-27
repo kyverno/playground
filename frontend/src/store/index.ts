@@ -2,7 +2,7 @@ import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate, Cust
 import { reactive } from 'vue'
 import { useState, Inputs } from '@/composables'
 
-export const inputs = reactive({
+export const inputs = reactive<Inputs>({
   diffResources: false,
   policy: PolicyTemplate,
   oldResource: '',

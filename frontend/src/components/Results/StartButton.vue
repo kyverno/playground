@@ -49,12 +49,12 @@ const submit = (): void => {
     return
   }
 
-  if (!inputs.policy.trim()) {
+  if (!(inputs.policy || '').trim()) {
     emit('on-error', new Error('Policy is required'))
     return
   }
 
-  if (!inputs.resource.trim()) {
+  if (!(inputs.resource || '').trim()) {
     emit('on-error', new Error('Resource is required'))
     return
   }

@@ -4,12 +4,12 @@ import { Ref, ref, watch } from 'vue'
 export type Inputs = {
   name?: string
   diffResources?: boolean
-  policy?: string | null
-  oldResource?: string | null
-  resource?: string | null
-  context?: string | null
-  config?: string | null
-  customResourceDefinitions?: string | null
+  policy?: string
+  oldResource?: string
+  resource?: string
+  context?: string
+  config?: string
+  customResourceDefinitions?: string
 }
 
 const persisted = useLocalStorage<string>('persist:list', '')
@@ -30,12 +30,12 @@ export const getPersisted = (): Ref<string[]> => {
 
 export const createInput = (name: string, defaults?: Inputs) => {
   name = name.replaceAll(';;', ';').trim()
-  const policy = useLocalStorage<string | null>(`persist:policy:${name}`, defaults?.policy || null)
-  const resource = useLocalStorage<string | null>(`persist:resource:${name}`, defaults?.resource || null)
-  const oldResource = useLocalStorage<string | null>(`persist:resource:old:${name}`, defaults?.oldResource || null)
-  const context = useLocalStorage<string | null>(`persist:context:${name}`, defaults?.context || null)
-  const config = useLocalStorage<string | null>(`persist:config:${name}`, defaults?.config || null)
-  const customResourceDefinitions = useLocalStorage<string | null>(`persist:crds:${name}`, defaults?.customResourceDefinitions || null)
+  const policy = useLocalStorage<string | undefined>(`persist:policy:${name}`, defaults?.policy || undefined)
+  const resource = useLocalStorage<string | undefined>(`persist:resource:${name}`, defaults?.resource || undefined)
+  const oldResource = useLocalStorage<string | undefined>(`persist:resource:old:${name}`, defaults?.oldResource || undefined)
+  const context = useLocalStorage<string | undefined>(`persist:context:${name}`, defaults?.context || undefined)
+  const config = useLocalStorage<string | undefined>(`persist:config:${name}`, defaults?.config || undefined)
+  const customResourceDefinitions = useLocalStorage<string | undefined>(`persist:crds:${name}`, defaults?.customResourceDefinitions || undefined)
 
   persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
 

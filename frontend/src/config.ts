@@ -36,7 +36,9 @@ export const options = {
   panels: {
     policyInfo: 'Kyverno Policy',
     resourceInfo: 'Kubernetes resources which get applied to policies',
-    contextInfo: 'Context information like admission context, variables, and Kubernetes version'
+    contextInfo: 'Context information like admission context, variables, and Kubernetes version',
+    crdInfo: 'Define unknown CRDs you want to use as resource',
+    configInfo: 'Configure the Kyverno Engine'
   },
   onboarding: {
     text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.'

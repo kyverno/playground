@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="600px" :theme="layoutTheme">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" prepend-icon="mdi-kubernetes" variant="flat" class="rounded-0 mx-0" color="success" width="25%">From Cluster</v-btn>
+      <v-btn v-bind="props" prepend-icon="mdi-kubernetes">From Cluster</v-btn>
     </template>
 
     <v-card :theme="layoutTheme" title="Load from connected Cluster">
@@ -29,7 +29,6 @@
 import { ref, watch } from 'vue'
 import { layoutTheme } from '@/config'
 import { useAPI, resourceToYAML } from '@/composables/api'
-import { inputs } from '@/store'
 import NamespaceSelect from '@/components/NamespaceSelect.vue'
 import SimpleRow from '@/components/SimpleRow.vue'
 
@@ -40,13 +39,15 @@ const name = ref<string>('kyverno')
 
 const { loading, error, resource: loadResource } = useAPI<object>()
 
+const emit = defineEmits(['update'])
+
 const load = () => {
   loading.value = true
   loadResource({ apiVersion: 'v1', kind: 'ConfigMap', namespace: namespace.value, name: name.value })
     .then((response) => {
       const results = resourceToYAML(response)
 
-      inputs.config = results
+      emit('update', results)
 
       dialog.value = false
     })

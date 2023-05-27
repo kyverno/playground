@@ -29,8 +29,7 @@
             <PolicyPanel />
           </v-col>
           <v-col :md="6" :sm="12">
-            <ContextPanel @collapse="(v: boolean) => resourceHeight = v ? 691 : 441" />
-            <ResourcePanel :height="resourceHeight" />
+            <ResourcePanel :height="800" />
           </v-col>
         </v-row>
         <HelpButton />
@@ -63,7 +62,7 @@ import HelpButton from '@/components/HelpButton.vue'
 import Onboarding from '@/components/Onboarding.vue'
 import Sponsor from '@/components/Sponsor.vue'
 import PrimeButton from '@/components/PrimeButton.vue'
-import { ResourcePanel, ContextPanel, PolicyPanel } from '@/components/Panel'
+import { ResourcePanel, PolicyPanel } from '@/components/Panel'
 import { LoadButton, SaveButton, ShareButton, MobileMenu, AppBar } from '@/components/AppBar'
 import { StartButton, ResultDialog } from '@/components/Results'
 import { parseContent } from '@/functions/share'
@@ -133,11 +132,9 @@ onMounted(() => {
 
 const { finish, start, onboarding, steps, wrapper } = useOnboarding(drawer)
 
-const resourceHeight = ref(441)
-
 watch(
   () => inputs.diffResources,
-  (diff: boolean) => {
+  (diff?: boolean) => {
     if (!diff) {
       inputs.oldResource = ''
       return
