@@ -26,7 +26,7 @@
                   <RuleDetails :details="details" />
                 </v-card-text>
                 <v-card-text v-if="details.status !== 'pass'">{{ details.message }}</v-card-text>
-                <ManocoEditor :height="600" language="yaml" :value="details.generatedResource" :theme="editorTheme" :options="options" id="generation" />
+                <ManocoEditor :height="600" language="yaml" :model-value="details.generatedResource" :theme="editorTheme" :options="options" id="generation" />
               </template>
             </v-card>
           </v-col>

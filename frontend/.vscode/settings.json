@@ -1,5 +1,5 @@
 {
-  "eslint.validate": ["javascript", "vue"],
+  "eslint.validate": ["typescript", "javascript", "vue"],
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

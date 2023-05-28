@@ -6,6 +6,8 @@ export const loadedContext = useLocalStorage<string>('loaded:context', ContextTe
 export const loadedResource = useLocalStorage<string>('loaded:resource', ResourceTemplate)
 export const loadedOldResource = useLocalStorage<string>('loaded:resource:old', '')
 export const loadedConfig = useLocalStorage<string>('loaded:config', ConfigTemplate)
+export const loadedExceptions = useLocalStorage<string>('loaded:exceptions', '')
+export const loadedClusterResources = useLocalStorage<string>('loaded:clusterResources', '')
 export const loadedCustomResourceDefinitions = useLocalStorage<string>('loaded:crds', CustomResourceDefinitionsTemplate)
 export const loadedState = useLocalStorage<string>('loaded:state', '')
 
@@ -16,6 +18,8 @@ export type State = {
   oldResource?: string
   context?: string
   config?: string
+  exceptions?: string
+  clusterResources?: string
   customResourceDefinitions?: string
 }
 
@@ -40,6 +44,14 @@ const update = (values: State) => {
     loadedConfig.value = values.config
   }
 
+  if (values.exceptions) {
+    loadedExceptions.value = values.exceptions
+  }
+
+  if (values.clusterResources) {
+    loadedClusterResources.value = values.clusterResources
+  }
+
   if (values.customResourceDefinitions) {
     loadedCustomResourceDefinitions.value = values.customResourceDefinitions
   }
@@ -53,6 +65,8 @@ export const useState = () => ({
   resource: loadedResource,
   oldResource: loadedOldResource,
   context: loadedContext,
+  exceptions: loadedExceptions,
+  clusterResources: loadedClusterResources,
   customResourceDefinitions: loadedCustomResourceDefinitions,
   name: loadedState,
   update

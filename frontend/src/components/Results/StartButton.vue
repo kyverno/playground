@@ -66,6 +66,8 @@ const submit = (): void => {
       policies: inputs.policy,
       resources: inputs.resource,
       oldResources: inputs.oldResource,
+      policyExceptions: inputs.exceptions,
+      clusterResources: inputs.clusterResources,
       context: inputs.context,
       config: inputs.config,
       customResourceDefinitions: inputs.customResourceDefinitions

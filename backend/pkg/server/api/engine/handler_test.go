@@ -10,6 +10,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
+
+	"github.com/kyverno/playground/backend/pkg/cluster"
 )
 
 func Test_Serve(t *testing.T) {
@@ -29,7 +31,7 @@ func Test_Serve(t *testing.T) {
 	c.Request = httptest.NewRequest(http.MethodPost, "/", body)
 	c.Request.Header.Add("Content-Type", "application/json")
 
-	handler, err := newEngineHandler(nil, APIConfiguration{})
+	handler, err := newEngineHandler(cluster.NewFake(), APIConfiguration{})
 	require.NoError(t, err)
 	handler(c)
 

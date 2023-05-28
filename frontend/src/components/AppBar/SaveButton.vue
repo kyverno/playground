@@ -83,6 +83,8 @@ const persist = (name: string) => {
     oldResource: inputs.oldResource,
     context: inputs.context,
     config: inputs.config,
+    clusterResources: inputs.clusterResources,
+    exceptions: inputs.exceptions,
     name: persistedInput.name
   })
 

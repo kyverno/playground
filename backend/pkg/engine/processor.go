@@ -33,7 +33,12 @@ type Processor struct {
 	cluster       bool
 }
 
-func (p *Processor) Run(ctx context.Context, policies []kyvernov1.PolicyInterface, resources []unstructured.Unstructured, oldResources []unstructured.Unstructured) (*Results, error) {
+func (p *Processor) Run(
+	ctx context.Context,
+	policies []kyvernov1.PolicyInterface,
+	resources []unstructured.Unstructured,
+	oldResources []unstructured.Unstructured,
+) (*Results, error) {
 	if !p.cluster {
 		if err := validateParams(p.params, policies); err != nil {
 			return nil, err
