@@ -1,0 +1,6 @@
+clusterRoles:
+  - name: read-all
+    apiGroups:
+      - '*'
+    resources:
+      - '*'
