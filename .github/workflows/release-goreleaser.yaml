@@ -55,7 +55,6 @@ jobs:
           cd backend && goreleaser release --clean --timeout 90m
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # - name: Generate subject
       #   id: hash
       #   env:
@@ -68,6 +67,20 @@ jobs:
       #       hashes=$(cat $checksum_file | base64 -w0)
       #     fi
       #     echo "hashes=$hashes" >> $GITHUB_OUTPUT
+      - name: Upload artifacts.json
+        uses: svenstaro/upload-release-action@58d525808845e4c8ff229ea1d5d7c496504a79bc # 2.6.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: backend/dist/artifacts.json
+          asset_name: artifacts.json
+          tag: ${{ github.ref }}
+      - name: Upload metadata.json
+        uses: svenstaro/upload-release-action@58d525808845e4c8ff229ea1d5d7c496504a79bc # 2.6.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: backend/dist/metadata.json
+          asset_name: metadata.json
+          tag: ${{ github.ref }}
 
   # provenance:
   #   needs:
