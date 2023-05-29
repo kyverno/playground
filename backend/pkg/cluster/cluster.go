@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyverno/kyverno/api/kyverno/v2alpha1"
 	"github.com/kyverno/kyverno/pkg/client/clientset/versioned"
-	kyvernofake "github.com/kyverno/kyverno/pkg/client/clientset/versioned/fake"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -16,7 +15,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
-	kubefake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/rest"
 )
 
@@ -36,8 +34,9 @@ type Cluster interface {
 	Namespaces(context.Context) ([]string, error)
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
-	DClient([]unstructured.Unstructured) dclient.Interface
+	DClient([]unstructured.Unstructured) (dclient.Interface, error)
 	PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector
+	IsFake() bool
 }
 
 type cluster struct {
@@ -136,25 +135,10 @@ func (c cluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException)
 	return NewPolicyExceptionSelector(c.kyvernoClient, exceptions)
 }
 
-func (c cluster) DClient(objects []unstructured.Unstructured) dclient.Interface {
-	if c.dClient == nil {
-		c.dClient = dclient.NewEmptyFakeClient()
-	}
-
-	for _, res := range objects {
-		_, _ = c.dClient.CreateResource(context.TODO(), res.GetAPIVersion(), res.GetKind(), res.GetNamespace(), &res, false)
-	}
-
-	return c.dClient
+func (c cluster) DClient(_ []unstructured.Unstructured) (dclient.Interface, error) {
+	return c.dClient, nil
 }
 
-func NewFake() Cluster {
-	kyvernoClient := kyvernofake.NewSimpleClientset()
-	kubeClient := kubefake.NewSimpleClientset()
-
-	return cluster{
-		kubeClient:    kubeClient,
-		kyvernoClient: kyvernoClient,
-		dClient:       nil,
-	}
+func (c cluster) IsFake() bool {
+	return false
 }
