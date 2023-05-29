@@ -17,7 +17,7 @@
       </template>
 
       <template #desktop-append>
-        <v-btn @click="() => (advanced = !advanced)" prepend-icon="mdi-application-settings">Advanced</v-btn>
+        <v-btn @click="() => (advanced = !advanced)" prepend-icon="mdi-application-settings" id="advanced-btn">Advanced</v-btn>
       </template>
     </AppBar>
     <ExampleDrawer v-model="drawer" />
@@ -130,7 +130,7 @@ onMounted(() => {
   populate()
 })
 
-const { finish, start, onboarding, steps, wrapper } = useOnboarding(drawer)
+const { finish, start, onboarding, steps, wrapper } = useOnboarding(drawer, advanced)
 
 watch(
   () => inputs.diffResources,

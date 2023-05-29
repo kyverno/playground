@@ -22,7 +22,7 @@
 type Command = { shortcut: string; description: string }
 
 const items: Command[] = [
-  { shortcut: 'OPTION/ALT + Z', description: 'Toogle Word Wrap' },
+  { shortcut: 'OPTION/ALT + Z', description: 'Toggle Word Wrap' },
   { shortcut: 'CMD/CTRL + S', description: 'Save changes' },
   { shortcut: 'ESCAPE', description: 'Discard changes and close dialog' }
 ]

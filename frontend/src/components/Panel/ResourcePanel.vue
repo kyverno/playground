@@ -10,7 +10,7 @@
         </v-tooltip>
       </template>
       <template #append-actions v-if="config.cluster">
-        <ClusterResourceButton />
+        <ClusterResourceButton @update:model-value="onSelect" :model-value="inputs.resource" />
       </template>
     </EditorToolbar>
     <template v-if="inputs.diffResources">

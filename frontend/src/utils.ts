@@ -6,6 +6,6 @@ export const resolveAPI = () => {
 
 export const mergeResources = (a: string, b: string): string => {
   return `${a.trim()}
-    ---
-    ${b.trim()}`
+---
+${b.trim()}`
 }
