@@ -17,26 +17,22 @@ type policyExceptionSelector struct {
 
 func (c policyExceptionSelector) List(selector labels.Selector) ([]*kyvernov2alpha1.PolicyException, error) {
 	var exceptions []*kyvernov2alpha1.PolicyException
-	list, err := c.kyvernoClient.KyvernoV2alpha1().PolicyExceptions(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{
-		LabelSelector: selector.String(),
-	})
-	if err != nil {
-		return nil, err
+	if c.kyvernoClient != nil {
+		list, err := c.kyvernoClient.KyvernoV2alpha1().PolicyExceptions(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{
+			LabelSelector: selector.String(),
+		})
+		if err != nil {
+			return nil, err
+		}
+		for i := range list.Items {
+			exceptions = append(exceptions, &list.Items[i])
+		}
 	}
-
 	exceptions = append(exceptions, c.additional...)
-
-	for i := range list.Items {
-		exceptions = append(exceptions, &list.Items[i])
-	}
 	return exceptions, nil
 }
 
 func NewPolicyExceptionSelector(client versioned.Interface, exceptions []*kyvernov2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
-	if client == nil {
-		return nil
-	}
-
 	return policyExceptionSelector{
 		additional:    exceptions,
 		kyvernoClient: client,
