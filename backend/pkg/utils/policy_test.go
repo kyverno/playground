@@ -60,15 +60,14 @@ func Test_LoadPolicies(t *testing.T) {
 			require.NoError(t, err)
 			loader, err := loader.New(
 				openapiclient.NewComposite(
-					openapiclient.NewHardcodedBuiltins("1.27"),
 					openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
 				),
 			)
 			require.NoError(t, err)
 			if res, err := utils.LoadPolicies(loader, bytes); (err != nil) != tt.wantErr {
-				t.Errorf("loader.Policies() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("loader.LoadPolicies() error = %v, wantErr %v", err, tt.wantErr)
 			} else if len(res) != tt.wantLoaded {
-				t.Errorf("loader.Policies() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)
+				t.Errorf("loader.LoadPolicies() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)
 			}
 		})
 	}
@@ -94,7 +93,6 @@ func TestToPolicyInterface(t *testing.T) {
 			require.NoError(t, err)
 			loader, err := loader.New(
 				openapiclient.NewComposite(
-					openapiclient.NewHardcodedBuiltins("1.27"),
 					openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
 				),
 			)
