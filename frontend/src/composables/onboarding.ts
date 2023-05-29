@@ -9,14 +9,14 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
   const steps = [
     {
       attachTo: { element: '#example-menu' },
-      content: { title: 'Example Menu', description: 'The Examples menu contains a list of predefined Kyverno policies with test resources and contexts.' }
+      content: { title: 'Example Menu', description: 'The Examples menu contains a list of sample Kyverno policies. Selecting a policy will populate not only the policy itself but also test resources and, in some cases, a runtime context for convenient and quick testing.' }
     },
     {
       attachTo: { element: '#tutorials' },
       content: {
         title: 'Examples',
         description:
-          'Choose between different Categories. The Tutorials category contains several Kyverno policies and supporting resources which demonstrate how to use the Playground effectively.'
+          'Choose between different categories of policies. The Tutorials category contains several Kyverno policies grouped by type which demonstrate how to use the Playground with various different policy styles.'
       },
       on: {
         beforeStep: async () => {
@@ -34,7 +34,7 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
       attachTo: { element: '#advanced-btn' },
       content: {
         title: 'Advanced Configuration',
-        description: 'Use the advanced configuration to simulate more complex use cases.'
+        description: 'The advanced configuration is used to simulate more complex policies.'
       },
       on: {
         beforeStep: async () => {
@@ -50,35 +50,35 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
       content: {
         title: 'Context Configuration',
         description:
-          'Contexts are special metadata used to define the runtime context of the test and include things like the Kubernetes version, the metadata of the AdmissionReview request outside of the resource itself (if required), and any variables which may need to be statically defined. Variables which begin with request.object do not need to be defined here. You can collapse the Context panel to save screen space if you wish.'
+          'Contexts are special metadata used to define the runtime context of the test and include things like the Kubernetes version, the metadata of the AdmissionReview request outside of the resource itself (if required), and any variables which may need to be statically defined. Variables which begin with request.object do not need to be defined here.'
       }
     },
     {
       attachTo: { element: '#config-btn' },
       content: {
         title: 'Kyverno Configuration',
-        description: 'The Kyverno configuration can be changed to update resourceFilters or the defaultRegistry.'
+        description: 'The Kyverno configuration can be changed to update resource filters or the default registry.'
       }
     },
     {
       attachTo: { element: '#crd-btn' },
       content: {
         title: 'Custom Resource Definitions',
-        description: 'Add CustomReosurceDefinitions to support additional resources.'
+        description: 'Add CRDs when testing custom resources.'
       }
     },
     {
       attachTo: { element: '#exceptions-btn' },
       content: {
         title: 'Policy Exceptions',
-        description: 'You can also test your PolicyExceptions by providing them in this panel.'
+        description: 'Test Policy Exceptions by providing them in this panel.'
       }
     },
     {
       attachTo: { element: '#clusterResources-btn' },
       content: {
         title: 'Cluster Resources',
-        description: 'Simulate existing resources in the cluster to test variable substitution with real resources or cloning rules.'
+        description: 'Simulate existing resources in the cluster to test variable substitution or when testing generate rules using the clone declaration.'
       },
       on: {
         afterStep: () => {
@@ -91,7 +91,7 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
       content: {
         title: 'Policy Panel',
         description:
-          'A Kyverno policy goes in the Policy Panel where it can be modified and tested. Schema validation of the editor updates in real time to show you any errors that may be found in the policy.'
+          'Kyverno policies are placed in the Policy Panel where they can be modified and tested. Schema validation of the editor updates in real time to show you any errors that may be found in the policy.'
       }
     },
     {
@@ -99,7 +99,7 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
       content: {
         title: 'Resource Panel',
         description:
-          "Resources are where you define the Kubernetes resources which are tested against the policy defined in the Policies pane. Multiple resources are supported with the standard YAML document delimiter '---'."
+          "Resources are where you define the Kubernetes resources which are tested against the policy defined in the Policies pane. Multiple resources are supported with the standard YAML document delimiter '---'. A split pane button enables you to provide old and new versions of a given resource when testing UPDATE requests."
       }
     },
     {
