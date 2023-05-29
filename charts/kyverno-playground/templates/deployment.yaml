@@ -32,14 +32,14 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- with .Values.sponsor }}
           args:
-            - -sponsor
-            - {{ . | quote }}
+            {{- with .Values.sponsor }}
+            - --sponsor
+            - {{ . }}
+            {{- end }}
             {{- range $key, $value := .Values.extraArgs }}
             - --{{ $key }}={{ $value }}
             {{- end }}
-          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"

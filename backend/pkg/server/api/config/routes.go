@@ -16,7 +16,7 @@ type ConfigResponse struct {
 func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster, sponsor string) error {
 	group.GET("/config", func(c *gin.Context) {
 		c.JSON(http.StatusOK, ConfigResponse{
-			Cluster: cluster != nil,
+			Cluster: cluster != nil && !cluster.IsFake(),
 			Sponsor: sponsor,
 		})
 	})

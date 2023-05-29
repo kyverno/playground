@@ -8,21 +8,12 @@ import (
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/client-go/kubernetes"
-	kubefake "k8s.io/client-go/kubernetes/fake"
 )
 
-type fakeCluster struct {
-	kubeClient kubernetes.Interface
-	dClient    dclient.Interface
-}
+type fakeCluster struct{}
 
 func NewFake() Cluster {
-	kubeClient := kubefake.NewSimpleClientset()
-
-	return fakeCluster{
-		kubeClient: kubeClient,
-	}
+	return fakeCluster{}
 }
 
 func (c fakeCluster) Kinds(_ context.Context, excludeGroups ...string) ([]Resource, error) {
@@ -38,19 +29,23 @@ func (c fakeCluster) Search(ctx context.Context, apiVersion string, kind string,
 }
 
 func (c fakeCluster) Get(ctx context.Context, apiVersion string, kind string, namespace string, name string) (*unstructured.Unstructured, error) {
-	return c.dClient.GetResource(ctx, apiVersion, kind, namespace, name)
+	return nil, errors.New("getting resource not supported in fake cluster")
 }
 
 func (c fakeCluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
 	return NewPolicyExceptionSelector(nil, exceptions)
 }
 
-func (c fakeCluster) DClient(objects []unstructured.Unstructured) dclient.Interface {
-	c.dClient = dclient.NewEmptyFakeClient()
-	for _, res := range objects {
-		_, _ = c.dClient.CreateResource(context.TODO(), res.GetAPIVersion(), res.GetKind(), res.GetNamespace(), &res, false)
+func (c fakeCluster) DClient(objects []unstructured.Unstructured) (dclient.Interface, error) {
+	dClient := dclient.NewEmptyFakeClient()
+	for i := range objects {
+		res := objects[i]
+		_, err := dClient.CreateResource(context.TODO(), res.GetAPIVersion(), res.GetKind(), res.GetNamespace(), &res, false)
+		if err != nil {
+			return nil, err
+		}
 	}
-	return c.dClient
+	return dClient, nil
 }
 
 func (c fakeCluster) IsFake() bool {

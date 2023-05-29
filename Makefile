@@ -247,7 +247,7 @@ kind-load: $(KIND) ko-build ## Build playground image and load it in kind cluste
 .PHONY: kind-install
 kind-install: $(HELM) kind-load ## Build image, load it in kind cluster and deploy playground helm chart
 	@echo Install playground chart... >&2
-	@$(HELM) upgrade --install kyverno --namespace kyverno --create-namespace --wait ./charts/kyverno-playground \
+	@$(HELM) upgrade --install kyverno-playground --namespace kyverno-playground --create-namespace --wait ./charts/kyverno-playground \
 		--set image.registry=$(KO_REGISTRY) \
 		--set image.repository=github.com/kyverno/playground/backend \
 		--set image.tag=$(GIT_SHA) \
