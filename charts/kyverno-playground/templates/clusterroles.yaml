@@ -24,7 +24,7 @@ roleRef:
   name: {{ .name }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "kyverno-playground.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    name: {{ include "kyverno-playground.serviceAccountName" $ }}
+    namespace: {{ $.Release.Namespace }}
 {{- end }}
 {{- end }}
