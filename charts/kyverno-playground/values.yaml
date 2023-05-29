@@ -157,3 +157,7 @@ roles: []
   #     - '*'
   #   resources:
   #     - '*'
+
+# -- Additonal container arguments
+extraArgs: {}
+  # cluster: true

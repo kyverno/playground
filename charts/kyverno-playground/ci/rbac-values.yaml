@@ -1,16 +1,2 @@
-clusterRoles:
-  - name: read-all
-    apiGroups:
-      - '*'
-    resources:
-      - '*'
-
-roles:
-  - name: read-all
-    namespaces:
-      - ns-1
-      - ns-2
-    apiGroups:
-      - '*'
-    resources:
-      - '*'
+extraArgs:
+  cluster: true

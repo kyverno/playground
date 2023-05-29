@@ -36,6 +36,9 @@ spec:
           args:
             - -sponsor
             - {{ . | quote }}
+            {{- range $key, $value := .Values.extraArgs }}
+            - --{{ $key }}={{ $value }}
+            {{- end }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

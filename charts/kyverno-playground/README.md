@@ -85,6 +85,7 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | affinity | object | `{}` | Affinity |
 | clusterRoles | list | `[]` | Cluster roles |
 | roles | list | `[]` | Cluster roles |
+| extraArgs | object | `{}` | Additonal container arguments |
 
 ## Source Code
 
