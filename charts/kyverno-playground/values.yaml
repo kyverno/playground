@@ -138,3 +138,22 @@ tolerations: []
 
 # -- Affinity
 affinity: {}
+
+# -- Cluster roles
+clusterRoles: []
+  # - name: read-all
+  #   apiGroups:
+  #     - '*'
+  #   resources:
+  #     - '*'
+
+# -- Cluster roles
+roles: []
+  # - name: read-all
+  #   namespaces:
+  #     - ns-1
+  #     - ns-2
+  #   apiGroups:
+  #     - '*'
+  #   resources:
+  #     - '*'

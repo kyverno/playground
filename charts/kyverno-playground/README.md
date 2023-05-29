@@ -83,6 +83,8 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | nodeSelector | object | `{}` | Node selector |
 | tolerations | list | `[]` | Tolerations |
 | affinity | object | `{}` | Affinity |
+| clusterRoles | list | `[]` | Cluster roles |
+| roles | list | `[]` | Cluster roles |
 
 ## Source Code
 
