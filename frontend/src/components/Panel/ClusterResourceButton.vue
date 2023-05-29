@@ -71,7 +71,6 @@
 import { ref, watch } from 'vue'
 import { layoutTheme } from '@/config'
 import { useAPI, resourcesToYAML, ResourceKind } from '@/composables/api'
-import { inputs } from '@/store'
 import { mergeResources } from '@/utils'
 import ClusterSearchList from '@/components/Panel/ClusterSearchList.vue'
 import ModeSelect from '@/components/ModeSelect.vue'
@@ -80,6 +79,12 @@ import NamespaceSelect from '@/components/NamespaceSelect.vue'
 import SimpleRow from '@/components/SimpleRow.vue'
 
 type Resource = { namespace?: string; name: string }
+
+const props = defineProps({
+  modelValue: { type: String }
+})
+
+const emit = defineEmits(['update:modelValue'])
 
 const window = ref<number>(0)
 const dialog = ref<boolean>(false)
@@ -130,9 +135,9 @@ const load = (res: Resource[]) => {
       const results = resourcesToYAML(response)
 
       if (mode.value === 'append') {
-        inputs.resource = mergeResources(inputs.resource || '', results)
+        emit('update:modelValue', mergeResources(props.modelValue || '', results))
       } else {
-        inputs.resource = results
+        emit('update:modelValue', results)
       }
       dialog.value = false
     })

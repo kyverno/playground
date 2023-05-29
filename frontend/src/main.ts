@@ -20,7 +20,8 @@ setDiagnosticsOptions({
   format: true,
   schemas: [
     { ...clusterpolicy, uri: `${baseURL}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] },
-    { ...context, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
+    { ...context, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] },
+    { ...context, uri: `${baseURL}/schemas/policyexception.json`, fileMatch: ['policyexception.yaml'] }
   ]
 })
 

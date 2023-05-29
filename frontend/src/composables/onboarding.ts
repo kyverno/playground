@@ -1,7 +1,7 @@
 import { useVOnboarding } from 'v-onboarding'
 import { Ref, ref } from 'vue'
 
-export const useOnboarding = (drawer: Ref<boolean>) => {
+export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
   const wrapper = ref(null)
   const onboarding = ref(true)
   const { start, finish } = useVOnboarding(wrapper)
@@ -20,6 +20,8 @@ export const useOnboarding = (drawer: Ref<boolean>) => {
       },
       on: {
         beforeStep: async () => {
+          if (drawer.value) return
+
           drawer.value = true
           await new Promise((r) => setTimeout(r, 200))
         },
@@ -29,19 +31,67 @@ export const useOnboarding = (drawer: Ref<boolean>) => {
       }
     },
     {
+      attachTo: { element: '#advanced-btn' },
+      content: {
+        title: 'Advanced Configuration',
+        description: 'Use the advanced configuration to simulate more complex use cases.'
+      },
+      on: {
+        beforeStep: async () => {
+          if (advanced.value) return
+
+          advanced.value = true
+          await new Promise((r) => setTimeout(r, 200))
+        }
+      }
+    },
+    {
+      attachTo: { element: '#context-btn' },
+      content: {
+        title: 'Context Configuration',
+        description:
+          'Contexts are special metadata used to define the runtime context of the test and include things like the Kubernetes version, the metadata of the AdmissionReview request outside of the resource itself (if required), and any variables which may need to be statically defined. Variables which begin with request.object do not need to be defined here. You can collapse the Context panel to save screen space if you wish.'
+      }
+    },
+    {
+      attachTo: { element: '#config-btn' },
+      content: {
+        title: 'Kyverno Configuration',
+        description: 'The Kyverno configuration can be changed to update resourceFilters or the defaultRegistry.'
+      }
+    },
+    {
+      attachTo: { element: '#crd-btn' },
+      content: {
+        title: 'Custom Resource Definitions',
+        description: 'Add CustomReosurceDefinitions to support additional resources.'
+      }
+    },
+    {
+      attachTo: { element: '#exceptions-btn' },
+      content: {
+        title: 'Policy Exceptions',
+        description: 'You can also test your PolicyExceptions by providing them in this panel.'
+      }
+    },
+    {
+      attachTo: { element: '#clusterResources-btn' },
+      content: {
+        title: 'Cluster Resources',
+        description: 'Simulate existing resources in the cluster to test variable substitution with real resources or cloning rules.'
+      },
+      on: {
+        afterStep: () => {
+          advanced.value = false
+        }
+      }
+    },
+    {
       attachTo: { element: '#policy-panel' },
       content: {
         title: 'Policy Panel',
         description:
           'A Kyverno policy goes in the Policy Panel where it can be modified and tested. Schema validation of the editor updates in real time to show you any errors that may be found in the policy.'
-      }
-    },
-    {
-      attachTo: { element: '#context-panel' },
-      content: {
-        title: 'Context Panel',
-        description:
-          'Contexts are special metadata used to define the runtime context of the test and include things like the Kubernetes version, the metadata of the AdmissionReview request outside of the resource itself (if required), and any variables which may need to be statically defined. Variables which begin with request.object do not need to be defined here. You can collapse the Context panel to save screen space if you wish.'
       }
     },
     {

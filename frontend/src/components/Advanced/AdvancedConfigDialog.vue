@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" height="90vh">
     <template v-slot:activator="{ props }">
-      <v-btn flat color="primary" block v-bind="props">{{ title }}</v-btn>
+      <v-btn flat color="primary" block v-bind="props" :id="`${id}-btn`">{{ title }}</v-btn>
     </template>
     <v-card>
       <v-toolbar color="transparent">
@@ -14,6 +14,7 @@
           </v-tooltip>
         </v-toolbar-title>
         <template v-slot:append>
+          <slot name="append" :update="update" :content="content" />
           <v-btn flat icon="mdi-close" @click="dialog = false"></v-btn>
         </template>
       </v-toolbar>
