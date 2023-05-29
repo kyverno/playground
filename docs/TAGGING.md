@@ -12,7 +12,7 @@ Dev images are all images that are published outside of a release (including com
 
 Release images are tagged with their corresponding release tag.
 
-Our release workflow is running `golreleaser` (which in turn runs `ko`) and is triggered when a tag is pushed to the repository.
+Our release workflow is running `goreleaser` (which in turn runs `ko`) and is triggered when a tag is pushed to the repository.
 The tag is expected to be in the form of a semantic release version (for example `v0.3.2-beta.1`).
 
 ## Latest tag
