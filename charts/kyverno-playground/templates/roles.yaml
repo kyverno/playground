@@ -1,0 +1,35 @@
+{{- with .Values.roles }}
+{{- range . }}
+{{- $role := . -}}
+{{- range .namespaces }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $role.name }}
+  namespace: {{ . }}
+rules:
+  - apiGroups:
+      {{- toYaml $role.apiGroups | nindent 6 }}
+    resources:
+      {{- toYaml $role.resources | nindent 6 }}
+    verbs:
+      - get
+      - list
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ $role.name }}
+  namespace: {{ . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $role.name }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "kyverno-playground.serviceAccountName" $ }}
+    namespace: {{ $.Release.Namespace }}
+{{- end }}
+{{- end }}
+{{- end }}
