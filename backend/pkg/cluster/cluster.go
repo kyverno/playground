@@ -16,6 +16,8 @@ import (
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+
+	"github.com/kyverno/playground/backend/pkg/auth"
 )
 
 type SearchResult struct {
@@ -65,10 +67,11 @@ func New(restConfig *rest.Config) (Cluster, error) {
 	return cluster{kubeClient, kyvernoClient, NewWrapper(dClient)}, nil
 }
 
-func (c cluster) Kinds(_ context.Context, excludeGroups ...string) ([]Resource, error) {
+func (c cluster) Kinds(ctx context.Context, excludeGroups ...string) ([]Resource, error) {
 	excluded := sets.New(excludeGroups...)
 	disco := c.kubeClient.Discovery()
 	_, resources, err := disco.ServerGroupsAndResources()
+	checker := auth.NewSelfChecker(c.kubeClient.AuthorizationV1().SelfSubjectAccessReviews())
 	var kinds []Resource
 	for _, group := range resources {
 		gv, err := schema.ParseGroupVersion(group.GroupVersion)
@@ -84,11 +87,17 @@ func (c cluster) Kinds(_ context.Context, excludeGroups ...string) ([]Resource, 
 			}
 			verbs := sets.New(resource.Verbs...)
 			if verbs.Has("get") && verbs.Has("list") {
-				kinds = append(kinds, Resource{
-					APIVersion:    group.GroupVersion,
-					Kind:          resource.Kind,
-					ClusterScoped: !resource.Namespaced,
-				})
+				allowed, err := auth.Check(ctx, checker, gv.Group, gv.Version, resource.Name, "", "", "get", "list")
+				if err != nil {
+					continue
+				}
+				if allowed {
+					kinds = append(kinds, Resource{
+						APIVersion:    group.GroupVersion,
+						Kind:          resource.Kind,
+						ClusterScoped: !resource.Namespaced,
+					})
+				}
 			}
 		}
 	}
