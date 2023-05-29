@@ -9,6 +9,8 @@ export type Inputs = {
   resource?: string
   context?: string
   config?: string
+  exceptions?: string
+  clusterResources?: string
   customResourceDefinitions?: string
 }
 
@@ -35,6 +37,8 @@ export const createInput = (name: string, defaults?: Inputs) => {
   const oldResource = useLocalStorage<string | undefined>(`persist:resource:old:${name}`, defaults?.oldResource || undefined)
   const context = useLocalStorage<string | undefined>(`persist:context:${name}`, defaults?.context || undefined)
   const config = useLocalStorage<string | undefined>(`persist:config:${name}`, defaults?.config || undefined)
+  const exceptions = useLocalStorage<string | undefined>(`persist:exceptions:${name}`, defaults?.config || undefined)
+  const clusterResources = useLocalStorage<string | undefined>(`persist:clusterResources:${name}`, defaults?.clusterResources || undefined)
   const customResourceDefinitions = useLocalStorage<string | undefined>(`persist:crds:${name}`, defaults?.customResourceDefinitions || undefined)
 
   persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
@@ -45,6 +49,8 @@ export const createInput = (name: string, defaults?: Inputs) => {
     oldResource,
     context,
     config,
+    exceptions,
+    clusterResources,
     customResourceDefinitions,
     name
   }
@@ -65,8 +71,14 @@ export const updateInput = (name: string, values: Inputs) => {
   if (input.context.value !== values.context) {
     input.context.value = values.context
   }
+  if (input.exceptions.value !== values.exceptions) {
+    input.exceptions.value = values.exceptions
+  }
   if (input.config.value !== values.config) {
     input.config.value = values.config
+  }
+  if (input.clusterResources.value !== values.clusterResources) {
+    input.clusterResources.value = values.clusterResources
   }
   if (input.customResourceDefinitions.value !== values.customResourceDefinitions) {
     input.customResourceDefinitions.value = values.customResourceDefinitions
@@ -83,6 +95,8 @@ export const removeInput = (name: string) => {
   input.oldResource.value = null
   input.context.value = null
   input.config.value = null
+  input.exceptions.value = null
+  input.clusterResources.value = null
   input.customResourceDefinitions.value = null
 
   name = name.replaceAll(';;', ';').trim()

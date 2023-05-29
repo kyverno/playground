@@ -6,11 +6,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/gin-gonic/gin"
-	"github.com/kyverno/kyverno/pkg/clients/dclient"
-	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
-	"github.com/kyverno/kyverno/pkg/engine/context/resolvers"
 	"github.com/loopfz/gadgeto/tonic"
-	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
 	"github.com/kyverno/playground/backend/data"
@@ -19,13 +15,14 @@ import (
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
 )
 
-func newEngineHandler(cluster cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
+func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
 	policyClient := openapiclient.NewLocalFiles(data.Schemas(), "schemas")
 	policyLoader, err := loader.New(policyClient)
 	if err != nil {
 		return nil, err
 	}
-	return tonic.Handler(func(c *gin.Context, in *EngineRequest) (*EngineResponse, error) {
+
+	return tonic.Handler(func(ctx *gin.Context, in *EngineRequest) (*EngineResponse, error) {
 		params, err := in.LoadParameters()
 		if err != nil {
 			return nil, err
@@ -46,18 +43,36 @@ func newEngineHandler(cluster cluster.Cluster, config APIConfiguration) (gin.Han
 		if err != nil {
 			return nil, err
 		}
+		clusterResources, err := in.LoadClusterResources(resourceLoader)
+		if err != nil {
+			return nil, err
+		}
 		config, err := in.LoadConfig(resourceLoader)
 		if err != nil {
 			return nil, err
 		}
-		processor, err := getProcessor(params, config, cluster)
+		exceptions, err := in.LoadPolicyExceptions(policyLoader)
 		if err != nil {
 			return nil, err
 		}
-		results, err := processor.Run(c, policies, resources, oldResources)
+
+		dClient := cl.DClient(clusterResources)
+
+		cmResolver, err := cluster.NewConfigMapResolver(dClient)
 		if err != nil {
 			return nil, err
 		}
+
+		processor, err := engine.NewProcessor(params, config, dClient, cmResolver, cl.PolicyExceptionSelector(exceptions))
+		if err != nil {
+			return nil, err
+		}
+
+		results, err := processor.Run(ctx, policies, resources, oldResources)
+		if err != nil {
+			return nil, err
+		}
+
 		return &EngineResponse{
 			Policies:          policies,
 			Resources:         resources,
@@ -78,22 +93,4 @@ func parseKubeVersion(kubeVersion string) (string, error) {
 		return "", err
 	}
 	return fmt.Sprint(version.Major(), ".", version.Minor()), nil
-}
-
-func getProcessor(params *engine.Parameters, config *corev1.ConfigMap, cluster cluster.Cluster) (*engine.Processor, error) {
-	var dClient dclient.Interface
-	var cmResolver engineapi.ConfigmapResolver
-	var exceptionSelector engineapi.PolicyExceptionSelector
-	if cluster != nil {
-		dClient = cluster.DClient()
-		exceptionSelector = engine.NewPolicyExceptionSelector(cluster)
-		if kubeClient := cluster.KubeClient(); kubeClient != nil {
-			resolver, err := resolvers.NewClientBasedResolver(kubeClient)
-			if err != nil {
-				return nil, err
-			}
-			cmResolver = resolver
-		}
-	}
-	return engine.NewProcessor(params, config, dClient, cmResolver, exceptionSelector)
 }

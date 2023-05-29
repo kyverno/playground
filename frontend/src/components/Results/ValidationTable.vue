@@ -6,10 +6,11 @@
     density="default"
     hover
     :items="items"
+    item-value="id"
     :headers="headers as any"
     class="result-table"
     show-expand
-    v-model:expanded="expanded"
+    v-model:expanded="(expanded as any)"
     :items-per-page="-1">
     <template v-slot:[`item.status`]="{ item }">
       <StatusChip :status="item.raw.status" :key="item.raw.status" />
@@ -28,12 +29,14 @@
 
 <script setup lang="ts">
 import { PropType, computed, ref } from 'vue'
+import hash from 'object-hash'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useConfig } from '@/config'
 import { Validation, RuleStatus } from '@/types'
 import StatusChip from './StatusChip.vue'
 
 type Item = {
+  id: string;
   apiVersion: string
   kind: string
   resource: string
@@ -47,7 +50,7 @@ const props = defineProps({
   results: { type: Array as PropType<Validation[]>, default: () => [] }
 })
 
-const expanded = ref<string[]>([])
+const expanded = ref<number[]>([])
 
 const display = useDisplay()
 
@@ -78,6 +81,7 @@ const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, validation) => {
     if (!validation.policyResponse.rules && !hideNoMatch.value) {
       results.push({
+        id: 'id',
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
         resource: [validation.resource.metadata.namespace, validation.resource.metadata.name].filter((s) => !!s).join('/'),
@@ -93,6 +97,7 @@ const items = computed(() => {
 
     rules.forEach((rule) => {
       results.push({
+        id: hash({ rule, resource: validation.resource }),
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
         resource: [validation.resource.metadata.namespace, validation.resource.metadata.name].filter((s) => !!s).join('/'),

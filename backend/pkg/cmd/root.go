@@ -67,7 +67,7 @@ func NewRootCommand() *cobra.Command {
 	return res
 }
 
-func (c *commandFlags) Run(_ *cobra.Command, args []string) error {
+func (c *commandFlags) Run(_ *cobra.Command, _ []string) error {
 	// initialise gin framework
 	gin.SetMode(c.ginFlags.mode)
 	// create server
@@ -104,7 +104,7 @@ func (c *commandFlags) Run(_ *cobra.Command, args []string) error {
 		}
 	} else {
 		// register API routes
-		if err := server.AddAPIRoutes(nil, apiConfig); err != nil {
+		if err := server.AddAPIRoutes(cluster.NewFake(), apiConfig); err != nil {
 			return err
 		}
 	}

@@ -60,6 +60,8 @@ const load = (name: string) => {
     oldResource: input.oldResource.value,
     context: input.context.value,
     config: input.config.value,
+    exceptions: input.exceptions.value,
+    clusterResources: input.clusterResources.value,
     name: input.name
   })
 

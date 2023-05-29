@@ -37,8 +37,10 @@ export const options = {
     policyInfo: 'Kyverno Policy',
     resourceInfo: 'Kubernetes resources which get applied to policies',
     contextInfo: 'Context information like admission context, variables, and Kubernetes version',
+    exceptionsInfo: 'Configure Kyverno PolicyException Resources',
     crdInfo: 'Define unknown CRDs you want to use as resource',
-    configInfo: 'Configure the Kyverno Engine'
+    configInfo: 'Configure the Kyverno Engine',
+    clusterResourcesInfo: 'Already existing resources to simulate clone operations or context substitution'
   },
   onboarding: {
     text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.'

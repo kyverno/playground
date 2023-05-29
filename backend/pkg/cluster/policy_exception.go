@@ -1,4 +1,4 @@
-package engine
+package cluster
 
 import (
 	"context"
@@ -8,11 +8,10 @@ import (
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-
-	"github.com/kyverno/playground/backend/pkg/cluster"
 )
 
 type policyExceptionSelector struct {
+	additional    []*kyvernov2alpha1.PolicyException
 	kyvernoClient versioned.Interface
 }
 
@@ -24,17 +23,22 @@ func (c policyExceptionSelector) List(selector labels.Selector) ([]*kyvernov2alp
 	if err != nil {
 		return nil, err
 	}
+
+	exceptions = append(exceptions, c.additional...)
+
 	for i := range list.Items {
 		exceptions = append(exceptions, &list.Items[i])
 	}
 	return exceptions, nil
 }
 
-func NewPolicyExceptionSelector(cluster cluster.Cluster) engineapi.PolicyExceptionSelector {
-	if cluster == nil {
+func NewPolicyExceptionSelector(client versioned.Interface, exceptions []*kyvernov2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
+	if client == nil {
 		return nil
 	}
+
 	return policyExceptionSelector{
-		kyvernoClient: cluster.KyvernoClient(),
+		additional:    exceptions,
+		kyvernoClient: client,
 	}
 }

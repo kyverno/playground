@@ -9,6 +9,8 @@ export const inputs = reactive<Inputs>({
   resource: ResourceTemplate,
   context: ContextTemplate,
   config: ConfigTemplate,
+  exceptions: '',
+  clusterResources: '',
   customResourceDefinitions: CustomResourceDefinitionsTemplate
 })
 
@@ -16,6 +18,8 @@ export const reset = () => {
   inputs.diffResources = false
   inputs.policy = PolicyTemplate
   inputs.oldResource = ''
+  inputs.exceptions = ''
+  inputs.clusterResources = ''
   inputs.resource = ResourceTemplate
   inputs.context = ContextTemplate
   inputs.config = ConfigTemplate
@@ -30,6 +34,8 @@ export const setDefaults = () => {
     oldResource: '',
     context: ContextTemplate,
     config: ConfigTemplate,
+    exceptions: '',
+    clusterResources: '',
     customResourceDefinitions: CustomResourceDefinitionsTemplate
   })
 }
@@ -76,6 +82,16 @@ export const init = (values: Inputs) => {
     inputs.config = values.config
   }
 
+  if (typeof values.exceptions === 'string') {
+    state.exceptions.value = values.exceptions
+    inputs.exceptions = values.exceptions
+  }
+
+  if (typeof values.clusterResources === 'string') {
+    state.clusterResources.value = values.clusterResources
+    inputs.clusterResources = values.clusterResources
+  }
+
   if (typeof values.customResourceDefinitions === 'string') {
     state.customResourceDefinitions.value = values.customResourceDefinitions
     inputs.customResourceDefinitions = values.customResourceDefinitions
@@ -105,6 +121,14 @@ export const update = (values: Inputs) => {
     inputs.config = values.config
   }
 
+  if (values.exceptions) {
+    inputs.exceptions = values.exceptions
+  }
+
+  if (values.clusterResources) {
+    inputs.clusterResources = values.clusterResources
+  }
+
   if (values.customResourceDefinitions) {
     inputs.customResourceDefinitions = values.customResourceDefinitions
   }
@@ -132,6 +156,14 @@ export const populate = () => {
 
   if (state.config.value) {
     inputs.config = state.config.value
+  }
+
+  if (state.exceptions.value) {
+    inputs.exceptions = state.exceptions.value
+  }
+
+  if (state.clusterResources.value) {
+    inputs.clusterResources = state.clusterResources.value
   }
 
   if (state.customResourceDefinitions.value) {

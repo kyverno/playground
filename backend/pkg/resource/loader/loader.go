@@ -40,6 +40,7 @@ func (l *loader) Load(document []byte) (unstructured.Unstructured, error) {
 	}
 	validator, err := l.factory.ValidatorsForGVK(gvk)
 	if err != nil {
+		fmt.Println(err)
 		return unstructured.Unstructured{}, err
 	}
 	decoder, err := validator.Decoder(gvk)
