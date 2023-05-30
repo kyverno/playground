@@ -7,7 +7,10 @@ export const generateContent = (): string => {
       policy: inputs.policy,
       resource: inputs.resource,
       context: inputs.context,
-      config: inputs.config
+      config: inputs.config,
+      customResourceDefinitions: inputs.customResourceDefinitions,
+      clusterResources: inputs.clusterResources,
+      exceptions: inputs.exceptions
     })
   )
 }
@@ -18,6 +21,9 @@ export const parseContent = (decoded: string): void => {
     resource: string
     context: string
     config: string
+    customResourceDefinitions: string
+    clusterResources: string
+    exceptions: string
   }
 
   init(content)
