@@ -9,7 +9,11 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
   const steps = [
     {
       attachTo: { element: '#example-menu' },
-      content: { title: 'Example Menu', description: 'The Examples menu contains a list of sample Kyverno policies. Selecting a policy will populate not only the policy itself but also test resources and, in some cases, a runtime context for convenient and quick testing.' }
+      content: {
+        title: 'Example Menu',
+        description:
+          'The Examples menu contains a list of sample Kyverno policies. Selecting a policy will populate not only the policy itself but also test resources and, in some cases, a runtime context for convenient and quick testing.'
+      }
     },
     {
       attachTo: { element: '#tutorials' },

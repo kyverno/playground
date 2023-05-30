@@ -34,7 +34,8 @@
       <v-card-actions>
         <v-btn @click="dialog = false">Close</v-btn>
         <v-spacer />
-        <slot name="actions" :update="update" />
+        <v-btn @click="() => update('')" prepend-icon="mdi-delete">Clear</v-btn>
+        <slot name="actions" :update="update" :content="content" />
         <v-spacer />
         <LegendMenu />
         <v-btn @click="save">Save</v-btn>
