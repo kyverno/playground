@@ -410,8 +410,6 @@ github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkp
 github.com/eapache/go-resiliency v1.1.0/go.mod h1:kFI+JgMyC7bLPUVY133qvEBtVayf5mFgVsvEsIPBvNs=
 github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21/go.mod h1:+020luEh2TKB4/GOp8oxxtq0Daoen/Cii55CzbTV6DU=
 github.com/eapache/queue v1.1.0/go.mod h1:6eCeP0CKFpHLu8blIFXhExK/dRa7WDZfr6jVFPTqq+I=
-github.com/eddycharly/kubectl-validate v0.0.0-20230525193829-93095c8e34ae h1:vgHVDYWUpv4Kw9sk8/2zdi2EllntHLsGiq6eceqQ7Pw=
-github.com/eddycharly/kubectl-validate v0.0.0-20230525193829-93095c8e34ae/go.mod h1:0+IwJWeQpDDO9xy0vra4TjfxO7bIeecLiv8CG6MgHRM=
 github.com/eddycharly/kyverno v1.5.0-rc1.0.20230530170212-a0d250f7c5e3 h1:gnaHAK8RanVLvt+yzNT7fU8wEAzSBkxe0X1IFy5lRCI=
 github.com/eddycharly/kyverno v1.5.0-rc1.0.20230530170212-a0d250f7c5e3/go.mod h1:zf/OydKTXqEhuSf3imfwjVm19+Z6I59hRZyC7FedmwE=
 github.com/edsrzf/mmap-go v1.0.0/go.mod h1:YO35OhQPt3KJa3ryjFM5Bs14WD66h8eGKpfaBNrHW5M=
@@ -2504,6 +2502,8 @@ sigs.k8s.io/controller-runtime v0.15.0 h1:ML+5Adt3qZnMSYxZ7gAverBLNPSMQEibtzAgp0
 sigs.k8s.io/controller-runtime v0.15.0/go.mod h1:7ngYvp1MLT+9GeZ+6lH3LOlcHkp/+tzA/fmHa4iq9kk=
 sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd h1:EDPBXCAspyGV4jQlpZSudPeMmr1bNJefnuqLsRAsHZo=
 sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd/go.mod h1:B8JuhiUyNFVKdsE8h686QcCxMaH6HrOAZj4vswFpcB0=
+sigs.k8s.io/kubectl-validate v0.0.0-20230530174549-310a07815fd8 h1:SoWz5wAdmuEgrR4VdS4gixD7EExAoSbKwERM15WuaiQ=
+sigs.k8s.io/kubectl-validate v0.0.0-20230530174549-310a07815fd8/go.mod h1:0+IwJWeQpDDO9xy0vra4TjfxO7bIeecLiv8CG6MgHRM=
 sigs.k8s.io/kustomize/api v0.13.4 h1:E38Hfx0G9R9v7vRgKshviPotJQETG0S2gD3JdHLCAsI=
 sigs.k8s.io/kustomize/api v0.13.4/go.mod h1:Bkaavz5RKK6ZzP0zgPrB7QbpbBJKiHuD3BB0KujY7Ls=
 sigs.k8s.io/kustomize/kyaml v0.14.2 h1:9WSwztbzwGszG1bZTziQUmVMrJccnyrLb5ZMKpJGvXw=
