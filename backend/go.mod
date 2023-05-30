@@ -18,7 +18,7 @@ require (
 	k8s.io/apimachinery v0.27.2
 	k8s.io/client-go v0.27.2
 	k8s.io/kube-openapi v0.0.0-20230501164219-8b0f38b5fd1f
-	sigs.k8s.io/kubectl-validate v0.0.0-20230525180452-baf053ee3e2f
+	sigs.k8s.io/kubectl-validate v0.0.0-20230530174549-310a07815fd8
 	sigs.k8s.io/yaml v1.3.0
 )
 
@@ -326,5 +326,4 @@ replace (
 	github.com/jmespath/go-jmespath => github.com/kyverno/go-jmespath v0.4.1-0.20230204162932-3ee946b9433d
 	go.etcd.io/etcd/client/pkg/v3 => go.etcd.io/etcd/client/pkg/v3 v3.5.7
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.27.0
-	sigs.k8s.io/kubectl-validate => github.com/eddycharly/kubectl-validate v0.0.0-20230525193829-93095c8e34ae
 )
