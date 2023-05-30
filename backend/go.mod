@@ -8,7 +8,7 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-logr/logr v1.2.4
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20230524095843-492a6761f886
+	github.com/kyverno/kyverno v1.5.0-rc1.0.20230530100144-7a838de4f1c8
 	github.com/loopfz/gadgeto v0.11.2
 	github.com/mattbaird/jsonpatch v0.0.0-20230413205102-771768614e91
 	github.com/spf13/cobra v1.7.0
@@ -45,7 +45,7 @@ require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
-	github.com/ProtonMail/go-crypto v0.0.0-20230426101702-58e86b294756 // indirect
+	github.com/ProtonMail/go-crypto v0.0.0-20230518184743-7afd39499903 // indirect
 	github.com/ThalesIgnite/crypto11 v1.2.5 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/alibabacloud-go/alibabacloud-gateway-spi v0.0.4 // indirect
@@ -197,7 +197,7 @@ require (
 	github.com/mozillazg/docker-credential-acr-helper v0.3.0 // indirect
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/notaryproject/notation-core-go v1.0.0-rc.3 // indirect
+	github.com/notaryproject/notation-core-go v1.0.0-rc.4 // indirect
 	github.com/notaryproject/notation-go v1.0.0-rc.3 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852 // indirect
@@ -250,7 +250,7 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.9 // indirect
 	github.com/vbatts/tar-split v0.11.3 // indirect
-	github.com/veraison/go-cose v1.0.0 // indirect
+	github.com/veraison/go-cose v1.1.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/xanzy/go-gitlab v0.81.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
@@ -312,7 +312,7 @@ require (
 	k8s.io/kubectl v0.27.1 // indirect
 	k8s.io/pod-security-admission v0.27.2 // indirect
 	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
-	oras.land/oras-go/v2 v2.1.0 // indirect
+	oras.land/oras-go/v2 v2.2.0 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.1.2 // indirect
 	sigs.k8s.io/controller-runtime v0.15.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/kyverno/kyverno/api/kyverno/v2alpha1"
+	"github.com/kyverno/kyverno/pkg/auth/checker"
 	"github.com/kyverno/kyverno/pkg/client/clientset/versioned"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
@@ -16,8 +17,6 @@ import (
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-
-	"github.com/kyverno/playground/backend/pkg/auth"
 )
 
 type SearchResult struct {
@@ -71,7 +70,7 @@ func (c cluster) Kinds(ctx context.Context, excludeGroups ...string) ([]Resource
 	excluded := sets.New(excludeGroups...)
 	disco := c.kubeClient.Discovery()
 	_, resources, err := disco.ServerGroupsAndResources()
-	checker := auth.NewSelfChecker(c.kubeClient.AuthorizationV1().SelfSubjectAccessReviews())
+	auth := checker.NewSelfChecker(c.kubeClient.AuthorizationV1().SelfSubjectAccessReviews())
 	var kinds []Resource
 	for _, group := range resources {
 		gv, err := schema.ParseGroupVersion(group.GroupVersion)
@@ -87,7 +86,7 @@ func (c cluster) Kinds(ctx context.Context, excludeGroups ...string) ([]Resource
 			}
 			verbs := sets.New(resource.Verbs...)
 			if verbs.Has("get") && verbs.Has("list") {
-				allowed, err := auth.Check(ctx, checker, gv.Group, gv.Version, resource.Name, "", "", "get", "list")
+				allowed, err := checker.Check(ctx, auth, gv.Group, gv.Version, resource.Name, "", "", "get", "list")
 				if err != nil {
 					continue
 				}
