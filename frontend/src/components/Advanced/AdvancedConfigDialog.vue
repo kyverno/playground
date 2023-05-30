@@ -35,6 +35,7 @@
         <v-btn @click="dialog = false">Close</v-btn>
         <v-spacer />
         <v-btn @click="() => update('')" prepend-icon="mdi-delete">Clear</v-btn>
+        <v-btn @click="() => update(template)" prepend-icon="mdi-note" v-if="template">Load Template</v-btn>
         <slot name="actions" :update="update" :content="content" />
         <v-spacer />
         <LegendMenu />
@@ -58,6 +59,7 @@ const props = defineProps({
   id: { type: String, required: true },
   title: { type: String, required: true },
   info: { type: String },
+  template: { type: String, default: '' },
   language: { type: String, default: 'yaml' },
   modelValue: { type: String, default: '' },
   uri: { type: String }

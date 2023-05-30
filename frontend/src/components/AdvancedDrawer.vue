@@ -27,6 +27,7 @@
             title="Policy Exceptions"
             :info="options.panels.exceptionsInfo"
             v-model="inputs.exceptions"
+            :template="PolicyExceptionTemplate"
             uri="policyexception.yaml">
             <template #actions="{ update, content }">
               <UploadButton label="Upload" @click="update" :tooltip="false" />
@@ -62,6 +63,7 @@ import ClusterResourceButton from './Panel/ClusterResourceButton.vue'
 import ClusterExceptionButton from './Panel/ClusterExceptionButton.vue'
 import UploadButton from './Panel/UploadButton.vue'
 import ClusterCRDButton from './Panel/ClusterCRDButton.vue'
+import { PolicyExceptionTemplate } from '@/assets/templates'
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false }

@@ -1,4 +1,4 @@
-import { ContextTemplate, PolicyTemplate, ResourceTemplate, ConfigTemplate, CustomResourceDefinitionsTemplate } from '@/assets/templates'
+import { ContextTemplate, PolicyTemplate, ResourceTemplate, ConfigTemplate } from '@/assets/templates'
 import { useLocalStorage } from '@vueuse/core'
 
 export const loadedPolicy = useLocalStorage<string>('loaded:policy', PolicyTemplate)
@@ -8,7 +8,7 @@ export const loadedOldResource = useLocalStorage<string>('loaded:resource:old', 
 export const loadedConfig = useLocalStorage<string>('loaded:config', ConfigTemplate)
 export const loadedExceptions = useLocalStorage<string>('loaded:exceptions', '')
 export const loadedClusterResources = useLocalStorage<string>('loaded:clusterResources', '')
-export const loadedCustomResourceDefinitions = useLocalStorage<string>('loaded:crds', CustomResourceDefinitionsTemplate)
+export const loadedCustomResourceDefinitions = useLocalStorage<string>('loaded:crds', '')
 export const loadedState = useLocalStorage<string>('loaded:state', '')
 
 export type State = {
