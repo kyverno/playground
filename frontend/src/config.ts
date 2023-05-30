@@ -187,15 +187,21 @@ export const options = {
     },
     {
       name: 'Custom Resources',
-      url: 'https://raw.githubusercontent.com/kyverno/policies/main/cert-manager',
+      url: 'https://raw.githubusercontent.com/kyverno/policies/main',
       color: undefined,
       subgroups: [
         {
           name: 'Cert Manager',
           policies: [
-            { path: 'limit-dnsnames', title: 'Limit DNS names' },
-            { path: 'limit-duration', title: 'Limit duration' },
-            { path: 'restrict-issuer', title: 'Restrict issuer' }
+            { path: 'cert-manager/limit-dnsnames', title: 'Limit DNS names' },
+            { path: 'cert-manager/limit-duration', title: 'Limit duration' },
+            { path: 'cert-manager/restrict-issuer', title: 'Restrict issuer' }
+          ]
+        },
+        {
+          name: 'ArgoCD',
+          policies: [
+            { path: 'argo/appproject-clusterresourceblacklist', title: 'Cluster resource blacklist' },
           ]
         }
       ]
