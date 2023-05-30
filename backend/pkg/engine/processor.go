@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	jsonpatch "github.com/evanphx/json-patch/v5"
+	json_patch "github.com/evanphx/json-patch/v5"
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
@@ -19,6 +19,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
+	"github.com/mattbaird/jsonpatch"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -125,25 +126,22 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 	}
 
 	response, verifiedImageData := p.engine.VerifyAndPatchImages(ctx, policyContext)
-	// TODO: we apply patches manually because the engine doesn't
-	patches := response.GetPatches()
+	var patches []jsonpatch.JsonPatchOperation
 	if !verifiedImageData.IsEmpty() {
 		annotationPatches, err := verifiedImageData.Patches(len(resource.GetAnnotations()) != 0, logr.Discard())
 		if err != nil {
 			return Response{}, resource, err
 		}
-
 		// add annotation patches first
 		patches = append(annotationPatches, patches...)
 	}
-
 	if len(patches) != 0 {
 		patch := jsonutils.JoinPatches(patch.ConvertPatches(patches...)...)
-		decoded, err := jsonpatch.DecodePatch(patch)
+		decoded, err := json_patch.DecodePatch(patch)
 		if err != nil {
 			return Response{}, resource, err
 		}
-		options := &jsonpatch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
+		options := &json_patch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
 		resourceBytes, err := resource.MarshalJSON()
 		if err != nil {
 			return Response{}, resource, err
@@ -156,7 +154,6 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 			return Response{}, resource, err
 		}
 	}
-
 	return ConvertResponse(response), response.PatchedResource, nil
 }
 

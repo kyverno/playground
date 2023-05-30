@@ -412,6 +412,8 @@ github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21/go.mod h1
 github.com/eapache/queue v1.1.0/go.mod h1:6eCeP0CKFpHLu8blIFXhExK/dRa7WDZfr6jVFPTqq+I=
 github.com/eddycharly/kubectl-validate v0.0.0-20230525193829-93095c8e34ae h1:vgHVDYWUpv4Kw9sk8/2zdi2EllntHLsGiq6eceqQ7Pw=
 github.com/eddycharly/kubectl-validate v0.0.0-20230525193829-93095c8e34ae/go.mod h1:0+IwJWeQpDDO9xy0vra4TjfxO7bIeecLiv8CG6MgHRM=
+github.com/eddycharly/kyverno v1.5.0-rc1.0.20230530170212-a0d250f7c5e3 h1:gnaHAK8RanVLvt+yzNT7fU8wEAzSBkxe0X1IFy5lRCI=
+github.com/eddycharly/kyverno v1.5.0-rc1.0.20230530170212-a0d250f7c5e3/go.mod h1:zf/OydKTXqEhuSf3imfwjVm19+Z6I59hRZyC7FedmwE=
 github.com/edsrzf/mmap-go v1.0.0/go.mod h1:YO35OhQPt3KJa3ryjFM5Bs14WD66h8eGKpfaBNrHW5M=
 github.com/elazarl/goproxy v0.0.0-20180725130230-947c36da3153/go.mod h1:/Zj4wYkgs4iZTTu3o/KG3Itv/qCCa8VVMlb3i9OVuzc=
 github.com/emicklei/go-restful v0.0.0-20170410110728-ff4f55a20633/go.mod h1:otzb+WCGbkyDHkqmQmT5YD2WR4BBwUdeQoFo8l/7tVs=
@@ -1004,8 +1006,6 @@ github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+
 github.com/kyoh86/exportloopref v0.1.8/go.mod h1:1tUcJeiioIs7VWe5gcOObrux3lb66+sBqGZrRkMwPgg=
 github.com/kyverno/go-jmespath v0.4.1-0.20230204162932-3ee946b9433d h1:g63VNwOo6yYRY1n3mgF2ou4cjnwyonsIKqnbBM9pTRA=
 github.com/kyverno/go-jmespath v0.4.1-0.20230204162932-3ee946b9433d/go.mod h1:T8mJZnbsbmF+m6zOOFylbeCJqk5+pHWvzYPziyZiYoo=
-github.com/kyverno/kyverno v1.5.0-rc1.0.20230530100144-7a838de4f1c8 h1:J9GfmCSS384lIlfulSN2+gU6kvZpvBilOV//GqGG0W4=
-github.com/kyverno/kyverno v1.5.0-rc1.0.20230530100144-7a838de4f1c8/go.mod h1:zf/OydKTXqEhuSf3imfwjVm19+Z6I59hRZyC7FedmwE=
 github.com/ldez/gomoddirectives v0.2.1/go.mod h1:sGicqkRgBOg//JfpXwkB9Hj0X5RyJ7mlACM5B9f6Me4=
 github.com/ldez/tagliatelle v0.2.0/go.mod h1:8s6WJQwEYHbKZDsp/LjArytKOG8qaMrKQQ3mFukHs88=
 github.com/leodido/go-urn v1.2.0/go.mod h1:+8+nEpDfqqsY+g338gtMEUOtuK+4dEMhiQEgxpxOKII=

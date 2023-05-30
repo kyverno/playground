@@ -324,6 +324,7 @@ require (
 
 replace (
 	github.com/jmespath/go-jmespath => github.com/kyverno/go-jmespath v0.4.1-0.20230204162932-3ee946b9433d
+	github.com/kyverno/kyverno => github.com/eddycharly/kyverno v1.5.0-rc1.0.20230530170212-a0d250f7c5e3
 	go.etcd.io/etcd/client/pkg/v3 => go.etcd.io/etcd/client/pkg/v3 v3.5.7
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.27.0
 	sigs.k8s.io/kubectl-validate => github.com/eddycharly/kubectl-validate v0.0.0-20230525193829-93095c8e34ae
