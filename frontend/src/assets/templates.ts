@@ -85,4 +85,24 @@ data:
     [ServiceMonitor,kyverno,kyverno-svc-service-monitor]
     [Pod,kyverno,kyverno-test]`
 
-export const CustomResourceDefinitionsTemplate = ''
+export const CustomResourceDefinitionsTemplate = ``
+
+export const PolicyExceptionTemplate = `apiVersion: kyverno.io/v2alpha1
+kind: PolicyException
+metadata:
+  name: policy-exception
+  namespace: default
+spec:
+  exceptions:
+  - policyName: ''
+    ruleNames:
+    - ''
+  match:
+    any:
+    - resources:
+        kinds:
+        - ''
+        namespaces:
+        - ''
+        names:
+        - ''`
