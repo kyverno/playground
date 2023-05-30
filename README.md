@@ -105,6 +105,7 @@ The following CRDs are embedded in the Playground backend and can be enabled wit
 
 | Name | Flag |
 | --- | --- |
+| ArgoCD | `--builtin-crds=argocd` |
 | Cert Manager | `--builtin-crds=cert-manager` |
 | Tekton Pipeline | `--builtin-crds=tekton-pipeline` |
 | Prometheus Operator | `--builtin-crds=prometheus-operator` |
