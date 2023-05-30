@@ -1,7 +1,6 @@
 <template>
   <AdvancedConfigDialog id="config" title="Kyverno Config" :info="options.panels.configInfo" v-model="inputs.config">
     <template #actions="{ update }">
-      <v-btn @click="() => update('')">Clear Config</v-btn>
       <v-btn @click="() => update(ConfigTemplate)">Load Default Config</v-btn>
       <UploadButton label="Upload ConfigMap" @click="update" :tooltip="false" />
       <ClusterConfigButton v-if="config.cluster" @update="update" />
