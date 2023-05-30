@@ -13,6 +13,8 @@ export type ProfileExport = {
     context?: string
     config?: string
     customResourceDefinitions?: string
+    clutserResources?: string
+    exceptions?: string
   }[]
 }
 
@@ -27,12 +29,14 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       oldResources: inputs.oldResource,
       context: inputs.context,
       config: inputs.config,
-      customResourceDefinitions: inputs.customResourceDefinitions
+      customResourceDefinitions: inputs.customResourceDefinitions,
+      clusterResources: inputs.clusterResources,
+      exceptions: inputs.exceptions
     })
   }
 
   profiles.map((p) => {
-    const { policy, resource, context, config, oldResource, customResourceDefinitions } = createInput(p)
+    const { policy, resource, context, config, oldResource, customResourceDefinitions, clusterResources, exceptions } = createInput(p)
 
     exports.push({
       name: p,
@@ -41,7 +45,9 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       oldResources: oldResource.value,
       context: context.value,
       config: config.value,
-      customResourceDefinitions: customResourceDefinitions.value
+      customResourceDefinitions: customResourceDefinitions.value,
+      clusterResources: clusterResources.value,
+      exceptions: exceptions.value
     })
   })
 
@@ -75,7 +81,9 @@ export const importProfiles = async (content: string) => {
       oldResource: currentState?.oldResources,
       context: currentState?.context,
       config: currentState?.config,
-      customResourceDefinitions: currentState?.customResourceDefinitions
+      customResourceDefinitions: currentState?.customResourceDefinitions,
+      clusterResources: currentState?.clutserResources,
+      exceptions: currentState?.exceptions
     })
   }
 
@@ -93,7 +101,9 @@ export const importProfiles = async (content: string) => {
         oldResource: profile?.oldResources,
         context: profile.context,
         config: profile?.config,
-        customResourceDefinitions: profile?.customResourceDefinitions
+        customResourceDefinitions: profile?.customResourceDefinitions,
+        clusterResources: profile?.clutserResources,
+        exceptions: profile?.exceptions
       })
     })
 }
