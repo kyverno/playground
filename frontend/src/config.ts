@@ -86,13 +86,34 @@ export const options = {
         {
           name: 'UPDATE Operations',
           policies: [
-            { path: 'other/allowed-label-changes', contextPath: 'tutorials/context', title: 'Allowed Label Changes' },
+            {
+              url: 'tutorials/policies',
+              path: 'allowed-label-changes',
+              contextPath: 'tutorials/context',
+              oldResourceFile: 'old_resource.yaml',
+              title: 'Allowed Label Changes'
+            },
+            { path: 'other/block-updates-deletes', contextPath: 'tutorials/context', title: 'Block Updates and Deletes' },
             { path: 'other/block-updates-deletes', contextPath: 'tutorials/context', title: 'Block Updates and Deletes' }
           ]
         },
         {
           name: 'Subject Configuration',
           policies: [{ path: 'other/check-serviceaccount', contextPath: 'tutorials/context', title: 'Check ServiceAccount' }]
+        },
+        {
+          name: 'Clone Rules',
+          policies: [
+            {
+              path: 'other/sync-secrets',
+              clusterResourcesFile: 'cloneSourceResource.yaml',
+              title: 'Sync Secrets'
+            }
+          ]
+        },
+        {
+          name: 'Policy Exceptions',
+          policies: [{ url: 'tutorials/policies', path: 'policy-exception', exceptionsFile: 'exception.yaml', title: 'Policy Exception' }]
         }
       ]
     },

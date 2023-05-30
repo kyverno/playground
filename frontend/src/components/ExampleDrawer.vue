@@ -56,8 +56,8 @@ const loadExample = async (url: string, policy: Policy) => {
     start: () => {
       overlay.value = true
     },
-    success: ([policy, resource, context]) => {
-      init({ policy, resource, context })
+    success: ([policy, resource, context, customResourceDefinitions, exceptions, clusterResources, oldResource]) => {
+      init({ policy, resource, context, customResourceDefinitions, exceptions, clusterResources, oldResource })
       emit('update:modelValue', false)
     },
     error: (err) => console.error(err),

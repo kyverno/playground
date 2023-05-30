@@ -7,13 +7,19 @@ export type Policy = {
   url?: string
   contextPath?: string
   resourceFile?: string
+  oldResourceFile?: string
+  crdsFile?: string
+  exceptionsFile?: string
+  clusterResourcesFile?: string
   path: string
   title: string
 }
 
+export type ExampleResponse = [string, string, string, string | undefined, string | undefined, string | undefined, string | undefined]
+
 export type LoadConfig = {
   start?: () => void
-  success?: (values: [string, string, string]) => void
+  success?: (values: ExampleResponse) => void
   error?: (err: Error) => void
   finished?: () => void
 }
@@ -50,13 +56,17 @@ export const loadPolicy = async (url: string, policy: Policy, config?: LoadConfi
         }
 
         return resp.text()
-      })
+      }),
+      policy.crdsFile ? fetch(`${url}/${folder}/${policy.crdsFile}`).then((resp) => resp.text()) : Promise.resolve(),
+      policy.exceptionsFile ? fetch(`${url}/${folder}/${policy.exceptionsFile}`).then((resp) => resp.text()) : Promise.resolve(),
+      policy.clusterResourcesFile ? fetch(`${url}/${folder}/${policy.clusterResourcesFile}`).then((resp) => resp.text()) : Promise.resolve(),
+      policy.oldResourceFile ? fetch(`${url}/${folder}/${policy.oldResourceFile}`).then((resp) => resp.text()) : Promise.resolve()
     ]
 
     config?.start?.()
     const values = await Promise.all(promises)
 
-    config?.success?.(values as [string, string, string])
+    config?.success?.(values as ExampleResponse)
   } catch (err) {
     config?.error?.(err as Error)
   } finally {

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: badpod01
+  labels:
+    foo: baz
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: goodpod01
+  labels:
+    breakglass: two
+spec:
+  containers:
+  - name: busybox
+    image: registry.corp/sdf3vhadfa:1.28
