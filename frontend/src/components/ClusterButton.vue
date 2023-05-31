@@ -6,7 +6,7 @@
           <v-btn v-bind="{ ...tooltip, ...props }" icon="mdi-kubernetes" />
         </template>
       </v-tooltip>
-      <v-btn v-bind="props" prepend-icon="mdi-kubernetes">{{ label }}</v-btn>
+      <v-btn v-bind="props" prepend-icon="mdi-kubernetes" v-else>{{ label }}</v-btn>
     </template>
 
     <v-card :theme="layoutTheme" title="Load from connected Cluster">
