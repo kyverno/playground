@@ -161,3 +161,29 @@ roles: []
 # -- Additonal container arguments
 extraArgs: {}
   # cluster: true
+
+config:
+  gin:
+    # -- Gin mode (`release` or `debug`)
+    mode: release
+    # -- Gin cors middleware
+    cors: false
+    # -- Gin logger middleware
+    logger: false
+  server:
+    # -- Server host
+    host: '0.0.0.0'
+    # -- Server port
+    port: 8080
+  cluster:
+    # -- Enable connected cluster mode
+    enabled: false
+    # TODO: kube config flags
+  ui:
+    # -- Sponsor name
+    sponsor: ''
+  engine:
+    # -- Builtin CRDs enabled (`argocd`, `cert-manager`, `prometheus-operator`, `tekton-pipelines`)
+    builtinCrds: []
+    # -- Paths to folders containing yaml definitions for CRDs
+    localCrds: []

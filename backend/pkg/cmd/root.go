@@ -19,7 +19,8 @@ import (
 type commandFlags struct {
 	serverFlags  serverFlags
 	ginFlags     ginFlags
-	configFlags  configFlags
+	uiFlags      uiFlags
+	engineFlags  engineFlags
 	clusterFlags clusterFlags
 }
 
@@ -34,14 +35,17 @@ type ginFlags struct {
 	cors bool
 }
 
-type configFlags struct {
-	cluster     bool
-	sponsor     string
+type uiFlags struct {
+	sponsor string
+}
+
+type engineFlags struct {
 	builtInCrds []string
 	localCrds   []string
 }
 
 type clusterFlags struct {
+	cluster             bool
 	kubeConfigOverrides clientcmd.ConfigOverrides
 }
 
@@ -57,12 +61,13 @@ func NewRootCommand() *cobra.Command {
 	res.Flags().StringVar(&command.ginFlags.mode, "gin-mode", gin.ReleaseMode, "gin run mode")
 	res.Flags().BoolVar(&command.ginFlags.log, "gin-log", false, "enable gin logger")
 	res.Flags().BoolVar(&command.ginFlags.cors, "gin-cors", true, "enable gin cors")
-	// config flags
-	res.Flags().StringVar(&command.configFlags.sponsor, "sponsor", "", "sponsor text")
-	res.Flags().BoolVar(&command.configFlags.cluster, "cluster", false, "enable cluster connected mode")
-	res.Flags().StringSliceVar(&command.configFlags.builtInCrds, "builtin-crds", nil, "list of enabled builtin custom resource definitions")
-	res.Flags().StringSliceVar(&command.configFlags.localCrds, "local-crds", nil, "list of folders containing custom resource definitions")
+	// ui flags
+	res.Flags().StringVar(&command.uiFlags.sponsor, "ui-sponsor", "", "sponsor text")
+	// engine flags
+	res.Flags().StringSliceVar(&command.engineFlags.builtInCrds, "engine-builtin-crds", nil, "list of enabled builtin custom resource definitions")
+	res.Flags().StringSliceVar(&command.engineFlags.localCrds, "engine-local-crds", nil, "list of folders containing custom resource definitions")
 	// cluster flags
+	res.Flags().BoolVar(&command.clusterFlags.cluster, "cluster", false, "enable cluster connected mode")
 	clientcmd.BindOverrideFlags(&command.clusterFlags.kubeConfigOverrides, res.Flags(), clientcmd.RecommendedConfigOverrideFlags("kube-"))
 	return res
 }
@@ -80,14 +85,14 @@ func (c *commandFlags) Run(_ *cobra.Command, _ []string) error {
 		return err
 	}
 	apiConfig := api.APIConfiguration{
-		Sponsor: c.configFlags.sponsor,
+		Sponsor: c.uiFlags.sponsor,
 		EngineConfiguration: api.EngineConfiguration{
-			BuiltInCrds: c.configFlags.builtInCrds,
-			LocalCrds:   c.configFlags.localCrds,
+			BuiltInCrds: c.engineFlags.builtInCrds,
+			LocalCrds:   c.engineFlags.localCrds,
 		},
 	}
 	// register API routes (with/without cluster support)
-	if c.configFlags.cluster {
+	if c.clusterFlags.cluster {
 		// create rest config
 		restConfig, err := utils.RestConfig(c.clusterFlags.kubeConfigOverrides)
 		if err != nil {
