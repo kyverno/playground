@@ -44,7 +44,7 @@ func TestNew(t *testing.T) {
 		}(),
 	}, {
 		name:    "invalid local",
-		client:  openapiclient.NewLocalFiles(data.Schemas(), "blam"),
+		client:  openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam"),
 		wantErr: true,
 	}, {
 		name:   "composite - no clients",
@@ -78,9 +78,9 @@ func TestNew(t *testing.T) {
 		}(),
 	}, {
 		name:   "composite - invalid local",
-		client: openapiclient.NewComposite(openapiclient.NewLocalFiles(data.Schemas(), "blam")),
+		client: openapiclient.NewComposite(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam")),
 		want: func() Loader {
-			factory, err := validatorfactory.New(openapiclient.NewComposite(openapiclient.NewLocalFiles(data.Schemas(), "blam")))
+			factory, err := validatorfactory.New(openapiclient.NewComposite(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam")))
 			require.NoError(t, err)
 			return &loader{
 				factory: factory,
@@ -130,16 +130,16 @@ func Test_loader_Load(t *testing.T) {
 		wantErr  bool
 	}{{
 		name:    "nil",
-		loader:  newLoader(openapiclient.NewLocalFiles(data.Schemas(), "schemas")),
+		loader:  newLoader(openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas")),
 		wantErr: true,
 	}, {
 		name:     "empty GVK",
-		loader:   newLoader(openapiclient.NewLocalFiles(data.Schemas(), "schemas")),
+		loader:   newLoader(openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas")),
 		document: []byte(`foo: bar`),
 		wantErr:  true,
 	}, {
 		name:   "not yaml",
-		loader: newLoader(openapiclient.NewLocalFiles(data.Schemas(), "schemas")),
+		loader: newLoader(openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas")),
 		document: []byte(`
 foo
   bar
@@ -147,7 +147,7 @@ foo
 		wantErr: true,
 	}, {
 		name:     "unknown GVK",
-		loader:   newLoader(openapiclient.NewLocalFiles(data.Schemas(), "schemas")),
+		loader:   newLoader(openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas")),
 		document: loadFile("../../../testdata/namespace.yaml"),
 		wantErr:  true,
 	}, {
