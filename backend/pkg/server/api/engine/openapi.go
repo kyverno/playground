@@ -1,9 +1,7 @@
 package engine
 
 import (
-	"encoding/json"
 	"fmt"
-	"strings"
 
 	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
@@ -15,19 +13,8 @@ import (
 	"k8s.io/client-go/openapi"
 	"k8s.io/kube-openapi/pkg/spec3"
 	"k8s.io/kube-openapi/pkg/validation/spec"
+	"sigs.k8s.io/kubectl-validate/pkg/openapiclient/groupversion"
 )
-
-// TODO: move into kubectl-validate
-type inmemoryGroupVersion struct {
-	*spec3.OpenAPI
-}
-
-func (g inmemoryGroupVersion) Schema(contentType string) ([]byte, error) {
-	if strings.ToLower(contentType) != runtime.ContentTypeJSON {
-		return nil, fmt.Errorf("only application/json content type is supported")
-	}
-	return json.Marshal(g.OpenAPI)
-}
 
 type inmemoryClient struct {
 	content []byte
@@ -106,7 +93,7 @@ func (k *inmemoryClient) Paths() (map[string]openapi.GroupVersion, error) {
 
 	res := map[string]openapi.GroupVersion{}
 	for k, v := range crds {
-		res[fmt.Sprintf("apis/%s/%s", k.Group, k.Version)] = inmemoryGroupVersion{v}
+		res[fmt.Sprintf("apis/%s/%s", k.Group, k.Version)] = groupversion.NewForOpenAPI(v)
 	}
 	return res, nil
 }
