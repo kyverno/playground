@@ -2502,8 +2502,8 @@ sigs.k8s.io/controller-runtime v0.15.0 h1:ML+5Adt3qZnMSYxZ7gAverBLNPSMQEibtzAgp0
 sigs.k8s.io/controller-runtime v0.15.0/go.mod h1:7ngYvp1MLT+9GeZ+6lH3LOlcHkp/+tzA/fmHa4iq9kk=
 sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd h1:EDPBXCAspyGV4jQlpZSudPeMmr1bNJefnuqLsRAsHZo=
 sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd/go.mod h1:B8JuhiUyNFVKdsE8h686QcCxMaH6HrOAZj4vswFpcB0=
-sigs.k8s.io/kubectl-validate v0.0.0-20230530223547-352a78cc5b61 h1:cIMVnZowEcbWj+mv4og12a+S1SrCJyf84P/t+QzRE98=
-sigs.k8s.io/kubectl-validate v0.0.0-20230530223547-352a78cc5b61/go.mod h1:0+IwJWeQpDDO9xy0vra4TjfxO7bIeecLiv8CG6MgHRM=
+sigs.k8s.io/kubectl-validate v0.0.0-20230531195345-5aee348b797c h1:V6JK3+D0oyXRLM5HEX6eH0fqxP3tSj+54jt7XhzLOiQ=
+sigs.k8s.io/kubectl-validate v0.0.0-20230531195345-5aee348b797c/go.mod h1:0+IwJWeQpDDO9xy0vra4TjfxO7bIeecLiv8CG6MgHRM=
 sigs.k8s.io/kustomize/api v0.13.4 h1:E38Hfx0G9R9v7vRgKshviPotJQETG0S2gD3JdHLCAsI=
 sigs.k8s.io/kustomize/api v0.13.4/go.mod h1:Bkaavz5RKK6ZzP0zgPrB7QbpbBJKiHuD3BB0KujY7Ls=
 sigs.k8s.io/kustomize/kyaml v0.14.2 h1:9WSwztbzwGszG1bZTziQUmVMrJccnyrLb5ZMKpJGvXw=
