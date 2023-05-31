@@ -43,9 +43,15 @@ func TestNew(t *testing.T) {
 			}
 		}(),
 	}, {
-		name:    "invalid local",
-		client:  openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam"),
-		wantErr: true,
+		name:   "invalid local",
+		client: openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam"),
+		want: func() Loader {
+			factory, err := validatorfactory.New(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam"))
+			require.NoError(t, err)
+			return &loader{
+				factory: factory,
+			}
+		}(),
 	}, {
 		name:   "composite - no clients",
 		client: openapiclient.NewComposite(),
