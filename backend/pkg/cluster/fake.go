@@ -36,7 +36,7 @@ func (c fakeCluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyExcept
 	return NewPolicyExceptionSelector(nil, exceptions)
 }
 
-func (c fakeCluster) DClient(objects []unstructured.Unstructured) (dclient.Interface, error) {
+func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Interface, error) {
 	dClient := dclient.NewEmptyFakeClient()
 	for i := range objects {
 		res := objects[i]

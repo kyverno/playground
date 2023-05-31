@@ -10,6 +10,7 @@ import (
 	"sigs.k8s.io/yaml"
 
 	"github.com/kyverno/playground/backend/data"
+	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
 	"github.com/kyverno/playground/backend/pkg/utils"
@@ -61,13 +62,20 @@ func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.Config
 	return loader.Load[corev1.ConfigMap](resourceLoader, []byte(r.Config))
 }
 
-func (r *EngineRequest) ResourceLoader(kubeVersion string, config APIConfiguration) (loader.Loader, error) {
-	kubeVersion, err := parseKubeVersion(kubeVersion)
-	if err != nil {
-		return nil, err
-	}
-	clients := []openapi.Client{
-		openapiclient.NewHardcodedBuiltins(kubeVersion),
+func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion string, config APIConfiguration) (loader.Loader, error) {
+	var clients []openapi.Client
+	if cluster != nil && !cluster.IsFake() {
+		dclient, err := cluster.DClient()
+		if err != nil {
+			return nil, err
+		}
+		clients = append(clients, dclient.GetKubeClient().Discovery().OpenAPIV3())
+	} else {
+		kubeVersion, err := parseKubeVersion(kubeVersion)
+		if err != nil {
+			return nil, err
+		}
+		clients = append(clients, openapiclient.NewHardcodedBuiltins(kubeVersion))
 	}
 	if len(r.CustomResourceDefinitions) != 0 {
 		clients = append(clients, NewInMemory([]byte(r.CustomResourceDefinitions)))

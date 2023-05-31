@@ -31,7 +31,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		resourceLoader, err := in.ResourceLoader(params.Kubernetes.Version, config)
+		resourceLoader, err := in.ResourceLoader(cl, params.Kubernetes.Version, config)
 		if err != nil {
 			return nil, err
 		}
@@ -55,7 +55,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		dClient, err := cl.DClient(clusterResources)
+		dClient, err := cl.DClient(clusterResources...)
 		if err != nil {
 			return nil, err
 		}
