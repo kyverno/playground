@@ -9,9 +9,10 @@
             "program": "${workspaceFolder}/backend",
             "args": [
                 "--gin-log",
-                "--builtin-crds=cert-manager",
-                "--builtin-crds=prometheus-operator",
-                "--builtin-crds=tekton-pipeline",
+                "--ui-sponsor=nirmata",
+                "--engine-builtin-crds=cert-manager",
+                "--engine-builtin-crds=prometheus-operator",
+                "--engine-builtin-crds=tekton-pipeline",
             ],
         },
         {
@@ -22,11 +23,12 @@
             "program": "${workspaceFolder}/backend",
             "args": [
                 "--gin-log",
+                "--ui-sponsor=nirmata",
                 "--cluster",
-                "--builtin-crds=argocd",
-                "--builtin-crds=cert-manager",
-                "--builtin-crds=prometheus-operator",
-                "--builtin-crds=tekton-pipeline",
+                "--engine-builtin-crds=argocd",
+                "--engine-builtin-crds=cert-manager",
+                "--engine-builtin-crds=prometheus-operator",
+                "--engine-builtin-crds=tekton-pipeline",
             ],
         }
     ]

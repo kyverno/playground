@@ -217,11 +217,12 @@ run: build-backend-assets ## Run locally
 	@echo Run backend... >&2
 	@cd backend && go run . \
 		--gin-log \
+		--ui-sponsor=nirmata \
 		--cluster \
-		--builtin-crds=argocd \
-		--builtin-crds=cert-manager \
-		--builtin-crds=prometheus-operator \
-		--builtin-crds=tekton-pipeline
+		--engine-builtin-crds=argocd \
+		--engine-builtin-crds=cert-manager \
+		--engine-builtin-crds=prometheus-operator \
+		--engine-builtin-crds=tekton-pipeline
 
 ########
 # KIND #
