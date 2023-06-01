@@ -13,30 +13,30 @@ import (
 type fakeCluster struct{}
 
 func NewFake() Cluster {
-	return fakeCluster{}
+	return &fakeCluster{}
 }
 
-func (c fakeCluster) Kinds(_ context.Context, excludeGroups ...string) ([]Resource, error) {
+func (c *fakeCluster) Kinds(_ context.Context, excludeGroups ...string) ([]Resource, error) {
 	return nil, errors.New("listing kinds not supported in fake cluster")
 }
 
-func (c fakeCluster) Namespaces(ctx context.Context) ([]string, error) {
+func (c *fakeCluster) Namespaces(ctx context.Context) ([]string, error) {
 	return nil, errors.New("listing namespaces not supported in fake cluster")
 }
 
-func (c fakeCluster) Search(ctx context.Context, apiVersion string, kind string, namespace string, labels map[string]string) ([]SearchResult, error) {
+func (c *fakeCluster) Search(ctx context.Context, apiVersion string, kind string, namespace string, labels map[string]string) ([]SearchResult, error) {
 	return nil, errors.New("searching resources not supported in fake cluster")
 }
 
-func (c fakeCluster) Get(ctx context.Context, apiVersion string, kind string, namespace string, name string) (*unstructured.Unstructured, error) {
+func (c *fakeCluster) Get(ctx context.Context, apiVersion string, kind string, namespace string, name string) (*unstructured.Unstructured, error) {
 	return nil, errors.New("getting resource not supported in fake cluster")
 }
 
-func (c fakeCluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
+func (c *fakeCluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
 	return NewPolicyExceptionSelector(nil, exceptions)
 }
 
-func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Interface, error) {
+func (c *fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Interface, error) {
 	dClient := dclient.NewEmptyFakeClient()
 	for i := range objects {
 		res := objects[i]
@@ -48,6 +48,10 @@ func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Inte
 	return dClient, nil
 }
 
-func (c fakeCluster) IsFake() bool {
+func (c *fakeCluster) IsFake() bool {
 	return true
+}
+
+func (c *fakeCluster) ClientInterface(objects ...unstructured.Unstructured) (engineapi.ClientInterface, error) {
+	return &fakeClient{objects}, nil
 }

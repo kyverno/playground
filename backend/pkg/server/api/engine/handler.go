@@ -63,7 +63,11 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		processor, err := engine.NewProcessor(params, config, dClient, cmResolver, cl.PolicyExceptionSelector(exceptions))
+		client, err := cl.ClientInterface(clusterResources...)
+		if err != nil {
+			return nil, err
+		}
+		processor, err := engine.NewProcessor(params, config, client, dClient, cmResolver, cl.PolicyExceptionSelector(exceptions))
 		if err != nil {
 			return nil, err
 		}

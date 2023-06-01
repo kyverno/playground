@@ -9,6 +9,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/auth/checker"
 	"github.com/kyverno/kyverno/pkg/client/clientset/versioned"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
+	"github.com/kyverno/kyverno/pkg/engine/adapters"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -36,6 +37,7 @@ type Cluster interface {
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
 	DClient(...unstructured.Unstructured) (dclient.Interface, error)
+	ClientInterface(...unstructured.Unstructured) (engineapi.ClientInterface, error)
 	PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector
 	IsFake() bool
 }
@@ -63,10 +65,10 @@ func New(restConfig *rest.Config) (Cluster, error) {
 	if err != nil {
 		return nil, err
 	}
-	return cluster{kubeClient, kyvernoClient, NewWrapper(dClient)}, nil
+	return &cluster{kubeClient, kyvernoClient, NewWrapper(dClient)}, nil
 }
 
-func (c cluster) Kinds(ctx context.Context, excludeGroups ...string) ([]Resource, error) {
+func (c *cluster) Kinds(ctx context.Context, excludeGroups ...string) ([]Resource, error) {
 	excluded := sets.New(excludeGroups...)
 	disco := c.kubeClient.Discovery()
 	_, resources, err := disco.ServerGroupsAndResources()
@@ -103,7 +105,7 @@ func (c cluster) Kinds(ctx context.Context, excludeGroups ...string) ([]Resource
 	return kinds, err
 }
 
-func (c cluster) Namespaces(ctx context.Context) ([]string, error) {
+func (c *cluster) Namespaces(ctx context.Context) ([]string, error) {
 	nsClient := c.kubeClient.CoreV1().Namespaces()
 	list, err := nsClient.List(ctx, v1.ListOptions{})
 	if err != nil {
@@ -116,7 +118,7 @@ func (c cluster) Namespaces(ctx context.Context) ([]string, error) {
 	return namespaces, nil
 }
 
-func (c cluster) Search(ctx context.Context, apiVersion string, kind string, namespace string, labels map[string]string) ([]SearchResult, error) {
+func (c *cluster) Search(ctx context.Context, apiVersion string, kind string, namespace string, labels map[string]string) ([]SearchResult, error) {
 	var selector *v1.LabelSelector
 	if labels != nil {
 		selector = &v1.LabelSelector{MatchLabels: labels}
@@ -135,18 +137,22 @@ func (c cluster) Search(ctx context.Context, apiVersion string, kind string, nam
 	return resources, nil
 }
 
-func (c cluster) Get(ctx context.Context, apiVersion string, kind string, namespace string, name string) (*unstructured.Unstructured, error) {
+func (c *cluster) Get(ctx context.Context, apiVersion string, kind string, namespace string, name string) (*unstructured.Unstructured, error) {
 	return c.dClient.GetResource(ctx, apiVersion, kind, namespace, name)
 }
 
-func (c cluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
+func (c *cluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
 	return NewPolicyExceptionSelector(c.kyvernoClient, exceptions)
 }
 
-func (c cluster) DClient(_ ...unstructured.Unstructured) (dclient.Interface, error) {
+func (c *cluster) DClient(_ ...unstructured.Unstructured) (dclient.Interface, error) {
 	return c.dClient, nil
 }
 
-func (c cluster) IsFake() bool {
+func (c *cluster) IsFake() bool {
 	return false
+}
+
+func (c *cluster) ClientInterface(...unstructured.Unstructured) (engineapi.ClientInterface, error) {
+	return adapters.ClientInterface(c.dClient), nil
 }

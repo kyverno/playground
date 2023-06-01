@@ -289,7 +289,7 @@ func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.U
 func newEngine(
 	cfg config.Configuration,
 	jp jmespath.Interface,
-	client dclient.Interface,
+	client engineapi.ClientInterface,
 	cmResolver engineapi.ConfigmapResolver,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 ) (engineapi.Engine, error) {
@@ -320,6 +320,7 @@ func newEngine(
 func NewProcessor(
 	params *Parameters,
 	kyvernoConfig *corev1.ConfigMap,
+	client engineapi.ClientInterface,
 	dClient dclient.Interface,
 	cmResolver engineapi.ConfigmapResolver,
 	exceptionSelector engineapi.PolicyExceptionSelector,
@@ -332,7 +333,7 @@ func NewProcessor(
 	jp := jmespath.New(cfg)
 	cluster := false
 
-	engine, err := newEngine(cfg, jp, dClient, cmResolver, exceptionSelector)
+	engine, err := newEngine(cfg, jp, client, cmResolver, exceptionSelector)
 	if err != nil {
 		return nil, err
 	}

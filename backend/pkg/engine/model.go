@@ -83,14 +83,14 @@ type RuleResponse struct {
 
 func ConvertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 	generatedResource, _ := yaml.Marshal(in.GeneratedResource().Object)
-
+	patchedTarget, _, _ := in.PatchedTarget()
 	out := RuleResponse{
 		Name:              in.Name(),
 		RuleType:          in.RuleType(),
 		Message:           in.Message(),
 		Status:            in.Status(),
 		GeneratedResource: string(generatedResource),
-		// PatchedTarget *unstructured.Unstructured
+		PatchedTarget:     patchedTarget,
 		// // patchedTargetParentResourceGVR is the GVR of the parent resource of the PatchedTarget. This is only populated when PatchedTarget is a subresource.
 		// PatchedTargetParentResourceGVR metav1.GroupVersionResource
 		// // patchedTargetSubresourceName is the name of the subresource which is patched, empty if the resource patched is not a subresource.
