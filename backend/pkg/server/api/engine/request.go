@@ -77,6 +77,7 @@ func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion stri
 		}
 		clients = append(clients, openapiclient.NewHardcodedBuiltins(kubeVersion))
 	}
+	clients = append(clients, openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"))
 	if len(r.CustomResourceDefinitions) != 0 {
 		clients = append(clients, NewInMemory([]byte(r.CustomResourceDefinitions)))
 	}
