@@ -213,12 +213,23 @@ test-backend: ## Test backend
 #######
 
 .PHONY: run
-run: build-backend-assets ## Run locally
+run: build-backend-assets ## Run locally (with connected cluster)
 	@echo Run backend... >&2
 	@cd backend && go run . \
 		--gin-log \
 		--ui-sponsor=nirmata \
 		--cluster \
+		--engine-builtin-crds=argocd \
+		--engine-builtin-crds=cert-manager \
+		--engine-builtin-crds=prometheus-operator \
+		--engine-builtin-crds=tekton-pipeline
+
+.PHONY: run-standalone
+run-standalone: build-backend-assets ## Run locally (without connected cluster)
+	@echo Run backend... >&2
+	@cd backend && go run . \
+		--gin-log \
+		--ui-sponsor=nirmata \
 		--engine-builtin-crds=argocd \
 		--engine-builtin-crds=cert-manager \
 		--engine-builtin-crds=prometheus-operator \
