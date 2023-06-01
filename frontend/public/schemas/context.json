@@ -64,6 +64,24 @@
                 "operation"
             ]
         },
+        "flags": {
+            "type": "object",
+            "properties": {
+                "exceptions": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enables policy exceptions."
+                        },
+                        "namespace": {
+                            "type": "string",
+                            "description": "Restricts exceptions to a specific namespace."
+                        }
+                    }
+                }
+            }
+        },
         "variables": {
             "type": "object"
         }

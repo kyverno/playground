@@ -12,6 +12,11 @@ context:
   operation: CREATE
   dryRun: false
 
+flags:
+  exceptions:
+    enabled: true
+    namespace: ''
+
 # Custom variables to mock references to 
 # ConfigMaps, Secrets or APICalls
 variables: {}
