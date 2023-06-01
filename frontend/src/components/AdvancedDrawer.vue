@@ -8,7 +8,13 @@
     <v-card flat>
       <v-list>
         <v-list-item>
-          <AdvancedConfigDialog id="context" title="Context" :info="options.panels.contextInfo" v-model="inputs.context" uri="context.yaml" />
+          <AdvancedConfigDialog
+            id="context"
+            title="Context"
+            :info="options.panels.contextInfo"
+            v-model="inputs.context"
+            uri="context.yaml"
+            :template="ContextTemplate" />
         </v-list-item>
         <v-list-item>
           <KyvernoConfig />
@@ -59,7 +65,7 @@ import { inputs } from '@/store'
 import ClusterResourceButton from './Panel/ClusterResourceButton.vue'
 import ClusterExceptionButton from './Panel/ClusterExceptionButton.vue'
 import ClusterCRDButton from './Panel/ClusterCRDButton.vue'
-import { PolicyExceptionTemplate } from '@/assets/templates'
+import { ContextTemplate, PolicyExceptionTemplate } from '@/assets/templates'
 import { config } from '@/composables/api'
 
 const props = defineProps({
