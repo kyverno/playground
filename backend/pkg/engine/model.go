@@ -15,8 +15,13 @@ type Exceptions struct {
 	Namespace string `json:"namespace"`
 }
 
+type Cosign struct {
+	ImageSignatureRepository string `json:"imageSignatureRepository"`
+}
+
 type Flags struct {
 	Exceptions Exceptions `json:"exceptions"`
+	Cosign     Cosign     `json:"cosign"`
 }
 
 type Parameters struct {

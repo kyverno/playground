@@ -34,6 +34,8 @@ flags:
   exceptions:
     enabled: true
     namespace: ''
+  cosign:
+    imageSignatureRepository: ''
 
 variables: {}`
 
