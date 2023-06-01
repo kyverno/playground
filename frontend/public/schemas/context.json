@@ -79,6 +79,15 @@
                             "description": "Restricts exceptions to a specific namespace."
                         }
                     }
+                },
+                "cosign": {
+                    "type": "object",
+                    "properties": {
+                        "imageSignatureRepository": {
+                            "type": "string",
+                            "description": "Alternate repository for image signatures."
+                        }
+                    }
                 }
             }
         },

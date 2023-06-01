@@ -14,6 +14,8 @@ flags:
   exceptions:
     enabled: true
     namespace: ''
+  cosign:
+    imageSignatureRepository: ''
 
 variables:
   hosts: "[\"www.github.com\", \"www.kyverno.com\", \"www.nirmata.com\"]"
