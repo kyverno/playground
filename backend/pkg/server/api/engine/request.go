@@ -1,6 +1,8 @@
 package engine
 
 import (
+	"testing/fstest"
+
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2alpha1 "github.com/kyverno/kyverno/api/kyverno/v2alpha1"
 	corev1 "k8s.io/api/core/v1"
@@ -79,7 +81,12 @@ func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion stri
 	}
 	clients = append(clients, openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"))
 	if len(r.CustomResourceDefinitions) != 0 {
-		clients = append(clients, NewInMemory([]byte(r.CustomResourceDefinitions)))
+		mapFs := fstest.MapFS{
+			"crds.yaml": &fstest.MapFile{
+				Data: []byte(r.CustomResourceDefinitions),
+			},
+		}
+		clients = append(clients, openapiclient.NewLocalCRDFiles(mapFs, "."))
 	}
 	for _, crd := range config.LocalCrds {
 		clients = append(clients, openapiclient.NewLocalCRDFiles(nil, crd))
