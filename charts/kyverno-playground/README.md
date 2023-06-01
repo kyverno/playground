@@ -89,6 +89,7 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | config.gin.mode | string | `"release"` | Gin mode (`release` or `debug`) |
 | config.gin.cors | bool | `false` | Gin cors middleware |
 | config.gin.logger | bool | `false` | Gin logger middleware |
+| config.gin.maxBodySize | int | `2097152` | Gin max body size |
 | config.server.host | string | `"0.0.0.0"` | Server host |
 | config.server.port | int | `8080` | Server port |
 | config.cluster.enabled | bool | `false` | Enable connected cluster mode |

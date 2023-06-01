@@ -79,6 +79,7 @@ func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion stri
 		}
 		clients = append(clients, openapiclient.NewHardcodedBuiltins(kubeVersion))
 	}
+	clients = append(clients, openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"))
 	if len(r.CustomResourceDefinitions) != 0 {
 		mapFs := fstest.MapFS{
 			"crds.yaml": &fstest.MapFile{
