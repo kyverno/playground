@@ -22,6 +22,8 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		return nil, err
 	}
 
+	tonic.SetBindHook(tonic.DefaultBindingHookMaxBodyBytes(512 * 1024))
+
 	return tonic.Handler(func(ctx *gin.Context, in *EngineRequest) (*EngineResponse, error) {
 		params, err := in.LoadParameters()
 		if err != nil {
