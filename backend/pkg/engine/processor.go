@@ -262,7 +262,6 @@ func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new 
 		gvk,
 		p.config,
 	)
-
 	if err != nil {
 		return nil, err
 	}

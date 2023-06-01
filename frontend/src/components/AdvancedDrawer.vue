@@ -16,7 +16,6 @@
         <v-list-item>
           <AdvancedConfigDialog id="crd" title="Custom Resource Definitions" :info="options.panels.crdInfo" v-model="inputs.customResourceDefinitions">
             <template #actions="{ update, content }">
-              <UploadButton label="Upload" @click="update" :tooltip="false" />
               <ClusterCRDButton @update:model-value="update" :model-value="content" label="From Cluster" v-if="config.cluster" />
             </template>
           </AdvancedConfigDialog>
@@ -30,7 +29,6 @@
             :template="PolicyExceptionTemplate"
             uri="policyexception.yaml">
             <template #actions="{ update, content }">
-              <UploadButton label="Upload" @click="update" :tooltip="false" />
               <ClusterExceptionButton @update:model-value="update" :model-value="content" v-if="config.cluster" />
             </template>
           </AdvancedConfigDialog>
@@ -38,7 +36,6 @@
         <v-list-item>
           <AdvancedConfigDialog id="clusterResources" title="Cluster Resources" :info="options.panels.clusterResourcesInfo" v-model="inputs.clusterResources">
             <template #actions="{ update, content }">
-              <UploadButton label="Upload" @click="update" :tooltip="false" />
               <ClusterResourceButton @update:model-value="update" :model-value="content" label="From Cluster" v-if="config.cluster" />
             </template>
           </AdvancedConfigDialog>
@@ -61,7 +58,6 @@ import KyvernoConfig from './Advanced/KyvernoConfig.vue'
 import { inputs } from '@/store'
 import ClusterResourceButton from './Panel/ClusterResourceButton.vue'
 import ClusterExceptionButton from './Panel/ClusterExceptionButton.vue'
-import UploadButton from './Panel/UploadButton.vue'
 import ClusterCRDButton from './Panel/ClusterCRDButton.vue'
 import { PolicyExceptionTemplate } from '@/assets/templates'
 import { config } from '@/composables/api'
