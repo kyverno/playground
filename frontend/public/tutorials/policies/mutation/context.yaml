@@ -10,6 +10,7 @@ context:
   clusterRoles: []
   namespaceLabels: {}
   operation: CREATE
+  dryRun: false
 
 # Custom variables to mock references to 
 # ConfigMaps, Secrets or APICalls
