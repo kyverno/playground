@@ -170,6 +170,8 @@ config:
     cors: false
     # -- Gin logger middleware
     logger: false
+    # -- Gin max body size
+    maxBodySize: 2097152
   server:
     # -- Server host
     host: '0.0.0.0'

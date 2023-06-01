@@ -216,7 +216,9 @@ test-backend: ## Test backend
 run: build-backend-assets ## Run locally (with connected cluster)
 	@echo Run backend... >&2
 	@cd backend && go run . \
+		--gin-mode=release \
 		--gin-log \
+		--gin-max-body-size=2097152 \
 		--ui-sponsor=nirmata \
 		--cluster \
 		--engine-builtin-crds=argocd \
@@ -228,7 +230,9 @@ run: build-backend-assets ## Run locally (with connected cluster)
 run-standalone: build-backend-assets ## Run locally (without connected cluster)
 	@echo Run backend... >&2
 	@cd backend && go run . \
+		--gin-mode=release \
 		--gin-log \
+		--gin-max-body-size=2097152 \
 		--ui-sponsor=nirmata \
 		--engine-builtin-crds=argocd \
 		--engine-builtin-crds=cert-manager \

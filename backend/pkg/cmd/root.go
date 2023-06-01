@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/loopfz/gadgeto/tonic"
 	"github.com/spf13/cobra"
 	"k8s.io/client-go/tools/clientcmd"
 
@@ -30,9 +31,10 @@ type serverFlags struct {
 }
 
 type ginFlags struct {
-	mode string
-	log  bool
-	cors bool
+	mode        string
+	log         bool
+	cors        bool
+	maxBodySize int
 }
 
 type uiFlags struct {
@@ -61,6 +63,7 @@ func NewRootCommand() *cobra.Command {
 	res.Flags().StringVar(&command.ginFlags.mode, "gin-mode", gin.ReleaseMode, "gin run mode")
 	res.Flags().BoolVar(&command.ginFlags.log, "gin-log", false, "enable gin logger")
 	res.Flags().BoolVar(&command.ginFlags.cors, "gin-cors", true, "enable gin cors")
+	res.Flags().IntVar(&command.ginFlags.maxBodySize, "gin-max-body-size", 2*1024*1024, "gin max body size")
 	// ui flags
 	res.Flags().StringVar(&command.uiFlags.sponsor, "ui-sponsor", "", "sponsor text")
 	// engine flags
@@ -75,6 +78,7 @@ func NewRootCommand() *cobra.Command {
 func (c *commandFlags) Run(_ *cobra.Command, _ []string) error {
 	// initialise gin framework
 	gin.SetMode(c.ginFlags.mode)
+	tonic.SetBindHook(tonic.DefaultBindingHookMaxBodyBytes(int64(c.ginFlags.maxBodySize)))
 	// create server
 	server, err := server.New(c.ginFlags.log, c.ginFlags.cors)
 	if err != nil {
