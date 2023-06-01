@@ -36,6 +36,7 @@ spec:
             - --gin-mode={{ .Values.config.gin.mode }}
             - --gin-cors={{ .Values.config.gin.cors }}
             - --gin-log={{ .Values.config.gin.logger }}
+            - --gin-max-body-size={{ .Values.config.gin.maxBodySize }}
             - --server-host={{ .Values.config.server.host }}
             - --server-port={{ .Values.config.server.port }}
             - --cluster={{ .Values.config.cluster.enabled }}
