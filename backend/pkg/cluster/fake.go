@@ -32,8 +32,8 @@ func (c fakeCluster) Get(ctx context.Context, apiVersion string, kind string, na
 	return nil, errors.New("getting resource not supported in fake cluster")
 }
 
-func (c fakeCluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
-	return NewPolicyExceptionSelector(nil, exceptions)
+func (c fakeCluster) PolicyExceptionSelector(namespace string, exceptions ...*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
+	return NewPolicyExceptionSelector(namespace, nil, exceptions...)
 }
 
 func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Interface, error) {

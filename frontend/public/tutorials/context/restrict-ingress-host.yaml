@@ -10,5 +10,10 @@ context:
   operation: CREATE
   dryRun: false
 
+flags:
+  exceptions:
+    enabled: true
+    namespace: ''
+
 variables:
   hosts: "[\"www.github.com\", \"www.kyverno.com\", \"www.nirmata.com\"]"

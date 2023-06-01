@@ -13,12 +13,13 @@ import (
 type policyExceptionSelector struct {
 	additional    []*kyvernov2alpha1.PolicyException
 	kyvernoClient versioned.Interface
+	namespace     string
 }
 
 func (c policyExceptionSelector) List(selector labels.Selector) ([]*kyvernov2alpha1.PolicyException, error) {
 	var exceptions []*kyvernov2alpha1.PolicyException
 	if c.kyvernoClient != nil {
-		list, err := c.kyvernoClient.KyvernoV2alpha1().PolicyExceptions(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{
+		list, err := c.kyvernoClient.KyvernoV2alpha1().PolicyExceptions(c.namespace).List(context.TODO(), metav1.ListOptions{
 			LabelSelector: selector.String(),
 		})
 		if err != nil {
@@ -28,13 +29,18 @@ func (c policyExceptionSelector) List(selector labels.Selector) ([]*kyvernov2alp
 			exceptions = append(exceptions, &list.Items[i])
 		}
 	}
-	exceptions = append(exceptions, c.additional...)
+	for _, exception := range c.additional {
+		if c.namespace == "" || exception.GetNamespace() == c.namespace {
+			exceptions = append(exceptions, exception)
+		}
+	}
 	return exceptions, nil
 }
 
-func NewPolicyExceptionSelector(client versioned.Interface, exceptions []*kyvernov2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
+func NewPolicyExceptionSelector(namespace string, client versioned.Interface, exceptions ...*kyvernov2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
 	return policyExceptionSelector{
 		additional:    exceptions,
 		kyvernoClient: client,
+		namespace:     namespace,
 	}
 }
