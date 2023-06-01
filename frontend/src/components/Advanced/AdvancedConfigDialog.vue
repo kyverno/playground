@@ -35,7 +35,8 @@
         <v-btn @click="dialog = false">Close</v-btn>
         <v-spacer />
         <v-btn @click="() => update('')" prepend-icon="mdi-delete">Clear</v-btn>
-        <v-btn @click="() => update(template)" prepend-icon="mdi-note" v-if="template">Load Template</v-btn>
+        <template-button :panel="id" :content="content" @select="update" :base-template="template" />
+        <UploadButton label="Upload" @click="update" :tooltip="false" />
         <slot name="actions" :update="update" :content="content" />
         <v-spacer />
         <LegendMenu />
@@ -54,6 +55,8 @@ import { editorTheme } from '@/config'
 import MonacoEditor from '@/components/Panel/MonacoEditor.vue'
 import { KeyCode, KeyMod, Uri, editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import LegendMenu from '../LegendMenu.vue'
+import TemplateButton from './TemplateButton.vue'
+import UploadButton from '../Panel/UploadButton.vue'
 
 const props = defineProps({
   id: { type: String, required: true },
