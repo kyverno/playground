@@ -28,6 +28,7 @@ context:
   clusterRoles: []
   namespaceLabels: {}
   operation: CREATE
+  dryRun: false
 
 variables: {}`
 

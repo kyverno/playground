@@ -41,6 +41,11 @@
                 "DELETE",
                 "CONNECT"
             ]
+        },
+        "dryRun": {
+            "type": "boolean",
+            "description": "simulates dry run requests",
+            "default": false
         }
     },
     "required": [

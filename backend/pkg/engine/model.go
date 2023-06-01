@@ -23,6 +23,7 @@ type Context struct {
 	ClusterRoles    []string                     `json:"clusterRoles"`
 	Operation       kyvernov1.AdmissionOperation `json:"operation"`
 	NamespaceLabels map[string]string            `json:"namespaceLabels"`
+	DryRun          bool                         `json:"dryRun"`
 }
 
 type Kubernetes struct {

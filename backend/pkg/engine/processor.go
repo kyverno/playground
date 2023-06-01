@@ -251,7 +251,7 @@ func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new 
 			OldObject: runtime.RawExtension{
 				Raw: oldBytes,
 			},
-			DryRun:  nil,
+			DryRun:  &p.params.Context.DryRun,
 			Options: runtime.RawExtension{},
 		},
 		kyvernov1beta1.RequestInfo{

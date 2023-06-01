@@ -5,5 +5,6 @@ context:
   clusterRoles: []
   namespaceLabels: {}
   operation: 'UPDATE'
+  dryRun: false
 
 variables: {}

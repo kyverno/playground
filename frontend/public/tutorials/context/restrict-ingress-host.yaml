@@ -8,6 +8,7 @@ context:
   clusterRoles: []
   namespaceLabels: {}
   operation: CREATE
+  dryRun: false
 
 variables:
   hosts: "[\"www.github.com\", \"www.kyverno.com\", \"www.nirmata.com\"]"
