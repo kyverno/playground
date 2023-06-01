@@ -6,6 +6,7 @@ import (
 	kyvernov2alpha1 "github.com/kyverno/kyverno/api/kyverno/v2alpha1"
 	"github.com/kyverno/kyverno/pkg/client/clientset/versioned"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	kerrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 )
@@ -22,11 +23,12 @@ func (c policyExceptionSelector) List(selector labels.Selector) ([]*kyvernov2alp
 		list, err := c.kyvernoClient.KyvernoV2alpha1().PolicyExceptions(c.namespace).List(context.TODO(), metav1.ListOptions{
 			LabelSelector: selector.String(),
 		})
-		if err != nil {
+		if err == nil {
+			for i := range list.Items {
+				exceptions = append(exceptions, &list.Items[i])
+			}
+		} else if !kerrors.IsNotFound(err) {
 			return nil, err
-		}
-		for i := range list.Items {
-			exceptions = append(exceptions, &list.Items[i])
 		}
 	}
 	for _, exception := range c.additional {
