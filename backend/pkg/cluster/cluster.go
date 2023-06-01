@@ -36,7 +36,7 @@ type Cluster interface {
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
 	DClient(...unstructured.Unstructured) (dclient.Interface, error)
-	PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector
+	PolicyExceptionSelector(namespace string, exceptions ...*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector
 	IsFake() bool
 }
 
@@ -139,8 +139,8 @@ func (c cluster) Get(ctx context.Context, apiVersion string, kind string, namesp
 	return c.dClient.GetResource(ctx, apiVersion, kind, namespace, name)
 }
 
-func (c cluster) PolicyExceptionSelector(exceptions []*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
-	return NewPolicyExceptionSelector(c.kyvernoClient, exceptions)
+func (c cluster) PolicyExceptionSelector(namespace string, exceptions ...*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
+	return NewPolicyExceptionSelector(namespace, c.kyvernoClient, exceptions...)
 }
 
 func (c cluster) DClient(_ ...unstructured.Unstructured) (dclient.Interface, error) {
