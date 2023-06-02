@@ -1547,6 +1547,18 @@
     },
     {
       "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.PolicyList"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.wgpolicyk8s.v1alpha2.ClusterPolicyReport"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.wgpolicyk8s.v1alpha2.ClusterPolicyReportList"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.wgpolicyk8s.v1alpha2.PolicyReport"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.wgpolicyk8s.v1alpha2.PolicyReportList"
     }
   ]
 }
