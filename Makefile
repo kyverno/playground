@@ -178,6 +178,9 @@ build-clean: ## Clean built files
 .PHONY: build-frontend
 build-frontend: ## Build frontend
 	@echo Building frontend... >&2
+	@cp schemas/json/clusterpolicy.json frontend/src/schemas
+	@cp schemas/json/policyexception.json frontend/src/schemas
+	@rm -rf frontend/public/schemas && cp -r frontend/src/schemas frontend/public/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets
