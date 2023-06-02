@@ -19,9 +19,16 @@ type Cosign struct {
 	ImageSignatureRepository string `json:"imageSignatureRepository"`
 }
 
+type Registry struct {
+	AllowInsecure     bool     `json:"allowInsecure"`
+	PullSecrets       []string `json:"pullSecrets"`
+	CredentialHelpers []string `json:"credentialHelpers"`
+}
+
 type Flags struct {
 	Exceptions Exceptions `json:"exceptions"`
 	Cosign     Cosign     `json:"cosign"`
+	Registry   Registry   `json:"registry"`
 }
 
 type Parameters struct {
