@@ -25,10 +25,20 @@ type Registry struct {
 	CredentialHelpers []string `json:"credentialHelpers"`
 }
 
+type ProtectManagedResources struct {
+	Enabled bool `json:"enabled"`
+}
+
+type ForceFailurePolicyIgnore struct {
+	Enabled bool `json:"enabled"`
+}
+
 type Flags struct {
-	Exceptions Exceptions `json:"exceptions"`
-	Cosign     Cosign     `json:"cosign"`
-	Registry   Registry   `json:"registry"`
+	Exceptions               Exceptions               `json:"exceptions"`
+	Cosign                   Cosign                   `json:"cosign"`
+	Registry                 Registry                 `json:"registry"`
+	ProtectManagedResources  ProtectManagedResources  `json:"protectManagedResources"`
+	ForceFailurePolicyIgnore ForceFailurePolicyIgnore `json:"forceFailurePolicyIgnore"`
 }
 
 type Parameters struct {
@@ -125,7 +135,7 @@ func ConvertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 	return out
 }
 
-func ConvertResponse(in engineapi.EngineResponse) Response {
+func convertResponse(in engineapi.EngineResponse) Response {
 	patchedResource, _ := yaml.Marshal(in.PatchedResource.Object)
 	resource, _ := yaml.Marshal(in.Resource.Object)
 	out := Response{
@@ -139,18 +149,4 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		out.PolicyResponse.Rules = append(out.PolicyResponse.Rules, ConvertRuleResponse(ruleresponse))
 	}
 	return out
-}
-
-func ParseParameters(content string) (*Parameters, error) {
-	params := Parameters{}
-
-	if err := yaml.Unmarshal([]byte(content), &params); err != nil {
-		return nil, err
-	}
-
-	if params.Context.Operation == "" {
-		params.Context.Operation = kyvernov1.Create
-	}
-
-	return &params, nil
 }

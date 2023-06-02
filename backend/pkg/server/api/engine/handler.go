@@ -22,7 +22,6 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 	if err != nil {
 		return nil, err
 	}
-
 	return tonic.Handler(func(ctx *gin.Context, in *EngineRequest) (*EngineResponse, error) {
 		params, err := in.LoadParameters()
 		if err != nil {

@@ -114,7 +114,7 @@ func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface
 
 	response := p.engine.Mutate(ctx, policyContext)
 
-	return ConvertResponse(response), response.PatchedResource, nil
+	return convertResponse(response), response.PatchedResource, nil
 }
 
 func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
@@ -156,7 +156,7 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 		}
 	}
 
-	return ConvertResponse(response), response.PatchedResource, nil
+	return convertResponse(response), response.PatchedResource, nil
 }
 
 func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, error) {
@@ -167,7 +167,7 @@ func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterfa
 
 	response := p.engine.Validate(ctx, policyContext)
 
-	return ConvertResponse(response), nil
+	return convertResponse(response), nil
 }
 
 func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, error) {
@@ -178,7 +178,7 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 
 	response := p.engine.Generate(ctx, policyContext)
 	if len(response.PolicyResponse.Rules) == 0 {
-		return ConvertResponse(response), nil
+		return convertResponse(response), nil
 	}
 
 	gr := toGenerateRequest(policy, new)
@@ -206,7 +206,7 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 	}
 	response.PolicyResponse.Rules = newRuleResponse
 
-	return ConvertResponse(response), nil
+	return convertResponse(response), nil
 }
 
 func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (*policycontext.PolicyContext, error) {
