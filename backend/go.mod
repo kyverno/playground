@@ -8,7 +8,7 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-logr/logr v1.2.4
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20230530100144-7a838de4f1c8
+	github.com/kyverno/kyverno v1.5.0-rc1.0.20230602121810-cbce1c91b72c
 	github.com/loopfz/gadgeto v0.11.2
 	github.com/mattbaird/jsonpatch v0.0.0-20230413205102-771768614e91
 	github.com/spf13/cobra v1.7.0
@@ -16,6 +16,7 @@ require (
 	k8s.io/api v0.27.2
 	k8s.io/apimachinery v0.27.2
 	k8s.io/client-go v0.27.2
+	sigs.k8s.io/controller-runtime v0.15.1-0.20230602114852-30dea34848b0
 	sigs.k8s.io/kubectl-validate v0.0.0-20230531195345-5aee348b797c
 	sigs.k8s.io/yaml v1.3.0
 )
@@ -144,7 +145,7 @@ require (
 	github.com/google/certificate-transparency-go v1.1.4 // indirect
 	github.com/google/gnostic v0.6.9 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
-	github.com/google/go-containerregistry v0.14.0 // indirect
+	github.com/google/go-containerregistry v0.14.1-0.20230425172351-b7c6e9dc3944 // indirect
 	github.com/google/go-containerregistry/pkg/authn/kubernetes v0.0.0-20230403180904-b8d1c0a1df12 // indirect
 	github.com/google/go-github/v45 v45.2.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
@@ -177,7 +178,7 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.16.3 // indirect
+	github.com/klauspost/compress v1.16.5 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/letsencrypt/boulder v0.0.0-20230331213904-8c67769be400 // indirect
@@ -315,7 +316,6 @@ require (
 	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	oras.land/oras-go/v2 v2.2.0 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.1.2 // indirect
-	sigs.k8s.io/controller-runtime v0.15.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/kustomize/api v0.13.4 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.14.2 // indirect

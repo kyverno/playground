@@ -13,7 +13,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
-	"github.com/kyverno/kyverno/pkg/cosign"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
@@ -51,9 +50,6 @@ func (p *Processor) Run(
 	}
 
 	response := &Results{}
-
-	// TODO: this is not thread safe :(
-	cosign.ImageSignatureRepository = p.params.Flags.Cosign.ImageSignatureRepository
 
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
@@ -327,6 +323,7 @@ func newEngine(
 	client dclient.Interface,
 	cmResolver engineapi.ConfigmapResolver,
 	exceptionSelector engineapi.PolicyExceptionSelector,
+	imageSignatureRepository string,
 ) (engineapi.Engine, error) {
 	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
 	if err != nil {
@@ -349,6 +346,7 @@ func newEngine(
 		rclient,
 		factory,
 		exceptionSelector,
+		imageSignatureRepository,
 	), nil
 }
 
@@ -367,7 +365,7 @@ func NewProcessor(
 	jp := jmespath.New(cfg)
 	cluster := false
 
-	engine, err := newEngine(cfg, jp, dClient, cmResolver, exceptionSelector)
+	engine, err := newEngine(cfg, jp, dClient, cmResolver, exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
 	if err != nil {
 		return nil, err
 	}
