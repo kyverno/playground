@@ -30,6 +30,13 @@ context:
   operation: CREATE
   dryRun: false
 
+flags:
+  exceptions:
+    enabled: true
+    namespace: ''
+  cosign:
+    imageSignatureRepository: ''
+
 variables: {}`
 
 export const ResourceTemplate = `apiVersion: v1

@@ -6,6 +6,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/gin-gonic/gin"
+	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/loopfz/gadgeto/tonic"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
@@ -63,7 +64,12 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		processor, err := engine.NewProcessor(params, config, dClient, cmResolver, cl.PolicyExceptionSelector(exceptions))
+		// TODO: move in engine ?
+		var exceptionSelector engineapi.PolicyExceptionSelector
+		if params.Flags.Exceptions.Enabled {
+			exceptionSelector = cl.PolicyExceptionSelector(params.Flags.Exceptions.Namespace, exceptions...)
+		}
+		processor, err := engine.NewProcessor(params, config, dClient, cmResolver, exceptionSelector)
 		if err != nil {
 			return nil, err
 		}

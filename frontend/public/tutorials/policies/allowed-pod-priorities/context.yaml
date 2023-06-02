@@ -10,6 +10,13 @@ context:
   operation: CREATE
   dryRun: false
 
+flags:
+  exceptions:
+    enabled: true
+    namespace: ''
+  cosign:
+    imageSignatureRepository: ''
+
 variables:
   podprioritydict:
     data:

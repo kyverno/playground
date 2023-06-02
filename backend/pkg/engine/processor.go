@@ -13,6 +13,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
+	"github.com/kyverno/kyverno/pkg/cosign"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
@@ -50,6 +51,9 @@ func (p *Processor) Run(
 	}
 
 	response := &Results{}
+
+	// TODO: this is not thread safe :(
+	cosign.ImageSignatureRepository = p.params.Flags.Cosign.ImageSignatureRepository
 
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}

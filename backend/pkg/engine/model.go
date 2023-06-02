@@ -10,10 +10,25 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
+type Exceptions struct {
+	Enabled   bool   `json:"enabled"`
+	Namespace string `json:"namespace"`
+}
+
+type Cosign struct {
+	ImageSignatureRepository string `json:"imageSignatureRepository"`
+}
+
+type Flags struct {
+	Exceptions Exceptions `json:"exceptions"`
+	Cosign     Cosign     `json:"cosign"`
+}
+
 type Parameters struct {
 	Kubernetes Kubernetes             `json:"kubernetes"`
 	Context    Context                `json:"context"`
 	Variables  map[string]interface{} `json:"variables"`
+	Flags      Flags                  `json:"flags"`
 }
 
 type Context struct {
