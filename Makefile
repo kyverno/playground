@@ -144,24 +144,24 @@ codegen-schema-json: codegen-schema-openapi ## Generate json schemas
 .PHONY: codegen-all
 codegen-all: codegen-helm-docs codegen-schema-json codegen-schema-openapi ## Generate all codegen
 
-.PHONY: verify-schema-openapi
-verify-schema-openapi: codegen-schema-openapi ## Check openapi schemas are up to date
+.PHONY: verify-schemas
+verify-schemas: codegen-schema-openapi codegen-schema-json ## Check openapi and json schemas are up to date
 	@echo Checking openapi schemas are up to date... >&2
-	@git --no-pager diff schemas
+	@git --no-pager diff -- schemas
 	@echo 'If this test fails, it is because the git diff is non-empty after running "make codegen-schema-openapi".' >&2
 	@echo 'To correct this, locally run "make codegen-schema-openapi", commit the changes, and re-run tests.' >&2
-	@git diff --quiet --exit-code $(CRDS_PATH)
+	@git diff --quiet --exit-code -- schemas
 
 .PHONY: verify-helm-docs
 verify-helm-docs: codegen-helm-docs ## Check Helm charts are up to date
 	@echo Checking helm charts are up to date... >&2
-	@git --no-pager diff charts
+	@git --no-pager diff -- charts
 	@echo 'If this test fails, it is because the git diff is non-empty after running "make codegen-helm-docs".' >&2
 	@echo 'To correct this, locally run "make codegen-helm-docs", commit the changes, and re-run tests.' >&2
-	@git diff --quiet --exit-code charts
+	@git diff --quiet --exit-code -- charts
 
 .PHONY: verify-codegen
-verify-codegen: verify-helm-docs verify-schema-openapi ## Verify all generated code and docs are up to date
+verify-codegen: verify-helm-docs verify-schemas ## Verify all generated code and docs are up to date
 
 #########
 # BUILD #
