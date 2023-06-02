@@ -130,6 +130,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_updaterequests.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/wgpolicyk8s.io_clusterpolicyreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/wgpolicyk8s.io_policyreports.yaml
+	@sleep 15
 	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
@@ -139,6 +140,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 .PHONY: codegen-schema-json
 codegen-schema-json: codegen-schema-openapi ## Generate json schemas
 	@$(PIP) install openapi2jsonschema
+	@rm -rf ./schemas/json
 	@openapi2jsonschema ./schemas/openapi/v2/schema.json --kubernetes --stand-alone -o ./schemas/json
 
 .PHONY: codegen-all
