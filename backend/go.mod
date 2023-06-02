@@ -16,6 +16,7 @@ require (
 	k8s.io/api v0.27.2
 	k8s.io/apimachinery v0.27.2
 	k8s.io/client-go v0.27.2
+	sigs.k8s.io/controller-runtime v0.15.0
 	sigs.k8s.io/kubectl-validate v0.0.0-20230531195345-5aee348b797c
 	sigs.k8s.io/yaml v1.3.0
 )
@@ -315,7 +316,6 @@ require (
 	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	oras.land/oras-go/v2 v2.2.0 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.1.2 // indirect
-	sigs.k8s.io/controller-runtime v0.15.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/kustomize/api v0.13.4 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.14.2 // indirect
@@ -327,4 +327,5 @@ replace (
 	github.com/jmespath/go-jmespath => github.com/kyverno/go-jmespath v0.4.1-0.20230204162932-3ee946b9433d
 	go.etcd.io/etcd/client/pkg/v3 => go.etcd.io/etcd/client/pkg/v3 v3.5.7
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.27.0
+	sigs.k8s.io/controller-runtime => github.com/vincepri/controller-runtime v0.15.0-beta.0.0.20230531220444-e06ac3313c6f
 )
