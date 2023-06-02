@@ -8,7 +8,7 @@ KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
-PIP                  ?= "pip3"
+PIP                  ?= "pip"
 
 #############
 # VARIABLES #
