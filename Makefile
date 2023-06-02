@@ -8,6 +8,7 @@ KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
+PIP                  ?= "pip3"
 
 #############
 # VARIABLES #
@@ -135,8 +136,13 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2alpha1 > ./schemas/openapi/v3/apis/kyverno.io/v2alpha1.json
 	@$(KIND) delete cluster --name schema
 
+.PHONY: codegen-schema-json
+codegen-schema-json: codegen-schema-openapi ## Generate json schemas
+	@$(PIP) install openapi2jsonschema
+	@openapi2jsonschema ./schemas/openapi/v2/schema.json --kubernetes --stand-alone -o ./schemas/json
+
 .PHONY: codegen-all
-codegen-all: codegen-helm-docs codegen-schema-openapi ## Generate all codegen
+codegen-all: codegen-helm-docs codegen-schema-json codegen-schema-openapi ## Generate all codegen
 
 .PHONY: verify-schema-openapi
 verify-schema-openapi: codegen-schema-openapi ## Check openapi schemas are up to date
