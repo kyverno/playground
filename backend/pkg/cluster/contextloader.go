@@ -18,6 +18,7 @@ func ContextLoaderFactory(fake bool, cmResolver engineapi.ConfigmapResolver) eng
 	return func(policy kyvernov1.PolicyInterface, rule kyvernov1.Rule) engineapi.ContextLoader {
 		if fake {
 			return &fakeContextLoader{
+				cmResolver: cmResolver,
 				logger:     logging.WithName("MockContextLoaderFactory"),
 				policyName: policy.GetName(),
 				ruleName:   rule.Name,
