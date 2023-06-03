@@ -51,3 +51,7 @@ func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Inte
 func (c fakeCluster) IsFake() bool {
 	return true
 }
+
+func (c fakeCluster) ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory {
+	return ContextLoaderFactory(c.IsFake(), cmResolver)
+}
