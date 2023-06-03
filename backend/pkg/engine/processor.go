@@ -9,7 +9,6 @@ import (
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/utils/store"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
@@ -321,21 +320,13 @@ func newEngine(
 	cfg config.Configuration,
 	jp jmespath.Interface,
 	client dclient.Interface,
-	cmResolver engineapi.ConfigmapResolver,
+	factory engineapi.ContextLoaderFactory,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 	imageSignatureRepository string,
 ) (engineapi.Engine, error) {
 	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
 	if err != nil {
 		return nil, err
-	}
-
-	store.SetMock(true)
-	store.SetRegistryAccess(true)
-
-	factory := store.ContextLoaderFactory(nil)
-	if cmResolver != nil {
-		factory = ContextLoaderFactory(cmResolver)
 	}
 
 	return kyvernoengine.NewEngine(
@@ -354,7 +345,7 @@ func NewProcessor(
 	params *Parameters,
 	kyvernoConfig *corev1.ConfigMap,
 	dClient dclient.Interface,
-	cmResolver engineapi.ConfigmapResolver,
+	factory engineapi.ContextLoaderFactory,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 ) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
@@ -365,7 +356,7 @@ func NewProcessor(
 	jp := jmespath.New(cfg)
 	cluster := false
 
-	engine, err := newEngine(cfg, jp, dClient, cmResolver, exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
+	engine, err := newEngine(cfg, jp, dClient, factory, exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
 	if err != nil {
 		return nil, err
 	}
@@ -386,12 +377,4 @@ func NewProcessor(
 		jmesPath:      jp,
 		cluster:       cluster,
 	}, nil
-}
-
-func ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory {
-	return func(policy kyvernov1.PolicyInterface, rule kyvernov1.Rule) engineapi.ContextLoader {
-		inner := engineapi.DefaultContextLoaderFactory(cmResolver)
-
-		return inner(policy, rule)
-	}
 }

@@ -58,7 +58,7 @@ metadata:
   name: kyverno
   namespace: kyverno
 data:
-  enableDefaultRegistryMutation: true
+  enableDefaultRegistryMutation: 'true'
   defaultRegistry: docker.io
   # comma separated list
   excludeGroups: 'system:nodes'
@@ -101,7 +101,7 @@ data:
     [Service,kyverno,kyverno-svc-metrics]
     [ServiceMonitor,kyverno,kyverno-svc-service-monitor]
     [Pod,kyverno,kyverno-test]`
-  
+
 export const CustomResourceDefinitionsTemplate = ``
 
 export const PolicyExceptionTemplate = `apiVersion: kyverno.io/v2alpha1

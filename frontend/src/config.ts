@@ -200,9 +200,7 @@ export const options = {
         },
         {
           name: 'ArgoCD',
-          policies: [
-            { path: 'argo/appproject-clusterresourceblacklist', title: 'Cluster resource blacklist' },
-          ]
+          policies: [{ path: 'argo/appproject-clusterresourceblacklist', title: 'Cluster resource blacklist' }]
         }
       ]
     },
