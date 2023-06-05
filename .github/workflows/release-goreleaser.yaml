@@ -58,6 +58,7 @@ jobs:
           cd backend && goreleaser release --clean --timeout 90m && echo "artifacts=$(cat dist/artifacts.json)" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KOCACHE: /tmp/ko-cache
       - name: Upload artifacts.json
         uses: svenstaro/upload-release-action@2b9d2847a97b04d02ad5c3df2d3a27baa97ce689 # 2.6.1
         with:
