@@ -95,8 +95,8 @@ The Playground uses openapi schemas to load resources from yaml content. To load
 By default, all Kubernetes builtin resources are supported. To work with custom resources you need to provide the custom resource definition.
 
 Providing custom resource definitions can be done in different ways:
-* Using the `--builtin-crds` flag in the backend (see the list of [supported built-in CRDs](#supported-built-in-custom-resource-definitions))
-* Using the `--local-crds` flag in the backend, pointing to a directory containing yaml CRD definitions
+* Using the `--engine-builtin-crds` flag in the backend (see the list of [supported built-in CRDs](#supported-built-in-custom-resource-definitions))
+* Using the `--engine-local-crds` flag in the backend, pointing to a directory containing yaml CRD definitions
 * Paste your CRD yaml definitions directly in the frontend
 
 ### Supported built-in custom resource definitions
@@ -109,6 +109,7 @@ The following CRDs are embedded in the Playground backend and can be enabled wit
 | Cert Manager | `--builtin-crds=cert-manager` |
 | Tekton Pipeline | `--builtin-crds=tekton-pipeline` |
 | Prometheus Operator | `--builtin-crds=prometheus-operator` |
+| (Cluster)PolicyReports | `--builtin-crds=wgpolicyk8s` |
 
 ## Build
 
