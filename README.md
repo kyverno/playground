@@ -116,11 +116,11 @@ Instructions for building and running the Playground from source code is availab
 
 ## Screenshots
 
-![Kyverno Playground - Layout](./frontend/screens/layout.png?raw=true)
+![Kyverno Playground - Layout](./frontend/screens/dashboard.png?raw=true)
 
 <hr />
 
-![Kyverno Playground - Examples](./frontend/screens/examples.png?raw=true)
+![Kyverno Playground - Examples](./frontend/screens/tutorials.png?raw=true)
 
 <hr />
 
@@ -128,4 +128,8 @@ Instructions for building and running the Playground from source code is availab
 
 <hr />
 
-![Kyverno Playground - DarkMode](./frontend/screens/darkmode.png?raw=true)
+![Kyverno Playground - DarkMode](./frontend/screens/context.png?raw=true)
+
+<hr />
+
+![Kyverno Playground - DarkMode](./frontend/screens/share.png?raw=true)
