@@ -37,7 +37,7 @@ func Test_LoadPolicyExceptions(t *testing.T) {
 			require.NoError(t, err)
 			loader, err := loader.New(
 				openapiclient.NewComposite(
-					openapiclient.NewLocalFiles(data.Schemas(), "schemas"),
+					openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"),
 				),
 			)
 			require.NoError(t, err)

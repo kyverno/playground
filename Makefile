@@ -8,6 +8,7 @@ KYVERNO_VERSION      ?= 3.0.0-alpha.2
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
+PIP                  ?= "pip"
 
 #############
 # VARIABLES #
@@ -117,37 +118,52 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@mkdir -p ./schemas/openapi/v2
 	@mkdir -p ./schemas/openapi/v3/apis/kyverno.io
 	@$(KIND) create cluster --name schema --image $(KIND_IMAGE)
-	@$(HELM) upgrade --install --wait --timeout 15m --atomic \
-  		--version $(KYVERNO_VERSION) \
-  		--namespace kyverno --create-namespace \
-  		--repo https://kyverno.github.io/kyverno kyverno kyverno
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_admissionreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_backgroundscanreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_cleanuppolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_clusteradmissionreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_clusterbackgroundscanreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_clustercleanuppolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_clusterpolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_policies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_policyexceptions.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/kyverno.io_updaterequests.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/wgpolicyk8s.io_clusterpolicyreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/main/config/crds/wgpolicyk8s.io_policyreports.yaml
+	@sleep 15
 	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2alpha1 > ./schemas/openapi/v3/apis/kyverno.io/v2alpha1.json
 	@$(KIND) delete cluster --name schema
 
-.PHONY: codegen-all
-codegen-all: codegen-helm-docs codegen-schema-openapi ## Generate all codegen
+.PHONY: codegen-schema-json
+codegen-schema-json: codegen-schema-openapi ## Generate json schemas
+	@$(PIP) install openapi2jsonschema
+	@rm -rf ./schemas/json
+	@openapi2jsonschema ./schemas/openapi/v2/schema.json --kubernetes --stand-alone -o ./schemas/json
 
-.PHONY: verify-schema-openapi
-verify-schema-openapi: codegen-schema-openapi ## Check openapi schemas are up to date
+.PHONY: codegen-all
+codegen-all: codegen-helm-docs codegen-schema-json codegen-schema-openapi ## Generate all codegen
+
+.PHONY: verify-schemas
+verify-schemas: codegen-schema-openapi codegen-schema-json ## Check openapi and json schemas are up to date
 	@echo Checking openapi schemas are up to date... >&2
-	@git --no-pager diff schemas
+	@git --no-pager diff -- schemas
 	@echo 'If this test fails, it is because the git diff is non-empty after running "make codegen-schema-openapi".' >&2
 	@echo 'To correct this, locally run "make codegen-schema-openapi", commit the changes, and re-run tests.' >&2
-	@git diff --quiet --exit-code $(CRDS_PATH)
+	@git diff --quiet --exit-code -- schemas
 
 .PHONY: verify-helm-docs
 verify-helm-docs: codegen-helm-docs ## Check Helm charts are up to date
 	@echo Checking helm charts are up to date... >&2
-	@git --no-pager diff charts
+	@git --no-pager diff -- charts
 	@echo 'If this test fails, it is because the git diff is non-empty after running "make codegen-helm-docs".' >&2
 	@echo 'To correct this, locally run "make codegen-helm-docs", commit the changes, and re-run tests.' >&2
-	@git diff --quiet --exit-code charts
+	@git diff --quiet --exit-code -- charts
 
 .PHONY: verify-codegen
-verify-codegen: verify-helm-docs verify-schema-openapi ## Verify all generated code and docs are up to date
+verify-codegen: verify-helm-docs verify-schemas ## Verify all generated code and docs are up to date
 
 #########
 # BUILD #
@@ -164,6 +180,9 @@ build-clean: ## Clean built files
 .PHONY: build-frontend
 build-frontend: ## Build frontend
 	@echo Building frontend... >&2
+	@cp schemas/json/clusterpolicy.json frontend/src/schemas
+	@cp schemas/json/policyexception.json frontend/src/schemas
+	@rm -rf frontend/public/schemas && cp -r frontend/src/schemas frontend/public/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets
@@ -213,15 +232,31 @@ test-backend: ## Test backend
 #######
 
 .PHONY: run
-run: build-backend-assets ## Run locally
+run: build-backend-assets ## Run locally (with connected cluster)
 	@echo Run backend... >&2
 	@cd backend && go run . \
+		--gin-mode=release \
 		--gin-log \
+		--gin-max-body-size=2097152 \
+		--ui-sponsor=nirmata \
 		--cluster \
-		--builtin-crds=argocd \
-		--builtin-crds=cert-manager \
-		--builtin-crds=prometheus-operator \
-		--builtin-crds=tekton-pipeline
+		--engine-builtin-crds=argocd \
+		--engine-builtin-crds=cert-manager \
+		--engine-builtin-crds=prometheus-operator \
+		--engine-builtin-crds=tekton-pipeline
+
+.PHONY: run-standalone
+run-standalone: build-backend-assets ## Run locally (without connected cluster)
+	@echo Run backend... >&2
+	@cd backend && go run . \
+		--gin-mode=release \
+		--gin-log \
+		--gin-max-body-size=2097152 \
+		--ui-sponsor=nirmata \
+		--engine-builtin-crds=argocd \
+		--engine-builtin-crds=cert-manager \
+		--engine-builtin-crds=prometheus-operator \
+		--engine-builtin-crds=tekton-pipeline
 
 ########
 # KIND #

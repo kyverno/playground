@@ -3,12 +3,12 @@ package engine
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	json_patch "github.com/evanphx/json-patch/v5"
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/utils/store"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
@@ -20,9 +20,12 @@ import (
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
 	"github.com/mattbaird/jsonpatch"
+	admissionv1 "k8s.io/api/admission/v1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 type Processor struct {
@@ -48,57 +51,54 @@ func (p *Processor) Run(
 
 	response := &Results{}
 
-	for i, resource := range resources {
+	for i := range resources {
 		oldResource := unstructured.Unstructured{}
-		// @TODO does this make sense or is needed?
+		newResource := unstructured.Unstructured{}
 		if p.params.Context.Operation == kyvernov1.Delete {
-			oldResource = resource
-		}
-
-		// @TODO should we also check for NS / kind / name or enforce the same order as resources?
-		if len(oldResources) > i && p.params.Context.Operation == kyvernov1.Update {
+			oldResource = resources[i]
+		} else if p.params.Context.Operation == kyvernov1.Update {
+			// TODO: bounds check
 			oldResource = oldResources[i]
+			newResource = resources[i]
+		} else {
+			newResource = resources[i]
 		}
 
 		// mutate
 		for _, policy := range policies {
-			result, res, err := p.mutate(ctx, policy, resource, oldResource)
+			result, res, err := p.mutate(ctx, policy, oldResource, newResource)
 			if err != nil {
 				return nil, err
 			}
-
-			resource = res
+			newResource = res
 			response.Mutation = append(response.Mutation, result)
 		}
 
 		// verify images
 		for _, policy := range policies {
-			result, res, err := p.verifyImages(ctx, policy, resource)
+			result, res, err := p.verifyImages(ctx, policy, oldResource, newResource)
 			if err != nil {
 				return nil, err
 			}
-
-			resource = res
+			newResource = res
 			response.ImageVerification = append(response.ImageVerification, result)
 		}
 
 		// validate
 		for _, policy := range policies {
-			result, err := p.validate(ctx, policy, resource, oldResource)
+			result, err := p.validate(ctx, policy, oldResource, newResource)
 			if err != nil {
 				return nil, err
 			}
-
 			response.Validation = append(response.Validation, result)
 		}
 
 		// generation
 		for _, policy := range policies {
-			result, err := p.generate(ctx, policy, resource, oldResource)
+			result, err := p.generate(ctx, policy, oldResource, newResource)
 			if err != nil {
 				return nil, err
 			}
-
 			response.Generation = append(response.Generation, result)
 		}
 	}
@@ -106,31 +106,29 @@ func (p *Processor) Run(
 	return response, nil
 }
 
-func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured, oldResource unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
-	policyContext, err := p.newPolicyContext(policy, resource)
+func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
+	policyContext, err := p.newPolicyContext(policy, old, new)
 	if err != nil {
-		return Response{}, resource, err
+		return Response{}, new, err
 	}
 
-	_ = policyContext.JSONContext().AddOldResource(oldResource.Object)
+	response := p.engine.Mutate(ctx, policyContext)
 
-	response := p.engine.Mutate(ctx, policyContext.WithOldResource(oldResource))
-
-	return ConvertResponse(response), response.PatchedResource, nil
+	return convertResponse(response), response.PatchedResource, nil
 }
 
-func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
-	policyContext, err := p.newPolicyContext(policy, resource)
+func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
+	policyContext, err := p.newPolicyContext(policy, old, new)
 	if err != nil {
-		return Response{}, resource, err
+		return Response{}, new, err
 	}
 
 	response, verifiedImageData := p.engine.VerifyAndPatchImages(ctx, policyContext)
 	var patches []jsonpatch.JsonPatchOperation
 	if !verifiedImageData.IsEmpty() {
-		annotationPatches, err := verifiedImageData.Patches(len(resource.GetAnnotations()) != 0, logr.Discard())
+		annotationPatches, err := verifiedImageData.Patches(len(new.GetAnnotations()) != 0, logr.Discard())
 		if err != nil {
-			return Response{}, resource, err
+			return Response{}, new, err
 		}
 		// add annotation patches first
 		patches = append(annotationPatches, patches...)
@@ -139,53 +137,48 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 		patch := jsonutils.JoinPatches(patch.ConvertPatches(patches...)...)
 		decoded, err := json_patch.DecodePatch(patch)
 		if err != nil {
-			return Response{}, resource, err
+			return Response{}, new, err
 		}
-		options := &json_patch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
-		resourceBytes, err := resource.MarshalJSON()
+		options := &jsonpatch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
+		resourceBytes, err := new.MarshalJSON()
 		if err != nil {
-			return Response{}, resource, err
+			return Response{}, new, err
 		}
 		patchedResourceBytes, err := decoded.ApplyWithOptions(resourceBytes, options)
 		if err != nil {
-			return Response{}, resource, err
+			return Response{}, new, err
 		}
 		if err := response.PatchedResource.UnmarshalJSON(patchedResourceBytes); err != nil {
-			return Response{}, resource, err
+			return Response{}, new, err
 		}
 	}
-	return ConvertResponse(response), response.PatchedResource, nil
+
+	return convertResponse(response), response.PatchedResource, nil
 }
 
-func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured, oldResource unstructured.Unstructured) (Response, error) {
-	policyContext, err := p.newPolicyContext(policy, resource)
+func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, error) {
+	policyContext, err := p.newPolicyContext(policy, old, new)
 	if err != nil {
 		return Response{}, err
 	}
 
-	_ = policyContext.JSONContext().AddOldResource(oldResource.Object)
+	response := p.engine.Validate(ctx, policyContext)
 
-	response := p.engine.Validate(ctx, policyContext.WithOldResource(oldResource))
-
-	return ConvertResponse(response), nil
+	return convertResponse(response), nil
 }
 
-func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterface, resource unstructured.Unstructured, oldResource unstructured.Unstructured) (Response, error) {
-	policyContext, err := p.newPolicyContext(policy, resource)
+func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, error) {
+	policyContext, err := p.newPolicyContext(policy, old, new)
 	if err != nil {
 		return Response{}, err
 	}
-
-	_ = policyContext.JSONContext().AddOldResource(oldResource.Object)
-
-	policyContext = policyContext.WithOldResource(oldResource)
 
 	response := p.engine.Generate(ctx, policyContext)
 	if len(response.PolicyResponse.Rules) == 0 {
-		return ConvertResponse(response), nil
+		return convertResponse(response), nil
 	}
 
-	gr := toGenerateRequest(policy, resource)
+	gr := toGenerateRequest(policy, new)
 
 	var newRuleResponse []engineapi.RuleResponse
 	for _, rule := range response.PolicyResponse.Rules {
@@ -210,22 +203,60 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 	}
 	response.PolicyResponse.Rules = newRuleResponse
 
-	return ConvertResponse(response), nil
+	return convertResponse(response), nil
 }
 
-func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) (*policycontext.PolicyContext, error) {
-	context, err := policycontext.NewPolicyContext(
+func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (*policycontext.PolicyContext, error) {
+	resource := old
+	if resource.Object == nil {
+		resource = new
+	}
+	userInfo := authenticationv1.UserInfo{
+		UID:      "user-123",
+		Username: p.params.Context.Username,
+		Groups:   p.params.Context.Groups,
+		Extra:    nil,
+	}
+	var oldBytes, newBytes []byte
+	if old.Object != nil {
+		bytes, _ := old.MarshalJSON()
+		oldBytes = bytes
+	}
+	if new.Object != nil {
+		bytes, _ := new.MarshalJSON()
+		newBytes = bytes
+	}
+	gvk := resource.GroupVersionKind()
+	gvr := gvk.GroupVersion().WithResource(strings.ToLower(gvk.Kind + "s"))
+	context, err := policycontext.NewPolicyContextFromAdmissionRequest(
 		p.jmesPath,
-		resource,
-		p.params.Context.Operation,
-		&kyvernov1beta1.RequestInfo{
-			AdmissionUserInfo: authenticationv1.UserInfo{
-				Username: p.params.Context.Username,
-				Groups:   p.params.Context.Groups,
+		admissionv1.AdmissionRequest{
+			UID:                "abc-123",
+			Kind:               metav1.GroupVersionKind(gvk),
+			Resource:           metav1.GroupVersionResource(gvr),
+			SubResource:        "",
+			RequestKind:        nil,
+			RequestResource:    nil,
+			RequestSubResource: "",
+			Name:               resource.GetName(),
+			Namespace:          resource.GetNamespace(),
+			Operation:          admissionv1.Operation(p.params.Context.Operation),
+			UserInfo:           userInfo,
+			Object: runtime.RawExtension{
+				Raw: newBytes,
 			},
-			Roles:        p.params.Context.Roles,
-			ClusterRoles: p.params.Context.ClusterRoles,
+			OldObject: runtime.RawExtension{
+				Raw: oldBytes,
+			},
+			DryRun:  &p.params.Context.DryRun,
+			Options: runtime.RawExtension{},
 		},
+		kyvernov1beta1.RequestInfo{
+			AdmissionUserInfo: userInfo,
+			Roles:             p.params.Context.Roles,
+			ClusterRoles:      p.params.Context.ClusterRoles,
+		},
+		gvk,
 		p.config,
 	)
 	if err != nil {
@@ -287,20 +318,13 @@ func newEngine(
 	cfg config.Configuration,
 	jp jmespath.Interface,
 	client dclient.Interface,
-	cmResolver engineapi.ConfigmapResolver,
+	factory engineapi.ContextLoaderFactory,
 	exceptionSelector engineapi.PolicyExceptionSelector,
+	imageSignatureRepository string,
 ) (engineapi.Engine, error) {
 	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
 	if err != nil {
 		return nil, err
-	}
-
-	store.SetMock(true)
-	store.SetRegistryAccess(true)
-
-	factory := store.ContextLoaderFactory(nil)
-	if cmResolver != nil {
-		factory = ContextLoaderFactory(cmResolver)
 	}
 
 	return kyvernoengine.NewEngine(
@@ -311,6 +335,7 @@ func newEngine(
 		rclient,
 		factory,
 		exceptionSelector,
+		imageSignatureRepository,
 	), nil
 }
 
@@ -318,7 +343,7 @@ func NewProcessor(
 	params *Parameters,
 	kyvernoConfig *corev1.ConfigMap,
 	dClient dclient.Interface,
-	cmResolver engineapi.ConfigmapResolver,
+	factory engineapi.ContextLoaderFactory,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 ) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
@@ -329,7 +354,7 @@ func NewProcessor(
 	jp := jmespath.New(cfg)
 	cluster := false
 
-	engine, err := newEngine(cfg, jp, dClient, cmResolver, exceptionSelector)
+	engine, err := newEngine(cfg, jp, dClient, factory, exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
 	if err != nil {
 		return nil, err
 	}
@@ -350,12 +375,4 @@ func NewProcessor(
 		jmesPath:      jp,
 		cluster:       cluster,
 	}, nil
-}
-
-func ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory {
-	return func(policy kyvernov1.PolicyInterface, rule kyvernov1.Rule) engineapi.ContextLoader {
-		inner := engineapi.DefaultContextLoaderFactory(cmResolver)
-
-		return inner(policy, rule)
-	}
 }

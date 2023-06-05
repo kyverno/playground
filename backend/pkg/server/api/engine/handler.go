@@ -6,6 +6,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/gin-gonic/gin"
+	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/loopfz/gadgeto/tonic"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
@@ -16,12 +17,11 @@ import (
 )
 
 func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
-	policyClient := openapiclient.NewLocalFiles(data.Schemas(), "schemas")
+	policyClient := openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas")
 	policyLoader, err := loader.New(policyClient)
 	if err != nil {
 		return nil, err
 	}
-
 	return tonic.Handler(func(ctx *gin.Context, in *EngineRequest) (*EngineResponse, error) {
 		params, err := in.LoadParameters()
 		if err != nil {
@@ -31,7 +31,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		resourceLoader, err := in.ResourceLoader(params.Kubernetes.Version, config)
+		resourceLoader, err := in.ResourceLoader(cl, params.Kubernetes.Version, config)
 		if err != nil {
 			return nil, err
 		}
@@ -55,7 +55,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		dClient, err := cl.DClient(clusterResources)
+		dClient, err := cl.DClient(clusterResources...)
 		if err != nil {
 			return nil, err
 		}
@@ -63,7 +63,12 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		processor, err := engine.NewProcessor(params, config, dClient, cmResolver, cl.PolicyExceptionSelector(exceptions))
+		// TODO: move in engine ?
+		var exceptionSelector engineapi.PolicyExceptionSelector
+		if params.Flags.Exceptions.Enabled {
+			exceptionSelector = cl.PolicyExceptionSelector(params.Flags.Exceptions.Namespace, exceptions...)
+		}
+		processor, err := engine.NewProcessor(params, config, dClient, cl.ContextLoaderFactory(cmResolver), exceptionSelector)
 		if err != nil {
 			return nil, err
 		}

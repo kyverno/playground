@@ -10,6 +10,14 @@ context:
   clusterRoles: []
   namespaceLabels: {}
   operation: CREATE
+  dryRun: false
+
+flags:
+  exceptions:
+    enabled: true
+    namespace: ''
+  cosign:
+    imageSignatureRepository: ''
 
 # Custom variables to mock references to 
 # ConfigMaps, Secrets or APICalls

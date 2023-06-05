@@ -28,6 +28,14 @@ context:
   clusterRoles: []
   namespaceLabels: {}
   operation: CREATE
+  dryRun: false
+
+flags:
+  exceptions:
+    enabled: true
+    namespace: ''
+  cosign:
+    imageSignatureRepository: ''
 
 variables: {}`
 
@@ -50,7 +58,16 @@ metadata:
   name: kyverno
   namespace: kyverno
 data:
+  enableDefaultRegistryMutation: 'true'
   defaultRegistry: docker.io
+  # comma separated list
+  excludeGroups: 'system:nodes'
+  # comma separated list
+  excludeUsernames: ''
+  # comma separated list
+  excludeRoles: ''
+  # comma separated list
+  excludeClusterRoles: ''
   resourceFilters: |
     [*,kyverno,*]
     [Event,*,*]

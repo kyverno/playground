@@ -10,10 +10,25 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
+type Exceptions struct {
+	Enabled   bool   `json:"enabled"`
+	Namespace string `json:"namespace"`
+}
+
+type Cosign struct {
+	ImageSignatureRepository string `json:"imageSignatureRepository"`
+}
+
+type Flags struct {
+	Exceptions Exceptions `json:"exceptions"`
+	Cosign     Cosign     `json:"cosign"`
+}
+
 type Parameters struct {
 	Kubernetes Kubernetes             `json:"kubernetes"`
 	Context    Context                `json:"context"`
 	Variables  map[string]interface{} `json:"variables"`
+	Flags      Flags                  `json:"flags"`
 }
 
 type Context struct {
@@ -23,6 +38,7 @@ type Context struct {
 	ClusterRoles    []string                     `json:"clusterRoles"`
 	Operation       kyvernov1.AdmissionOperation `json:"operation"`
 	NamespaceLabels map[string]string            `json:"namespaceLabels"`
+	DryRun          bool                         `json:"dryRun"`
 }
 
 type Kubernetes struct {
@@ -102,7 +118,7 @@ func ConvertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 	return out
 }
 
-func ConvertResponse(in engineapi.EngineResponse) Response {
+func convertResponse(in engineapi.EngineResponse) Response {
 	patchedResource, _ := yaml.Marshal(in.PatchedResource.Object)
 	resource, _ := yaml.Marshal(in.Resource.Object)
 	out := Response{
@@ -116,18 +132,4 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		out.PolicyResponse.Rules = append(out.PolicyResponse.Rules, ConvertRuleResponse(ruleresponse))
 	}
 	return out
-}
-
-func ParseParameters(content string) (*Parameters, error) {
-	params := Parameters{}
-
-	if err := yaml.Unmarshal([]byte(content), &params); err != nil {
-		return nil, err
-	}
-
-	if params.Context.Operation == "" {
-		params.Context.Operation = kyvernov1.Create
-	}
-
-	return &params, nil
 }

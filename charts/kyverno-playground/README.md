@@ -86,6 +86,16 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | clusterRoles | list | `[]` | Cluster roles |
 | roles | list | `[]` | Cluster roles |
 | extraArgs | object | `{}` | Additonal container arguments |
+| config.gin.mode | string | `"release"` | Gin mode (`release` or `debug`) |
+| config.gin.cors | bool | `false` | Gin cors middleware |
+| config.gin.logger | bool | `false` | Gin logger middleware |
+| config.gin.maxBodySize | int | `2097152` | Gin max body size |
+| config.server.host | string | `"0.0.0.0"` | Server host |
+| config.server.port | int | `8080` | Server port |
+| config.cluster.enabled | bool | `false` | Enable connected cluster mode |
+| config.ui.sponsor | string | `""` | Sponsor name |
+| config.engine.builtinCrds | list | `[]` | Builtin CRDs enabled (`argocd`, `cert-manager`, `prometheus-operator`, `tekton-pipelines`) |
+| config.engine.localCrds | list | `[]` | Paths to folders containing yaml definitions for CRDs |
 
 ## Source Code
 
