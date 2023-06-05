@@ -139,7 +139,7 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 		if err != nil {
 			return Response{}, new, err
 		}
-		options := &jsonpatch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
+		options := &json_patch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
 		resourceBytes, err := new.MarshalJSON()
 		if err != nil {
 			return Response{}, new, err
