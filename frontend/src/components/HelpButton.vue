@@ -27,12 +27,12 @@
           <li>Image Verification Rules</li>
         </ul>
 
-        <p>It is not possible to access private registries (e.g., for image verification rules) or to use the clone capability in a generate rule.</p>
+        <p>It is not possible to access private registries (e.g., for image verification rules).</p>
 
         <h2 class="text-h6 mb-2 mt-3">Context and Variables</h2>
 
         <p>
-          It is currently not possible to add variables from external resources or do actual API calls. It is only possible to mock variables using the
+          It is currently not possible to do actual API calls. It is only possible to mock variables using the
           <code>variables</code>
           configuration in the context input.
         </p>
