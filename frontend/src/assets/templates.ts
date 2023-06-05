@@ -31,11 +31,24 @@ context:
   dryRun: false
 
 flags:
+  cosign:
+    imageSignatureRepository: ''
   exceptions:
     enabled: true
     namespace: ''
-  cosign:
-    imageSignatureRepository: ''
+  forceFailurePolicyIgnore:
+    enabled: false
+  protectManagedResources:
+    enabled: false
+  registry:
+    allowInsecure: false
+    pullSecrets: []
+    credentialHelpers:
+      - default
+      - amazon
+      - azure
+      - github
+      - google
 
 variables: {}`
 
