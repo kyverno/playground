@@ -198,7 +198,7 @@ require (
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/notaryproject/notation-core-go v1.0.0-rc.4 // indirect
-	github.com/notaryproject/notation-go v1.0.0-rc.3 // indirect
+	github.com/notaryproject/notation-go v1.0.0-rc.6 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852 // indirect
 	github.com/open-policy-agent/gatekeeper v0.0.0-20210824170141-dd97b8a7e966 // indirect
