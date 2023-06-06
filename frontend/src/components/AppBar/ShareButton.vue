@@ -15,9 +15,20 @@
 
     <v-card title="Share Policy">
       <v-divider />
-      <v-card-text>
-        <v-text-field label="URL" v-model="url" />
-      </v-card-text>
+      <v-container>
+        <v-row>
+          <v-col cols="3" class="my-0 align-self-center"><h3 class="text-h6 d-inline">Include</h3></v-col>
+          <v-col class="my-0">
+            <v-checkbox hide-details label="Context" v-model="values.context" />
+          </v-col>
+          <v-col class="my-0">
+            <v-checkbox hide-details label="Kyverno Config" v-model="values.config" />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col><v-text-field label="URL" v-model="url" /></v-col>
+        </v-row>
+      </v-container>
       <v-card-actions>
         <v-btn @click="dialog = false">Close</v-btn>
         <v-spacer />
@@ -31,12 +42,12 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useClipboard } from '@vueuse/core'
 import { PropType } from 'vue'
 import { btnColor } from '@/config'
-import { generateContent } from '@/functions/share'
+import { generateContent, Config } from '@/functions/share'
 
 defineProps({
   btnClass: { type: String, default: '' },
@@ -48,17 +59,37 @@ const dialog = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const url = ref<string>('')
 
+const values = reactive<Config>({
+  config: false,
+  context: false,
+  crds: true,
+  clusterResources: true,
+  exceptions: true
+})
+
 const router = useRouter()
 
 const { copy, copied, isSupported } = useClipboard({ source: url })
 
-const share = () => {
-  loading.value = true
-
-  const content = generateContent()
+const generate = (config: Config) => {
+  const content = generateContent(config)
 
   url.value = `${window.location.origin}/${router.resolve({ name: 'home', query: { content } }).href}`
+}
+
+const share = () => {
+  loading.value = true
+  generate(values)
   dialog.value = true
   loading.value = false
 }
+
+watch(values, generate)
+
+watch(dialog, (open) => {
+  if (open) return
+
+  values.config = false
+  values.context = false
+})
 </script>
