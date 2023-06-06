@@ -1,16 +1,25 @@
 import { init, inputs } from '@/store'
 import * as lzstring from 'lz-string'
 
-export const generateContent = (): string => {
+export type Config = {
+  config: boolean
+  crds: boolean
+  clusterResources: boolean
+  exceptions: boolean
+  context: boolean
+}
+
+export const generateContent = (config: Config): string => {
   return lzstring.compressToBase64(
     JSON.stringify({
       policy: inputs.policy,
       resource: inputs.resource,
-      context: inputs.context,
-      config: inputs.config,
-      customResourceDefinitions: inputs.customResourceDefinitions,
-      clusterResources: inputs.clusterResources,
-      exceptions: inputs.exceptions
+      oldResource: inputs.oldResource,
+      ...(config.context ? { context: inputs.context } : {}),
+      ...(config.config ? { config: inputs.config } : {}),
+      ...(config.crds ? { customResourceDefinitions: inputs.customResourceDefinitions } : {}),
+      ...(config.clusterResources ? { clusterResources: inputs.clusterResources } : {}),
+      ...(config.exceptions ? { exceptions: inputs.exceptions } : {})
     })
   )
 }
@@ -19,11 +28,12 @@ export const parseContent = (decoded: string): void => {
   const content = JSON.parse(lzstring.decompressFromBase64(decoded)) as {
     policy: string
     resource: string
-    context: string
-    config: string
-    customResourceDefinitions: string
-    clusterResources: string
-    exceptions: string
+    context?: string
+    config?: string
+    oldResource?: string
+    customResourceDefinitions?: string
+    clusterResources?: string
+    exceptions?: string
   }
 
   init(content)
