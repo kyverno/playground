@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { MarkerSeverity, editor } from 'monaco-editor'
-import { EngineResponse } from '@/types'
+import { EngineResponse, ErrorResponse } from '@/types'
 import { resolveAPI } from '@/utils'
 import { inputs } from '@/store'
 
@@ -80,6 +80,27 @@ const submit = (): void => {
     }
   })
     .then((resp) => {
+      if (resp.status === 400) {
+        resp.json().then((err: ErrorResponse) => {
+          if (err.violations) {
+            emit(
+              'on-error',
+              new Error(
+                err.violations.reduce((error, e) => {
+                  const policy = [e.policyNamespace, e.policyName].filter((s) => !!s).join('/')
+
+                  return error + `<h2 class="text-subtitle-2 mb-1">${policy}</h2><p class="mb-0 pb-0">${e.field}: ${e.detail}</p>`
+                }, `<h1 class="text-subtitle-1 mb-2">Invalid Policy:</h1>`)
+              )
+            )
+            return
+          }
+
+          emit('on-error', new Error(`ServerError: ${err.error}`))
+        })
+        return
+      }
+
       if (resp.status > 300) {
         resp.text().then((err) => emit('on-error', new Error(`ServerError: ${err}`)))
         return

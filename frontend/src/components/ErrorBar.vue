@@ -1,6 +1,12 @@
 <template>
-  <v-snackbar :model-value="props.modelValue" @update:model-value="(event: boolean) => emit('update:modelValue', event)" color="error">
-    <span v-html="text" />
+  <v-snackbar
+    :model-value="props.modelValue"
+    @update:model-value="(event: boolean) => emit('update:modelValue', event)"
+    color="error"
+    max-width="80%"
+    :width="856"
+    :timeout="8000">
+    <span v-html="text" class="d-block" />
     <template v-slot:actions>
       <v-btn variant="text" @click="emit('update:modelValue', false)">Close</v-btn>
     </template>
