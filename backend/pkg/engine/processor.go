@@ -126,7 +126,7 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 	response, verifiedImageData := p.engine.VerifyAndPatchImages(ctx, policyContext)
 	var patches []jsonpatch.JsonPatchOperation
 	if !verifiedImageData.IsEmpty() {
-		annotationPatches, err := verifiedImageData.Patches(len(new.GetAnnotations()) != 0, logr.Discard())
+		annotationPatches, err := verifiedImageData.Patches(len(response.PatchedResource.GetAnnotations()) != 0, logr.Discard())
 		if err != nil {
 			return Response{}, new, err
 		}
@@ -137,19 +137,19 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 		patch := jsonutils.JoinPatches(patch.ConvertPatches(patches...)...)
 		decoded, err := json_patch.DecodePatch(patch)
 		if err != nil {
-			return Response{}, new, err
+			return Response{}, response.PatchedResource, err
 		}
 		options := &json_patch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
-		resourceBytes, err := new.MarshalJSON()
+		resourceBytes, err := response.PatchedResource.MarshalJSON()
 		if err != nil {
-			return Response{}, new, err
+			return Response{}, response.PatchedResource, err
 		}
 		patchedResourceBytes, err := decoded.ApplyWithOptions(resourceBytes, options)
 		if err != nil {
-			return Response{}, new, err
+			return Response{}, response.PatchedResource, err
 		}
 		if err := response.PatchedResource.UnmarshalJSON(patchedResourceBytes); err != nil {
-			return Response{}, new, err
+			return Response{}, response.PatchedResource, err
 		}
 	}
 
