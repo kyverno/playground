@@ -8,10 +8,7 @@ import (
 )
 
 type EngineResponse struct {
-	Policies          []kyvernov1.PolicyInterface `json:"policies"`
-	Resources         []unstructured.Unstructured `json:"resources"`
-	Mutation          []engine.Response           `json:"mutation"`
-	ImageVerification []engine.Response           `json:"imageVerification"`
-	Validation        []engine.Response           `json:"validation"`
-	Generation        []engine.Response           `json:"generation"`
+	Policies  []kyvernov1.PolicyInterface `json:"policies"`
+	Resources []unstructured.Unstructured `json:"resources"`
+	*engine.Results
 }

@@ -43,13 +43,17 @@ func (p *Processor) Run(
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*Results, error) {
+	response := &Results{
+		PolicyValidations: validatePolicies(policies),
+	}
+	if len(response.PolicyValidations) > 0 {
+		return response, nil
+	}
 	if !p.cluster {
 		if err := validateParams(p.params, policies); err != nil {
 			return nil, err
 		}
 	}
-
-	response := &Results{}
 
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
@@ -277,25 +281,38 @@ func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new 
 	return context, nil
 }
 
+func validatePolicies(policies []kyvernov1.PolicyInterface) []PolicyValidation {
+	var result []PolicyValidation
+	for _, policy := range policies {
+		for _, err := range policy.Validate(nil) {
+			result = append(result, PolicyValidation{
+				PolicyName:      policy.GetName(),
+				PolicyNamespace: policy.GetNamespace(),
+				Type:            string(err.Type),
+				Field:           err.Field,
+				Detail:          err.Detail,
+			})
+		}
+	}
+	return result
+}
+
 func validateParams(params *Parameters, policies []kyvernov1.PolicyInterface) error {
 	if params == nil {
 		return nil
 	}
-
 	for _, policy := range policies {
 		for _, rule := range policy.GetSpec().Rules {
 			for _, variable := range rule.Context {
 				if variable.APICall == nil && variable.ConfigMap == nil {
 					continue
 				}
-
 				if _, ok := params.Variables[variable.Name]; !ok {
 					return fmt.Errorf("Variable %s is not defined in the context", variable.Name)
 				}
 			}
 		}
 	}
-
 	return nil
 }
 

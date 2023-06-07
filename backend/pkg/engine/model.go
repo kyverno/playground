@@ -45,11 +45,22 @@ type Kubernetes struct {
 }
 
 type Results struct {
-	Mutation          []Response `json:"mutation"`
-	ImageVerification []Response `json:"imageVerification"`
-	Validation        []Response `json:"validation"`
-	Generation        []Response `json:"generation"`
+	PolicyValidations []PolicyValidation `json:"policyValidations"`
+	Mutation          []Response         `json:"mutation"`
+	ImageVerification []Response         `json:"imageVerification"`
+	Validation        []Response         `json:"validation"`
+	Generation        []Response         `json:"generation"`
 }
+
+type PolicyValidation struct {
+	PolicyName      string `json:"policyName"`
+	PolicyNamespace string `json:"policyNamespace"`
+	Field           string `json:"field"`
+	Type            string `json:"type"`
+	Detail          string `json:"detail"`
+}
+
+type PolicyValidations []PolicyValidation
 
 type Response struct {
 	// OriginalResource is the original resource as YAML string
