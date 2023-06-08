@@ -1,6 +1,6 @@
 <template>
   <cluster-button :default-resource="defaultResource" v-model="inputs.policy">
-    <template #resource-select="{ update, resource }">
+    <template #resource-api="{ update, resource }">
       <simple-row>
         <policy-type-select :model-value="resource" @update:modelValue="update" />
       </simple-row>
