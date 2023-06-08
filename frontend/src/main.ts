@@ -7,8 +7,8 @@ import { setDiagnosticsOptions } from 'monaco-yaml'
 import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 
-import policyexception from './schemas/policyexception.json'
-import clusterpolicy from './schemas/clusterpolicy.json'
+import policyexception from './schemas/clusterpolicy-kyverno-v1.json'
+import clusterpolicy from './schemas/policyexception-kyverno-v2alpha1.json'
 import context from './schemas/context.json'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
