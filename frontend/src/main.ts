@@ -7,9 +7,10 @@ import { setDiagnosticsOptions } from 'monaco-yaml'
 import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 
-import policyexception from './schemas/clusterpolicy-kyverno-v1.json'
-import clusterpolicy from './schemas/policyexception-kyverno-v2alpha1.json'
+import policyexception from './schemas/policyexception-kyverno-v2alpha1.json'
+import clusterpolicy from './schemas/clusterpolicy-kyverno-v1.json'
 import context from './schemas/context.json'
+import { JSONSchema6 } from 'json-schema'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
 
@@ -20,9 +21,9 @@ setDiagnosticsOptions({
   validate: true,
   format: true,
   schemas: [
-    { ...policyexception, uri: `${baseURL}/schemas/policyexception.json`, fileMatch: ['policyexception.yaml'] },
-    { ...clusterpolicy, uri: `${baseURL}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] },
-    { ...context, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
+    { schema: policyexception as JSONSchema6, uri: `${baseURL}/schemas/policyexception.json`, fileMatch: ['policyexception.yaml'] },
+    { schema: clusterpolicy as JSONSchema6, uri: `${baseURL}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] },
+    { schema: context as JSONSchema6, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
   ]
 })
 
