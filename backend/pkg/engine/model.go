@@ -45,11 +45,10 @@ type Kubernetes struct {
 }
 
 type Results struct {
-	PolicyValidations []PolicyValidation `json:"policyValidations"`
-	Mutation          []Response         `json:"mutation"`
-	ImageVerification []Response         `json:"imageVerification"`
-	Validation        []Response         `json:"validation"`
-	Generation        []Response         `json:"generation"`
+	Mutation          []Response `json:"mutation"`
+	ImageVerification []Response `json:"imageVerification"`
+	Validation        []Response `json:"validation"`
+	Generation        []Response `json:"generation"`
 }
 
 type PolicyValidation struct {

@@ -13,9 +13,9 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/engine"
 	"github.com/kyverno/playground/backend/pkg/server"
 	"github.com/kyverno/playground/backend/pkg/server/api"
-	"github.com/kyverno/playground/backend/pkg/server/errors"
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
@@ -82,15 +82,19 @@ func (c *commandFlags) Run(_ *cobra.Command, _ []string) error {
 	gin.SetMode(c.ginFlags.mode)
 	tonic.SetBindHook(tonic.DefaultBindingHookMaxBodyBytes(int64(c.ginFlags.maxBodySize)))
 	tonic.SetErrorHook(func(c *gin.Context, err error) (int, interface{}) {
-		if err != nil {
-			if err, ok := err.(errors.Error); ok {
-				return http.StatusBadRequest, gin.H{
-					"error":  err.Error(),
-					"reason": err.Reason(),
-				}
+		switch e := err.(type) {
+		case engine.PolicyViolationError:
+			return http.StatusBadRequest, gin.H{
+				"violations": e.Violations,
+				"error":      e.Error(),
+				"reason":     "POLICY_VALIDATION",
+			}
+		default:
+			return http.StatusBadRequest, gin.H{
+				"error":  e.Error(),
+				"reason": "ERROR",
 			}
 		}
-		return tonic.DefaultErrorHook(c, err)
 	})
 	// create server
 	server, err := server.New(c.ginFlags.log, c.ginFlags.cors)

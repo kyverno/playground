@@ -14,7 +14,6 @@ import (
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
-	"github.com/kyverno/playground/backend/pkg/server/errors"
 )
 
 func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
@@ -76,9 +75,6 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		results, err := processor.Run(ctx, policies, resources, oldResources)
 		if err != nil {
 			return nil, err
-		}
-		if len(results.PolicyValidations) > 0 {
-			return nil, errors.PolicyValidations(results.PolicyValidations)
 		}
 		return &EngineResponse{
 			Policies:  policies,
