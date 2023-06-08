@@ -141,7 +141,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 codegen-schema-json: codegen-schema-openapi ## Generate json schemas
 	@$(PIP) install openapi2jsonschema
 	@rm -rf ./schemas/json
-	@openapi2jsonschema ./schemas/openapi/v2/schema.json --kubernetes --stand-alone -o ./schemas/json
+	@openapi2jsonschema ./schemas/openapi/v2/schema.json --kubernetes --stand-alone --expanded -o ./schemas/json
 
 .PHONY: codegen-all
 codegen-all: codegen-helm-docs codegen-schema-json codegen-schema-openapi ## Generate all codegen
@@ -180,9 +180,11 @@ build-clean: ## Clean built files
 .PHONY: build-frontend
 build-frontend: ## Build frontend
 	@echo Building frontend... >&2
-	@cp schemas/json/clusterpolicy.json frontend/src/schemas
-	@cp schemas/json/policyexception.json frontend/src/schemas
-	@rm -rf frontend/public/schemas && cp -r frontend/src/schemas frontend/public/schemas
+	@cp schemas/json/clusterpolicy-kyverno-v1.json frontend/src/schemas
+	@cp schemas/json/clusterpolicy-kyverno-v2beta1.json frontend/src/schemas
+	@cp schemas/json/policy-kyverno-v1.json frontend/src/schemas
+	@cp schemas/json/policy-kyverno-v2beta1.json frontend/src/schemas
+	@cp schemas/json/policyexception-kyverno-v2alpha1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets
