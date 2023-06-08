@@ -3,7 +3,7 @@
   <v-autocomplete
     variant="outlined"
     hide-details
-    :items="list"
+    :items="state.kinds"
     label="Resource Type"
     v-model="resource"
     return-object
@@ -12,20 +12,17 @@
 </template>
 
 <script setup lang="ts">
-import { ResourceKind, useAPI } from '@/composables/api'
-import { computed, ref } from 'vue'
+import { Resource, useAPI } from '@/composables/api'
+import { computed } from 'vue'
 import { PropType } from 'vue'
-
-type Resource = ResourceKind & { title: string }
+import { state } from '@/store'
 
 const { kinds, loading, error } = useAPI()
-
-const list = ref<Resource[]>([])
 
 loading.value = true
 kinds()
   .then((kinds) => {
-    list.value = kinds.map((k) => ({ ...k, title: `${k.apiVersion} ${k.kind}` }))
+    state.kinds = kinds.map((k) => ({ ...k, title: `${k.apiVersion} ${k.kind}` }))
   })
   .catch((err) => {
     error.value = err
