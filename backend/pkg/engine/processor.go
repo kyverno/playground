@@ -43,12 +43,12 @@ func (p *Processor) Run(
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*Results, error) {
-	response := &Results{
-		PolicyValidations: validatePolicies(policies),
+	if violations := validatePolicies(policies); len(violations) > 0 {
+		return nil, PolicyViolationError{Violations: violations}
 	}
-	if len(response.PolicyValidations) > 0 {
-		return response, nil
-	}
+
+	response := &Results{}
+
 	if !p.cluster {
 		if err := validateParams(p.params, policies); err != nil {
 			return nil, err
