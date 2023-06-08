@@ -335,6 +335,9 @@
               "object",
               "null"
             ],
+            "required": [
+              "name"
+            ],
             "properties": {
               "celPreconditions": {
                 "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
@@ -2463,10 +2466,7 @@
               },
               "name": {
                 "description": "Name is a label to identify the rule, It must be unique within the policy.",
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": "string",
                 "maxLength": 63
               },
               "preconditions": {
@@ -4377,6 +4377,9 @@
                 "type": [
                   "object",
                   "null"
+                ],
+                "required": [
+                  "name"
                 ],
                 "properties": {
                   "celPreconditions": {
@@ -7076,10 +7079,7 @@
                   },
                   "name": {
                     "description": "Name is a label to identify the rule, It must be unique within the policy.",
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": "string",
                     "maxLength": 63
                   },
                   "preconditions": {

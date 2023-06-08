@@ -15787,6 +15787,9 @@
               "items": {
                 "description": "Rule defines a validation, mutation, or generation control for matching resources. Each rules contains a match declaration to select resources, and an optional exclude declaration to specify which resources to exclude.",
                 "type": "object",
+                "required": [
+                  "name"
+                ],
                 "properties": {
                   "celPreconditions": {
                     "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
@@ -18748,6 +18751,9 @@
                   "items": {
                     "description": "Rule defines a validation, mutation, or generation control for matching resources. Each rules contains a match declaration to select resources, and an optional exclude declaration to specify which resources to exclude.",
                     "type": "object",
+                    "required": [
+                      "name"
+                    ],
                     "properties": {
                       "celPreconditions": {
                         "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
@@ -21804,6 +21810,9 @@
               "items": {
                 "description": "Rule defines a validation, mutation, or generation control for matching resources. Each rules contains a match declaration to select resources, and an optional exclude declaration to specify which resources to exclude.",
                 "type": "object",
+                "required": [
+                  "name"
+                ],
                 "properties": {
                   "celPreconditions": {
                     "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
@@ -24765,6 +24774,9 @@
                   "items": {
                     "description": "Rule defines a validation, mutation, or generation control for matching resources. Each rules contains a match declaration to select resources, and an optional exclude declaration to specify which resources to exclude.",
                     "type": "object",
+                    "required": [
+                      "name"
+                    ],
                     "properties": {
                       "celPreconditions": {
                         "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
@@ -32143,6 +32155,9 @@
               "items": {
                 "description": "Rule defines a validation, mutation, or generation control for matching resources. Each rules contains a match declaration to select resources, and an optional exclude declaration to specify which resources to exclude.",
                 "type": "object",
+                "required": [
+                  "name"
+                ],
                 "properties": {
                   "celPreconditions": {
                     "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
@@ -34872,6 +34887,9 @@
                   "items": {
                     "description": "Rule defines a validation, mutation, or generation control for matching resources. Each rules contains a match declaration to select resources, and an optional exclude declaration to specify which resources to exclude.",
                     "type": "object",
+                    "required": [
+                      "name"
+                    ],
                     "properties": {
                       "celPreconditions": {
                         "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
@@ -37928,6 +37946,9 @@
               "items": {
                 "description": "Rule defines a validation, mutation, or generation control for matching resources. Each rules contains a match declaration to select resources, and an optional exclude declaration to specify which resources to exclude.",
                 "type": "object",
+                "required": [
+                  "name"
+                ],
                 "properties": {
                   "celPreconditions": {
                     "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
@@ -40657,6 +40678,9 @@
                   "items": {
                     "description": "Rule defines a validation, mutation, or generation control for matching resources. Each rules contains a match declaration to select resources, and an optional exclude declaration to specify which resources to exclude.",
                     "type": "object",
+                    "required": [
+                      "name"
+                    ],
                     "properties": {
                       "celPreconditions": {
                         "description": "CELPreconditions are used to determine if a policy rule should be applied by evaluating a set of CEL conditions. It can only be used with the validate.cel subrule",
