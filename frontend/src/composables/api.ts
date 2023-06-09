@@ -26,6 +26,8 @@ export type ResourceKind = {
   clusterScoped: boolean
 }
 
+export type Resource = ResourceKind & { title: string }
+
 export type SearchResult = { namespace: string; name: string }
 
 export const config = reactive<Config>({
