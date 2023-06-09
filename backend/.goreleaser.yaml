@@ -44,7 +44,7 @@ signs:
       - --output-signature=${signature}
       - ${artifact}
       - --yes
-    artifacts: checksum
+    artifacts: all
     output: true
 
 docker_signs:
@@ -62,7 +62,7 @@ archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: checksums.txt
 
 source:
   enabled: true
