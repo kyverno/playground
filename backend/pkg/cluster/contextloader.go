@@ -6,7 +6,6 @@ import (
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/utils/store"
-	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	enginecontext "github.com/kyverno/kyverno/pkg/engine/context"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
@@ -41,7 +40,7 @@ type fakeContextLoader struct {
 func (l *fakeContextLoader) Load(
 	ctx context.Context,
 	jp jmespath.Interface,
-	_ dclient.Interface,
+	_ engineapi.Client,
 	_ registryclient.Client,
 	contextEntries []kyvernov1.ContextEntry,
 	jsonContext enginecontext.Interface,
