@@ -8,11 +8,11 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-logr/logr v1.2.4
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20230608095458-d4a6d4fc8e9c
+	github.com/kyverno/kyverno v1.5.0-rc1.0.20230610092034-42657f672fa4
 	github.com/loopfz/gadgeto v0.11.2
-	github.com/mattbaird/jsonpatch v0.0.0-20230413205102-771768614e91
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
+	gomodules.xyz/jsonpatch/v2 v2.3.0
 	k8s.io/api v0.27.2
 	k8s.io/apimachinery v0.27.2
 	k8s.io/client-go v0.27.2
