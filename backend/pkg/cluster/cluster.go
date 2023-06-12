@@ -37,7 +37,6 @@ type Cluster interface {
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
 	DClient(...unstructured.Unstructured) (dclient.Interface, error)
 	PolicyExceptionSelector(namespace string, exceptions ...*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector
-	ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory
 	IsFake() bool
 }
 
@@ -146,10 +145,6 @@ func (c cluster) PolicyExceptionSelector(namespace string, exceptions ...*v2alph
 
 func (c cluster) DClient(_ ...unstructured.Unstructured) (dclient.Interface, error) {
 	return c.dClient, nil
-}
-
-func (c cluster) ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory {
-	return ContextLoaderFactory(c.IsFake(), cmResolver)
 }
 
 func (c cluster) IsFake() bool {
