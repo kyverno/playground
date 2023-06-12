@@ -14,19 +14,16 @@ import (
 )
 
 func ContextLoaderFactory(fake bool, cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory {
+	if !fake {
+		return engineapi.DefaultContextLoaderFactory(cmResolver)
+	}
 	return func(policy kyvernov1.PolicyInterface, rule kyvernov1.Rule) engineapi.ContextLoader {
-		if fake {
-			return &fakeContextLoader{
-				cmResolver: cmResolver,
-				logger:     logging.WithName("MockContextLoaderFactory"),
-				policyName: policy.GetName(),
-				ruleName:   rule.Name,
-			}
+		return fakeContextLoader{
+			cmResolver: cmResolver,
+			logger:     logging.WithName("MockContextLoaderFactory"),
+			policyName: policy.GetName(),
+			ruleName:   rule.Name,
 		}
-
-		inner := engineapi.DefaultContextLoaderFactory(cmResolver)
-
-		return inner(policy, rule)
 	}
 }
 
@@ -37,7 +34,7 @@ type fakeContextLoader struct {
 	ruleName   string
 }
 
-func (l *fakeContextLoader) Load(
+func (l fakeContextLoader) Load(
 	ctx context.Context,
 	jp jmespath.Interface,
 	_ engineapi.Client,
