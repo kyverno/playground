@@ -8,7 +8,7 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-logr/logr v1.2.4
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20230610092034-42657f672fa4
+	github.com/kyverno/kyverno v1.5.0-rc1.0.20230612153612-1401bcf2fbc7
 	github.com/loopfz/gadgeto v0.11.2
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
