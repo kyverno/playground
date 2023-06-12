@@ -28,6 +28,8 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 
+	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/engine/mocks"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
 
@@ -37,7 +39,7 @@ type Processor struct {
 	genController *generate.GenerateController
 	config        config.Configuration
 	jmesPath      jmespath.Interface
-	cluster       bool
+	cluster       cluster.Cluster
 }
 
 func (p *Processor) Run(
@@ -52,7 +54,7 @@ func (p *Processor) Run(
 
 	response := &models.Results{}
 
-	if !p.cluster {
+	if p.cluster.IsFake() {
 		if err := validateParams(p.params, policies); err != nil {
 			return nil, err
 		}
@@ -361,28 +363,24 @@ func newEngine(
 
 func NewProcessor(
 	params *models.Parameters,
+	cluster cluster.Cluster,
 	kyvernoConfig *corev1.ConfigMap,
 	dClient dclient.Interface,
-	factory engineapi.ContextLoaderFactory,
+	cmResolver engineapi.ConfigmapResolver,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 ) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	if kyvernoConfig != nil {
 		cfg.Load(kyvernoConfig)
 	}
-
 	jp := jmespath.New(cfg)
-	cluster := false
-
-	engine, err := newEngine(cfg, jp, dClient, factory, exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
+	engine, err := newEngine(cfg, jp, dClient, mocks.ContextLoaderFactory(cmResolver), exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
 	if err != nil {
 		return nil, err
 	}
 
 	if dClient == nil {
 		dClient = dclient.NewEmptyFakeClient()
-	} else {
-		cluster = true
 	}
 
 	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, logr.Discard(), jp)
