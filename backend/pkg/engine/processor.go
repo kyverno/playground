@@ -374,7 +374,7 @@ func NewProcessor(
 		cfg.Load(kyvernoConfig)
 	}
 	jp := jmespath.New(cfg)
-	engine, err := newEngine(cfg, jp, dClient, mocks.ContextLoaderFactory(cmResolver), exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
+	engine, err := newEngine(cfg, jp, dClient, mocks.ContextLoaderFactory(cmResolver, params.ImageData), exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
 	if err != nil {
 		return nil, err
 	}
