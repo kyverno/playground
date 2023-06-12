@@ -1,7 +1,11 @@
 package engine
 
+import (
+	"github.com/kyverno/playground/backend/pkg/engine/models"
+)
+
 type PolicyViolationError struct {
-	Violations []PolicyValidation
+	Violations []models.PolicyValidation
 }
 
 func (e PolicyViolationError) Error() string {

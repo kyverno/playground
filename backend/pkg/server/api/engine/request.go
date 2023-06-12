@@ -13,7 +13,7 @@ import (
 
 	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
-	"github.com/kyverno/playground/backend/pkg/engine"
+	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/playground/backend/pkg/resource/loader"
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
@@ -29,8 +29,8 @@ type EngineRequest struct {
 	PolicyExceptions          string `json:"policyExceptions"`
 }
 
-func (r *EngineRequest) LoadParameters() (*engine.Parameters, error) {
-	var params engine.Parameters
+func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
+	var params models.Parameters
 	if err := yaml.Unmarshal([]byte(r.Context), &params); err != nil {
 		return nil, err
 	}
