@@ -41,7 +41,7 @@ func (l *fakeContextLoader) Load(
 	ctx context.Context,
 	jp jmespath.Interface,
 	_ engineapi.Client,
-	_ registryclient.Client,
+	rclient registryclient.Client,
 	contextEntries []kyvernov1.ContextEntry,
 	jsonContext enginecontext.Interface,
 ) error {
@@ -58,7 +58,6 @@ func (l *fakeContextLoader) Load(
 		if entry.ConfigMap != nil {
 			_ = engineapi.LoadConfigMap(ctx, l.logger, entry, jsonContext, l.cmResolver)
 		} else if entry.ImageRegistry != nil {
-			rclient := store.GetRegistryClient()
 			if err := engineapi.LoadImageData(ctx, jp, rclient, l.logger, entry, jsonContext); err != nil {
 				return err
 			}
