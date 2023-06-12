@@ -1,5 +1,18 @@
 export type RuleType = 'Vaidation'
 export type RuleStatus = 'fail' | 'pass' | 'warn' | 'error' | 'skip' | 'no match'
+export type ErrorReason = 'POLICY_VALIDATION' | 'ERROR'
+
+export type ErrorResponse = {
+  reason: ErrorReason
+  error: string
+  violations: {
+    detail: string
+    field: string
+    policyName: string
+    policyNamespace: string
+    type: string
+  }[]
+}
 
 export type Metadata = {
   name: string

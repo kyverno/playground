@@ -1,6 +1,11 @@
 import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate, CustomResourceDefinitionsTemplate } from '@/assets/templates'
 import { reactive } from 'vue'
 import { useState, Inputs } from '@/composables'
+import { ResourceKind } from '@/composables/api'
+
+type State = {
+  kinds: ResourceKind[]
+}
 
 export const inputs = reactive<Inputs>({
   diffResources: false,
@@ -12,6 +17,10 @@ export const inputs = reactive<Inputs>({
   exceptions: '',
   clusterResources: '',
   customResourceDefinitions: CustomResourceDefinitionsTemplate
+})
+
+export const state = reactive<State>({
+  kinds: []
 })
 
 export const reset = () => {

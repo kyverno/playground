@@ -1,6 +1,6 @@
 <template>
   <cluster-button :default-resource="defaultResource" :model-value="modelValue" @update:model-value="(res: string) => emit('update:modelValue', res)">
-    <template #resource-select="{ update, resource }">
+    <template #resource-api="{ update, resource }">
       <simple-row>
         <resource-type-select :model-value="resource" @update:modelValue="update" />
       </simple-row>

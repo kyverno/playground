@@ -7,9 +7,13 @@ import { setDiagnosticsOptions } from 'monaco-yaml'
 import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 
-import policyexception from './schemas/policyexception.json'
-import clusterpolicy from './schemas/clusterpolicy.json'
+import policyexception from './schemas/policyexception-kyverno-v2alpha1.json'
+import clusterpolicyv1 from './schemas/clusterpolicy-kyverno-v1.json'
+import policyv1 from './schemas/policy-kyverno-v1.json'
+import clusterpolicyv2beta1 from './schemas/clusterpolicy-kyverno-v2beta1.json'
+import policyv2beta1 from './schemas/policy-kyverno-v2beta1.json'
 import context from './schemas/context.json'
+import { JSONSchema6 } from 'json-schema'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
 
@@ -20,9 +24,26 @@ setDiagnosticsOptions({
   validate: true,
   format: true,
   schemas: [
-    { ...policyexception, uri: `${baseURL}/schemas/policyexception.json`, fileMatch: ['policyexception.yaml'] },
-    { ...clusterpolicy, uri: `${baseURL}/schemas/clusterpolicy.json`, fileMatch: ['policy.yaml'] },
-    { ...context, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
+    {
+      schema: {
+        oneOf: [
+          { $ref: '#/definitions/clusterpolicy-v1' },
+          { $ref: '#/definitions/policy-v1' },
+          { $ref: '#/definitions/clusterpolicy-v2beta1' },
+          { $ref: '#/definitions/policy-v2beta1' },
+        ],
+        definitions: {
+          "clusterpolicy-v1": (clusterpolicyv1 as JSONSchema6),
+          "policy-v1": (policyv1 as JSONSchema6),
+          "clusterpolicy-v2beta1": (clusterpolicyv2beta1 as JSONSchema6),
+          "policy-v2beta1": (policyv2beta1 as JSONSchema6),
+        }
+      },
+      uri: `${baseURL}/schemas/policies.json`,
+      fileMatch: ['policy.yaml']
+    },
+    { schema: policyexception as JSONSchema6, uri: `${baseURL}/schemas/policyexception.json`, fileMatch: ['policyexception.yaml'] },
+    { schema: context as JSONSchema6, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
   ]
 })
 

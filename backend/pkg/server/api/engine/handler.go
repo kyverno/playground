@@ -68,7 +68,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if params.Flags.Exceptions.Enabled {
 			exceptionSelector = cl.PolicyExceptionSelector(params.Flags.Exceptions.Namespace, exceptions...)
 		}
-		processor, err := engine.NewProcessor(params, config, dClient, cl.ContextLoaderFactory(cmResolver), exceptionSelector)
+		processor, err := engine.NewProcessor(params, cl, config, dClient, cmResolver, exceptionSelector)
 		if err != nil {
 			return nil, err
 		}
@@ -77,12 +77,9 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			return nil, err
 		}
 		return &EngineResponse{
-			Policies:          policies,
-			Resources:         resources,
-			Mutation:          results.Mutation,
-			ImageVerification: results.ImageVerification,
-			Validation:        results.Validation,
-			Generation:        results.Generation,
+			Policies:  policies,
+			Resources: resources,
+			Results:   results,
 		}, nil
 	}, http.StatusOK), nil
 }

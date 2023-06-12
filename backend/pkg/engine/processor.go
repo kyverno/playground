@@ -13,28 +13,33 @@ import (
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
+	"github.com/kyverno/kyverno/pkg/engine/adapters"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
-	"github.com/mattbaird/jsonpatch"
+	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+
+	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/engine/mocks"
+	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
 
 type Processor struct {
-	params        *Parameters
+	params        *models.Parameters
 	engine        engineapi.Engine
 	genController *generate.GenerateController
 	config        config.Configuration
 	jmesPath      jmespath.Interface
-	cluster       bool
+	cluster       cluster.Cluster
 }
 
 func (p *Processor) Run(
@@ -42,14 +47,18 @@ func (p *Processor) Run(
 	policies []kyvernov1.PolicyInterface,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
-) (*Results, error) {
-	if !p.cluster {
+) (*models.Results, error) {
+	if violations := validatePolicies(policies); len(violations) > 0 {
+		return nil, PolicyViolationError{Violations: violations}
+	}
+
+	response := &models.Results{}
+
+	if p.cluster.IsFake() {
 		if err := validateParams(p.params, policies); err != nil {
 			return nil, err
 		}
 	}
-
-	response := &Results{}
 
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
@@ -106,29 +115,29 @@ func (p *Processor) Run(
 	return response, nil
 }
 
-func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
+func (p *Processor) mutate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (models.Response, unstructured.Unstructured, error) {
 	policyContext, err := p.newPolicyContext(policy, old, new)
 	if err != nil {
-		return Response{}, new, err
+		return models.Response{}, new, err
 	}
 
 	response := p.engine.Mutate(ctx, policyContext)
 
-	return convertResponse(response), response.PatchedResource, nil
+	return models.ConvertResponse(response), response.PatchedResource, nil
 }
 
-func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, unstructured.Unstructured, error) {
+func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (models.Response, unstructured.Unstructured, error) {
 	policyContext, err := p.newPolicyContext(policy, old, new)
 	if err != nil {
-		return Response{}, new, err
+		return models.Response{}, new, err
 	}
 
 	response, verifiedImageData := p.engine.VerifyAndPatchImages(ctx, policyContext)
 	var patches []jsonpatch.JsonPatchOperation
 	if !verifiedImageData.IsEmpty() {
-		annotationPatches, err := verifiedImageData.Patches(len(new.GetAnnotations()) != 0, logr.Discard())
+		annotationPatches, err := verifiedImageData.Patches(len(response.PatchedResource.GetAnnotations()) != 0, logr.Discard())
 		if err != nil {
-			return Response{}, new, err
+			return models.Response{}, new, err
 		}
 		// add annotation patches first
 		patches = append(annotationPatches, patches...)
@@ -137,45 +146,45 @@ func (p *Processor) verifyImages(ctx context.Context, policy kyvernov1.PolicyInt
 		patch := jsonutils.JoinPatches(patch.ConvertPatches(patches...)...)
 		decoded, err := json_patch.DecodePatch(patch)
 		if err != nil {
-			return Response{}, new, err
+			return models.Response{}, response.PatchedResource, err
 		}
 		options := &json_patch.ApplyOptions{SupportNegativeIndices: true, AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
-		resourceBytes, err := new.MarshalJSON()
+		resourceBytes, err := response.PatchedResource.MarshalJSON()
 		if err != nil {
-			return Response{}, new, err
+			return models.Response{}, response.PatchedResource, err
 		}
 		patchedResourceBytes, err := decoded.ApplyWithOptions(resourceBytes, options)
 		if err != nil {
-			return Response{}, new, err
+			return models.Response{}, response.PatchedResource, err
 		}
 		if err := response.PatchedResource.UnmarshalJSON(patchedResourceBytes); err != nil {
-			return Response{}, new, err
+			return models.Response{}, response.PatchedResource, err
 		}
 	}
 
-	return convertResponse(response), response.PatchedResource, nil
+	return models.ConvertResponse(response), response.PatchedResource, nil
 }
 
-func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, error) {
+func (p *Processor) validate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (models.Response, error) {
 	policyContext, err := p.newPolicyContext(policy, old, new)
 	if err != nil {
-		return Response{}, err
+		return models.Response{}, err
 	}
 
 	response := p.engine.Validate(ctx, policyContext)
 
-	return convertResponse(response), nil
+	return models.ConvertResponse(response), nil
 }
 
-func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (Response, error) {
+func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (models.Response, error) {
 	policyContext, err := p.newPolicyContext(policy, old, new)
 	if err != nil {
-		return Response{}, err
+		return models.Response{}, err
 	}
 
 	response := p.engine.Generate(ctx, policyContext)
 	if len(response.PolicyResponse.Rules) == 0 {
-		return convertResponse(response), nil
+		return models.ConvertResponse(response), nil
 	}
 
 	gr := toGenerateRequest(policy, new)
@@ -184,14 +193,14 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 	for _, rule := range response.PolicyResponse.Rules {
 		genRes, err := p.genController.ApplyGeneratePolicy(logr.Discard(), policyContext, gr, []string{rule.Name()})
 		if err != nil {
-			return Response{}, err
+			return models.Response{}, err
 		}
 		if len(genRes) == 0 {
 			continue
 		}
 		unstrGenResource, err := p.genController.GetUnstrResource(genRes[0])
 		if err != nil {
-			return Response{}, err
+			return models.Response{}, err
 		}
 
 		// cleanup metadata
@@ -203,7 +212,7 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 	}
 	response.PolicyResponse.Rules = newRuleResponse
 
-	return convertResponse(response), nil
+	return models.ConvertResponse(response), nil
 }
 
 func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new unstructured.Unstructured) (*policycontext.PolicyContext, error) {
@@ -277,25 +286,38 @@ func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new 
 	return context, nil
 }
 
-func validateParams(params *Parameters, policies []kyvernov1.PolicyInterface) error {
+func validatePolicies(policies []kyvernov1.PolicyInterface) []models.PolicyValidation {
+	var result []models.PolicyValidation
+	for _, policy := range policies {
+		for _, err := range policy.Validate(nil) {
+			result = append(result, models.PolicyValidation{
+				PolicyName:      policy.GetName(),
+				PolicyNamespace: policy.GetNamespace(),
+				Type:            string(err.Type),
+				Field:           err.Field,
+				Detail:          err.Detail,
+			})
+		}
+	}
+	return result
+}
+
+func validateParams(params *models.Parameters, policies []kyvernov1.PolicyInterface) error {
 	if params == nil {
 		return nil
 	}
-
 	for _, policy := range policies {
 		for _, rule := range policy.GetSpec().Rules {
 			for _, variable := range rule.Context {
 				if variable.APICall == nil && variable.ConfigMap == nil {
 					continue
 				}
-
 				if _, ok := params.Variables[variable.Name]; !ok {
 					return fmt.Errorf("Variable %s is not defined in the context", variable.Name)
 				}
 			}
 		}
 	}
-
 	return nil
 }
 
@@ -331,7 +353,7 @@ func newEngine(
 		cfg,
 		config.NewDefaultMetricsConfiguration(),
 		jp,
-		client,
+		adapters.Client(client),
 		rclient,
 		factory,
 		exceptionSelector,
@@ -340,29 +362,25 @@ func newEngine(
 }
 
 func NewProcessor(
-	params *Parameters,
+	params *models.Parameters,
+	cluster cluster.Cluster,
 	kyvernoConfig *corev1.ConfigMap,
 	dClient dclient.Interface,
-	factory engineapi.ContextLoaderFactory,
+	cmResolver engineapi.ConfigmapResolver,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 ) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	if kyvernoConfig != nil {
 		cfg.Load(kyvernoConfig)
 	}
-
 	jp := jmespath.New(cfg)
-	cluster := false
-
-	engine, err := newEngine(cfg, jp, dClient, factory, exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
+	engine, err := newEngine(cfg, jp, dClient, mocks.ContextLoaderFactory(cmResolver, params.ImageData), exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
 	if err != nil {
 		return nil, err
 	}
 
 	if dClient == nil {
 		dClient = dclient.NewEmptyFakeClient()
-	} else {
-		cluster = true
 	}
 
 	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, logr.Discard(), jp)
