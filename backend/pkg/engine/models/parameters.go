@@ -5,4 +5,5 @@ type Parameters struct {
 	Context    Context                `json:"context"`
 	Variables  map[string]interface{} `json:"variables"`
 	Flags      Flags                  `json:"flags"`
+	ImageData  map[string]ImageData   `json:"imageData"`
 }
