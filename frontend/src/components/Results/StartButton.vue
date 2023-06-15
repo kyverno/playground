@@ -70,7 +70,8 @@ const submit = (): void => {
       clusterResources: inputs.clusterResources,
       context: inputs.context,
       config: inputs.config,
-      customResourceDefinitions: inputs.customResourceDefinitions
+      customResourceDefinitions: inputs.customResourceDefinitions,
+      imageData: inputs.imageData
     }),
     method: 'POST',
     mode: 'cors',

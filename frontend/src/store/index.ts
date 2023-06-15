@@ -1,4 +1,4 @@
-import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate, CustomResourceDefinitionsTemplate } from '@/assets/templates'
+import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate, CustomResourceDefinitionsTemplate, ImageDataTemplate } from '@/assets/templates'
 import { reactive } from 'vue'
 import { useState, Inputs } from '@/composables'
 import { ResourceKind } from '@/composables/api'
@@ -16,6 +16,7 @@ export const inputs = reactive<Inputs>({
   config: ConfigTemplate,
   exceptions: '',
   clusterResources: '',
+  imageData: ImageDataTemplate,
   customResourceDefinitions: CustomResourceDefinitionsTemplate
 })
 
@@ -32,6 +33,7 @@ export const reset = () => {
   inputs.resource = ResourceTemplate
   inputs.context = ContextTemplate
   inputs.config = ConfigTemplate
+  inputs.imageData = ImageDataTemplate
   inputs.customResourceDefinitions = CustomResourceDefinitionsTemplate
 }
 
@@ -45,6 +47,7 @@ export const setDefaults = () => {
     config: ConfigTemplate,
     exceptions: '',
     clusterResources: '',
+    imageData: ImageDataTemplate,
     customResourceDefinitions: CustomResourceDefinitionsTemplate
   })
 }
@@ -106,6 +109,11 @@ export const init = (values: Inputs) => {
     inputs.customResourceDefinitions = values.customResourceDefinitions
   }
 
+  if (typeof values.imageData === 'string') {
+    state.imageData.value = values.imageData
+    inputs.imageData = values.imageData
+  }
+
   state.name.value = values.name || ''
 }
 
@@ -140,6 +148,10 @@ export const update = (values: Inputs) => {
 
   if (values.customResourceDefinitions) {
     inputs.customResourceDefinitions = values.customResourceDefinitions
+  }
+
+  if (values.imageData) {
+    inputs.imageData = values.imageData
   }
 }
 
@@ -177,5 +189,9 @@ export const populate = () => {
 
   if (state.customResourceDefinitions.value) {
     inputs.customResourceDefinitions = state.customResourceDefinitions.value
+  }
+
+  if (state.imageData.value) {
+    inputs.imageData = state.imageData.value
   }
 }

@@ -12,6 +12,7 @@ export type Inputs = {
   exceptions?: string
   clusterResources?: string
   customResourceDefinitions?: string
+  imageData?: string
 }
 
 const persisted = useLocalStorage<string>('persist:list', '')
@@ -40,6 +41,7 @@ export const createInput = (name: string, defaults?: Inputs) => {
   const exceptions = useLocalStorage<string | undefined>(`persist:exceptions:${name}`, defaults?.config || undefined)
   const clusterResources = useLocalStorage<string | undefined>(`persist:clusterResources:${name}`, defaults?.clusterResources || undefined)
   const customResourceDefinitions = useLocalStorage<string | undefined>(`persist:crds:${name}`, defaults?.customResourceDefinitions || undefined)
+  const imageData = useLocalStorage<string | undefined>(`persist:imageData:${name}`, defaults?.imageData || undefined)
 
   persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
 
@@ -52,6 +54,7 @@ export const createInput = (name: string, defaults?: Inputs) => {
     exceptions,
     clusterResources,
     customResourceDefinitions,
+    imageData,
     name
   }
 }
@@ -83,6 +86,9 @@ export const updateInput = (name: string, values: Inputs) => {
   if (input.customResourceDefinitions.value !== values.customResourceDefinitions) {
     input.customResourceDefinitions.value = values.customResourceDefinitions
   }
+  if (input.imageData.value !== values.imageData) {
+    input.imageData.value = values.imageData
+  }
 
   return input
 }
@@ -98,6 +104,7 @@ export const removeInput = (name: string) => {
   input.exceptions.value = null
   input.clusterResources.value = null
   input.customResourceDefinitions.value = null
+  input.imageData.value = null
 
   name = name.replaceAll(';;', ';').trim()
   const list = getPersisted()

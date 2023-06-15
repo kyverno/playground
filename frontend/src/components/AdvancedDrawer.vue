@@ -46,6 +46,9 @@
             </template>
           </AdvancedConfigDialog>
         </v-list-item>
+        <v-list-item>
+          <AdvancedConfigDialog id="imageDate" title="Image Data" :info="options.panels.imageDataInfo" v-model="inputs.imageData" />
+        </v-list-item>
       </v-list>
     </v-card>
 
