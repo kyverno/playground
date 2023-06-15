@@ -13,8 +13,8 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
 	gomodules.xyz/jsonpatch/v2 v2.3.0
-	k8s.io/api v0.27.2
-	k8s.io/apimachinery v0.27.2
+	k8s.io/api v0.27.3
+	k8s.io/apimachinery v0.27.3
 	k8s.io/client-go v0.27.2
 	sigs.k8s.io/controller-runtime v0.15.1-0.20230602114852-30dea34848b0
 	sigs.k8s.io/kubectl-validate v0.0.0-20230531195345-5aee348b797c
