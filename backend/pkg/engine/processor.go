@@ -341,21 +341,19 @@ func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.U
 func newEngine(
 	cfg config.Configuration,
 	jp jmespath.Interface,
-	client dclient.Interface,
+	client engineapi.Client,
+	imgClient engineapi.ImageDataClient,
+	rclient registryclient.Client,
 	factory engineapi.ContextLoaderFactory,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 	imageSignatureRepository string,
 ) (engineapi.Engine, error) {
-	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
-	if err != nil {
-		return nil, err
-	}
-
 	return kyvernoengine.NewEngine(
 		cfg,
 		config.NewDefaultMetricsConfiguration(),
 		jp,
-		adapters.Client(client),
+		client,
+		imgClient,
 		rclient,
 		factory,
 		exceptionSelector,
@@ -376,7 +374,21 @@ func NewProcessor(
 		cfg.Load(kyvernoConfig)
 	}
 	jp := jmespath.New(cfg)
-	engine, err := newEngine(cfg, jp, dClient, mocks.ContextLoaderFactory(cmResolver, params.ImageData), exceptionSelector, params.Flags.Cosign.ImageSignatureRepository)
+	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
+	if err != nil {
+		return nil, err
+	}
+	imgClient := mocks.ImageDataClient(adapters.ImageDataClient(rclient), params.ImageData)
+	engine, err := newEngine(
+		cfg,
+		jp,
+		adapters.Client(dClient),
+		imgClient,
+		rclient,
+		mocks.ContextLoaderFactory(cmResolver),
+		exceptionSelector,
+		params.Flags.Cosign.ImageSignatureRepository,
+	)
 	if err != nil {
 		return nil, err
 	}
