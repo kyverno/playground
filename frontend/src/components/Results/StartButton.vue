@@ -8,6 +8,7 @@ import { MarkerSeverity, editor } from 'monaco-editor'
 import { EngineResponse, ErrorResponse } from '@/types'
 import { resolveAPI } from '@/utils'
 import { inputs } from '@/store'
+import { parse } from 'yaml'
 
 const props = defineProps({
   errorState: { type: Boolean, default: false }
@@ -71,7 +72,7 @@ const submit = (): void => {
       context: inputs.context,
       config: inputs.config,
       customResourceDefinitions: inputs.customResourceDefinitions,
-      imageData: inputs.imageData
+      imageData: parse(inputs.imageData || '')
     }),
     method: 'POST',
     mode: 'cors',

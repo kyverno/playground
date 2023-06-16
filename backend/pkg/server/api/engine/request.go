@@ -19,15 +19,15 @@ import (
 )
 
 type EngineRequest struct {
-	Policies                  string `json:"policies"`
-	Resources                 string `json:"resources"`
-	OldResources              string `json:"oldResources"`
-	ClusterResources          string `json:"clusterResources"`
-	Context                   string `json:"context"`
-	ImageData                 string `json:"imageData"`
-	Config                    string `json:"config"`
-	CustomResourceDefinitions string `json:"customResourceDefinitions"`
-	PolicyExceptions          string `json:"policyExceptions"`
+	Policies                  string                      `json:"policies"`
+	Resources                 string                      `json:"resources"`
+	OldResources              string                      `json:"oldResources"`
+	ClusterResources          string                      `json:"clusterResources"`
+	Context                   string                      `json:"context"`
+	Config                    string                      `json:"config"`
+	CustomResourceDefinitions string                      `json:"customResourceDefinitions"`
+	PolicyExceptions          string                      `json:"policyExceptions"`
+	ImageData                 map[string]models.ImageData `json:"imageData"`
 }
 
 func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
@@ -36,14 +36,6 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 		return nil, err
 	}
 	return &params, nil
-}
-
-func (r *EngineRequest) LoadImageData() (map[string]models.ImageData, error) {
-	var imageData map[string]models.ImageData
-	if err := yaml.Unmarshal([]byte(r.ImageData), &imageData); err != nil {
-		return nil, err
-	}
-	return imageData, nil
 }
 
 func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, error) {
