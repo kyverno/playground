@@ -27,6 +27,12 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
+		imageData, err := in.LoadImageData()
+		if err != nil {
+			return nil, err
+		}
+		params.ImageData = imageData
+
 		policies, err := in.LoadPolicies(policyLoader)
 		if err != nil {
 			return nil, err

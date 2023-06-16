@@ -137,4 +137,4 @@ spec:
         names:
         - ''`
 
-export const ImageDataTemplate = `imageData: {}`
+export const ImageDataTemplate = ``
