@@ -136,3 +136,5 @@ spec:
         - ''
         names:
         - ''`
+
+export const ImageDataTemplate = ``

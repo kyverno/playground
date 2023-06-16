@@ -15,6 +15,7 @@ export type ProfileExport = {
     customResourceDefinitions?: string
     clutserResources?: string
     exceptions?: string
+    imageData?: string
   }[]
 }
 
@@ -31,12 +32,13 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       config: inputs.config,
       customResourceDefinitions: inputs.customResourceDefinitions,
       clusterResources: inputs.clusterResources,
-      exceptions: inputs.exceptions
+      exceptions: inputs.exceptions,
+      imageData: inputs.imageData
     })
   }
 
   profiles.map((p) => {
-    const { policy, resource, context, config, oldResource, customResourceDefinitions, clusterResources, exceptions } = createInput(p)
+    const { policy, resource, context, config, oldResource, customResourceDefinitions, clusterResources, exceptions, imageData } = createInput(p)
 
     exports.push({
       name: p,
@@ -47,7 +49,8 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       config: config.value,
       customResourceDefinitions: customResourceDefinitions.value,
       clusterResources: clusterResources.value,
-      exceptions: exceptions.value
+      exceptions: exceptions.value,
+      imageData: imageData.value
     })
   })
 
@@ -83,7 +86,8 @@ export const importProfiles = async (content: string) => {
       config: currentState?.config,
       customResourceDefinitions: currentState?.customResourceDefinitions,
       clusterResources: currentState?.clutserResources,
-      exceptions: currentState?.exceptions
+      exceptions: currentState?.exceptions,
+      imageData: currentState?.imageData
     })
   }
 
@@ -103,7 +107,8 @@ export const importProfiles = async (content: string) => {
         config: profile?.config,
         customResourceDefinitions: profile?.customResourceDefinitions,
         clusterResources: profile?.clutserResources,
-        exceptions: profile?.exceptions
+        exceptions: profile?.exceptions,
+        imageData: profile.imageData
       })
     })
 }

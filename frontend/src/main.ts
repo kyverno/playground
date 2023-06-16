@@ -30,13 +30,13 @@ setDiagnosticsOptions({
           { $ref: '#/definitions/clusterpolicy-v1' },
           { $ref: '#/definitions/policy-v1' },
           { $ref: '#/definitions/clusterpolicy-v2beta1' },
-          { $ref: '#/definitions/policy-v2beta1' },
+          { $ref: '#/definitions/policy-v2beta1' }
         ],
         definitions: {
-          "clusterpolicy-v1": (clusterpolicyv1 as JSONSchema6),
-          "policy-v1": (policyv1 as JSONSchema6),
-          "clusterpolicy-v2beta1": (clusterpolicyv2beta1 as JSONSchema6),
-          "policy-v2beta1": (policyv2beta1 as JSONSchema6),
+          'clusterpolicy-v1': clusterpolicyv1 as JSONSchema6,
+          'policy-v1': policyv1 as JSONSchema6,
+          'clusterpolicy-v2beta1': clusterpolicyv2beta1 as JSONSchema6,
+          'policy-v2beta1': policyv2beta1 as JSONSchema6
         }
       },
       uri: `${baseURL}/schemas/policies.json`,

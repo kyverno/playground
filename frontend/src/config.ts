@@ -40,7 +40,8 @@ export const options = {
     exceptionsInfo: 'Configure Kyverno PolicyException Resources',
     crdInfo: 'Define unknown CRDs you want to use as resource',
     configInfo: 'Configure the Kyverno Engine',
-    clusterResourcesInfo: 'Already existing resources to simulate clone operations or context substitution'
+    clusterResourcesInfo: 'Already existing resources to simulate clone operations or context substitution',
+    imageDataInfo: 'Simulate loading of not accessable ImageData'
   },
   onboarding: {
     text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.'

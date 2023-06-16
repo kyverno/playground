@@ -9,6 +9,7 @@ export const loadedConfig = useLocalStorage<string>('loaded:config', ConfigTempl
 export const loadedExceptions = useLocalStorage<string>('loaded:exceptions', '')
 export const loadedClusterResources = useLocalStorage<string>('loaded:clusterResources', '')
 export const loadedCustomResourceDefinitions = useLocalStorage<string>('loaded:crds', '')
+export const loadedImageData = useLocalStorage<string>('loaded:imageData', '')
 export const loadedState = useLocalStorage<string>('loaded:state', '')
 
 export type State = {
@@ -21,6 +22,7 @@ export type State = {
   exceptions?: string
   clusterResources?: string
   customResourceDefinitions?: string
+  imageData?: string
 }
 
 const update = (values: State) => {
@@ -56,6 +58,10 @@ const update = (values: State) => {
     loadedCustomResourceDefinitions.value = values.customResourceDefinitions
   }
 
+  if (values.imageData) {
+    loadedImageData.value = values.imageData
+  }
+
   loadedState.value = values.name
 }
 
@@ -68,6 +74,7 @@ export const useState = () => ({
   exceptions: loadedExceptions,
   clusterResources: loadedClusterResources,
   customResourceDefinitions: loadedCustomResourceDefinitions,
+  imageData: loadedImageData,
   name: loadedState,
   update
 })
