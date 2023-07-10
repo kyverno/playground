@@ -62,14 +62,17 @@ func (p *Processor) Run(
 		}
 	}
 
+	oldMaxIndex := len(oldResources) - 1
+
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
 		newResource := unstructured.Unstructured{}
 		if p.params.Context.Operation == kyvernov1.Delete {
 			oldResource = resources[i]
 		} else if p.params.Context.Operation == kyvernov1.Update {
-			// TODO: bounds check
-			oldResource = oldResources[i]
+			if oldMaxIndex >= i {
+				oldResource = oldResources[i]
+			}
 			newResource = resources[i]
 		} else {
 			newResource = resources[i]
