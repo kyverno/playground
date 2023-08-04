@@ -9,7 +9,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-logr/logr v1.2.4
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20230614115500-1c7d62f9a1d0
-	github.com/loopfz/gadgeto v0.11.2
+	github.com/loopfz/gadgeto v0.11.3
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
 	gomodules.xyz/jsonpatch/v2 v2.3.0

@@ -1025,8 +1025,8 @@ github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de/go.mod h1:zAbeS9
 github.com/lightstep/lightstep-tracer-common/golang/gogo v0.0.0-20190605223551-bc2310a04743/go.mod h1:qklhhLq1aX+mtWk9cPHPzaBjWImj5ULL6C7HFJtXQMM=
 github.com/lightstep/lightstep-tracer-go v0.18.1/go.mod h1:jlF1pusYV4pidLvZ+XD0UBX0ZE6WURAspgAczcDHrL4=
 github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e/go.mod h1:7rIyQOR62GCctdiQpZ/zOJlFyk6y+94wXzv6RNZgaR4=
-github.com/loopfz/gadgeto v0.11.2 h1:kc7GoNcNgjQOZmA6nwS1jOC6yek9GoyDkxQ2vCwf63g=
-github.com/loopfz/gadgeto v0.11.2/go.mod h1:FFfb8QmTdEo+z9pvzTeTousO2ZoP81WInQg1aG42UOo=
+github.com/loopfz/gadgeto v0.11.3 h1:DXLxS717ed2bFz2z6YF27y2QvwBOgTv80lFNcLrGFgM=
+github.com/loopfz/gadgeto v0.11.3/go.mod h1:1U806bGowcWfsf3f+z8H7VJVYViym9Kjjjz2c62HMbk=
 github.com/lunixbochs/vtclean v0.0.0-20160125035106-4fbf7632a2c6/go.mod h1:pHhQNgMf3btfWnGBVipUOjRYhoOsdGqdm/+2c2E2WMI=
 github.com/lyft/protoc-gen-validate v0.0.13/go.mod h1:XbGvPuh87YZc5TdIa2/I4pLk0QoUACkjt2znoq26NVQ=
 github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
