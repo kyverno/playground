@@ -40,7 +40,6 @@ func (l *loader) Load(document []byte) (unstructured.Unstructured, error) {
 	}
 	validator, err := l.factory.ValidatorsForGVK(gvk)
 	if err != nil {
-		fmt.Println(err)
 		return unstructured.Unstructured{}, err
 	}
 	decoder, err := validator.Decoder(gvk)
@@ -56,5 +55,17 @@ func (l *loader) Load(document []byte) (unstructured.Unstructured, error) {
 	if err != nil {
 		return unstructured.Unstructured{}, err
 	}
+
+	c := result.UnstructuredContent()
+	if m, ok := c["metadata"]; ok {
+		if mm, ok := m.(map[string]any); ok {
+			if cT, ok := mm["creationTimestamp"]; ok {
+				if _, ok := cT.(map[string]any); ok {
+					mm["creationTimestamp"] = nil
+				}
+			}
+		}
+	}
+
 	return result, err
 }

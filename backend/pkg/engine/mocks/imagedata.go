@@ -5,28 +5,31 @@ import (
 	"encoding/json"
 	"fmt"
 
+	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
+	"github.com/kyverno/kyverno/pkg/engine/adapters"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	"github.com/kyverno/kyverno/pkg/registryclient"
 
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
 
-type imageDataClient struct {
-	next      engineapi.ImageDataClient
+type registryClientAdapter struct {
+	engineapi.RegistryClient
 	imageData map[string]models.ImageData
 }
 
-func ImageDataClient(next engineapi.ImageDataClient, imageData map[string]models.ImageData) engineapi.ImageDataClient {
+func ImageDataClient(next engineapi.RegistryClient, imageData map[string]models.ImageData) engineapi.RegistryClient {
 	if next == nil {
 		return nil
 	}
-	return imageDataClient{
-		next:      next,
-		imageData: imageData,
+	return registryClientAdapter{
+		RegistryClient: next,
+		imageData:      imageData,
 	}
 }
 
-func (c imageDataClient) ForRef(ctx context.Context, ref string) (*engineapi.ImageData, error) {
-	if data, err := c.next.ForRef(ctx, ref); err == nil {
+func (c registryClientAdapter) ForRef(ctx context.Context, ref string) (*engineapi.ImageData, error) {
+	if data, err := c.RegistryClient.ForRef(ctx, ref); err == nil {
 		return data, err
 	}
 	if c.imageData == nil {
@@ -53,4 +56,18 @@ func (c imageDataClient) ForRef(ctx context.Context, ref string) (*engineapi.Ima
 		Config:        configData,
 		Manifest:      manifest,
 	}, nil
+}
+
+type registryClientFactory struct {
+	client engineapi.RegistryClient
+}
+
+func (f *registryClientFactory) GetClient(_ context.Context, _ *kyvernov1.ImageRegistryCredentials) (engineapi.RegistryClient, error) {
+	return f.client, nil
+}
+
+func NewRegistryClientFactory(rclient registryclient.Client, imageData map[string]models.ImageData) engineapi.RegistryClientFactory {
+	return &registryClientFactory{
+		client: &registryClientAdapter{RegistryClient: adapters.RegistryClient(rclient), imageData: imageData},
+	}
 }

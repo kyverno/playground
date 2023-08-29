@@ -11,7 +11,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
-	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
+	eventsv1 "k8s.io/client-go/kubernetes/typed/events/v1"
 )
 
 // Overwrite write actions to dry run
@@ -26,7 +26,7 @@ func (c *Client) GetKubeClient() kubernetes.Interface {
 	return c.inner.GetKubeClient()
 }
 
-func (c *Client) GetEventsInterface() corev1.EventInterface {
+func (c *Client) GetEventsInterface() eventsv1.EventsV1Interface {
 	return c.inner.GetEventsInterface()
 }
 
@@ -89,6 +89,24 @@ func (c *Client) UpdateResource(_ context.Context, _ string, _ string, _ string,
 }
 
 func (c *Client) UpdateStatusResource(_ context.Context, _ string, _ string, _ string, obj interface{}, _ bool) (*unstructured.Unstructured, error) {
+	if o, ok := obj.(*unstructured.Unstructured); ok {
+		c.addObject(o)
+		return o, nil
+	}
+
+	return nil, nil
+}
+
+func (c *Client) ApplyResource(_ context.Context, _, _, _, _ string, obj interface{}, _ bool, _ string, _ ...string) (*unstructured.Unstructured, error) {
+	if o, ok := obj.(*unstructured.Unstructured); ok {
+		c.addObject(o)
+		return o, nil
+	}
+
+	return nil, nil
+}
+
+func (c *Client) ApplyStatusResource(_ context.Context, _, _, _, _ string, obj interface{}, _ bool, _ string) (*unstructured.Unstructured, error) {
 	if o, ok := obj.(*unstructured.Unstructured); ok {
 		c.addObject(o)
 		return o, nil
