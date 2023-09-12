@@ -18,6 +18,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
+	"github.com/kyverno/kyverno/pkg/imageverifycache"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
@@ -49,7 +50,11 @@ func (p *Processor) Run(
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
-	ctx = toggle.NewContext(ctx, mocks.Toggles(p.params.Flags.ProtectManagedResources.Enabled, p.params.Flags.ForceFailurePolicyIgnore.Enabled))
+	ctx = toggle.NewContext(ctx, mocks.Toggles(
+		p.params.Flags.ProtectManagedResources.Enabled,
+		p.params.Flags.ForceFailurePolicyIgnore.Enabled,
+		p.params.Flags.EnableDeferredLoading.Enabled,
+	))
 	if violations := validatePolicies(policies); len(violations) > 0 {
 		return nil, PolicyViolationError{Violations: violations}
 	}
@@ -345,8 +350,8 @@ func newEngine(
 	cfg config.Configuration,
 	jp jmespath.Interface,
 	client engineapi.Client,
-	imgClient engineapi.ImageDataClient,
-	rclient registryclient.Client,
+	ivClient imageverifycache.Client,
+	rclient engineapi.RegistryClientFactory,
 	factory engineapi.ContextLoaderFactory,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 	imageSignatureRepository string,
@@ -356,8 +361,8 @@ func newEngine(
 		config.NewDefaultMetricsConfiguration(),
 		jp,
 		client,
-		imgClient,
 		rclient,
+		ivClient,
 		factory,
 		exceptionSelector,
 		imageSignatureRepository,
@@ -381,13 +386,18 @@ func NewProcessor(
 	if err != nil {
 		return nil, err
 	}
-	imgClient := mocks.ImageDataClient(adapters.ImageDataClient(rclient), params.ImageData)
+
+	ivClient, err := imageverifycache.New(imageverifycache.WithCacheEnableFlag(true))
+	if err != nil {
+		return nil, err
+	}
+
 	engine, err := newEngine(
 		cfg,
 		jp,
 		adapters.Client(dClient),
-		imgClient,
-		rclient,
+		ivClient,
+		mocks.NewRegistryClientFactory(rclient, params.ImageData),
 		mocks.ContextLoaderFactory(cmResolver),
 		exceptionSelector,
 		params.Flags.Cosign.ImageSignatureRepository,

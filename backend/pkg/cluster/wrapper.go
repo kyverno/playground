@@ -9,7 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
-	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
+	eventsv1 "k8s.io/client-go/kubernetes/typed/events/v1"
 )
 
 // Overwrite write actions to dry run
@@ -23,7 +23,7 @@ func (c *Client) GetKubeClient() kubernetes.Interface {
 	return c.inner.GetKubeClient()
 }
 
-func (c *Client) GetEventsInterface() corev1.EventInterface {
+func (c *Client) GetEventsInterface() eventsv1.EventsV1Interface {
 	return c.inner.GetEventsInterface()
 }
 
@@ -77,6 +77,14 @@ func (c *Client) UpdateResource(ctx context.Context, apiVersion string, kind str
 
 func (c *Client) UpdateStatusResource(ctx context.Context, apiVersion string, kind string, namespace string, obj interface{}, dryRun bool) (*unstructured.Unstructured, error) {
 	return c.fake.UpdateStatusResource(ctx, apiVersion, kind, namespace, obj, dryRun)
+}
+
+func (c *Client) ApplyResource(ctx context.Context, apiVersion string, kind string, namespace string, name string, obj interface{}, dryRun bool, fieldManager string, subresources ...string) (*unstructured.Unstructured, error) {
+	return c.fake.ApplyResource(ctx, apiVersion, kind, namespace, name, obj, dryRun, fieldManager, subresources...)
+}
+
+func (c *Client) ApplyStatusResource(ctx context.Context, apiVersion string, kind string, namespace string, name string, obj interface{}, dryRun bool, fieldManager string) (*unstructured.Unstructured, error) {
+	return c.fake.ApplyStatusResource(ctx, apiVersion, kind, namespace, name, obj, dryRun, fieldManager)
 }
 
 func NewWrapper(client dclient.Interface) dclient.Interface {

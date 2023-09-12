@@ -6,4 +6,5 @@ type Flags struct {
 	Registry                 Registry                 `json:"registry"`
 	ProtectManagedResources  ProtectManagedResources  `json:"protectManagedResources"`
 	ForceFailurePolicyIgnore ForceFailurePolicyIgnore `json:"forceFailurePolicyIgnore"`
+	EnableDeferredLoading    EnableDeferredLoading    `json:"enableDeferredLoading"`
 }

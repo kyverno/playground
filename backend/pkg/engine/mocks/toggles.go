@@ -5,12 +5,14 @@ import "github.com/kyverno/kyverno/pkg/toggle"
 type toggles struct {
 	protectManagedResources  bool
 	forceFailurePolicyIgnore bool
+	enableDeferredLoading    bool
 }
 
-func Toggles(protectManagedResources, forceFailurePolicyIgnore bool) toggle.Toggles {
+func Toggles(protectManagedResources, forceFailurePolicyIgnore, enableDeferredLoading bool) toggle.Toggles {
 	return toggles{
 		protectManagedResources:  protectManagedResources,
 		forceFailurePolicyIgnore: forceFailurePolicyIgnore,
+		enableDeferredLoading:    enableDeferredLoading,
 	}
 }
 
@@ -20,4 +22,8 @@ func (t toggles) ProtectManagedResources() bool {
 
 func (t toggles) ForceFailurePolicyIgnore() bool {
 	return t.forceFailurePolicyIgnore
+}
+
+func (t toggles) EnableDeferredLoading() bool {
+	return t.enableDeferredLoading
 }

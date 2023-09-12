@@ -18,7 +18,7 @@ import (
 
 type errClient struct{}
 
-func (_ errClient) Paths() (map[string]openapi.GroupVersion, error) {
+func (errClient) Paths() (map[string]openapi.GroupVersion, error) {
 	return nil, errors.New("error")
 }
 
@@ -63,25 +63,13 @@ func TestNew(t *testing.T) {
 			}
 		}(),
 	}, {
-		name:   "composite - err client",
-		client: openapiclient.NewComposite(errClient{}),
-		want: func() Loader {
-			factory, err := validatorfactory.New(openapiclient.NewComposite(errClient{}))
-			require.NoError(t, err)
-			return &loader{
-				factory: factory,
-			}
-		}(),
+		name:    "composite - err client",
+		client:  openapiclient.NewComposite(errClient{}),
+		wantErr: true,
 	}, {
-		name:   "composite - with err client",
-		client: openapiclient.NewComposite(openapiclient.NewHardcodedBuiltins("1.27"), errClient{}),
-		want: func() Loader {
-			factory, err := validatorfactory.New(openapiclient.NewComposite(openapiclient.NewHardcodedBuiltins("1.27"), errClient{}))
-			require.NoError(t, err)
-			return &loader{
-				factory: factory,
-			}
-		}(),
+		name:    "composite - with err client",
+		client:  openapiclient.NewComposite(openapiclient.NewHardcodedBuiltins("1.27"), errClient{}),
+		wantErr: true,
 	}, {
 		name:   "composite - invalid local",
 		client: openapiclient.NewComposite(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam")),

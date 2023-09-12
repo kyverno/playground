@@ -1,7 +1,7 @@
 package models
 
 import (
-	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
+	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
@@ -11,7 +11,7 @@ type Response struct {
 	// Resource is the original resource
 	Resource unstructured.Unstructured `json:"resource"`
 	// Policy is the original policy
-	Policy kyvernov1.PolicyInterface `json:"policy"`
+	Policy engineapi.GenericPolicy `json:"policy"`
 	// namespaceLabels given by policy context
 	NamespaceLabels map[string]string `json:"namespaceLabels"`
 	// PatchedResource is the resource patched with the engine action changes

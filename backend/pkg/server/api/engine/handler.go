@@ -25,13 +25,13 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 	return tonic.Handler(func(ctx *gin.Context, in *EngineRequest) (*EngineResponse, error) {
 		params, err := in.LoadParameters()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unable to load params: %w", err)
 		}
 		params.ImageData = in.ImageData
 
 		policies, err := in.LoadPolicies(policyLoader)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unable to load policies: %w", err)
 		}
 		resourceLoader, err := in.ResourceLoader(cl, params.Kubernetes.Version, config)
 		if err != nil {
@@ -39,11 +39,11 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		}
 		resources, err := in.LoadResources(resourceLoader)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unable to load resources: %w", err)
 		}
 		oldResources, err := in.LoadOldResources(resourceLoader)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unable to load old resources: %w", err)
 		}
 		clusterResources, err := in.LoadClusterResources(resourceLoader)
 		if err != nil {
@@ -51,11 +51,11 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		}
 		config, err := in.LoadConfig(resourceLoader)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unable to load config resources: %w", err)
 		}
 		exceptions, err := in.LoadPolicyExceptions(policyLoader)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unable to load policy exceptions: %w", err)
 		}
 		dClient, err := cl.DClient(clusterResources...)
 		if err != nil {
