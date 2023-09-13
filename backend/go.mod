@@ -6,7 +6,7 @@ replace sigs.k8s.io/kubectl-validate => github.com/fjogeleit/kubectl-validate v0
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/evanphx/json-patch/v5 v5.6.0
+	github.com/evanphx/json-patch/v5 v5.7.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-logr/logr v1.2.4
