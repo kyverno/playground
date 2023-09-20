@@ -1,6 +1,6 @@
 module github.com/kyverno/playground/backend
 
-go 1.20
+go 1.21
 
 replace sigs.k8s.io/kubectl-validate => github.com/fjogeleit/kubectl-validate v0.0.0-20230829084516-b287ab7c3ec5
 
