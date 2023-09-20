@@ -6,7 +6,7 @@ replace sigs.k8s.io/kubectl-validate => github.com/fjogeleit/kubectl-validate v0
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/evanphx/json-patch/v5 v5.6.0
+	github.com/evanphx/json-patch/v5 v5.7.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-logr/logr v1.2.4
@@ -15,10 +15,10 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
 	gomodules.xyz/jsonpatch/v2 v2.4.0
-	k8s.io/api v0.28.1
-	k8s.io/apimachinery v0.28.1
-	k8s.io/client-go v0.28.1
-	sigs.k8s.io/controller-runtime v0.16.0
+	k8s.io/api v0.28.2
+	k8s.io/apimachinery v0.28.2
+	k8s.io/client-go v0.28.2
+	sigs.k8s.io/controller-runtime v0.16.2
 	sigs.k8s.io/kubectl-validate v0.0.0-20230531195345-5aee348b797c
 	sigs.k8s.io/yaml v1.3.0
 )
