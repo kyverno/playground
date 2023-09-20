@@ -10,7 +10,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/openapi"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
-	"sigs.k8s.io/kubectl-validate/pkg/validatorfactory"
+	"sigs.k8s.io/kubectl-validate/pkg/validator"
 	"sigs.k8s.io/yaml"
 
 	"github.com/kyverno/playground/backend/data"
@@ -36,30 +36,30 @@ func TestNew(t *testing.T) {
 		name:   "builtin",
 		client: openapiclient.NewHardcodedBuiltins("1.27"),
 		want: func() Loader {
-			factory, err := validatorfactory.New(openapiclient.NewHardcodedBuiltins("1.27"))
+			validator, err := validator.New(openapiclient.NewHardcodedBuiltins("1.27"))
 			require.NoError(t, err)
 			return &loader{
-				factory: factory,
+				validator: validator,
 			}
 		}(),
 	}, {
 		name:   "invalid local",
 		client: openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam"),
 		want: func() Loader {
-			factory, err := validatorfactory.New(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam"))
+			validator, err := validator.New(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam"))
 			require.NoError(t, err)
 			return &loader{
-				factory: factory,
+				validator: validator,
 			}
 		}(),
 	}, {
 		name:   "composite - no clients",
 		client: openapiclient.NewComposite(),
 		want: func() Loader {
-			factory, err := validatorfactory.New(openapiclient.NewComposite())
+			validator, err := validator.New(openapiclient.NewComposite())
 			require.NoError(t, err)
 			return &loader{
-				factory: factory,
+				validator: validator,
 			}
 		}(),
 	}, {
@@ -74,10 +74,10 @@ func TestNew(t *testing.T) {
 		name:   "composite - invalid local",
 		client: openapiclient.NewComposite(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam")),
 		want: func() Loader {
-			factory, err := validatorfactory.New(openapiclient.NewComposite(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam")))
+			validator, err := validator.New(openapiclient.NewComposite(openapiclient.NewLocalSchemaFiles(data.Schemas(), "blam")))
 			require.NoError(t, err)
 			return &loader{
-				factory: factory,
+				validator: validator,
 			}
 		}(),
 	}}
@@ -135,9 +135,9 @@ func Test_loader_Load(t *testing.T) {
 		name:   "not yaml",
 		loader: newLoader(openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas")),
 		document: []byte(`
-foo
-  bar
-  - baz`),
+		foo
+		  bar
+		  - baz`),
 		wantErr: true,
 	}, {
 		name:     "unknown GVK",
@@ -148,13 +148,13 @@ foo
 		name:   "bad schema",
 		loader: newLoader(openapiclient.NewHardcodedBuiltins("1.27")),
 		document: []byte(`
-apiVersion: v1
-kind: Namespace
-bad: field
-metadata:
-  name: prod-bus-app1
-  labels:
-    purpose: production`),
+		apiVersion: v1
+		kind: Namespace
+		bad: field
+		metadata:
+		  name: prod-bus-app1
+		  labels:
+		    purpose: production`),
 		wantErr: true,
 	}, {
 		name:     "ok",

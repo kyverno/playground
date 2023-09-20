@@ -2,8 +2,6 @@ module github.com/kyverno/playground/backend
 
 go 1.21
 
-replace sigs.k8s.io/kubectl-validate => github.com/fjogeleit/kubectl-validate v0.0.0-20230829084516-b287ab7c3ec5
-
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/evanphx/json-patch/v5 v5.7.0
@@ -19,7 +17,7 @@ require (
 	k8s.io/apimachinery v0.28.2
 	k8s.io/client-go v0.28.2
 	sigs.k8s.io/controller-runtime v0.16.2
-	sigs.k8s.io/kubectl-validate v0.0.0-20230531195345-5aee348b797c
+	sigs.k8s.io/kubectl-validate v0.0.0-20230914185012-0d8eb44296e9
 	sigs.k8s.io/yaml v1.3.0
 )
 
@@ -27,12 +25,12 @@ require (
 	cloud.google.com/go/compute v1.23.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/iam v1.1.2 // indirect
-	cloud.google.com/go/kms v1.15.1 // indirect
+	cloud.google.com/go/kms v1.15.2 // indirect
 	cuelang.org/go v0.6.0 // indirect
 	filippo.io/edwards25519 v1.0.0 // indirect
 	github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/alibabacloudsdkgo/helper v0.2.0 // indirect
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible // indirect
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.1 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.2 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.3.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.3.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys v1.0.1 // indirect

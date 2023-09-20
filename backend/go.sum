@@ -37,8 +37,8 @@ cloud.google.com/go/datastore v1.1.0/go.mod h1:umbIZjpQpHh4hmRpGhH4tLFup+FVzqBi1
 cloud.google.com/go/firestore v1.1.0/go.mod h1:ulACoGHTpvq5r8rxGJ4ddJZBZqakUQqClKRT5SZwBmk=
 cloud.google.com/go/iam v1.1.2 h1:gacbrBdWcoVmGLozRuStX45YKvJtzIjJdAolzUs1sm4=
 cloud.google.com/go/iam v1.1.2/go.mod h1:A5avdyVL2tCppe4unb0951eI9jreack+RJ0/d+KUZOU=
-cloud.google.com/go/kms v1.15.1 h1:HUC3fAoepH3RpcQXiJhXWWYizjQ5r7YjI7SO9ZbHf9s=
-cloud.google.com/go/kms v1.15.1/go.mod h1:c9J991h5DTl+kg7gi3MYomh12YEENGrf48ee/N/2CDM=
+cloud.google.com/go/kms v1.15.2 h1:lh6qra6oC4AyWe5fUUUBe/S27k12OHAleOOOw6KakdE=
+cloud.google.com/go/kms v1.15.2/go.mod h1:3hopT4+7ooWRCjc2DxgnpESFxhIraaI2IpAVUEhbT/w=
 cloud.google.com/go/pubsub v1.0.1/go.mod h1:R0Gpsv3s54REJCy4fxDixWD93lHJMoZTyQ2kNxGRt3I=
 cloud.google.com/go/pubsub v1.1.0/go.mod h1:EwwdRX2sKPjnvnqCa270oGRyludottCI76h+R3AArQw=
 cloud.google.com/go/pubsub v1.2.0/go.mod h1:jhfEVHT8odbXTkndysNHCcx0awwzvfOlguIAii9o8iA=
@@ -66,8 +66,8 @@ github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/alibabacloudsdkgo
 github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/alibabacloudsdkgo/helper v0.2.0/go.mod h1:GgeIE+1be8Ivm7Sh4RgwI42aTtC9qrcj+Y9Y6CjJhJs=
 github.com/Azure/azure-sdk-for-go v68.0.0+incompatible h1:fcYLmCpyNYRnvJbPerq7U0hS+6+I79yEDJBqVNcqUzU=
 github.com/Azure/azure-sdk-for-go v68.0.0+incompatible/go.mod h1:9XXNKU+eRnpl9moKnB4QOLf1HestfXbmab5FXxiDBjc=
-github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.1 h1:/iHxaJhsFr0+xVFfbMr5vxz848jyiWuIEDhYq3y5odY=
-github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.1/go.mod h1:bjGvMhVMb+EEm3VRNQawDMUyMMjo+S5ewNjflkep/0Q=
+github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.2 h1:t5+QXLCK9SVi0PPdaY0PrFvYUo24KwA0QwxnaHRSVd4=
+github.com/Azure/azure-sdk-for-go/sdk/azcore v1.7.2/go.mod h1:bjGvMhVMb+EEm3VRNQawDMUyMMjo+S5ewNjflkep/0Q=
 github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.3.1 h1:LNHhpdK7hzUcx/k1LIcuh5k7k1LGIWLQfCjaneSj7Fc=
 github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.3.1/go.mod h1:uE9zaUfEQT/nbQjVi2IblCG9iaLtZsuYZ8ne+PuQ02M=
 github.com/Azure/azure-sdk-for-go/sdk/internal v1.3.0 h1:sXr+ck84g/ZlZUOZiNELInmMgOsuGwdjjVkEIde0OtY=
@@ -474,8 +474,6 @@ github.com/fatih/color v1.15.0/go.mod h1:0h5ZqXfHYED7Bhv2ZJamyIOUej9KtShiJESRwBD
 github.com/fatih/structtag v1.2.0/go.mod h1:mBJUNpUnHmRKrKlQQlmCrh5PuhftFbNv8Ys4/aAZl94=
 github.com/felixge/httpsnoop v1.0.3 h1:s/nj+GCswXYzN5v2DpNMuMQYe+0DDwt5WVCU6CWBdXk=
 github.com/felixge/httpsnoop v1.0.3/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
-github.com/fjogeleit/kubectl-validate v0.0.0-20230829084516-b287ab7c3ec5 h1:qK0Jm6cE186ce8MecbypxsARaQMQUDWwBj3aRYvW5Xk=
-github.com/fjogeleit/kubectl-validate v0.0.0-20230829084516-b287ab7c3ec5/go.mod h1:9FgW8ync4Up+D1hIYTSO1vc9HkNbgm55N2iZ/LYNYxk=
 github.com/form3tech-oss/jwt-go v3.2.2+incompatible/go.mod h1:pbq4aXjuKjdthFRnoDwaVPLA+WlJuPGy+QneDUgJi2k=
 github.com/fortytw2/leaktest v1.3.0 h1:u8491cBMTQ8ft8aeV+adlcytMZylmA5nnwwkRZjI8vw=
 github.com/fortytw2/leaktest v1.3.0/go.mod h1:jDsjWgpAGjm2CA7WthBh/CdZYEPF31XHquHwclZch5g=
@@ -2471,6 +2469,8 @@ sigs.k8s.io/controller-runtime v0.16.2 h1:mwXAVuEk3EQf478PQwQ48zGOXvW27UJc8NHktQ
 sigs.k8s.io/controller-runtime v0.16.2/go.mod h1:vpMu3LpI5sYWtujJOa2uPK61nB5rbwlN7BAB8aSLvGU=
 sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd h1:EDPBXCAspyGV4jQlpZSudPeMmr1bNJefnuqLsRAsHZo=
 sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd/go.mod h1:B8JuhiUyNFVKdsE8h686QcCxMaH6HrOAZj4vswFpcB0=
+sigs.k8s.io/kubectl-validate v0.0.0-20230914185012-0d8eb44296e9 h1:2SQuQcVormMzrPZyayZ2q4t1EJBe0RTtqmFozc6HQTA=
+sigs.k8s.io/kubectl-validate v0.0.0-20230914185012-0d8eb44296e9/go.mod h1:9FgW8ync4Up+D1hIYTSO1vc9HkNbgm55N2iZ/LYNYxk=
 sigs.k8s.io/kustomize/api v0.14.0 h1:6+QLmXXA8X4eDM7ejeaNUyruA1DDB3PVIjbpVhDOJRA=
 sigs.k8s.io/kustomize/api v0.14.0/go.mod h1:vmOXlC8BcmcUJQjiceUbcyQ75JBP6eg8sgoyzc+eLpQ=
 sigs.k8s.io/kustomize/kyaml v0.14.3 h1:WpabVAKZe2YEp/irTSHwD6bfjwZnTtSDewd2BVJGMZs=
