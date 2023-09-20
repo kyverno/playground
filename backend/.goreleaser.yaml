@@ -24,10 +24,7 @@ kos:
     preserve_import_paths: false
     sbom: none
     platforms:
-      - linux/amd64
-      - linux/arm64
-      # building for all platforms has issues with disk space consumed in GH workflow :-(
-      # - all
+      - all
     flags:
       - -trimpath
     ldflags:
