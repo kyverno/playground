@@ -6,7 +6,7 @@ KIND_IMAGE           ?= kindest/node:v1.26.3
 KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= 1c7d62f9a1d0
 KOCACHE              ?= /tmp/ko-cache
-USE_CONFIG           ?= standard,in-cluster,all-read-rbac
+USE_CONFIG           ?= standard,no-ingress,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
 PIP                  ?= "pip3"
 
