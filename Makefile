@@ -257,8 +257,7 @@ run-standalone: build-backend-assets ## Run locally (without connected cluster)
 		--ui-sponsor=nirmata \
 		--engine-builtin-crds=argocd \
 		--engine-builtin-crds=cert-manager \
-		--engine-builtin-crds=prometheus-operator \
-		--engine-builtin-crds=tekton-pipeline
+		--engine-builtin-crds=prometheus-operator
 
 ########
 # KIND #
