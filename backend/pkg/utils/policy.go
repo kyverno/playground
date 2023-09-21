@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/convert"
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
-	"github.com/kyverno/playground/backend/pkg/resource/convert"
-	"github.com/kyverno/playground/backend/pkg/resource/loader"
+	"github.com/kyverno/playground/backend/pkg/resource"
 )
 
 func ToPolicyInterface(untyped unstructured.Unstructured) (kyvernov1.PolicyInterface, error) {
@@ -29,7 +30,7 @@ func ToPolicyInterface(untyped unstructured.Unstructured) (kyvernov1.PolicyInter
 }
 
 func LoadPolicies(l loader.Loader, content []byte) ([]kyvernov1.PolicyInterface, error) {
-	untyped, err := loader.LoadResources(l, content)
+	untyped, err := resource.LoadResources(l, content)
 	if err != nil {
 		return nil, err
 	}

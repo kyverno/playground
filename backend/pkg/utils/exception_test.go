@@ -4,11 +4,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
 	"github.com/stretchr/testify/require"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
 	"github.com/kyverno/playground/backend/data"
-	"github.com/kyverno/playground/backend/pkg/resource/loader"
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 

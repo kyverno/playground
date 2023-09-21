@@ -1,11 +1,12 @@
-package loader_test
+package resource_test
 
 import (
 	"testing"
 
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
-	"github.com/kyverno/playground/backend/pkg/resource/loader"
+	"github.com/kyverno/playground/backend/pkg/resource"
 )
 
 const (
@@ -98,7 +99,7 @@ func Test_LoadResources(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if res, err := loader.LoadResources(l, []byte(tt.resources)); (err != nil) != tt.wantErr {
+			if res, err := resource.LoadResources(l, []byte(tt.resources)); (err != nil) != tt.wantErr {
 				t.Errorf("loader.Resources() error = %v, wantErr %v", err, tt.wantErr)
 			} else if len(res) != tt.wantLoaded {
 				t.Errorf("loader.Resources() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)

@@ -6,6 +6,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/gin-gonic/gin"
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/loopfz/gadgeto/tonic"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
@@ -13,7 +14,6 @@ import (
 	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
-	"github.com/kyverno/playground/backend/pkg/resource/loader"
 )
 
 func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {

@@ -5,6 +5,7 @@ import (
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2alpha1 "github.com/kyverno/kyverno/api/kyverno/v2alpha1"
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/openapi"
@@ -14,7 +15,7 @@ import (
 	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
-	"github.com/kyverno/playground/backend/pkg/resource/loader"
+	"github.com/kyverno/playground/backend/pkg/resource"
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
@@ -43,15 +44,15 @@ func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.Po
 }
 
 func (r *EngineRequest) LoadResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
-	return loader.LoadResources(resourceLoader, []byte(r.Resources))
+	return resource.LoadResources(resourceLoader, []byte(r.Resources))
 }
 
 func (r *EngineRequest) LoadClusterResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
-	return loader.LoadResources(resourceLoader, []byte(r.ClusterResources))
+	return resource.LoadResources(resourceLoader, []byte(r.ClusterResources))
 }
 
 func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
-	return loader.LoadResources(resourceLoader, []byte(r.OldResources))
+	return resource.LoadResources(resourceLoader, []byte(r.OldResources))
 }
 
 func (r *EngineRequest) LoadPolicyExceptions(resourceLoader loader.Loader) ([]*kyvernov2alpha1.PolicyException, error) {
@@ -62,7 +63,7 @@ func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.Config
 	if len(r.Config) == 0 {
 		return nil, nil
 	}
-	return loader.Load[corev1.ConfigMap](resourceLoader, []byte(r.Config))
+	return resource.Load[corev1.ConfigMap](resourceLoader, []byte(r.Config))
 }
 
 func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion string, config APIConfiguration) (loader.Loader, error) {
