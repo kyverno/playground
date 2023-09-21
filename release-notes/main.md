@@ -3,11 +3,12 @@
 Release notes for `TODO`.
 
 ## :dizzy: New features :dizzy:
+- Added Validating Admission Policies support
+
+## :sparkles: UI changes :sparkles:
 - Added Validating Admission Policy autocompletion in Policies panel
 
 <!--
-## :sparkles: UI changes :sparkles:
-
 ## :star: Examples :star:
 
 ## :boat: Tutorials :boat:
