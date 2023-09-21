@@ -12,6 +12,7 @@
                 "--ui-sponsor=nirmata",
                 "--engine-builtin-crds=cert-manager",
                 "--engine-builtin-crds=prometheus-operator",
+                "--engine-builtin-crds=tekton-pipeline",
             ],
         },
         {
