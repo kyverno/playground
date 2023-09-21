@@ -1,18 +1,17 @@
-package utils_test
+package exception
 
 import (
 	"os"
 	"testing"
 
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
 	"github.com/stretchr/testify/require"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
 	"github.com/kyverno/playground/backend/data"
-	"github.com/kyverno/playground/backend/pkg/resource/loader"
-	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
-func Test_LoadPolicyExceptions(t *testing.T) {
+func Test_Load(t *testing.T) {
 	tests := []struct {
 		name       string
 		policies   string
@@ -41,10 +40,10 @@ func Test_LoadPolicyExceptions(t *testing.T) {
 				),
 			)
 			require.NoError(t, err)
-			if res, err := utils.LoadPolicyExceptions(loader, bytes); (err != nil) != tt.wantErr {
-				t.Errorf("loader.LoadPolicyExceptions() error = %v, wantErr %v", err, tt.wantErr)
+			if res, err := Load(loader, bytes); (err != nil) != tt.wantErr {
+				t.Errorf("Load() error = %v, wantErr %v", err, tt.wantErr)
 			} else if len(res) != tt.wantLoaded {
-				t.Errorf("loader.LoadPolicyExceptions() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)
 			}
 		})
 	}

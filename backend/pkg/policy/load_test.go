@@ -1,15 +1,14 @@
-package utils_test
+package policy
 
 import (
 	"os"
 	"testing"
 
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
 	"github.com/stretchr/testify/require"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
 	"github.com/kyverno/playground/backend/data"
-	"github.com/kyverno/playground/backend/pkg/resource/loader"
-	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
 const (
@@ -21,7 +20,7 @@ const (
 	policyAndVap      string = "../../testdata/policy-and-vap.yaml"
 )
 
-func Test_LoadPolicies(t *testing.T) {
+func Test_Load(t *testing.T) {
 	tests := []struct {
 		name         string
 		policies     string
@@ -76,12 +75,12 @@ func Test_LoadPolicies(t *testing.T) {
 				),
 			)
 			require.NoError(t, err)
-			if policies, vaps, err := utils.LoadPolicies(loader, bytes); (err != nil) != tt.wantErr {
-				t.Errorf("loader.LoadPolicies() error = %v, wantErr %v", err, tt.wantErr)
+			if policies, vaps, err := Load(loader, bytes); (err != nil) != tt.wantErr {
+				t.Errorf("Load() error = %v, wantErr %v", err, tt.wantErr)
 			} else if len(policies) != tt.wantPolicies {
-				t.Errorf("loader.LoadPolicies() loaded amount = %v, wantLoaded %v", len(policies), tt.wantPolicies)
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(policies), tt.wantPolicies)
 			} else if len(vaps) != tt.wantVaps {
-				t.Errorf("loader.LoadPolicies() loaded amount = %v, wantLoaded %v", len(vaps), tt.wantVaps)
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(vaps), tt.wantVaps)
 			}
 		})
 	}

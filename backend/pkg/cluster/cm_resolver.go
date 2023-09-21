@@ -4,11 +4,10 @@ import (
 	"context"
 	"errors"
 
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/convert"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	corev1 "k8s.io/api/core/v1"
-
-	"github.com/kyverno/playground/backend/pkg/resource/convert"
 )
 
 type clientBasedResolver struct {
