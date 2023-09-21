@@ -25,7 +25,8 @@ func (c policyExceptionSelector) List(selector labels.Selector) ([]*kyvernov2alp
 		})
 		if err == nil {
 			for i := range list.Items {
-				exceptions = append(exceptions, &list.Items[i])
+				pe := kyvernov2alpha1.PolicyException(list.Items[i])
+				exceptions = append(exceptions, &pe)
 			}
 		} else if !kerrors.IsNotFound(err) {
 			return nil, err

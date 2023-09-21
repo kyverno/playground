@@ -33,9 +33,7 @@
             "properties": {
               "key": {
                 "description": "key is the label key that the selector applies to.",
-                "type": "string",
-                "x-kubernetes-patch-merge-key": "key",
-                "x-kubernetes-patch-strategy": "merge"
+                "type": "string"
               },
               "operator": {
                 "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -74,7 +72,7 @@
       "x-kubernetes-map-type": "atomic"
     },
     "matchLabelKeys": {
-      "description": "MatchLabelKeys is a set of pod label keys to select the pods over which spreading will be calculated. The keys are used to lookup values from the incoming pod labels, those key-value labels are ANDed with labelSelector to select the group of existing pods over which spreading will be calculated for the incoming pod. Keys that don't exist in the incoming pod labels will be ignored. A null or empty list means only match against labelSelector.",
+      "description": "MatchLabelKeys is a set of pod label keys to select the pods over which spreading will be calculated. The keys are used to lookup values from the incoming pod labels, those key-value labels are ANDed with labelSelector to select the group of existing pods over which spreading will be calculated for the incoming pod. The same key is forbidden to exist in both MatchLabelKeys and LabelSelector. MatchLabelKeys cannot be set when LabelSelector isn't set. Keys that don't exist in the incoming pod labels will be ignored. A null or empty list means only match against labelSelector.\n\nThis is a beta field and requires the MatchLabelKeysInPodTopologySpread feature gate to be enabled (enabled by default).",
       "type": [
         "array",
         "null"
@@ -104,17 +102,25 @@
       "format": "int32"
     },
     "nodeAffinityPolicy": {
-      "description": "NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating pod topology spread skew. Options are: - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations. - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.\n\nIf this value is nil, the behavior is equivalent to the Honor policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.",
+      "description": "NodeAffinityPolicy indicates how we will treat Pod's nodeAffinity/nodeSelector when calculating pod topology spread skew. Options are: - Honor: only nodes matching nodeAffinity/nodeSelector are included in the calculations. - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.\n\nIf this value is nil, the behavior is equivalent to the Honor policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.\n\nPossible enum values:\n - `\"Honor\"` means use this scheduling directive when calculating pod topology spread skew.\n - `\"Ignore\"` means ignore this scheduling directive when calculating pod topology spread skew.",
       "type": [
         "string",
         "null"
+      ],
+      "enum": [
+        "Honor",
+        "Ignore"
       ]
     },
     "nodeTaintsPolicy": {
-      "description": "NodeTaintsPolicy indicates how we will treat node taints when calculating pod topology spread skew. Options are: - Honor: nodes without taints, along with tainted nodes for which the incoming pod has a toleration, are included. - Ignore: node taints are ignored. All nodes are included.\n\nIf this value is nil, the behavior is equivalent to the Ignore policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.",
+      "description": "NodeTaintsPolicy indicates how we will treat node taints when calculating pod topology spread skew. Options are: - Honor: nodes without taints, along with tainted nodes for which the incoming pod has a toleration, are included. - Ignore: node taints are ignored. All nodes are included.\n\nIf this value is nil, the behavior is equivalent to the Ignore policy. This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.\n\nPossible enum values:\n - `\"Honor\"` means use this scheduling directive when calculating pod topology spread skew.\n - `\"Ignore\"` means ignore this scheduling directive when calculating pod topology spread skew.",
       "type": [
         "string",
         "null"
+      ],
+      "enum": [
+        "Honor",
+        "Ignore"
       ]
     },
     "topologyKey": {

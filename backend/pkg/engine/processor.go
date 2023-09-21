@@ -387,16 +387,16 @@ func NewProcessor(
 		return nil, err
 	}
 
-	ivClient, err := imageverifycache.New(imageverifycache.WithCacheEnableFlag(true))
-	if err != nil {
-		return nil, err
-	}
+	// ivClient, err := imageverifycache.New(imageverifycache.WithCacheEnableFlag(true))
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	engine, err := newEngine(
 		cfg,
 		jp,
 		adapters.Client(dClient),
-		ivClient,
+		nil,
 		mocks.NewRegistryClientFactory(rclient, params.ImageData),
 		mocks.ContextLoaderFactory(cmResolver),
 		exceptionSelector,

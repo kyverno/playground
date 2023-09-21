@@ -16,7 +16,7 @@
       ]
     },
     "items": {
-      "description": "Items is the list of StorageClasses",
+      "description": "items is the list of StorageClasses",
       "type": [
         "array",
         "null"
@@ -32,14 +32,14 @@
         ],
         "properties": {
           "allowVolumeExpansion": {
-            "description": "AllowVolumeExpansion shows whether the storage class allow volume expand",
+            "description": "allowVolumeExpansion shows whether the storage class allow volume expand.",
             "type": [
               "boolean",
               "null"
             ]
           },
           "allowedTopologies": {
-            "description": "Restrict the node topologies where volumes can be dynamically provisioned. Each volume plugin defines its own supported topology specifications. An empty TopologySelectorTerm list means there is no topology restriction. This field is only honored by servers that enable the VolumeScheduling feature.",
+            "description": "allowedTopologies restrict the node topologies where volumes can be dynamically provisioned. Each volume plugin defines its own supported topology specifications. An empty TopologySelectorTerm list means there is no topology restriction. This field is only honored by servers that enable the VolumeScheduling feature.",
             "type": [
               "array",
               "null"
@@ -118,7 +118,7 @@
             ],
             "properties": {
               "annotations": {
-                "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
+                "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
                 "type": [
                   "object",
                   "null"
@@ -184,7 +184,7 @@
                 "format": "int64"
               },
               "labels": {
-                "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: http://kubernetes.io/docs/user-guide/labels",
+                "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
                 "type": [
                   "object",
                   "null"
@@ -263,14 +263,14 @@
                 }
               },
               "name": {
-                "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+                "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names",
                 "type": [
                   "string",
                   "null"
                 ]
               },
               "namespace": {
-                "description": "Namespace defines the space within which each name must be unique. An empty namespace is equivalent to the \"default\" namespace, but \"default\" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.\n\nMust be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces",
+                "description": "Namespace defines the space within which each name must be unique. An empty namespace is equivalent to the \"default\" namespace, but \"default\" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.\n\nMust be a DNS_LABEL. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces",
                 "type": [
                   "string",
                   "null"
@@ -318,11 +318,11 @@
                       "type": "string"
                     },
                     "name": {
-                      "description": "Name of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+                      "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names",
                       "type": "string"
                     },
                     "uid": {
-                      "description": "UID of the referent. More info: http://kubernetes.io/docs/user-guide/identifiers#uids",
+                      "description": "UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids",
                       "type": "string"
                     }
                   },
@@ -346,7 +346,7 @@
                 ]
               },
               "uid": {
-                "description": "UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.\n\nPopulated by the system. Read-only. More info: http://kubernetes.io/docs/user-guide/identifiers#uids",
+                "description": "UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.\n\nPopulated by the system. Read-only. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids",
                 "type": [
                   "string",
                   "null"
@@ -355,7 +355,7 @@
             }
           },
           "mountOptions": {
-            "description": "Dynamically provisioned PersistentVolumes of this storage class are created with these mountOptions, e.g. [\"ro\", \"soft\"]. Not validated - mount of the PVs will simply fail if one is invalid.",
+            "description": "mountOptions controls the mountOptions for dynamically provisioned PersistentVolumes of this storage class. e.g. [\"ro\", \"soft\"]. Not validated - mount of the PVs will simply fail if one is invalid.",
             "type": [
               "array",
               "null"
@@ -368,7 +368,7 @@
             }
           },
           "parameters": {
-            "description": "Parameters holds the parameters for the provisioner that should create volumes of this storage class.",
+            "description": "parameters holds the parameters for the provisioner that should create volumes of this storage class.",
             "type": [
               "object",
               "null"
@@ -381,21 +381,30 @@
             }
           },
           "provisioner": {
-            "description": "Provisioner indicates the type of the provisioner.",
+            "description": "provisioner indicates the type of the provisioner.",
             "type": "string"
           },
           "reclaimPolicy": {
-            "description": "Dynamically provisioned PersistentVolumes of this storage class are created with this reclaimPolicy. Defaults to Delete.",
+            "description": "reclaimPolicy controls the reclaimPolicy for dynamically provisioned PersistentVolumes of this storage class. Defaults to Delete.\n\nPossible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
             "type": [
               "string",
               "null"
+            ],
+            "enum": [
+              "Delete",
+              "Recycle",
+              "Retain"
             ]
           },
           "volumeBindingMode": {
-            "description": "VolumeBindingMode indicates how PersistentVolumeClaims should be provisioned and bound.  When unset, VolumeBindingImmediate is used. This field is only honored by servers that enable the VolumeScheduling feature.",
+            "description": "volumeBindingMode indicates how PersistentVolumeClaims should be provisioned and bound.  When unset, VolumeBindingImmediate is used. This field is only honored by servers that enable the VolumeScheduling feature.\n\nPossible enum values:\n - `\"Immediate\"` indicates that PersistentVolumeClaims should be immediately provisioned and bound. This is the default mode.\n - `\"WaitForFirstConsumer\"` indicates that PersistentVolumeClaims should not be provisioned and bound until the first Pod is created that references the PeristentVolumeClaim. The volume provisioning and binding will occur during Pod scheduing.",
             "type": [
               "string",
               "null"
+            ],
+            "enum": [
+              "Immediate",
+              "WaitForFirstConsumer"
             ]
           }
         },

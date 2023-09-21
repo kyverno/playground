@@ -136,7 +136,7 @@
           }
         },
         "requests": {
-          "description": "Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+          "description": "Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
           "type": [
             "object",
             "null"
@@ -186,9 +186,7 @@
             "properties": {
               "key": {
                 "description": "key is the label key that the selector applies to.",
-                "type": "string",
-                "x-kubernetes-patch-merge-key": "key",
-                "x-kubernetes-patch-strategy": "merge"
+                "type": "string"
               },
               "operator": {
                 "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -234,10 +232,14 @@
       ]
     },
     "volumeMode": {
-      "description": "volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec.",
+      "description": "volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec.\n\nPossible enum values:\n - `\"Block\"` means the volume will not be formatted with a filesystem and will remain a raw block device.\n - `\"Filesystem\"` means the volume will be or is formatted with a filesystem.",
       "type": [
         "string",
         "null"
+      ],
+      "enum": [
+        "Block",
+        "Filesystem"
       ]
     },
     "volumeName": {

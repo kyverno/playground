@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "failed": {
-      "description": "Failed holds UIDs of failed Pods.",
+      "description": "failed holds UIDs of failed Pods.",
       "type": [
         "array",
         "null"
@@ -17,7 +17,7 @@
       "x-kubernetes-list-type": "set"
     },
     "succeeded": {
-      "description": "Succeeded holds UIDs of succeeded Pods.",
+      "description": "succeeded holds UIDs of succeeded Pods.",
       "type": [
         "array",
         "null"

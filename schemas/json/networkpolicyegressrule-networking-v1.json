@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "ports": {
-      "description": "List of destination ports for outgoing traffic. Each item in this list is combined using a logical OR. If this field is empty or missing, this rule matches all ports (traffic not restricted by port). If this field is present and contains at least one item, then this rule allows traffic only if the traffic matches at least one port in the list.",
+      "description": "ports is a list of destination ports for outgoing traffic. Each item in this list is combined using a logical OR. If this field is empty or missing, this rule matches all ports (traffic not restricted by port). If this field is present and contains at least one item, then this rule allows traffic only if the traffic matches at least one port in the list.",
       "type": [
         "array",
         "null"
@@ -16,7 +16,7 @@
         ],
         "properties": {
           "endPort": {
-            "description": "If set, indicates that the range of ports from port to endPort, inclusive, should be allowed by the policy. This field cannot be defined if the port field is not defined or if the port field is defined as a named (string) port. The endPort must be equal or greater than port.",
+            "description": "endPort indicates that the range of ports from port to endPort if set, inclusive, should be allowed by the policy. This field cannot be defined if the port field is not defined or if the port field is defined as a named (string) port. The endPort must be equal or greater than port.",
             "type": [
               "integer",
               "null"
@@ -40,17 +40,22 @@
             ]
           },
           "protocol": {
-            "description": "The protocol (TCP, UDP, or SCTP) which traffic must match. If not specified, this field defaults to TCP.",
+            "description": "protocol represents the protocol (TCP, UDP, or SCTP) which traffic must match. If not specified, this field defaults to TCP.\n\nPossible enum values:\n - `\"SCTP\"` is the SCTP protocol.\n - `\"TCP\"` is the TCP protocol.\n - `\"UDP\"` is the UDP protocol.",
             "type": [
               "string",
               "null"
+            ],
+            "enum": [
+              "SCTP",
+              "TCP",
+              "UDP"
             ]
           }
         }
       }
     },
     "to": {
-      "description": "List of destinations for outgoing traffic of pods selected for this rule. Items in this list are combined using a logical OR operation. If this field is empty or missing, this rule matches all destinations (traffic not restricted by destination). If this field is present and contains at least one item, this rule allows traffic only if the traffic matches at least one item in the to list.",
+      "description": "to is a list of destinations for outgoing traffic of pods selected for this rule. Items in this list are combined using a logical OR operation. If this field is empty or missing, this rule matches all destinations (traffic not restricted by destination). If this field is present and contains at least one item, this rule allows traffic only if the traffic matches at least one item in the to list.",
       "type": [
         "array",
         "null"
@@ -73,11 +78,11 @@
             ],
             "properties": {
               "cidr": {
-                "description": "CIDR is a string representing the IP Block Valid examples are \"192.168.1.0/24\" or \"2001:db8::/64\"",
+                "description": "cidr is a string representing the IPBlock Valid examples are \"192.168.1.0/24\" or \"2001:db8::/64\"",
                 "type": "string"
               },
               "except": {
-                "description": "Except is a slice of CIDRs that should not be included within an IP Block Valid examples are \"192.168.1.0/24\" or \"2001:db8::/64\" Except values will be rejected if they are outside the CIDR range",
+                "description": "except is a slice of CIDRs that should not be included within an IPBlock Valid examples are \"192.168.1.0/24\" or \"2001:db8::/64\" Except values will be rejected if they are outside the cidr range",
                 "type": [
                   "array",
                   "null"
@@ -117,9 +122,7 @@
                   "properties": {
                     "key": {
                       "description": "key is the label key that the selector applies to.",
-                      "type": "string",
-                      "x-kubernetes-patch-merge-key": "key",
-                      "x-kubernetes-patch-strategy": "merge"
+                      "type": "string"
                     },
                     "operator": {
                       "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -183,9 +186,7 @@
                   "properties": {
                     "key": {
                       "description": "key is the label key that the selector applies to.",
-                      "type": "string",
-                      "x-kubernetes-patch-merge-key": "key",
-                      "x-kubernetes-patch-strategy": "merge"
+                      "type": "string"
                     },
                     "operator": {
                       "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",

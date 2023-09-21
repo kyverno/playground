@@ -2,9 +2,9 @@
 # DEFAULTS #
 ############
 
-KIND_IMAGE           ?= kindest/node:v1.26.3
+KIND_IMAGE           ?= kindest/node:v1.28.0
 KIND_NAME            ?= kind
-KYVERNO_VERSION      ?= 1c7d62f9a1d0
+KYVERNO_VERSION      ?= v1.11.0-beta.1
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,no-ingress,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
@@ -46,9 +46,9 @@ TOOLS_DIR                          := $(PWD)/.tools
 HELM                               := $(TOOLS_DIR)/helm
 HELM_VERSION                       := v3.10.1
 KIND                               := $(TOOLS_DIR)/kind
-KIND_VERSION                       := v0.18.0
+KIND_VERSION                       := v0.20.0
 KO                                 := $(TOOLS_DIR)/ko
-KO_VERSION                         := main #e93dbee8540f28c45ec9a2b8aec5ef8e43123966
+KO_VERSION                         := v0.14.1
 HELM_DOCS                          := $(TOOLS_DIR)/helm-docs
 HELM_DOCS_VERSION                  := v1.11.0
 GCI                                := $(TOOLS_DIR)/gci
@@ -257,8 +257,7 @@ run-standalone: build-backend-assets ## Run locally (without connected cluster)
 		--ui-sponsor=nirmata \
 		--engine-builtin-crds=argocd \
 		--engine-builtin-crds=cert-manager \
-		--engine-builtin-crds=prometheus-operator \
-		--engine-builtin-crds=tekton-pipeline
+		--engine-builtin-crds=prometheus-operator
 
 ########
 # KIND #

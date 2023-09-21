@@ -1,6 +1,9 @@
 {
   "oneOf": [
     {
+      "$ref": "_definitions.json#/definitions/io.k8s.api.admissionregistration.v1.MatchCondition"
+    },
+    {
       "$ref": "_definitions.json#/definitions/io.k8s.api.admissionregistration.v1.MutatingWebhook"
     },
     {
@@ -119,6 +122,12 @@
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.authentication.v1.BoundObjectReference"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.k8s.api.authentication.v1.SelfSubjectReview"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.k8s.api.authentication.v1.SelfSubjectReviewStatus"
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.authentication.v1.TokenRequest"
@@ -433,6 +442,9 @@
       "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.ContainerPort"
     },
     {
+      "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.ContainerResizePolicy"
+    },
+    {
       "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.ContainerState"
     },
     {
@@ -542,6 +554,9 @@
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.HostAlias"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.HostIP"
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
@@ -722,6 +737,9 @@
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.PodResourceClaim"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.PodResourceClaimStatus"
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.core.v1.PodSchedulingGate"
@@ -961,6 +979,9 @@
       "$ref": "_definitions.json#/definitions/io.k8s.api.events.v1.EventSeries"
     },
     {
+      "$ref": "_definitions.json#/definitions/io.k8s.api.flowcontrol.v1beta2.ExemptPriorityLevelConfiguration"
+    },
+    {
       "$ref": "_definitions.json#/definitions/io.k8s.api.flowcontrol.v1beta2.FlowDistinguisherMethod"
     },
     {
@@ -1025,6 +1046,9 @@
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.flowcontrol.v1beta2.UserSubject"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.k8s.api.flowcontrol.v1beta3.ExemptPriorityLevelConfiguration"
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.flowcontrol.v1beta3.FlowDistinguisherMethod"
@@ -1168,9 +1192,6 @@
       "$ref": "_definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicySpec"
     },
     {
-      "$ref": "_definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyStatus"
-    },
-    {
       "$ref": "_definitions.json#/definitions/io.k8s.api.networking.v1.ServiceBackendPort"
     },
     {
@@ -1298,12 +1319,6 @@
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.api.storage.v1.VolumeNodeResources"
-    },
-    {
-      "$ref": "_definitions.json#/definitions/io.k8s.api.storage.v1beta1.CSIStorageCapacity"
-    },
-    {
-      "$ref": "_definitions.json#/definitions/io.k8s.api.storage.v1beta1.CSIStorageCapacityList"
     },
     {
       "$ref": "_definitions.json#/definitions/io.k8s.apiextensions-apiserver.pkg.apis.apiextensions.v1.CustomResourceColumnDefinition"
@@ -1544,6 +1559,12 @@
     },
     {
       "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.Policy"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.PolicyException"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.PolicyExceptionList"
     },
     {
       "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.PolicyList"

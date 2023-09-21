@@ -18,7 +18,7 @@
       ],
       "properties": {
         "container": {
-          "description": "Container is the name of the container in the pods of the scaling target",
+          "description": "container is the name of the container in the pods of the scaling target",
           "type": "string"
         },
         "current": {
@@ -68,7 +68,7 @@
           }
         },
         "name": {
-          "description": "Name is the name of the resource in question.",
+          "description": "name is the name of the resource in question.",
           "type": "string"
         }
       }
@@ -167,9 +167,7 @@
                     "properties": {
                       "key": {
                         "description": "key is the label key that the selector applies to.",
-                        "type": "string",
-                        "x-kubernetes-patch-merge-key": "key",
-                        "x-kubernetes-patch-strategy": "merge"
+                        "type": "string"
                       },
                       "operator": {
                         "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -278,18 +276,18 @@
           ],
           "properties": {
             "apiVersion": {
-              "description": "API version of the referent",
+              "description": "apiVersion is the API version of the referent",
               "type": [
                 "string",
                 "null"
               ]
             },
             "kind": {
-              "description": "Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+              "description": "kind is the kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
               "type": "string"
             },
             "name": {
-              "description": "Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+              "description": "name is the name of the referent; More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
               "type": "string"
             }
           }
@@ -331,9 +329,7 @@
                     "properties": {
                       "key": {
                         "description": "key is the label key that the selector applies to.",
-                        "type": "string",
-                        "x-kubernetes-patch-merge-key": "key",
-                        "x-kubernetes-patch-strategy": "merge"
+                        "type": "string"
                       },
                       "operator": {
                         "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -469,9 +465,7 @@
                     "properties": {
                       "key": {
                         "description": "key is the label key that the selector applies to.",
-                        "type": "string",
-                        "x-kubernetes-patch-merge-key": "key",
-                        "x-kubernetes-patch-strategy": "merge"
+                        "type": "string"
                       },
                       "operator": {
                         "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -571,7 +565,7 @@
           }
         },
         "name": {
-          "description": "Name is the name of the resource in question.",
+          "description": "name is the name of the resource in question.",
           "type": "string"
         }
       }
