@@ -5,10 +5,11 @@ import (
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2beta1 "github.com/kyverno/kyverno/api/kyverno/v2beta1"
-	"github.com/kyverno/playground/backend/pkg/resource/loader"
 	"k8s.io/api/admissionregistration/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	"github.com/kyverno/playground/backend/pkg/resource/loader"
 )
 
 var (
