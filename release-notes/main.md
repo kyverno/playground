@@ -15,3 +15,4 @@ Release notes for `TODO`.
 ## :guitar: Misc :guitar:
 - Upgrade backend to golang 1.21
 - Release images for all platforms 
+- Bump Kyverno to `v1.11.0-beta.1`
