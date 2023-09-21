@@ -117,6 +117,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@rm -rf ./schemas
 	@mkdir -p ./schemas/openapi/v2
 	@mkdir -p ./schemas/openapi/v3/apis/kyverno.io
+	@mkdir -p ./schemas/openapi/v3/apis/admissionregistration.k8s.io
 	@$(KIND) create cluster --name schema --image $(KIND_IMAGE) --config ./scripts/config/kind.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_admissionreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_backgroundscanreports.yaml
@@ -135,6 +136,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2alpha1 > ./schemas/openapi/v3/apis/kyverno.io/v2alpha1.json
+	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1alpha1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1alpha1.json
 	@$(KIND) delete cluster --name schema
 
 .PHONY: codegen-schema-json
@@ -185,6 +187,7 @@ build-frontend: ## Build frontend
 	@cp schemas/json/policy-kyverno-v1.json frontend/src/schemas
 	@cp schemas/json/policy-kyverno-v2beta1.json frontend/src/schemas
 	@cp schemas/json/policyexception-kyverno-v2alpha1.json frontend/src/schemas
+	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1alpha1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets

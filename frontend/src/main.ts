@@ -12,6 +12,7 @@ import clusterpolicyv1 from './schemas/clusterpolicy-kyverno-v1.json'
 import policyv1 from './schemas/policy-kyverno-v1.json'
 import clusterpolicyv2beta1 from './schemas/clusterpolicy-kyverno-v2beta1.json'
 import policyv2beta1 from './schemas/policy-kyverno-v2beta1.json'
+import vapv1alpha1 from './schemas/validatingadmissionpolicy-admissionregistration-v1alpha1.json'
 import context from './schemas/context.json'
 import { JSONSchema6 } from 'json-schema'
 
@@ -30,13 +31,15 @@ setDiagnosticsOptions({
           { $ref: '#/definitions/clusterpolicy-v1' },
           { $ref: '#/definitions/policy-v1' },
           { $ref: '#/definitions/clusterpolicy-v2beta1' },
-          { $ref: '#/definitions/policy-v2beta1' }
+          { $ref: '#/definitions/policy-v2beta1' },
+          { $ref: '#/definitions/vap-v1alpha1' },
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema6,
           'policy-v1': policyv1 as JSONSchema6,
           'clusterpolicy-v2beta1': clusterpolicyv2beta1 as JSONSchema6,
-          'policy-v2beta1': policyv2beta1 as JSONSchema6
+          'policy-v2beta1': policyv2beta1 as JSONSchema6,
+          'vap-v1alpha1': vapv1alpha1 as JSONSchema6,
         }
       },
       uri: `${baseURL}/schemas/policies.json`,

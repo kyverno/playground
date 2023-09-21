@@ -2,15 +2,18 @@
 
 Release notes for `TODO`.
 
-<!-- ## :dizzy: New features :dizzy:
+## :dizzy: New features :dizzy:
+- Added Validating Admission Policy autocompletion in Policies panel
 
+<!--
 ## :sparkles: UI changes :sparkles:
 
 ## :star: Examples :star:
 
 ## :boat: Tutorials :boat:
 
-## :wrench: Fixes :wrench: -->
+## :wrench: Fixes :wrench:
+-->
 
 ## :guitar: Misc :guitar:
 - Upgrade backend to golang 1.21
