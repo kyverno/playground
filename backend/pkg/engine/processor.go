@@ -22,8 +22,10 @@ import (
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
+	"github.com/kyverno/kyverno/pkg/validatingadmissionpolicy"
 	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
+	"k8s.io/api/admissionregistration/v1alpha1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -47,6 +49,7 @@ type Processor struct {
 func (p *Processor) Run(
 	ctx context.Context,
 	policies []kyvernov1.PolicyInterface,
+	vaps []v1alpha1.ValidatingAdmissionPolicy,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -121,7 +124,21 @@ func (p *Processor) Run(
 			response.Generation = append(response.Generation, result)
 		}
 	}
-
+	// validating admissin policies
+	for i := range resources {
+		var resource unstructured.Unstructured
+		if p.params.Context.Operation == kyvernov1.Delete {
+			resource = resources[i]
+		} else if p.params.Context.Operation == kyvernov1.Update {
+			resource = resources[i]
+		} else {
+			resource = resources[i]
+		}
+		for _, policy := range vaps {
+			result := validatingadmissionpolicy.Validate(policy, resource)
+			response.Validation = append(response.Validation, models.ConvertResponse(result))
+		}
+	}
 	return response, nil
 }
 

@@ -5,7 +5,9 @@ import (
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2alpha1 "github.com/kyverno/kyverno/api/kyverno/v2alpha1"
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource"
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
+	"k8s.io/api/admissionregistration/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/openapi"
@@ -15,8 +17,8 @@ import (
 	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
-	"github.com/kyverno/playground/backend/pkg/resource"
-	"github.com/kyverno/playground/backend/pkg/utils"
+	"github.com/kyverno/playground/backend/pkg/exception"
+	"github.com/kyverno/playground/backend/pkg/policy"
 )
 
 type EngineRequest struct {
@@ -39,8 +41,8 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	return &params, nil
 }
 
-func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, error) {
-	return utils.LoadPolicies(policyLoader, []byte(r.Policies))
+func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1alpha1.ValidatingAdmissionPolicy, error) {
+	return policy.Load(policyLoader, []byte(r.Policies))
 }
 
 func (r *EngineRequest) LoadResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
@@ -56,7 +58,7 @@ func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstru
 }
 
 func (r *EngineRequest) LoadPolicyExceptions(resourceLoader loader.Loader) ([]*kyvernov2alpha1.PolicyException, error) {
-	return utils.LoadPolicyExceptions(resourceLoader, []byte(r.PolicyExceptions))
+	return exception.Load(resourceLoader, []byte(r.PolicyExceptions))
 }
 
 func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.ConfigMap, error) {
