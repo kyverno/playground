@@ -17,14 +17,17 @@ const (
 	singleResource    string = "../../testdata/namespace.yaml"
 	multiplePolicy    string = "../../testdata/multiple-policies.yaml"
 	policyWithComment string = "../../testdata/multiple-policies-with-comment.yaml"
+	vap               string = "../../testdata/vap.yaml"
+	policyAndVap      string = "../../testdata/policy-and-vap.yaml"
 )
 
 func Test_LoadPolicies(t *testing.T) {
 	tests := []struct {
-		name       string
-		policies   string
-		wantLoaded int
-		wantErr    bool
+		name         string
+		policies     string
+		wantPolicies int
+		wantVaps     int
+		wantErr      bool
 	}{{
 		name:     "invalid policy",
 		policies: "../../testdata/invalid-policy.yaml",
@@ -41,17 +44,27 @@ func Test_LoadPolicies(t *testing.T) {
 		policies: singleResource,
 		wantErr:  true,
 	}, {
-		name:       "load single policy",
-		policies:   "../../testdata/single-policy.yaml",
-		wantLoaded: 1,
+		name:         "load single policy",
+		policies:     "../../testdata/single-policy.yaml",
+		wantPolicies: 1,
 	}, {
-		name:       "load multiple resources",
-		policies:   multiplePolicy,
-		wantLoaded: 2,
+		name:         "load multiple resources",
+		policies:     multiplePolicy,
+		wantPolicies: 2,
 	}, {
-		name:       "load policy with comment",
-		policies:   policyWithComment,
-		wantLoaded: 1,
+		name:         "load policy with comment",
+		policies:     policyWithComment,
+		wantPolicies: 1,
+	}, {
+		name:         "vap",
+		policies:     vap,
+		wantPolicies: 0,
+		wantVaps:     1,
+	}, {
+		name:         "policy and vap",
+		policies:     policyAndVap,
+		wantPolicies: 1,
+		wantVaps:     1,
 	}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -63,48 +76,13 @@ func Test_LoadPolicies(t *testing.T) {
 				),
 			)
 			require.NoError(t, err)
-			if res, _, err := utils.LoadPolicies(loader, bytes); (err != nil) != tt.wantErr {
+			if policies, vaps, err := utils.LoadPolicies(loader, bytes); (err != nil) != tt.wantErr {
 				t.Errorf("loader.LoadPolicies() error = %v, wantErr %v", err, tt.wantErr)
-			} else if len(res) != tt.wantLoaded {
-				t.Errorf("loader.LoadPolicies() loaded amount = %v, wantLoaded %v", len(res), tt.wantLoaded)
+			} else if len(policies) != tt.wantPolicies {
+				t.Errorf("loader.LoadPolicies() loaded amount = %v, wantLoaded %v", len(policies), tt.wantPolicies)
+			} else if len(vaps) != tt.wantVaps {
+				t.Errorf("loader.LoadPolicies() loaded amount = %v, wantLoaded %v", len(vaps), tt.wantVaps)
 			}
 		})
 	}
 }
-
-// func TestToPolicyInterface(t *testing.T) {
-// 	tests := []struct {
-// 		name    string
-// 		file    string
-// 		wantErr bool
-// 	}{{
-// 		name:    "load single policy",
-// 		file:    "../../testdata/single-policy.yaml",
-// 		wantErr: true,
-// 	}, {
-// 		name:    "load single cluster policy",
-// 		file:    "../../testdata/single-cluster-policy.yaml",
-// 		wantErr: true,
-// 	}}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			bytes, err := os.ReadFile(tt.file)
-// 			require.NoError(t, err)
-// 			loader, err := loader.New(
-// 				openapiclient.NewComposite(
-// 					openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"),
-// 				),
-// 			)
-// 			require.NoError(t, err)
-// 			resource, err := loader.Load(bytes)
-// 			require.NoError(t, err)
-// 			err = unstructured.SetNestedField(resource.UnstructuredContent(), "foo", "spec", "bar")
-// 			require.NoError(t, err)
-// 			_, err = utils.ToPolicyInterface(resource)
-// 			if (err != nil) != tt.wantErr {
-// 				t.Errorf("ToPolicyInterface() error = %v, wantErr %v", err, tt.wantErr)
-// 				return
-// 			}
-// 		})
-// 	}
-// }
