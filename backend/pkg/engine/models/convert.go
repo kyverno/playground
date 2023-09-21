@@ -1,6 +1,7 @@
 package models
 
 import (
+	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"sigs.k8s.io/yaml"
 )
@@ -30,7 +31,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 	out := Response{
 		OriginalResource: string(resource),
 		Resource:         in.Resource,
-		Policy:           in.Policy(),
+		Policy:           in.Policy().GetPolicy().(kyvernov1.PolicyInterface),
 		NamespaceLabels:  in.NamespaceLabels(),
 		PatchedResource:  string(patchedResource),
 	}
