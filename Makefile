@@ -2,9 +2,9 @@
 # DEFAULTS #
 ############
 
-KIND_IMAGE           ?= kindest/node:v1.26.3
+KIND_IMAGE           ?= kindest/node:v1.28.0
 KIND_NAME            ?= kind
-KYVERNO_VERSION      ?= 1c7d62f9a1d0
+KYVERNO_VERSION      ?= v1.11.0-beta.1
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,no-ingress,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""

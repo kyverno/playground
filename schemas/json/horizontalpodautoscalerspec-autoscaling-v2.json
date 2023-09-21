@@ -39,16 +39,16 @@
                 ],
                 "properties": {
                   "periodSeconds": {
-                    "description": "PeriodSeconds specifies the window of time for which the policy should hold true. PeriodSeconds must be greater than zero and less than or equal to 1800 (30 min).",
+                    "description": "periodSeconds specifies the window of time for which the policy should hold true. PeriodSeconds must be greater than zero and less than or equal to 1800 (30 min).",
                     "type": "integer",
                     "format": "int32"
                   },
                   "type": {
-                    "description": "Type is used to specify the scaling policy.",
+                    "description": "type is used to specify the scaling policy.",
                     "type": "string"
                   },
                   "value": {
-                    "description": "Value contains the amount of change which is permitted by the policy. It must be greater than zero",
+                    "description": "value contains the amount of change which is permitted by the policy. It must be greater than zero",
                     "type": "integer",
                     "format": "int32"
                   }
@@ -64,7 +64,7 @@
               ]
             },
             "stabilizationWindowSeconds": {
-              "description": "StabilizationWindowSeconds is the number of seconds for which past recommendations should be considered while scaling up or scaling down. StabilizationWindowSeconds must be greater than or equal to zero and less than or equal to 3600 (one hour). If not set, use the default values: - For scale up: 0 (i.e. no stabilization is done). - For scale down: 300 (i.e. the stabilization window is 300 seconds long).",
+              "description": "stabilizationWindowSeconds is the number of seconds for which past recommendations should be considered while scaling up or scaling down. StabilizationWindowSeconds must be greater than or equal to zero and less than or equal to 3600 (one hour). If not set, use the default values: - For scale up: 0 (i.e. no stabilization is done). - For scale down: 300 (i.e. the stabilization window is 300 seconds long).",
               "type": [
                 "integer",
                 "null"
@@ -99,16 +99,16 @@
                 ],
                 "properties": {
                   "periodSeconds": {
-                    "description": "PeriodSeconds specifies the window of time for which the policy should hold true. PeriodSeconds must be greater than zero and less than or equal to 1800 (30 min).",
+                    "description": "periodSeconds specifies the window of time for which the policy should hold true. PeriodSeconds must be greater than zero and less than or equal to 1800 (30 min).",
                     "type": "integer",
                     "format": "int32"
                   },
                   "type": {
-                    "description": "Type is used to specify the scaling policy.",
+                    "description": "type is used to specify the scaling policy.",
                     "type": "string"
                   },
                   "value": {
-                    "description": "Value contains the amount of change which is permitted by the policy. It must be greater than zero",
+                    "description": "value contains the amount of change which is permitted by the policy. It must be greater than zero",
                     "type": "integer",
                     "format": "int32"
                   }
@@ -124,7 +124,7 @@
               ]
             },
             "stabilizationWindowSeconds": {
-              "description": "StabilizationWindowSeconds is the number of seconds for which past recommendations should be considered while scaling up or scaling down. StabilizationWindowSeconds must be greater than or equal to zero and less than or equal to 3600 (one hour). If not set, use the default values: - For scale up: 0 (i.e. no stabilization is done). - For scale down: 300 (i.e. the stabilization window is 300 seconds long).",
+              "description": "stabilizationWindowSeconds is the number of seconds for which past recommendations should be considered while scaling up or scaling down. StabilizationWindowSeconds must be greater than or equal to zero and less than or equal to 3600 (one hour). If not set, use the default values: - For scale up: 0 (i.e. no stabilization is done). - For scale down: 300 (i.e. the stabilization window is 300 seconds long).",
               "type": [
                 "integer",
                 "null"
@@ -282,9 +282,7 @@
                           "properties": {
                             "key": {
                               "description": "key is the label key that the selector applies to.",
-                              "type": "string",
-                              "x-kubernetes-patch-merge-key": "key",
-                              "x-kubernetes-patch-strategy": "merge"
+                              "type": "string"
                             },
                             "operator": {
                               "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -400,18 +398,18 @@
                 ],
                 "properties": {
                   "apiVersion": {
-                    "description": "API version of the referent",
+                    "description": "apiVersion is the API version of the referent",
                     "type": [
                       "string",
                       "null"
                     ]
                   },
                   "kind": {
-                    "description": "Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+                    "description": "kind is the kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
                     "type": "string"
                   },
                   "name": {
-                    "description": "Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+                    "description": "name is the name of the referent; More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
                     "type": "string"
                   }
                 }
@@ -453,9 +451,7 @@
                           "properties": {
                             "key": {
                               "description": "key is the label key that the selector applies to.",
-                              "type": "string",
-                              "x-kubernetes-patch-merge-key": "key",
-                              "x-kubernetes-patch-strategy": "merge"
+                              "type": "string"
                             },
                             "operator": {
                               "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -598,9 +594,7 @@
                           "properties": {
                             "key": {
                               "description": "key is the label key that the selector applies to.",
-                              "type": "string",
-                              "x-kubernetes-patch-merge-key": "key",
-                              "x-kubernetes-patch-strategy": "merge"
+                              "type": "string"
                             },
                             "operator": {
                               "description": "operator represents a key's relationship to a set of values. Valid operators are In, NotIn, Exists and DoesNotExist.",
@@ -793,18 +787,18 @@
       ],
       "properties": {
         "apiVersion": {
-          "description": "API version of the referent",
+          "description": "apiVersion is the API version of the referent",
           "type": [
             "string",
             "null"
           ]
         },
         "kind": {
-          "description": "Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "description": "kind is the kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
           "type": "string"
         },
         "name": {
-          "description": "Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+          "description": "name is the name of the referent; More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
           "type": "string"
         }
       }

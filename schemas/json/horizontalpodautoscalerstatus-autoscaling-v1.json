@@ -7,7 +7,7 @@
   ],
   "properties": {
     "currentCPUUtilizationPercentage": {
-      "description": "current average CPU utilization over all pods, represented as a percentage of requested CPU, e.g. 70 means that an average pod is using now 70% of its requested CPU.",
+      "description": "currentCPUUtilizationPercentage is the current average CPU utilization over all pods, represented as a percentage of requested CPU, e.g. 70 means that an average pod is using now 70% of its requested CPU.",
       "type": [
         "integer",
         "null"
@@ -15,7 +15,7 @@
       "format": "int32"
     },
     "currentReplicas": {
-      "description": "current number of replicas of pods managed by this autoscaler.",
+      "description": "currentReplicas is the current number of replicas of pods managed by this autoscaler.",
       "type": [
         "integer",
         "null"
@@ -23,7 +23,7 @@
       "format": "int32"
     },
     "desiredReplicas": {
-      "description": "desired number of replicas of pods managed by this autoscaler.",
+      "description": "desiredReplicas is the  desired number of replicas of pods managed by this autoscaler.",
       "type": [
         "integer",
         "null"
@@ -39,7 +39,7 @@
       "format": "date-time"
     },
     "observedGeneration": {
-      "description": "most recent generation observed by this autoscaler.",
+      "description": "observedGeneration is the most recent generation observed by this autoscaler.",
       "type": [
         "integer",
         "null"

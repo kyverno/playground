@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "replicas": {
-      "description": "desired number of instances for the scaled object.",
+      "description": "replicas is the desired number of instances for the scaled object.",
       "type": [
         "integer",
         "null"

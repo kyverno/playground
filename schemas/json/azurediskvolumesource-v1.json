@@ -7,10 +7,15 @@
   ],
   "properties": {
     "cachingMode": {
-      "description": "cachingMode is the Host Caching mode: None, Read Only, Read Write.",
+      "description": "cachingMode is the Host Caching mode: None, Read Only, Read Write.\n\nPossible enum values:\n - `\"None\"`\n - `\"ReadOnly\"`\n - `\"ReadWrite\"`",
       "type": [
         "string",
         "null"
+      ],
+      "enum": [
+        "None",
+        "ReadOnly",
+        "ReadWrite"
       ]
     },
     "diskName": {
@@ -35,10 +40,15 @@
       ]
     },
     "kind": {
-      "description": "kind expected values are Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared",
+      "description": "kind expected values are Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared\n\nPossible enum values:\n - `\"Dedicated\"`\n - `\"Managed\"`\n - `\"Shared\"`",
       "type": [
         "string",
         "null"
+      ],
+      "enum": [
+        "Dedicated",
+        "Managed",
+        "Shared"
       ]
     },
     "readOnly": {
