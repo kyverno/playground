@@ -40,6 +40,8 @@ flags:
     enabled: false
   protectManagedResources:
     enabled: false
+  enableDeferredLoading:
+    enabled: false
   registry:
     allowInsecure: false
     pullSecrets: []
