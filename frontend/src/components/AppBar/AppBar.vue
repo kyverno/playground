@@ -6,11 +6,11 @@
     <div class="app-logo">
       <template v-if="display.mdAndUp.value">
         <v-img src="/kyverno-logo.png" />
-        <v-chip size="small" style="position: absolute; bottom: 12px; right: -55px">v1.10</v-chip>
+        <v-chip size="small" style="position: absolute; bottom: 12px; right: -55px">v1.11-beta</v-chip>
       </template>
       <template v-if="display.smAndDown.value">
         <v-img src="/favicon.png" width="80" />
-        <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px">Kyverno v1.10</v-chip>
+        <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px">Kyverno v1.11-beta</v-chip>
       </template>
     </div>
     <template v-slot:append>
