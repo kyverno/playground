@@ -2,7 +2,6 @@ package engine
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	json_patch "github.com/evanphx/json-patch/v5"
@@ -63,12 +62,6 @@ func (p *Processor) Run(
 	}
 
 	response := &models.Results{}
-
-	if p.cluster.IsFake() {
-		if err := validateParams(p.params, policies); err != nil {
-			return nil, err
-		}
-	}
 
 	oldMaxIndex := len(oldResources) - 1
 
@@ -327,25 +320,6 @@ func validatePolicies(policies []kyvernov1.PolicyInterface) []models.PolicyValid
 		}
 	}
 	return result
-}
-
-func validateParams(params *models.Parameters, policies []kyvernov1.PolicyInterface) error {
-	if params == nil {
-		return nil
-	}
-	for _, policy := range policies {
-		for _, rule := range policy.GetSpec().Rules {
-			for _, variable := range rule.Context {
-				if variable.APICall == nil && variable.ConfigMap == nil {
-					continue
-				}
-				if _, ok := params.Variables[variable.Name]; !ok {
-					return fmt.Errorf("Variable %s is not defined in the context", variable.Name)
-				}
-			}
-		}
-	}
-	return nil
 }
 
 func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) kyvernov1beta1.UpdateRequest {

@@ -11,6 +11,7 @@ func ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.Cont
 	return func(policy kyvernov1.PolicyInterface, rule kyvernov1.Rule) engineapi.ContextLoader {
 		chain := next(policy, rule)
 		chain = WithoutAPICalls(chain)
+		chain = WithCMCheck(cmResolver, chain)
 		return chain
 	}
 }
