@@ -73,15 +73,15 @@ export const options = {
           name: 'ConfigMap Context',
           policies: [
             { url: 'tutorials/policies', path: 'allowed-pod-priorities', title: 'Allowed Pod Priorities' },
-            { path: 'other/exclude-namespaces-dynamically', contextPath: 'tutorials/context', title: 'Exclude Namespaces Dynamically' }
+            { path: 'other/e-l/exclude-namespaces-dynamically', contextPath: 'tutorials/context', title: 'Exclude Namespaces Dynamically' }
           ]
         },
         {
           name: 'API Call Context',
           policies: [
-            { path: 'other/restrict-pod-count-per-node', contextPath: 'tutorials/context', title: 'Restrict Pod Count per Node' },
-            { path: 'other/restrict-ingress-host', contextPath: 'tutorials/context', title: 'Unique Ingress Host' },
-            { path: 'other/require-netpol', contextPath: 'tutorials/context', title: 'Require NetworkPolicy' }
+            { path: 'other/res/restrict-pod-count-per-node', contextPath: 'tutorials/context', title: 'Restrict Pod Count per Node' },
+            { path: 'other/res/restrict-ingress-host', contextPath: 'tutorials/context', title: 'Unique Ingress Host' },
+            { path: 'other/rec-req/require-netpol', contextPath: 'tutorials/context', title: 'Require NetworkPolicy' }
           ]
         },
         {
@@ -94,19 +94,18 @@ export const options = {
               oldResourceFile: 'old_resource.yaml',
               title: 'Allowed Label Changes'
             },
-            { path: 'other/block-updates-deletes', contextPath: 'tutorials/context', title: 'Block Updates and Deletes' },
-            { path: 'other/block-updates-deletes', contextPath: 'tutorials/context', title: 'Block Updates and Deletes' }
+            { path: 'other/b-d/block-updates-deletes', contextPath: 'tutorials/context', title: 'Block Updates and Deletes' }
           ]
         },
         {
           name: 'Subject Configuration',
-          policies: [{ path: 'other/check-serviceaccount', contextPath: 'tutorials/context', title: 'Check ServiceAccount' }]
+          policies: [{ path: 'other/b-d/check-serviceaccount', contextPath: 'tutorials/context', title: 'Check ServiceAccount' }]
         },
         {
           name: 'Clone Rules',
           policies: [
             {
-              path: 'other/sync-secrets',
+              path: 'other/s-z/sync-secrets',
               clusterResourcesFile: 'cloneSourceResource.yaml',
               title: 'Sync Secrets'
             }
@@ -210,12 +209,12 @@ export const options = {
       url: 'https://raw.githubusercontent.com/kyverno/policies/main/other',
       color: undefined,
       policies: [
-        { path: 'add-certificates-volume', title: 'Add Certificates as a Volume' },
-        { path: 'add-default-resources', title: 'Add Default Resources' },
-        { path: 'add-labels', title: 'Add Labels' },
-        { path: 'allowed-annotations', title: 'Allowed Annotations' },
-        { path: 'check-env-vars', title: 'Check Environment Variables' },
-        { path: 'require-base-image', title: 'Check Image Base' }
+        { path: 'a/add-certificates-volume', title: 'Add Certificates as a Volume' },
+        { path: 'a/add-default-resources', title: 'Add Default Resources' },
+        { path: 'a/add-labels', title: 'Add Labels' },
+        { path: 'a/allowed-annotations', title: 'Allowed Annotations' },
+        { path: 'b-d/check-env-vars', title: 'Check Environment Variables' },
+        { path: 'rec-req/require-base-image', title: 'Check Image Base' }
       ]
     }
   ] as Example[]
