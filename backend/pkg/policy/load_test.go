@@ -16,7 +16,8 @@ const (
 	singleResource    string = "../../testdata/namespace.yaml"
 	multiplePolicy    string = "../../testdata/multiple-policies.yaml"
 	policyWithComment string = "../../testdata/multiple-policies-with-comment.yaml"
-	vap               string = "../../testdata/vap.yaml"
+	vapV1Alpha1       string = "../../testdata/vap-v1alpha1.yaml"
+	vapV1Beta1        string = "../../testdata/vap-v1beta1.yaml"
 	policyAndVap      string = "../../testdata/policy-and-vap.yaml"
 )
 
@@ -55,8 +56,13 @@ func Test_Load(t *testing.T) {
 		policies:     policyWithComment,
 		wantPolicies: 1,
 	}, {
-		name:         "vap",
-		policies:     vap,
+		name:         "vap v1alpha1",
+		policies:     vapV1Alpha1,
+		wantPolicies: 0,
+		wantVaps:     1,
+	}, {
+		name:         "vap v1beta1",
+		policies:     vapV1Beta1,
 		wantPolicies: 0,
 		wantVaps:     1,
 	}, {
@@ -71,6 +77,7 @@ func Test_Load(t *testing.T) {
 			require.NoError(t, err)
 			loader, err := loader.New(
 				openapiclient.NewComposite(
+					openapiclient.NewGitHubBuiltins("1.28"),
 					openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"),
 				),
 			)
