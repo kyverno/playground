@@ -87,7 +87,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 
 func parseKubeVersion(kubeVersion string) (string, error) {
 	if kubeVersion == "" {
-		return "1.27", nil
+		return "1.28", nil
 	}
 	version, err := semver.NewVersion(kubeVersion)
 	if err != nil {
