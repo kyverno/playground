@@ -2,6 +2,11 @@ export type RuleType = 'Vaidation'
 export type RuleStatus = 'fail' | 'pass' | 'warn' | 'error' | 'skip' | 'no match'
 export type ErrorReason = 'POLICY_VALIDATION' | 'ERROR'
 
+type RequireOnlyOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyof T, Keys>> &
+  {
+    [K in Keys]-?: Required<Pick<T, K>> & Partial<Record<Exclude<Keys, K>, undefined>>
+  }[Keys]
+
 export type ErrorResponse = {
   reason: ErrorReason
   error: string
@@ -45,23 +50,28 @@ export type PolicyResponse = {
   rules: Rule[] | null
 }
 
-export type Validation = {
+export type Result = RequireOnlyOne<
+  {
+    policy?: Policy
+    validatingAdmissionPolicy?: Policy
+  },
+  'policy' | 'validatingAdmissionPolicy'
+>
+
+export type Validation = Result & {
   resource: Resource
-  policy: Policy
   policyResponse: PolicyResponse
 }
 
-export type Mutation = {
+export type Mutation = Result & {
   resource: Resource
-  policy: Policy
   policyResponse: PolicyResponse
   originalResource: string
   patchedResource: string
 }
 
-export type Generation = {
+export type Generation = Result & {
   resource: Resource
-  policy: Policy
   policyResponse: PolicyResponse
 }
 

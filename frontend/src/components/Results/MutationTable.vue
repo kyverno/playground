@@ -69,15 +69,16 @@ const headers = computed(() => {
 
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, mutation) => {
-    const rules = mutation.policyResponse.rules || []
+    const policy = mutation.policy || mutation.validatingAdmissionPolicy
 
+    const rules = mutation.policyResponse.rules || []
     rules.forEach((rule) => {
       const item = {
         id: '',
         apiVersion: mutation.resource.apiVersion,
         kind: mutation.resource.kind,
         resource: [mutation.resource.metadata.namespace, mutation.resource.metadata.name].filter((s) => !!s).join('/'),
-        policy: mutation.policy.metadata.name,
+        policy: policy.metadata.name,
         rule: rule.name,
         message: rule.message,
         patchedResource: mutation.patchedResource,
