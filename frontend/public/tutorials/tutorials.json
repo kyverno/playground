@@ -35,7 +35,7 @@
                         "title": "Allowed Pod Priorities"
                     },
                     {
-                        "path": "other/exclude-namespaces-dynamically",
+                        "path": "other/e-l/exclude-namespaces-dynamically",
                         "contextPath": "tutorials/context",
                         "title": "Exclude Namespaces Dynamically"
                     }
@@ -45,17 +45,17 @@
                 "name": "API Call Context",
                 "policies": [
                     {
-                        "path": "other/restrict-pod-count-per-node",
+                        "path": "other/res/restrict-pod-count-per-node",
                         "contextPath": "tutorials/context",
                         "title": "Restrict Pod Count per Node"
                     },
                     {
-                        "path": "other/restrict-ingress-host",
+                        "path": "other/res/restrict-ingress-host",
                         "contextPath": "tutorials/context",
                         "title": "Unique Ingress Host"
                     },
                     {
-                        "path": "other/require-netpol",
+                        "path": "other/rec-req/require-netpol",
                         "contextPath": "tutorials/context",
                         "title": "Require NetworkPolicy"
                     }
@@ -72,12 +72,7 @@
                         "title": "Allowed Label Changes"
                     },
                     {
-                        "path": "other/block-updates-deletes",
-                        "contextPath": "tutorials/context",
-                        "title": "Block Updates and Deletes"
-                    },
-                    {
-                        "path": "other/block-updates-deletes",
+                        "path": "other/b-d/block-updates-deletes",
                         "contextPath": "tutorials/context",
                         "title": "Block Updates and Deletes"
                     }
@@ -87,7 +82,7 @@
                 "name": "Subject Configuration",
                 "policies": [
                     {
-                        "path": "other/check-serviceaccount",
+                        "path": "other/b-d/check-serviceaccount",
                         "contextPath": "tutorials/context",
                         "title": "Check ServiceAccount"
                     }
@@ -97,7 +92,7 @@
                 "name": "Clone Rules",
                 "policies": [
                     {
-                        "path": "other/sync-secrets",
+                        "path": "other/s-z/sync-secrets",
                         "clusterResourcesFile": "cloneSourceResource.yaml",
                         "title": "Sync Secrets"
                     }
@@ -320,27 +315,27 @@
         "url": "https://raw.githubusercontent.com/kyverno/policies/main/other",
         "policies": [
             {
-                "path": "add-certificates-volume",
+                "path": "a/add-certificates-volume",
                 "title": "Add Certificates as a Volume"
             },
             {
-                "path": "add-default-resources",
+                "path": "a/add-default-resources",
                 "title": "Add Default Resources"
             },
             {
-                "path": "add-labels",
+                "path": "a/add-labels",
                 "title": "Add Labels"
             },
             {
-                "path": "allowed-annotations",
+                "path": "a/allowed-annotations",
                 "title": "Allowed Annotations"
             },
             {
-                "path": "check-env-vars",
+                "path": "b-d/check-env-vars",
                 "title": "Check Environment Variables"
             },
             {
-                "path": "require-base-image",
+                "path": "rec-req/require-base-image",
                 "title": "Check Image Base"
             }
         ]
