@@ -196,14 +196,7 @@ build-frontend: ## Build frontend
 build-backend-assets: build-frontend ## Build backend assets
 	@echo Building backend assets... >&2
 	@rm -rf backend/pkg/server/ui/dist && cp -r frontend/dist backend/pkg/server/ui/dist
-	@rm -rf backend/data/schemas && mkdir -p backend/data/schemas/apis/kyverno.io && cp -r schemas/openapi/v3/apis/kyverno.io/ backend/data/schemas/apis/kyverno.io
-
-.PHONY: docker-build-backend-assets
-docker-build-backend-assets:
-	@echo Building backend assets... >&2
-	@docker run --env "APP_VERSION=$(APP_VERSION)" --rm --entrypoint sh -v ${PWD}/frontend:/frontend -w /frontend node:20-alpine  -c "npm install && npm run build"
-	@rm -rf backend/pkg/server/ui/dist && cp -r frontend/dist backend/pkg/server/ui/dist
-	@rm -rf backend/data/schemas && cp -r schemas/openapi/v3 backend/data/schemas
+	@rm -rf backend/data/schemas && mkdir -p backend/data/schemas/apis/kyverno.io && cp -r schemas/openapi/v3/apis/kyverno.io/* backend/data/schemas/apis/kyverno.io
 
 .PHONY: build-backend
 build-backend: build-backend-assets ## Build backend

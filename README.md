@@ -21,7 +21,6 @@ The playground currently supports:
 - Image verification rules
 - Generate rules
 
-
 **NOTES:**
 - This tool only works with public image registries
 - No data is gathered, stored, or shared
