@@ -68,6 +68,8 @@ const headers = computed(() => {
 
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, generation) => {
+    const policy = generation.policy || generation.validatingAdmissionPolicy
+
     const rules = generation.policyResponse.rules || []
 
     rules.forEach((rule) => {
@@ -76,7 +78,7 @@ const items = computed(() => {
         apiVersion: generation.resource.apiVersion,
         kind: generation.resource.kind,
         resource: [generation.resource.metadata.namespace, generation.resource.metadata.name].filter((s) => !!s).join('/'),
-        policy: generation.policy.metadata.name,
+        policy: policy.metadata.name,
         rule: rule.name,
         message: rule.message,
         generatedResource: rule.generatedResource,

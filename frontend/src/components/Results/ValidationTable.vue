@@ -12,6 +12,12 @@
     show-expand
     v-model:expanded="(expanded as any)"
     :items-per-page="-1">
+    <template v-slot:[`item.policy`]="{ item }">
+      <v-avatar size="24px" rounded="0" class="mr-2 mb-1">
+        <v-img :src="`icons/${item.raw.icon}.png`" />
+      </v-avatar>
+      {{ item.raw.policy }}
+    </template>
     <template v-slot:[`item.status`]="{ item }">
       <StatusChip :status="item.raw.status" :key="item.raw.status" />
     </template>
@@ -36,7 +42,8 @@ import { Validation, RuleStatus } from '@/types'
 import StatusChip from './StatusChip.vue'
 
 type Item = {
-  id: string;
+  id: string
+  icon?: string
   apiVersion: string
   kind: string
   resource: string
@@ -79,13 +86,15 @@ const { hideNoMatch } = useConfig()
 
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, validation) => {
+    const policy = validation.policy || validation.validatingAdmissionPolicy
+
     if (!validation.policyResponse.rules && !hideNoMatch.value) {
       results.push({
         id: 'id',
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
         resource: [validation.resource.metadata.namespace, validation.resource.metadata.name].filter((s) => !!s).join('/'),
-        policy: validation.policy.metadata.name,
+        policy: policy.metadata.name,
         rule: 'resource does not match any rule',
         message: 'no validation triggered',
         status: 'no match'
@@ -96,13 +105,22 @@ const items = computed(() => {
     const rules = validation.policyResponse.rules || []
 
     rules.forEach((rule) => {
+      let ruleName = rule.name
+      let icon = 'kyverno'
+
+      if (validation.validatingAdmissionPolicy) {
+        ruleName = 'N/A'
+        icon = 'k8s'
+      }
+
       results.push({
         id: hash({ rule, resource: validation.resource }),
+        icon,
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
         resource: [validation.resource.metadata.namespace, validation.resource.metadata.name].filter((s) => !!s).join('/'),
-        policy: validation.policy.metadata.name,
-        rule: rule.name,
+        policy: policy.metadata.name,
+        rule: ruleName,
         message: rule.message,
         status: rule.status
       })
