@@ -1,0 +1,343 @@
+[
+    {
+        "name": "Tutorials",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/main/",
+        "color": "orange-darken-3",
+        "subgroups": [
+            {
+                "name": "RuleTypes",
+                "url": "tutorials/policies",
+                "policies": [
+                    {
+                        "path": "validate",
+                        "title": "Validate Pod Labels"
+                    },
+                    {
+                        "path": "mutation",
+                        "title": "Mutate Pod Annotations"
+                    },
+                    {
+                        "path": "generation",
+                        "title": "Generate Quotas"
+                    },
+                    {
+                        "path": "verify-images",
+                        "title": "Verify Image Signatures"
+                    }
+                ]
+            },
+            {
+                "name": "ConfigMap Context",
+                "policies": [
+                    {
+                        "url": "tutorials/policies",
+                        "path": "allowed-pod-priorities",
+                        "title": "Allowed Pod Priorities"
+                    },
+                    {
+                        "path": "other/e-l/exclude-namespaces-dynamically",
+                        "contextPath": "tutorials/context",
+                        "title": "Exclude Namespaces Dynamically"
+                    }
+                ]
+            },
+            {
+                "name": "API Call Context",
+                "policies": [
+                    {
+                        "path": "other/res/restrict-pod-count-per-node",
+                        "contextPath": "tutorials/context",
+                        "title": "Restrict Pod Count per Node"
+                    },
+                    {
+                        "path": "other/res/restrict-ingress-host",
+                        "contextPath": "tutorials/context",
+                        "title": "Unique Ingress Host"
+                    },
+                    {
+                        "path": "other/rec-req/require-netpol",
+                        "contextPath": "tutorials/context",
+                        "title": "Require NetworkPolicy"
+                    }
+                ]
+            },
+            {
+                "name": "UPDATE Operations",
+                "policies": [
+                    {
+                        "url": "tutorials/policies",
+                        "path": "allowed-label-changes",
+                        "contextPath": "tutorials/context",
+                        "oldResourceFile": "old_resource.yaml",
+                        "title": "Allowed Label Changes"
+                    },
+                    {
+                        "path": "other/b-d/block-updates-deletes",
+                        "contextPath": "tutorials/context",
+                        "title": "Block Updates and Deletes"
+                    }
+                ]
+            },
+            {
+                "name": "Subject Configuration",
+                "policies": [
+                    {
+                        "path": "other/b-d/check-serviceaccount",
+                        "contextPath": "tutorials/context",
+                        "title": "Check ServiceAccount"
+                    }
+                ]
+            },
+            {
+                "name": "Clone Rules",
+                "policies": [
+                    {
+                        "path": "other/s-z/sync-secrets",
+                        "clusterResourcesFile": "cloneSourceResource.yaml",
+                        "title": "Sync Secrets"
+                    }
+                ]
+            },
+            {
+                "name": "Policy Exceptions",
+                "policies": [
+                    {
+                        "url": "tutorials/policies",
+                        "path": "policy-exception",
+                        "exceptionsFile": "exception.yaml",
+                        "title": "Policy Exception"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Best Practices",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/main/best-practices",
+        "policies": [
+            {
+                "path": "disallow-cri-sock-mount",
+                "title": "Disallow CRI socket mounts"
+            },
+            {
+                "path": "disallow-default-namespace",
+                "title": "Disallow Default Namespace"
+            },
+            {
+                "path": "disallow-empty-ingress-host",
+                "title": "Disallow empty Ingress host"
+            },
+            {
+                "path": "disallow-cri-sock-mount",
+                "title": "Disallow CRI socket mounts"
+            },
+            {
+                "path": "disallow-latest-tag",
+                "title": "Disallow Latest Tag"
+            },
+            {
+                "path": "require-drop-all",
+                "title": "Drop All Capabilities"
+            },
+            {
+                "path": "require-drop-cap-net-raw",
+                "title": "Drop CAP_NET_RAW"
+            },
+            {
+                "path": "require-labels",
+                "title": "Require Labels"
+            },
+            {
+                "path": "require-pod-requests-limits",
+                "title": "Require Limits and Requests"
+            },
+            {
+                "path": "require-probes",
+                "title": "Require Pod Probes"
+            },
+            {
+                "path": "restrict-image-registries",
+                "title": "Restrict Image Registries"
+            }
+        ]
+    },
+    {
+        "name": "Pod Security",
+        "subgroups": [
+            {
+                "name": "Baseline",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/main/pod-security/baseline",
+                "policies": [
+                    {
+                        "path": "disallow-capabilities",
+                        "title": "Disallow Capabilities"
+                    },
+                    {
+                        "path": "disallow-host-namespaces",
+                        "title": "Disallow  Host Namespaces"
+                    },
+                    {
+                        "path": "disallow-host-path",
+                        "title": "Disallow hostPath"
+                    },
+                    {
+                        "path": "disallow-host-ports-range",
+                        "title": "Disallow hostPorts Range (Alternate)"
+                    },
+                    {
+                        "path": "disallow-host-ports",
+                        "title": "Disallow hostPorts"
+                    },
+                    {
+                        "path": "disallow-host-process",
+                        "title": "Disallow hostProcess"
+                    },
+                    {
+                        "path": "disallow-privileged-containers",
+                        "title": "Disallow Privileged Containers"
+                    },
+                    {
+                        "path": "disallow-proc-mount",
+                        "title": "Disallow procMount"
+                    },
+                    {
+                        "path": "disallow-selinux",
+                        "title": "Disallow SELinux"
+                    },
+                    {
+                        "path": "restrict-apparmor-profiles",
+                        "title": "Restrict AppArmor"
+                    },
+                    {
+                        "path": "restrict-seccomp",
+                        "title": "Restrict Seccomp"
+                    },
+                    {
+                        "path": "restrict-sysctls",
+                        "title": "Restrict sysctls"
+                    }
+                ]
+            },
+            {
+                "name": "Restricted",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/main/pod-security/restricted",
+                "policies": [
+                    {
+                        "path": "disallow-capabilities-strict",
+                        "title": "Disallow Capabilities (Strict)"
+                    },
+                    {
+                        "path": "disallow-privilege-escalation",
+                        "title": "Disallow Privilege Escalation"
+                    },
+                    {
+                        "path": "require-run-as-non-root-user",
+                        "title": "Require Run As Non-Root User"
+                    },
+                    {
+                        "path": "require-run-as-nonroot",
+                        "title": "Require runAsNonRoot"
+                    },
+                    {
+                        "path": "restrict-seccomp-strict",
+                        "title": "Restrict Seccomp (Strict)"
+                    },
+                    {
+                        "path": "restrict-volume-types",
+                        "title": "Restrict Volume Types"
+                    }
+                ]
+            },
+            {
+                "name": "Subrule",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule",
+                "policies": [
+                    {
+                        "path": "podsecurity-subrule-baseline",
+                        "title": "Baseline Pod Security Standards"
+                    }
+                ]
+            },
+            {
+                "name": "Subrule Restricted",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule/restricted",
+                "policies": [
+                    {
+                        "path": "restricted-exclude-capabilities",
+                        "title": "Restricted Exclude Capabilities"
+                    },
+                    {
+                        "path": "estricted-exclude-seccomp",
+                        "title": "Restricted Exclude SECComp"
+                    },
+                    {
+                        "path": "restricted-latest",
+                        "title": "Restricted Pod Security Standards"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Custom Resources",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/main",
+        "subgroups": [
+            {
+                "name": "Cert Manager",
+                "policies": [
+                    {
+                        "path": "cert-manager/limit-dnsnames",
+                        "title": "Limit DNS names"
+                    },
+                    {
+                        "path": "cert-manager/limit-duration",
+                        "title": "Limit duration"
+                    },
+                    {
+                        "path": "cert-manager/restrict-issuer",
+                        "title": "Restrict issuer"
+                    }
+                ]
+            },
+            {
+                "name": "ArgoCD",
+                "policies": [
+                    {
+                        "path": "argo/appproject-clusterresourceblacklist",
+                        "title": "Cluster resource blacklist"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Other",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/main/other",
+        "policies": [
+            {
+                "path": "a/add-certificates-volume",
+                "title": "Add Certificates as a Volume"
+            },
+            {
+                "path": "a/add-default-resources",
+                "title": "Add Default Resources"
+            },
+            {
+                "path": "a/add-labels",
+                "title": "Add Labels"
+            },
+            {
+                "path": "a/allowed-annotations",
+                "title": "Allowed Annotations"
+            },
+            {
+                "path": "b-d/check-env-vars",
+                "title": "Check Environment Variables"
+            },
+            {
+                "path": "rec-req/require-base-image",
+                "title": "Check Image Base"
+            }
+        ]
+    }
+]

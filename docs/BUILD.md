@@ -4,7 +4,7 @@ This docs contains informations related to building the Playground
 
 ## Required
 
-* Requires Go >= v1.20
+* Requires Go >= v1.21
 * Requires NodeJS >= v18.0
 
 ## Makefile
