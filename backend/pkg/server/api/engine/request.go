@@ -5,7 +5,7 @@ import (
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2alpha1 "github.com/kyverno/kyverno/api/kyverno/v2alpha1"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource"
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/exception"
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
 	"k8s.io/api/admissionregistration/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
-	"github.com/kyverno/playground/backend/pkg/exception"
 	"github.com/kyverno/playground/backend/pkg/policy"
+	"github.com/kyverno/playground/backend/pkg/resource"
 )
 
 type EngineRequest struct {
@@ -58,7 +58,7 @@ func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstru
 }
 
 func (r *EngineRequest) LoadPolicyExceptions(resourceLoader loader.Loader) ([]*kyvernov2alpha1.PolicyException, error) {
-	return exception.Load(resourceLoader, []byte(r.PolicyExceptions))
+	return exception.Load([]byte(r.PolicyExceptions))
 }
 
 func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.ConfigMap, error) {
