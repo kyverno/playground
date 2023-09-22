@@ -137,6 +137,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2alpha1 > ./schemas/openapi/v3/apis/kyverno.io/v2alpha1.json
 	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1alpha1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1alpha1.json
+	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1beta1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1beta1.json
 	@$(KIND) delete cluster --name schema
 
 .PHONY: codegen-schema-json
@@ -188,13 +189,14 @@ build-frontend: ## Build frontend
 	@cp schemas/json/policy-kyverno-v2beta1.json frontend/src/schemas
 	@cp schemas/json/policyexception-kyverno-v2alpha1.json frontend/src/schemas
 	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1beta1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets
 build-backend-assets: build-frontend ## Build backend assets
 	@echo Building backend assets... >&2
 	@rm -rf backend/pkg/server/ui/dist && cp -r frontend/dist backend/pkg/server/ui/dist
-	@rm -rf backend/data/schemas && cp -r schemas/openapi/v3 backend/data/schemas
+	@rm -rf backend/data/schemas && mkdir -p backend/data/schemas/apis/kyverno.io && cp -r schemas/openapi/v3/apis/kyverno.io/ backend/data/schemas/apis/kyverno.io
 
 .PHONY: docker-build-backend-assets
 docker-build-backend-assets:
