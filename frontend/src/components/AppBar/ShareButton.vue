@@ -74,7 +74,7 @@ const { copy, copied, isSupported } = useClipboard({ source: url })
 const generate = (config: Config) => {
   const content = generateContent(config)
 
-  url.value = `${window.location.origin}/${router.resolve({ name: 'home', query: { content } }).href}`
+  url.value = `${window.location.origin}${window.location.pathname}${router.resolve({ name: 'home', query: { content } }).href}`
 }
 
 const share = () => {
