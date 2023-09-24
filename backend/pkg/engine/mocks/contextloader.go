@@ -7,7 +7,6 @@ import (
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	enginecontext "github.com/kyverno/kyverno/pkg/engine/context"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
-	"github.com/kyverno/kyverno/pkg/imageverifycache"
 )
 
 type withoutAPICalls struct {
@@ -25,7 +24,6 @@ func (cl withoutAPICalls) Load(
 	jp jmespath.Interface,
 	client engineapi.RawClient,
 	rclientFactory engineapi.RegistryClientFactory,
-	ivCache imageverifycache.Client,
 	contextEntries []kyvernov1.ContextEntry,
 	jsonContext enginecontext.Interface,
 ) error {
@@ -35,7 +33,7 @@ func (cl withoutAPICalls) Load(
 			contextEntriesWithoutAPICalls = append(contextEntriesWithoutAPICalls, entry)
 		}
 	}
-	return cl.next.Load(ctx, jp, client, rclientFactory, ivCache, contextEntriesWithoutAPICalls, jsonContext)
+	return cl.next.Load(ctx, jp, client, rclientFactory, contextEntriesWithoutAPICalls, jsonContext)
 }
 
 func WithCMCheck(resolver engineapi.ConfigmapResolver, next engineapi.ContextLoader) engineapi.ContextLoader {
@@ -55,7 +53,6 @@ func (cl withCMCheck) Load(
 	jp jmespath.Interface,
 	client engineapi.RawClient,
 	rclientFactory engineapi.RegistryClientFactory,
-	ivCache imageverifycache.Client,
 	contextEntries []kyvernov1.ContextEntry,
 	jsonContext enginecontext.Interface,
 ) error {
@@ -72,5 +69,5 @@ func (cl withCMCheck) Load(
 			continue
 		}
 	}
-	return cl.next.Load(ctx, jp, client, rclientFactory, ivCache, contextEntriesWithExistingCMs, jsonContext)
+	return cl.next.Load(ctx, jp, client, rclientFactory, contextEntriesWithExistingCMs, jsonContext)
 }
