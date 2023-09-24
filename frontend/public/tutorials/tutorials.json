@@ -311,6 +311,24 @@
         ]
     },
     {
+        "name": "Validating Admission Policies",
+        "url": "tutorials/validating-admission-policies",
+        "policies": [
+            {
+                "path": "check-deployment-replicas",
+                "title": "Check Deployment Replicas"
+            },
+            {
+                "path": "disallow-host-path",
+                "title": "Disallow hostPath"
+            },
+            {
+                "path": "disallow-host-namespaces",
+                "title": "Disallow  Host Namespaces"
+            }
+        ]
+    },
+    {
         "name": "Other",
         "url": "https://raw.githubusercontent.com/kyverno/policies/main/other",
         "policies": [
