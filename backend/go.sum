@@ -1041,8 +1041,8 @@ github.com/kyverno/go-jmespath v0.4.1-0.20230705123211-d067dc3d6613 h1:M0uOLuCAZ
 github.com/kyverno/go-jmespath v0.4.1-0.20230705123211-d067dc3d6613/go.mod h1:yzDHaKovQy16rjN4kFnjF+IdNoN4p1ndw+va6+B8zUU=
 github.com/kyverno/go-jmespath/internal/testify v1.5.2-0.20230630133209-945021c749d9 h1:lL311dF3a2aeNibJj8v+uhFU3XkvRHZmCtAdSPOrQYY=
 github.com/kyverno/go-jmespath/internal/testify v1.5.2-0.20230630133209-945021c749d9/go.mod h1:XRxUGHIiCy1WYma1CdfdO1WOhIe8dLPTENaZr5D1ex4=
-github.com/kyverno/kyverno v1.11.0-beta.2 h1:YnMpmwUbJS7RQh9dxtj2zb8+SUblCZ+D1grKcnBTv3o=
-github.com/kyverno/kyverno v1.11.0-beta.2/go.mod h1:xQfQwdPstbC//8ZSLz5ttZOLFMdsuGVgI7Y45DlYzBg=
+github.com/kyverno/kyverno v1.11.0-beta.3 h1:iPid3fnFXcIUyWlDoovWMCusZ3DF3Ir2Hbn6FOUQY5M=
+github.com/kyverno/kyverno v1.11.0-beta.3/go.mod h1:xQfQwdPstbC//8ZSLz5ttZOLFMdsuGVgI7Y45DlYzBg=
 github.com/ldez/gomoddirectives v0.2.1/go.mod h1:sGicqkRgBOg//JfpXwkB9Hj0X5RyJ7mlACM5B9f6Me4=
 github.com/ldez/tagliatelle v0.2.0/go.mod h1:8s6WJQwEYHbKZDsp/LjArytKOG8qaMrKQQ3mFukHs88=
 github.com/leodido/go-urn v1.2.0/go.mod h1:+8+nEpDfqqsY+g338gtMEUOtuK+4dEMhiQEgxpxOKII=
