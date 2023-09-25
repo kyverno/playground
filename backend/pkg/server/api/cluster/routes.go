@@ -50,17 +50,6 @@ func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster) error {
 		if err != nil {
 			return nil, err
 		}
-		// cleanup metadata
-		if meta, ok := resource.Object["metadata"]; ok {
-			delete(meta.(map[string]any), "managedFields")
-		}
-		// cleanup status
-		delete(resource.Object, "status")
-		// TODO: check
-		// spec.strategy.rollingUpdate: Invalid value: value provided for unknown field
-		if meta, ok := resource.Object["spec"]; ok {
-			delete(meta.(map[string]any), "strategy")
-		}
 		return resource.Object, err
 	}, http.StatusOK))
 	return nil
