@@ -1,7 +1,7 @@
 package models
 
 import (
-	kyvernov2alpha1 "github.com/kyverno/kyverno/api/kyverno/v2alpha1"
+	"github.com/kyverno/kyverno/api/kyverno/v2beta1"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -27,5 +27,5 @@ type RuleResponse struct {
 	// podSecurityChecks contains pod security checks (only if this is a pod security rule)
 	PodSecurityChecks *engineapi.PodSecurityChecks `json:"podSecurityChecks"`
 	// exception is the exception applied (if any)
-	Exception *kyvernov2alpha1.PolicyException `json:"exception"`
+	Exception *v2beta1.PolicyException `json:"exception"`
 }

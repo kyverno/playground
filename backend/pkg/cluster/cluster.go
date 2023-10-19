@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kyverno/kyverno/api/kyverno/v2alpha1"
+	"github.com/kyverno/kyverno/api/kyverno/v2beta1"
 	"github.com/kyverno/kyverno/pkg/auth/checker"
 	"github.com/kyverno/kyverno/pkg/client/clientset/versioned"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
@@ -36,7 +36,7 @@ type Cluster interface {
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
 	DClient(...unstructured.Unstructured) (dclient.Interface, error)
-	PolicyExceptionSelector(namespace string, exceptions ...*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector
+	PolicyExceptionSelector(namespace string, exceptions ...*v2beta1.PolicyException) engineapi.PolicyExceptionSelector
 	IsFake() bool
 }
 
@@ -139,7 +139,7 @@ func (c cluster) Get(ctx context.Context, apiVersion string, kind string, namesp
 	return c.dClient.GetResource(ctx, apiVersion, kind, namespace, name)
 }
 
-func (c cluster) PolicyExceptionSelector(namespace string, exceptions ...*v2alpha1.PolicyException) engineapi.PolicyExceptionSelector {
+func (c cluster) PolicyExceptionSelector(namespace string, exceptions ...*v2beta1.PolicyException) engineapi.PolicyExceptionSelector {
 	return NewPolicyExceptionSelector(namespace, c.kyvernoClient, exceptions...)
 }
 

@@ -58,7 +58,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, fmt.Errorf("unable to load config resources: %w", err)
 		}
-		exceptions, err := in.LoadPolicyExceptions(policyLoader)
+		exceptions, err := in.LoadPolicyExceptions()
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policy exceptions: %w", err)
 		}
