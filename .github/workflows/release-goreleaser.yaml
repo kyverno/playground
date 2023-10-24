@@ -17,7 +17,7 @@ jobs:
       digest: ${{ steps.digest.outputs.digest }}
     runs-on: ubuntu-latest
     steps:
-      - uses: jlumbroso/free-disk-space@f68fdb76e2ea636224182cfb7377ff9a1708f9b8 # v1.3.0
+      - uses: jlumbroso/free-disk-space@76866dbe54312617f00798d1762df7f43def6e5c # v1.2.0
         with:
           tool-cache: true
           android: true
@@ -26,7 +26,7 @@ jobs:
           large-packages: false
           swap-storage: false
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
         with:
           fetch-depth: 0
       - name: Fetch all tags
