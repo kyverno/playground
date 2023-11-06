@@ -10,7 +10,7 @@ require (
 	github.com/go-logr/logr v1.3.0
 	github.com/kyverno/kyverno v1.11.0-rc.4
 	github.com/loopfz/gadgeto v0.11.3
-	github.com/spf13/cobra v1.7.0
+	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
 	gomodules.xyz/jsonpatch/v2 v2.4.0
 	k8s.io/api v0.28.3
