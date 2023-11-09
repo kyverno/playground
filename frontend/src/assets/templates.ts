@@ -42,6 +42,8 @@ flags:
     enabled: false
   enableDeferredLoading:
     enabled: false
+  generateValidatingAdmissionPolicy:
+    enabled: false
   registry:
     allowInsecure: false
     pullSecrets: []

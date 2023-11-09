@@ -1,5 +1,5 @@
 {
-  "description": "ClusterCleanupPolicy defines rule for resource cleanup.",
+  "description": "CleanupPolicy defines a rule for resource cleanup.",
   "type": "object",
   "required": [
     "spec"
@@ -12,7 +12,7 @@
         "null"
       ],
       "enum": [
-        "kyverno.io/v2alpha1"
+        "kyverno.io/v2beta1"
       ]
     },
     "kind": {
@@ -22,7 +22,7 @@
         "null"
       ],
       "enum": [
-        "ClusterCleanupPolicy"
+        "CleanupPolicy"
       ]
     },
     "metadata": {
@@ -1933,8 +1933,8 @@
   "x-kubernetes-group-version-kind": [
     {
       "group": "kyverno.io",
-      "kind": "ClusterCleanupPolicy",
-      "version": "v2alpha1"
+      "kind": "CleanupPolicy",
+      "version": "v2beta1"
     }
   ],
   "$schema": "http://json-schema.org/schema#"

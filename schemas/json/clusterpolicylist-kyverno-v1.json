@@ -539,14 +539,14 @@
                                 ],
                                 "properties": {
                                   "allowInsecureRegistry": {
-                                    "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                    "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                     "type": [
                                       "boolean",
                                       "null"
                                     ]
                                   },
                                   "providers": {
-                                    "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                    "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                     "type": [
                                       "array",
                                       "null"
@@ -567,7 +567,7 @@
                                     }
                                   },
                                   "secrets": {
-                                    "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                    "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                     "type": [
                                       "array",
                                       "null"
@@ -1685,6 +1685,13 @@
                             "boolean",
                             "null"
                           ]
+                        },
+                        "uid": {
+                          "description": "UID specifies the resource uid.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       }
                     },
@@ -2799,14 +2806,14 @@
                                           ],
                                           "properties": {
                                             "allowInsecureRegistry": {
-                                              "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                              "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                               "type": [
                                                 "boolean",
                                                 "null"
                                               ]
                                             },
                                             "providers": {
-                                              "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                              "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                               "type": [
                                                 "array",
                                                 "null"
@@ -2827,7 +2834,7 @@
                                               }
                                             },
                                             "secrets": {
-                                              "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                              "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                               "type": [
                                                 "array",
                                                 "null"
@@ -3098,14 +3105,14 @@
                                           ],
                                           "properties": {
                                             "allowInsecureRegistry": {
-                                              "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                              "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                               "type": [
                                                 "boolean",
                                                 "null"
                                               ]
                                             },
                                             "providers": {
-                                              "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                              "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                               "type": [
                                                 "array",
                                                 "null"
@@ -3126,7 +3133,7 @@
                                               }
                                             },
                                             "secrets": {
-                                              "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                              "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                               "type": [
                                                 "array",
                                                 "null"
@@ -3211,6 +3218,13 @@
                               "preconditions": {
                                 "description": "Preconditions are used to determine if a policy rule should be applied by evaluating a set of conditions. The declaration can contain nested `any` or `all` statements. A direct list of conditions (without `any` or `all` statements is supported for backwards compatibility but will be deprecated in the next major release. See: https://kyverno.io/docs/writing-policies/preconditions/",
                                 "x-kubernetes-preserve-unknown-fields": true
+                              },
+                              "uid": {
+                                "description": "UID specifies the resource uid.",
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             }
                           }
@@ -3634,14 +3648,14 @@
                                           ],
                                           "properties": {
                                             "allowInsecureRegistry": {
-                                              "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                              "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                               "type": [
                                                 "boolean",
                                                 "null"
                                               ]
                                             },
                                             "providers": {
-                                              "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                              "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                               "type": [
                                                 "array",
                                                 "null"
@@ -3662,7 +3676,7 @@
                                               }
                                             },
                                             "secrets": {
-                                              "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                              "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                               "type": [
                                                 "array",
                                                 "null"
@@ -3825,46 +3839,46 @@
                                           }
                                         },
                                         "attestor": {
-                                          "description": "Attestor is a nested AttestorSet used to specify a more complex set of match authorities",
+                                          "description": "Attestor is a nested set of Attestor used to specify a more complex set of match authorities.",
                                           "x-kubernetes-preserve-unknown-fields": true
                                         },
                                         "certificates": {
-                                          "description": "Certificates specifies one or more certificates",
+                                          "description": "Certificates specifies one or more certificates.",
                                           "type": [
                                             "object",
                                             "null"
                                           ],
                                           "properties": {
                                             "cert": {
-                                              "description": "Certificate is an optional PEM encoded public certificate.",
+                                              "description": "Cert is an optional PEM-encoded public certificate.",
                                               "type": [
                                                 "string",
                                                 "null"
                                               ]
                                             },
                                             "certChain": {
-                                              "description": "CertificateChain is an optional PEM encoded set of certificates used to verify",
+                                              "description": "CertChain is an optional PEM encoded set of certificates used to verify.",
                                               "type": [
                                                 "string",
                                                 "null"
                                               ]
                                             },
                                             "ctlog": {
-                                              "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                              "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                               "type": [
                                                 "object",
                                                 "null"
                                               ],
                                               "properties": {
                                                 "ignoreSCT": {
-                                                  "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                  "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "pubkey": {
-                                                  "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                  "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                   "type": [
                                                     "string",
                                                     "null"
@@ -3883,21 +3897,21 @@
                                               ],
                                               "properties": {
                                                 "ignoreTlog": {
-                                                  "description": "IgnoreTlog skip tlog verification",
+                                                  "description": "IgnoreTlog skips transparency log verification.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "pubkey": {
-                                                  "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                  "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                   "type": [
                                                     "string",
                                                     "null"
                                                   ]
                                                 },
                                                 "url": {
-                                                  "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                  "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                   "type": "string"
                                                 }
                                               }
@@ -3925,21 +3939,21 @@
                                               }
                                             },
                                             "ctlog": {
-                                              "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                              "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                               "type": [
                                                 "object",
                                                 "null"
                                               ],
                                               "properties": {
                                                 "ignoreSCT": {
-                                                  "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                  "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "pubkey": {
-                                                  "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                  "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                   "type": [
                                                     "string",
                                                     "null"
@@ -3965,21 +3979,21 @@
                                               ],
                                               "properties": {
                                                 "ignoreTlog": {
-                                                  "description": "IgnoreTlog skip tlog verification",
+                                                  "description": "IgnoreTlog skips transparency log verification.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "pubkey": {
-                                                  "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                  "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                   "type": [
                                                     "string",
                                                     "null"
                                                   ]
                                                 },
                                                 "url": {
-                                                  "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                  "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                   "type": "string"
                                                 }
                                               }
@@ -3992,7 +4006,7 @@
                                               ]
                                             },
                                             "subject": {
-                                              "description": "Subject is the verified identity used for keyless signing, for example the email address",
+                                              "description": "Subject is the verified identity used for keyless signing, for example the email address.",
                                               "type": [
                                                 "string",
                                                 "null"
@@ -4001,28 +4015,28 @@
                                           }
                                         },
                                         "keys": {
-                                          "description": "Keys specifies one or more public keys",
+                                          "description": "Keys specifies one or more public keys.",
                                           "type": [
                                             "object",
                                             "null"
                                           ],
                                           "properties": {
                                             "ctlog": {
-                                              "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                              "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                               "type": [
                                                 "object",
                                                 "null"
                                               ],
                                               "properties": {
                                                 "ignoreSCT": {
-                                                  "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                  "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "pubkey": {
-                                                  "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                  "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                   "type": [
                                                     "string",
                                                     "null"
@@ -4055,21 +4069,21 @@
                                               ],
                                               "properties": {
                                                 "ignoreTlog": {
-                                                  "description": "IgnoreTlog skip tlog verification",
+                                                  "description": "IgnoreTlog skips transparency log verification.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "pubkey": {
-                                                  "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                  "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                   "type": [
                                                     "string",
                                                     "null"
                                                   ]
                                                 },
                                                 "url": {
-                                                  "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                  "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                   "type": "string"
                                                 }
                                               }
@@ -4096,7 +4110,7 @@
                                               }
                                             },
                                             "signatureAlgorithm": {
-                                              "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512",
+                                              "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512.",
                                               "type": [
                                                 "string",
                                                 "null"
@@ -4376,7 +4390,7 @@
                               ],
                               "properties": {
                                 "attestors": {
-                                  "description": "Attestors specify the required attestors (i.e. authorities)",
+                                  "description": "Attestors specify the required attestors (i.e. authorities).",
                                   "type": [
                                     "array",
                                     "null"
@@ -4421,46 +4435,46 @@
                                               }
                                             },
                                             "attestor": {
-                                              "description": "Attestor is a nested AttestorSet used to specify a more complex set of match authorities",
+                                              "description": "Attestor is a nested set of Attestor used to specify a more complex set of match authorities.",
                                               "x-kubernetes-preserve-unknown-fields": true
                                             },
                                             "certificates": {
-                                              "description": "Certificates specifies one or more certificates",
+                                              "description": "Certificates specifies one or more certificates.",
                                               "type": [
                                                 "object",
                                                 "null"
                                               ],
                                               "properties": {
                                                 "cert": {
-                                                  "description": "Certificate is an optional PEM encoded public certificate.",
+                                                  "description": "Cert is an optional PEM-encoded public certificate.",
                                                   "type": [
                                                     "string",
                                                     "null"
                                                   ]
                                                 },
                                                 "certChain": {
-                                                  "description": "CertificateChain is an optional PEM encoded set of certificates used to verify",
+                                                  "description": "CertChain is an optional PEM encoded set of certificates used to verify.",
                                                   "type": [
                                                     "string",
                                                     "null"
                                                   ]
                                                 },
                                                 "ctlog": {
-                                                  "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                  "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                   "type": [
                                                     "object",
                                                     "null"
                                                   ],
                                                   "properties": {
                                                     "ignoreSCT": {
-                                                      "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                      "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                      "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                       "type": [
                                                         "string",
                                                         "null"
@@ -4479,21 +4493,21 @@
                                                   ],
                                                   "properties": {
                                                     "ignoreTlog": {
-                                                      "description": "IgnoreTlog skip tlog verification",
+                                                      "description": "IgnoreTlog skips transparency log verification.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                      "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                       "type": [
                                                         "string",
                                                         "null"
                                                       ]
                                                     },
                                                     "url": {
-                                                      "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                      "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                       "type": "string"
                                                     }
                                                   }
@@ -4521,21 +4535,21 @@
                                                   }
                                                 },
                                                 "ctlog": {
-                                                  "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                  "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                   "type": [
                                                     "object",
                                                     "null"
                                                   ],
                                                   "properties": {
                                                     "ignoreSCT": {
-                                                      "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                      "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                      "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                       "type": [
                                                         "string",
                                                         "null"
@@ -4561,21 +4575,21 @@
                                                   ],
                                                   "properties": {
                                                     "ignoreTlog": {
-                                                      "description": "IgnoreTlog skip tlog verification",
+                                                      "description": "IgnoreTlog skips transparency log verification.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                      "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                       "type": [
                                                         "string",
                                                         "null"
                                                       ]
                                                     },
                                                     "url": {
-                                                      "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                      "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                       "type": "string"
                                                     }
                                                   }
@@ -4588,7 +4602,7 @@
                                                   ]
                                                 },
                                                 "subject": {
-                                                  "description": "Subject is the verified identity used for keyless signing, for example the email address",
+                                                  "description": "Subject is the verified identity used for keyless signing, for example the email address.",
                                                   "type": [
                                                     "string",
                                                     "null"
@@ -4597,28 +4611,28 @@
                                               }
                                             },
                                             "keys": {
-                                              "description": "Keys specifies one or more public keys",
+                                              "description": "Keys specifies one or more public keys.",
                                               "type": [
                                                 "object",
                                                 "null"
                                               ],
                                               "properties": {
                                                 "ctlog": {
-                                                  "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                  "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                   "type": [
                                                     "object",
                                                     "null"
                                                   ],
                                                   "properties": {
                                                     "ignoreSCT": {
-                                                      "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                      "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                      "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                       "type": [
                                                         "string",
                                                         "null"
@@ -4651,21 +4665,21 @@
                                                   ],
                                                   "properties": {
                                                     "ignoreTlog": {
-                                                      "description": "IgnoreTlog skip tlog verification",
+                                                      "description": "IgnoreTlog skips transparency log verification.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                      "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                       "type": [
                                                         "string",
                                                         "null"
                                                       ]
                                                     },
                                                     "url": {
-                                                      "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                      "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                       "type": "string"
                                                     }
                                                   }
@@ -4692,7 +4706,7 @@
                                                   }
                                                 },
                                                 "signatureAlgorithm": {
-                                                  "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512",
+                                                  "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512.",
                                                   "type": [
                                                     "string",
                                                     "null"
@@ -4904,46 +4918,46 @@
                                         }
                                       },
                                       "attestor": {
-                                        "description": "Attestor is a nested AttestorSet used to specify a more complex set of match authorities",
+                                        "description": "Attestor is a nested set of Attestor used to specify a more complex set of match authorities.",
                                         "x-kubernetes-preserve-unknown-fields": true
                                       },
                                       "certificates": {
-                                        "description": "Certificates specifies one or more certificates",
+                                        "description": "Certificates specifies one or more certificates.",
                                         "type": [
                                           "object",
                                           "null"
                                         ],
                                         "properties": {
                                           "cert": {
-                                            "description": "Certificate is an optional PEM encoded public certificate.",
+                                            "description": "Cert is an optional PEM-encoded public certificate.",
                                             "type": [
                                               "string",
                                               "null"
                                             ]
                                           },
                                           "certChain": {
-                                            "description": "CertificateChain is an optional PEM encoded set of certificates used to verify",
+                                            "description": "CertChain is an optional PEM encoded set of certificates used to verify.",
                                             "type": [
                                               "string",
                                               "null"
                                             ]
                                           },
                                           "ctlog": {
-                                            "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                            "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                             "type": [
                                               "object",
                                               "null"
                                             ],
                                             "properties": {
                                               "ignoreSCT": {
-                                                "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                 "type": [
                                                   "boolean",
                                                   "null"
                                                 ]
                                               },
                                               "pubkey": {
-                                                "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                 "type": [
                                                   "string",
                                                   "null"
@@ -4962,21 +4976,21 @@
                                             ],
                                             "properties": {
                                               "ignoreTlog": {
-                                                "description": "IgnoreTlog skip tlog verification",
+                                                "description": "IgnoreTlog skips transparency log verification.",
                                                 "type": [
                                                   "boolean",
                                                   "null"
                                                 ]
                                               },
                                               "pubkey": {
-                                                "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                 "type": [
                                                   "string",
                                                   "null"
                                                 ]
                                               },
                                               "url": {
-                                                "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                 "type": "string"
                                               }
                                             }
@@ -5004,21 +5018,21 @@
                                             }
                                           },
                                           "ctlog": {
-                                            "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                            "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                             "type": [
                                               "object",
                                               "null"
                                             ],
                                             "properties": {
                                               "ignoreSCT": {
-                                                "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                 "type": [
                                                   "boolean",
                                                   "null"
                                                 ]
                                               },
                                               "pubkey": {
-                                                "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                 "type": [
                                                   "string",
                                                   "null"
@@ -5044,21 +5058,21 @@
                                             ],
                                             "properties": {
                                               "ignoreTlog": {
-                                                "description": "IgnoreTlog skip tlog verification",
+                                                "description": "IgnoreTlog skips transparency log verification.",
                                                 "type": [
                                                   "boolean",
                                                   "null"
                                                 ]
                                               },
                                               "pubkey": {
-                                                "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                 "type": [
                                                   "string",
                                                   "null"
                                                 ]
                                               },
                                               "url": {
-                                                "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                 "type": "string"
                                               }
                                             }
@@ -5071,7 +5085,7 @@
                                             ]
                                           },
                                           "subject": {
-                                            "description": "Subject is the verified identity used for keyless signing, for example the email address",
+                                            "description": "Subject is the verified identity used for keyless signing, for example the email address.",
                                             "type": [
                                               "string",
                                               "null"
@@ -5080,28 +5094,28 @@
                                         }
                                       },
                                       "keys": {
-                                        "description": "Keys specifies one or more public keys",
+                                        "description": "Keys specifies one or more public keys.",
                                         "type": [
                                           "object",
                                           "null"
                                         ],
                                         "properties": {
                                           "ctlog": {
-                                            "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                            "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                             "type": [
                                               "object",
                                               "null"
                                             ],
                                             "properties": {
                                               "ignoreSCT": {
-                                                "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                 "type": [
                                                   "boolean",
                                                   "null"
                                                 ]
                                               },
                                               "pubkey": {
-                                                "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                 "type": [
                                                   "string",
                                                   "null"
@@ -5134,21 +5148,21 @@
                                             ],
                                             "properties": {
                                               "ignoreTlog": {
-                                                "description": "IgnoreTlog skip tlog verification",
+                                                "description": "IgnoreTlog skips transparency log verification.",
                                                 "type": [
                                                   "boolean",
                                                   "null"
                                                 ]
                                               },
                                               "pubkey": {
-                                                "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                 "type": [
                                                   "string",
                                                   "null"
                                                 ]
                                               },
                                               "url": {
-                                                "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                 "type": "string"
                                               }
                                             }
@@ -5175,7 +5189,7 @@
                                             }
                                           },
                                           "signatureAlgorithm": {
-                                            "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512",
+                                            "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512.",
                                             "type": [
                                               "string",
                                               "null"
@@ -5217,21 +5231,21 @@
                             }
                           },
                           "imageRegistryCredentials": {
-                            "description": "ImageRegistryCredentials provides credentials that will be used for authentication with registry",
+                            "description": "ImageRegistryCredentials provides credentials that will be used for authentication with registry.",
                             "type": [
                               "object",
                               "null"
                             ],
                             "properties": {
                               "allowInsecureRegistry": {
-                                "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                 "type": [
                                   "boolean",
                                   "null"
                                 ]
                               },
                               "providers": {
-                                "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                 "type": [
                                   "array",
                                   "null"
@@ -5252,7 +5266,7 @@
                                 }
                               },
                               "secrets": {
-                                "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                 "type": [
                                   "array",
                                   "null"
@@ -5327,7 +5341,7 @@
                             ]
                           },
                           "useCache": {
-                            "description": "UseCache enables caching of image verify responses for this rule",
+                            "description": "UseCache enables caching of image verify responses for this rule.",
                             "type": [
                               "boolean",
                               "null"
@@ -5687,14 +5701,14 @@
                                     ],
                                     "properties": {
                                       "allowInsecureRegistry": {
-                                        "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                        "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                         "type": [
                                           "boolean",
                                           "null"
                                         ]
                                       },
                                       "providers": {
-                                        "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                        "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                         "type": [
                                           "array",
                                           "null"
@@ -5715,7 +5729,7 @@
                                         }
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                         "type": [
                                           "array",
                                           "null"
@@ -6833,6 +6847,13 @@
                                 "boolean",
                                 "null"
                               ]
+                            },
+                            "uid": {
+                              "description": "UID specifies the resource uid.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
                             }
                           }
                         },
@@ -7947,14 +7968,14 @@
                                               ],
                                               "properties": {
                                                 "allowInsecureRegistry": {
-                                                  "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                                  "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "providers": {
-                                                  "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                                  "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                                   "type": [
                                                     "array",
                                                     "null"
@@ -7975,7 +7996,7 @@
                                                   }
                                                 },
                                                 "secrets": {
-                                                  "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                                  "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                                   "type": [
                                                     "array",
                                                     "null"
@@ -8246,14 +8267,14 @@
                                               ],
                                               "properties": {
                                                 "allowInsecureRegistry": {
-                                                  "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                                  "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "providers": {
-                                                  "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                                  "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                                   "type": [
                                                     "array",
                                                     "null"
@@ -8274,7 +8295,7 @@
                                                   }
                                                 },
                                                 "secrets": {
-                                                  "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                                  "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                                   "type": [
                                                     "array",
                                                     "null"
@@ -8359,6 +8380,13 @@
                                   "preconditions": {
                                     "description": "Preconditions are used to determine if a policy rule should be applied by evaluating a set of conditions. The declaration can contain nested `any` or `all` statements. A direct list of conditions (without `any` or `all` statements is supported for backwards compatibility but will be deprecated in the next major release. See: https://kyverno.io/docs/writing-policies/preconditions/",
                                     "x-kubernetes-preserve-unknown-fields": true
+                                  },
+                                  "uid": {
+                                    "description": "UID specifies the resource uid.",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
                                   }
                                 }
                               }
@@ -8782,14 +8810,14 @@
                                               ],
                                               "properties": {
                                                 "allowInsecureRegistry": {
-                                                  "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                                  "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                                   "type": [
                                                     "boolean",
                                                     "null"
                                                   ]
                                                 },
                                                 "providers": {
-                                                  "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                                  "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                                   "type": [
                                                     "array",
                                                     "null"
@@ -8810,7 +8838,7 @@
                                                   }
                                                 },
                                                 "secrets": {
-                                                  "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                                  "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                                   "type": [
                                                     "array",
                                                     "null"
@@ -8973,46 +9001,46 @@
                                               }
                                             },
                                             "attestor": {
-                                              "description": "Attestor is a nested AttestorSet used to specify a more complex set of match authorities",
+                                              "description": "Attestor is a nested set of Attestor used to specify a more complex set of match authorities.",
                                               "x-kubernetes-preserve-unknown-fields": true
                                             },
                                             "certificates": {
-                                              "description": "Certificates specifies one or more certificates",
+                                              "description": "Certificates specifies one or more certificates.",
                                               "type": [
                                                 "object",
                                                 "null"
                                               ],
                                               "properties": {
                                                 "cert": {
-                                                  "description": "Certificate is an optional PEM encoded public certificate.",
+                                                  "description": "Cert is an optional PEM-encoded public certificate.",
                                                   "type": [
                                                     "string",
                                                     "null"
                                                   ]
                                                 },
                                                 "certChain": {
-                                                  "description": "CertificateChain is an optional PEM encoded set of certificates used to verify",
+                                                  "description": "CertChain is an optional PEM encoded set of certificates used to verify.",
                                                   "type": [
                                                     "string",
                                                     "null"
                                                   ]
                                                 },
                                                 "ctlog": {
-                                                  "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                  "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                   "type": [
                                                     "object",
                                                     "null"
                                                   ],
                                                   "properties": {
                                                     "ignoreSCT": {
-                                                      "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                      "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                      "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                       "type": [
                                                         "string",
                                                         "null"
@@ -9031,21 +9059,21 @@
                                                   ],
                                                   "properties": {
                                                     "ignoreTlog": {
-                                                      "description": "IgnoreTlog skip tlog verification",
+                                                      "description": "IgnoreTlog skips transparency log verification.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                      "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                       "type": [
                                                         "string",
                                                         "null"
                                                       ]
                                                     },
                                                     "url": {
-                                                      "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                      "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                       "type": "string"
                                                     }
                                                   }
@@ -9073,21 +9101,21 @@
                                                   }
                                                 },
                                                 "ctlog": {
-                                                  "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                  "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                   "type": [
                                                     "object",
                                                     "null"
                                                   ],
                                                   "properties": {
                                                     "ignoreSCT": {
-                                                      "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                      "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                      "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                       "type": [
                                                         "string",
                                                         "null"
@@ -9113,21 +9141,21 @@
                                                   ],
                                                   "properties": {
                                                     "ignoreTlog": {
-                                                      "description": "IgnoreTlog skip tlog verification",
+                                                      "description": "IgnoreTlog skips transparency log verification.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                      "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                       "type": [
                                                         "string",
                                                         "null"
                                                       ]
                                                     },
                                                     "url": {
-                                                      "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                      "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                       "type": "string"
                                                     }
                                                   }
@@ -9140,7 +9168,7 @@
                                                   ]
                                                 },
                                                 "subject": {
-                                                  "description": "Subject is the verified identity used for keyless signing, for example the email address",
+                                                  "description": "Subject is the verified identity used for keyless signing, for example the email address.",
                                                   "type": [
                                                     "string",
                                                     "null"
@@ -9149,28 +9177,28 @@
                                               }
                                             },
                                             "keys": {
-                                              "description": "Keys specifies one or more public keys",
+                                              "description": "Keys specifies one or more public keys.",
                                               "type": [
                                                 "object",
                                                 "null"
                                               ],
                                               "properties": {
                                                 "ctlog": {
-                                                  "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                  "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                   "type": [
                                                     "object",
                                                     "null"
                                                   ],
                                                   "properties": {
                                                     "ignoreSCT": {
-                                                      "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                      "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                      "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                       "type": [
                                                         "string",
                                                         "null"
@@ -9203,21 +9231,21 @@
                                                   ],
                                                   "properties": {
                                                     "ignoreTlog": {
-                                                      "description": "IgnoreTlog skip tlog verification",
+                                                      "description": "IgnoreTlog skips transparency log verification.",
                                                       "type": [
                                                         "boolean",
                                                         "null"
                                                       ]
                                                     },
                                                     "pubkey": {
-                                                      "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                      "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                       "type": [
                                                         "string",
                                                         "null"
                                                       ]
                                                     },
                                                     "url": {
-                                                      "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                      "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                       "type": "string"
                                                     }
                                                   }
@@ -9244,7 +9272,7 @@
                                                   }
                                                 },
                                                 "signatureAlgorithm": {
-                                                  "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512",
+                                                  "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512.",
                                                   "type": [
                                                     "string",
                                                     "null"
@@ -9524,7 +9552,7 @@
                                   ],
                                   "properties": {
                                     "attestors": {
-                                      "description": "Attestors specify the required attestors (i.e. authorities)",
+                                      "description": "Attestors specify the required attestors (i.e. authorities).",
                                       "type": [
                                         "array",
                                         "null"
@@ -9569,46 +9597,46 @@
                                                   }
                                                 },
                                                 "attestor": {
-                                                  "description": "Attestor is a nested AttestorSet used to specify a more complex set of match authorities",
+                                                  "description": "Attestor is a nested set of Attestor used to specify a more complex set of match authorities.",
                                                   "x-kubernetes-preserve-unknown-fields": true
                                                 },
                                                 "certificates": {
-                                                  "description": "Certificates specifies one or more certificates",
+                                                  "description": "Certificates specifies one or more certificates.",
                                                   "type": [
                                                     "object",
                                                     "null"
                                                   ],
                                                   "properties": {
                                                     "cert": {
-                                                      "description": "Certificate is an optional PEM encoded public certificate.",
+                                                      "description": "Cert is an optional PEM-encoded public certificate.",
                                                       "type": [
                                                         "string",
                                                         "null"
                                                       ]
                                                     },
                                                     "certChain": {
-                                                      "description": "CertificateChain is an optional PEM encoded set of certificates used to verify",
+                                                      "description": "CertChain is an optional PEM encoded set of certificates used to verify.",
                                                       "type": [
                                                         "string",
                                                         "null"
                                                       ]
                                                     },
                                                     "ctlog": {
-                                                      "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                      "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                       "type": [
                                                         "object",
                                                         "null"
                                                       ],
                                                       "properties": {
                                                         "ignoreSCT": {
-                                                          "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                          "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                           "type": [
                                                             "boolean",
                                                             "null"
                                                           ]
                                                         },
                                                         "pubkey": {
-                                                          "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                          "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                           "type": [
                                                             "string",
                                                             "null"
@@ -9627,21 +9655,21 @@
                                                       ],
                                                       "properties": {
                                                         "ignoreTlog": {
-                                                          "description": "IgnoreTlog skip tlog verification",
+                                                          "description": "IgnoreTlog skips transparency log verification.",
                                                           "type": [
                                                             "boolean",
                                                             "null"
                                                           ]
                                                         },
                                                         "pubkey": {
-                                                          "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                          "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                           "type": [
                                                             "string",
                                                             "null"
                                                           ]
                                                         },
                                                         "url": {
-                                                          "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                          "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                           "type": "string"
                                                         }
                                                       }
@@ -9669,21 +9697,21 @@
                                                       }
                                                     },
                                                     "ctlog": {
-                                                      "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                      "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                       "type": [
                                                         "object",
                                                         "null"
                                                       ],
                                                       "properties": {
                                                         "ignoreSCT": {
-                                                          "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                          "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                           "type": [
                                                             "boolean",
                                                             "null"
                                                           ]
                                                         },
                                                         "pubkey": {
-                                                          "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                          "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                           "type": [
                                                             "string",
                                                             "null"
@@ -9709,21 +9737,21 @@
                                                       ],
                                                       "properties": {
                                                         "ignoreTlog": {
-                                                          "description": "IgnoreTlog skip tlog verification",
+                                                          "description": "IgnoreTlog skips transparency log verification.",
                                                           "type": [
                                                             "boolean",
                                                             "null"
                                                           ]
                                                         },
                                                         "pubkey": {
-                                                          "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                          "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                           "type": [
                                                             "string",
                                                             "null"
                                                           ]
                                                         },
                                                         "url": {
-                                                          "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                          "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                           "type": "string"
                                                         }
                                                       }
@@ -9736,7 +9764,7 @@
                                                       ]
                                                     },
                                                     "subject": {
-                                                      "description": "Subject is the verified identity used for keyless signing, for example the email address",
+                                                      "description": "Subject is the verified identity used for keyless signing, for example the email address.",
                                                       "type": [
                                                         "string",
                                                         "null"
@@ -9745,28 +9773,28 @@
                                                   }
                                                 },
                                                 "keys": {
-                                                  "description": "Keys specifies one or more public keys",
+                                                  "description": "Keys specifies one or more public keys.",
                                                   "type": [
                                                     "object",
                                                     "null"
                                                   ],
                                                   "properties": {
                                                     "ctlog": {
-                                                      "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                      "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                       "type": [
                                                         "object",
                                                         "null"
                                                       ],
                                                       "properties": {
                                                         "ignoreSCT": {
-                                                          "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                          "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                           "type": [
                                                             "boolean",
                                                             "null"
                                                           ]
                                                         },
                                                         "pubkey": {
-                                                          "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                          "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                           "type": [
                                                             "string",
                                                             "null"
@@ -9799,21 +9827,21 @@
                                                       ],
                                                       "properties": {
                                                         "ignoreTlog": {
-                                                          "description": "IgnoreTlog skip tlog verification",
+                                                          "description": "IgnoreTlog skips transparency log verification.",
                                                           "type": [
                                                             "boolean",
                                                             "null"
                                                           ]
                                                         },
                                                         "pubkey": {
-                                                          "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                          "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                           "type": [
                                                             "string",
                                                             "null"
                                                           ]
                                                         },
                                                         "url": {
-                                                          "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                          "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                           "type": "string"
                                                         }
                                                       }
@@ -9840,7 +9868,7 @@
                                                       }
                                                     },
                                                     "signatureAlgorithm": {
-                                                      "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512",
+                                                      "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512.",
                                                       "type": [
                                                         "string",
                                                         "null"
@@ -10052,46 +10080,46 @@
                                             }
                                           },
                                           "attestor": {
-                                            "description": "Attestor is a nested AttestorSet used to specify a more complex set of match authorities",
+                                            "description": "Attestor is a nested set of Attestor used to specify a more complex set of match authorities.",
                                             "x-kubernetes-preserve-unknown-fields": true
                                           },
                                           "certificates": {
-                                            "description": "Certificates specifies one or more certificates",
+                                            "description": "Certificates specifies one or more certificates.",
                                             "type": [
                                               "object",
                                               "null"
                                             ],
                                             "properties": {
                                               "cert": {
-                                                "description": "Certificate is an optional PEM encoded public certificate.",
+                                                "description": "Cert is an optional PEM-encoded public certificate.",
                                                 "type": [
                                                   "string",
                                                   "null"
                                                 ]
                                               },
                                               "certChain": {
-                                                "description": "CertificateChain is an optional PEM encoded set of certificates used to verify",
+                                                "description": "CertChain is an optional PEM encoded set of certificates used to verify.",
                                                 "type": [
                                                   "string",
                                                   "null"
                                                 ]
                                               },
                                               "ctlog": {
-                                                "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                 "type": [
                                                   "object",
                                                   "null"
                                                 ],
                                                 "properties": {
                                                   "ignoreSCT": {
-                                                    "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                    "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                     "type": [
                                                       "boolean",
                                                       "null"
                                                     ]
                                                   },
                                                   "pubkey": {
-                                                    "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                    "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                     "type": [
                                                       "string",
                                                       "null"
@@ -10110,21 +10138,21 @@
                                                 ],
                                                 "properties": {
                                                   "ignoreTlog": {
-                                                    "description": "IgnoreTlog skip tlog verification",
+                                                    "description": "IgnoreTlog skips transparency log verification.",
                                                     "type": [
                                                       "boolean",
                                                       "null"
                                                     ]
                                                   },
                                                   "pubkey": {
-                                                    "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                    "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                     "type": [
                                                       "string",
                                                       "null"
                                                     ]
                                                   },
                                                   "url": {
-                                                    "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                    "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                     "type": "string"
                                                   }
                                                 }
@@ -10152,21 +10180,21 @@
                                                 }
                                               },
                                               "ctlog": {
-                                                "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                 "type": [
                                                   "object",
                                                   "null"
                                                 ],
                                                 "properties": {
                                                   "ignoreSCT": {
-                                                    "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                    "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                     "type": [
                                                       "boolean",
                                                       "null"
                                                     ]
                                                   },
                                                   "pubkey": {
-                                                    "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                    "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                     "type": [
                                                       "string",
                                                       "null"
@@ -10192,21 +10220,21 @@
                                                 ],
                                                 "properties": {
                                                   "ignoreTlog": {
-                                                    "description": "IgnoreTlog skip tlog verification",
+                                                    "description": "IgnoreTlog skips transparency log verification.",
                                                     "type": [
                                                       "boolean",
                                                       "null"
                                                     ]
                                                   },
                                                   "pubkey": {
-                                                    "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                    "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                     "type": [
                                                       "string",
                                                       "null"
                                                     ]
                                                   },
                                                   "url": {
-                                                    "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                    "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                     "type": "string"
                                                   }
                                                 }
@@ -10219,7 +10247,7 @@
                                                 ]
                                               },
                                               "subject": {
-                                                "description": "Subject is the verified identity used for keyless signing, for example the email address",
+                                                "description": "Subject is the verified identity used for keyless signing, for example the email address.",
                                                 "type": [
                                                   "string",
                                                   "null"
@@ -10228,28 +10256,28 @@
                                             }
                                           },
                                           "keys": {
-                                            "description": "Keys specifies one or more public keys",
+                                            "description": "Keys specifies one or more public keys.",
                                             "type": [
                                               "object",
                                               "null"
                                             ],
                                             "properties": {
                                               "ctlog": {
-                                                "description": "CTLog provides configuration for validation of SCTs. If the value is nil, default ctlog public key is used",
+                                                "description": "CTLog (certificate timestamp log) provides a configuration for validation of Signed Certificate Timestamps (SCTs). If the value is unset, the default behavior by Cosign is used.",
                                                 "type": [
                                                   "object",
                                                   "null"
                                                 ],
                                                 "properties": {
                                                   "ignoreSCT": {
-                                                    "description": "IgnoreSCT requires that a certificate contain an embedded SCT during verification.",
+                                                    "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate timestamp. Default is false. Set to true if this was opted out during signing.",
                                                     "type": [
                                                       "boolean",
                                                       "null"
                                                     ]
                                                   },
                                                   "pubkey": {
-                                                    "description": "CTLogPubKey, if set, is used to validate SCTs against those keys.",
+                                                    "description": "PubKey, if set, is used to validate SCTs against a custom source.",
                                                     "type": [
                                                       "string",
                                                       "null"
@@ -10282,21 +10310,21 @@
                                                 ],
                                                 "properties": {
                                                   "ignoreTlog": {
-                                                    "description": "IgnoreTlog skip tlog verification",
+                                                    "description": "IgnoreTlog skips transparency log verification.",
                                                     "type": [
                                                       "boolean",
                                                       "null"
                                                     ]
                                                   },
                                                   "pubkey": {
-                                                    "description": "RekorPubKey is an optional PEM encoded public key to use for a custom Rekor. If set, is used to validate signatures on log entries from Rekor.",
+                                                    "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor. If set, this will be used to validate transparency log signatures from a custom Rekor.",
                                                     "type": [
                                                       "string",
                                                       "null"
                                                     ]
                                                   },
                                                   "url": {
-                                                    "description": "URL is the address of the transparency log. Defaults to the public log https://rekor.sigstore.dev.",
+                                                    "description": "URL is the address of the transparency log. Defaults to the public Rekor log instance https://rekor.sigstore.dev.",
                                                     "type": "string"
                                                   }
                                                 }
@@ -10323,7 +10351,7 @@
                                                 }
                                               },
                                               "signatureAlgorithm": {
-                                                "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512",
+                                                "description": "Specify signature algorithm for public keys. Supported values are sha256 and sha512.",
                                                 "type": [
                                                   "string",
                                                   "null"
@@ -10365,21 +10393,21 @@
                                 }
                               },
                               "imageRegistryCredentials": {
-                                "description": "ImageRegistryCredentials provides credentials that will be used for authentication with registry",
+                                "description": "ImageRegistryCredentials provides credentials that will be used for authentication with registry.",
                                 "type": [
                                   "object",
                                   "null"
                                 ],
                                 "properties": {
                                   "allowInsecureRegistry": {
-                                    "description": "AllowInsecureRegistry allows insecure access to a registry",
+                                    "description": "AllowInsecureRegistry allows insecure access to a registry.",
                                     "type": [
                                       "boolean",
                                       "null"
                                     ]
                                   },
                                   "providers": {
-                                    "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided It can be of one of these values: AWS, ACR, GCP, GHCR",
+                                    "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided. It can be of one of these values: default,google,azure,amazon,github.",
                                     "type": [
                                       "array",
                                       "null"
@@ -10400,7 +10428,7 @@
                                     }
                                   },
                                   "secrets": {
-                                    "description": "Secrets specifies a list of secrets that are provided for credentials Secrets must live in the Kyverno namespace",
+                                    "description": "Secrets specifies a list of secrets that are provided for credentials. Secrets must live in the Kyverno namespace.",
                                     "type": [
                                       "array",
                                       "null"
@@ -10475,7 +10503,7 @@
                                 ]
                               },
                               "useCache": {
-                                "description": "UseCache enables caching of image verify responses for this rule",
+                                "description": "UseCache enables caching of image verify responses for this rule.",
                                 "type": [
                                   "boolean",
                                   "null"
