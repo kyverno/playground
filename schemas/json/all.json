@@ -1654,6 +1654,18 @@
       "$ref": "_definitions.json#/definitions/io.kyverno.v2alpha1.PolicyExceptionList"
     },
     {
+      "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.CleanupPolicy"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.CleanupPolicyList"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.ClusterCleanupPolicy"
+    },
+    {
+      "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.ClusterCleanupPolicyList"
+    },
+    {
       "$ref": "_definitions.json#/definitions/io.kyverno.v2beta1.ClusterPolicy"
     },
     {

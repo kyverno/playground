@@ -1,5 +1,5 @@
 {
-  "description": "CleanupPolicyList is a list of CleanupPolicy",
+  "description": "ClusterCleanupPolicyList is a list of ClusterCleanupPolicy",
   "type": "object",
   "required": [
     "items"
@@ -12,17 +12,17 @@
         "null"
       ],
       "enum": [
-        "kyverno.io/v2alpha1"
+        "kyverno.io/v2beta1"
       ]
     },
     "items": {
-      "description": "List of cleanuppolicies. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md",
+      "description": "List of clustercleanuppolicies. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md",
       "type": [
         "array",
         "null"
       ],
       "items": {
-        "description": "CleanupPolicy defines a rule for resource cleanup.",
+        "description": "ClusterCleanupPolicy defines rule for resource cleanup.",
         "type": [
           "object",
           "null"
@@ -38,7 +38,7 @@
               "null"
             ],
             "enum": [
-              "kyverno.io/v2alpha1"
+              "kyverno.io/v2beta1"
             ]
           },
           "kind": {
@@ -48,7 +48,7 @@
               "null"
             ],
             "enum": [
-              "CleanupPolicy"
+              "ClusterCleanupPolicy"
             ]
           },
           "metadata": {
@@ -1956,8 +1956,8 @@
         "x-kubernetes-group-version-kind": [
           {
             "group": "kyverno.io",
-            "kind": "CleanupPolicy",
-            "version": "v2alpha1"
+            "kind": "ClusterCleanupPolicy",
+            "version": "v2beta1"
           }
         ]
       }
@@ -1969,7 +1969,7 @@
         "null"
       ],
       "enum": [
-        "CleanupPolicyList"
+        "ClusterCleanupPolicyList"
       ]
     },
     "metadata": {
@@ -2014,8 +2014,8 @@
   "x-kubernetes-group-version-kind": [
     {
       "group": "kyverno.io",
-      "kind": "CleanupPolicyList",
-      "version": "v2alpha1"
+      "kind": "ClusterCleanupPolicyList",
+      "version": "v2beta1"
     }
   ],
   "$schema": "http://json-schema.org/schema#"

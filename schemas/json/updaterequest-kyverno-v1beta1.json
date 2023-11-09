@@ -633,6 +633,13 @@
                 "string",
                 "null"
               ]
+            },
+            "uid": {
+              "description": "UID specifies the resource uid.",
+              "type": [
+                "string",
+                "null"
+              ]
             }
           }
         },
@@ -694,6 +701,13 @@
               },
               "namespace": {
                 "description": "Namespace specifies resource namespace.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "uid": {
+                "description": "UID specifies the resource uid.",
                 "type": [
                   "string",
                   "null"

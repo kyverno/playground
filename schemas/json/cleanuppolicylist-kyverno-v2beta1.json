@@ -12,7 +12,7 @@
         "null"
       ],
       "enum": [
-        "kyverno.io/v2alpha1"
+        "kyverno.io/v2beta1"
       ]
     },
     "items": {
@@ -38,7 +38,7 @@
               "null"
             ],
             "enum": [
-              "kyverno.io/v2alpha1"
+              "kyverno.io/v2beta1"
             ]
           },
           "kind": {
@@ -1957,7 +1957,7 @@
           {
             "group": "kyverno.io",
             "kind": "CleanupPolicy",
-            "version": "v2alpha1"
+            "version": "v2beta1"
           }
         ]
       }
@@ -2015,7 +2015,7 @@
     {
       "group": "kyverno.io",
       "kind": "CleanupPolicyList",
-      "version": "v2alpha1"
+      "version": "v2beta1"
     }
   ],
   "$schema": "http://json-schema.org/schema#"

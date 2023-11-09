@@ -12,7 +12,7 @@
         "null"
       ],
       "enum": [
-        "kyverno.io/v2alpha1"
+        "kyverno.io/v2beta1"
       ]
     },
     "kind": {
@@ -1934,7 +1934,7 @@
     {
       "group": "kyverno.io",
       "kind": "ClusterCleanupPolicy",
-      "version": "v2alpha1"
+      "version": "v2beta1"
     }
   ],
   "$schema": "http://json-schema.org/schema#"
