@@ -6,4 +6,4 @@ backend/coverage.out
 backend/dist
 backend/pkg/server/ui/dist
 backend/backend
-/values.yaml
+/values*.yaml
