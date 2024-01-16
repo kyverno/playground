@@ -1,7 +1,7 @@
 [
     {
         "name": "Tutorials",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/main/",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.11/",
         "color": "orange-darken-3",
         "subgroups": [
             {
