@@ -32,7 +32,7 @@ jobs:
           set -e
           make test-backend
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
+        uses: codecov/codecov-action@e0b68c6749509c5f83f984dd99a76a1c1a231044 # v4.0.1
         with:
           file: ./backend/coverage.out
           fail_ci_if_error: true
