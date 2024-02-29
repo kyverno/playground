@@ -7,6 +7,7 @@ export const loadedResource = useLocalStorage<string>('loaded:resource', Resourc
 export const loadedOldResource = useLocalStorage<string>('loaded:resource:old', '')
 export const loadedConfig = useLocalStorage<string>('loaded:config', ConfigTemplate)
 export const loadedExceptions = useLocalStorage<string>('loaded:exceptions', '')
+export const loadedVapBindings = useLocalStorage<string>('loaded:vapBindings', '')
 export const loadedClusterResources = useLocalStorage<string>('loaded:clusterResources', '')
 export const loadedCustomResourceDefinitions = useLocalStorage<string>('loaded:crds', '')
 export const loadedImageData = useLocalStorage<string>('loaded:imageData', '')
@@ -20,6 +21,7 @@ export type State = {
   context?: string
   config?: string
   exceptions?: string
+  vapBindings?: string
   clusterResources?: string
   customResourceDefinitions?: string
   imageData?: string
@@ -50,6 +52,10 @@ const update = (values: State) => {
     loadedExceptions.value = values.exceptions
   }
 
+  if (values.vapBindings) {
+    loadedVapBindings.value = values.vapBindings
+  }
+
   if (values.clusterResources) {
     loadedClusterResources.value = values.clusterResources
   }
@@ -72,6 +78,7 @@ export const useState = () => ({
   oldResource: loadedOldResource,
   context: loadedContext,
   exceptions: loadedExceptions,
+  vapBindings: loadedVapBindings,
   clusterResources: loadedClusterResources,
   customResourceDefinitions: loadedCustomResourceDefinitions,
   imageData: loadedImageData,

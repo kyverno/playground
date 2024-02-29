@@ -49,6 +49,7 @@ func (p *Processor) Run(
 	ctx context.Context,
 	policies []kyvernov1.PolicyInterface,
 	vaps []v1alpha1.ValidatingAdmissionPolicy,
+	vapbs []v1alpha1.ValidatingAdmissionPolicyBinding,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -60,6 +61,11 @@ func (p *Processor) Run(
 	))
 	if violations := validatePolicies(policies); len(violations) > 0 {
 		return nil, PolicyViolationError{Violations: violations}
+	}
+
+	dClient, err := p.cluster.DClient()
+	if err != nil {
+		return nil, err
 	}
 
 	response := &models.Results{}
@@ -129,7 +135,18 @@ func (p *Processor) Run(
 			resource = resources[i]
 		}
 		for _, policy := range vaps {
-			result := validatingadmissionpolicy.Validate(policy, resource)
+			pData := validatingadmissionpolicy.NewPolicyData(policy)
+			for _, binding := range vapbs {
+				if binding.Spec.PolicyName == policy.Name {
+					pData.AddBinding(binding)
+				}
+			}
+
+			result, err := validatingadmissionpolicy.Validate(pData, resource, make(map[string]map[string]string), dClient)
+			if err != nil {
+				return nil, err
+			}
+
 			response.Validation = append(response.Validation, models.ConvertResponse(result))
 		}
 	}
@@ -346,7 +363,6 @@ func newEngine(
 	rclient engineapi.RegistryClientFactory,
 	factory engineapi.ContextLoaderFactory,
 	exceptionSelector engineapi.PolicyExceptionSelector,
-	imageSignatureRepository string,
 ) (engineapi.Engine, error) {
 	return kyvernoengine.NewEngine(
 		cfg,
@@ -357,7 +373,6 @@ func newEngine(
 		ivClient,
 		factory,
 		exceptionSelector,
-		imageSignatureRepository,
 	), nil
 }
 
@@ -379,11 +394,6 @@ func NewProcessor(
 		return nil, err
 	}
 
-	// ivClient, err := imageverifycache.New(imageverifycache.WithCacheEnableFlag(true))
-	// if err != nil {
-	// 	return nil, err
-	// }
-
 	engine, err := newEngine(
 		cfg,
 		jp,
@@ -392,7 +402,6 @@ func NewProcessor(
 		mocks.NewRegistryClientFactory(rclient, params.ImageData),
 		mocks.ContextLoaderFactory(cmResolver),
 		exceptionSelector,
-		params.Flags.Cosign.ImageSignatureRepository,
 	)
 	if err != nil {
 		return nil, err
