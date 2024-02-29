@@ -39,6 +39,7 @@ export const options = {
     resourceInfo: 'Kubernetes resources which get applied to policies',
     contextInfo: 'Context information like admission context, variables, and Kubernetes version',
     exceptionsInfo: 'Configure Kyverno PolicyException Resources',
+    vapBindingInfo: 'Configure ValidatingAdmissionPolicyBinding Resources',
     crdInfo: 'Define unknown CRDs you want to use as resource',
     configInfo: 'Configure the Kyverno Engine',
     clusterResourcesInfo: 'Already existing resources to simulate clone operations or context substitution',

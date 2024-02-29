@@ -3,7 +3,7 @@ package resource
 import (
 	"testing"
 
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
+	"github.com/kyverno/kyverno/ext/resource/loader"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 )
 

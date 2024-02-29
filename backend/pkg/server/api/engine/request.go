@@ -5,7 +5,7 @@ import (
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2beta1 "github.com/kyverno/kyverno/api/kyverno/v2beta1"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
+	"github.com/kyverno/kyverno/ext/resource/loader"
 	"k8s.io/api/admissionregistration/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -19,6 +19,7 @@ import (
 	"github.com/kyverno/playground/backend/pkg/exception"
 	"github.com/kyverno/playground/backend/pkg/policy"
 	"github.com/kyverno/playground/backend/pkg/resource"
+	"github.com/kyverno/playground/backend/pkg/vapbinding"
 )
 
 type EngineRequest struct {
@@ -30,6 +31,7 @@ type EngineRequest struct {
 	Config                    string                      `json:"config"`
 	CustomResourceDefinitions string                      `json:"customResourceDefinitions"`
 	PolicyExceptions          string                      `json:"policyExceptions"`
+	VAPBindings               string                      `json:"vapBindings"`
 	ImageData                 map[string]models.ImageData `json:"imageData"`
 }
 
@@ -59,6 +61,10 @@ func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstru
 
 func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2beta1.PolicyException, error) {
 	return exception.Load([]byte(r.PolicyExceptions))
+}
+
+func (r *EngineRequest) LoadVAPBindings(policyLoader loader.Loader) ([]v1alpha1.ValidatingAdmissionPolicyBinding, error) {
+	return vapbinding.Load(policyLoader, []byte(r.VAPBindings))
 }
 
 func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.ConfigMap, error) {

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
+	"github.com/kyverno/kyverno/ext/resource/loader"
 	"github.com/stretchr/testify/require"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 

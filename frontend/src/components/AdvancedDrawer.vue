@@ -40,6 +40,15 @@
           </AdvancedConfigDialog>
         </v-list-item>
         <v-list-item>
+          <AdvancedConfigDialog
+            id="vapbindings"
+            title="ValidatingAdmissionPolicyBinding"
+            :info="options.panels.vapBindingInfo"
+            v-model="inputs.vapBindings"
+            :template="VAPBindingTemplate"
+            uri="vapbindings.yaml"></AdvancedConfigDialog>
+        </v-list-item>
+        <v-list-item>
           <AdvancedConfigDialog id="clusterResources" title="Cluster Resources" :info="options.panels.clusterResourcesInfo" v-model="inputs.clusterResources">
             <template #actions="{ update, content }">
               <ClusterResourceButton @update:model-value="update" :model-value="content" label="From Cluster" v-if="config.cluster" />
@@ -68,7 +77,7 @@ import { inputs } from '@/store'
 import ClusterResourceButton from './Panel/ClusterResourceButton.vue'
 import ClusterExceptionButton from './Panel/ClusterExceptionButton.vue'
 import ClusterCRDButton from './Panel/ClusterCRDButton.vue'
-import { ContextTemplate, PolicyExceptionTemplate } from '@/assets/templates'
+import { ContextTemplate, PolicyExceptionTemplate, VAPBindingTemplate } from '@/assets/templates'
 import { config } from '@/composables/api'
 
 const props = defineProps({
