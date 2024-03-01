@@ -651,6 +651,8 @@ github.com/kyverno/go-jmespath/internal/testify v1.5.2-0.20230630133209-945021c7
 github.com/kyverno/go-jmespath/internal/testify v1.5.2-0.20230630133209-945021c749d9/go.mod h1:XRxUGHIiCy1WYma1CdfdO1WOhIe8dLPTENaZr5D1ex4=
 github.com/kyverno/kyverno v1.12.0-alpha.3 h1:RJhRWMvlVrAhdeGqzRnAVSYPxrgUKHnqX7Duo8Eg140=
 github.com/kyverno/kyverno v1.12.0-alpha.3/go.mod h1:LCisHXxEFlIWasYjb13CnQQnIn74llfNoaWJNb0b2Zw=
+github.com/kyverno/kyverno v1.12.0-alpha.4 h1:tHyS1lglIWDxswMLexhwAx0ZBzDeqfZVoC2VTy6Nzgg=
+github.com/kyverno/kyverno v1.12.0-alpha.4/go.mod h1:LCisHXxEFlIWasYjb13CnQQnIn74llfNoaWJNb0b2Zw=
 github.com/leodido/go-urn v1.2.0/go.mod h1:+8+nEpDfqqsY+g338gtMEUOtuK+4dEMhiQEgxpxOKII=
 github.com/leodido/go-urn v1.2.4 h1:XlAE/cm/ms7TE/VMVoduSpNBoyc2dOxHs5MZSwAN63Q=
 github.com/leodido/go-urn v1.2.4/go.mod h1:7ZrI8mTSeBSHl/UaRyKQW1qZeMgak41ANeCNaVckg+4=

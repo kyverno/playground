@@ -3,11 +3,11 @@
   <v-divider />
   <v-data-table density="default" hover :items="items" :headers="(headers as any)" class="result-table" :items-per-page="-1">
     <template v-slot:[`item.status`]="{ item }">
-      <StatusChip :status="item.raw.status" :key="item.raw.status" />
+      <StatusChip :status="item.status" :key="item.status" />
     </template>
     <template v-slot:[`item.details`]="{ item }">
-      <v-btn @click="details(item.raw)" variant="text" icon="mdi-open-in-new" v-if="item.raw.status === 'pass'" />
-      <MsgTooltip :msg="item.raw.message" v-else />
+      <v-btn @click="details(item)" variant="text" icon="mdi-open-in-new" v-if="item.status === 'pass'" />
+      <MsgTooltip :msg="item.message" v-else />
     </template>
     <template #bottom></template>
   </v-data-table>
