@@ -64,7 +64,8 @@ const values = reactive<Config>({
   context: false,
   crds: true,
   clusterResources: true,
-  exceptions: true
+  exceptions: true,
+  vapBindings: true
 })
 
 const router = useRouter()

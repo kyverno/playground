@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  tag: c0a0c765c3d91d98fe9e07df328ebcea5a43c594
+  tag: bd570cf8860506e28baae04e8985d16c93c30356
 
 config:
   engine:
