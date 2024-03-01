@@ -114,6 +114,11 @@ export const init = (values: Inputs) => {
     inputs.imageData = values.imageData
   }
 
+  if (typeof values.vapBindings === 'string') {
+    state.vapBindings.value = values.vapBindings
+    inputs.vapBindings = values.vapBindings
+  }
+
   state.name.value = values.name || ''
 }
 
