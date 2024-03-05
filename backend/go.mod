@@ -1,8 +1,6 @@
 module github.com/kyverno/playground/backend
 
-go 1.21.4
-
-toolchain go1.21.6
+go 1.22
 
 require (
 	github.com/Masterminds/semver/v3 v3.2.1
@@ -10,7 +8,7 @@ require (
 	github.com/gin-contrib/cors v1.5.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-logr/logr v1.4.1
-	github.com/kyverno/kyverno v1.12.0-alpha.4
+	github.com/kyverno/kyverno v1.12.0-alpha.5
 	github.com/loopfz/gadgeto v0.11.3
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
@@ -343,14 +341,14 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/apiextensions-apiserver v0.29.1 // indirect
-	k8s.io/apiserver v0.29.1 // indirect
-	k8s.io/cli-runtime v0.29.1 // indirect
+	k8s.io/apiextensions-apiserver v0.29.2 // indirect
+	k8s.io/apiserver v0.29.2 // indirect
+	k8s.io/cli-runtime v0.29.2 // indirect
 	k8s.io/component-base v0.29.2 // indirect
 	k8s.io/klog/v2 v2.120.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240126223410-2919ad4fcfec // indirect
-	k8s.io/kubectl v0.29.1 // indirect
-	k8s.io/pod-security-admission v0.29.1 // indirect
+	k8s.io/kubectl v0.29.2 // indirect
+	k8s.io/pod-security-admission v0.29.2 // indirect
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e // indirect
 	oras.land/oras-go/v2 v2.3.1 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.29.0 // indirect
@@ -361,4 +359,4 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
 
-replace k8s.io/pod-security-admission v0.29.1 => github.com/YTGhost/pod-security-admission v0.0.0-20231116105308-8b1daa0177f2
+replace k8s.io/pod-security-admission v0.29.2 => github.com/YTGhost/pod-security-admission v0.22.0-beta.0.0.20240304113848-33168815d7c7
