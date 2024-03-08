@@ -37,7 +37,8 @@
                     {
                         "path": "other/exclude-namespaces-dynamically",
                         "contextPath": "tutorials/context",
-                        "title": "Exclude Namespaces Dynamically"
+                        "title": "Exclude Namespaces Dynamically",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             },
@@ -47,17 +48,20 @@
                     {
                         "path": "other/restrict-pod-count-per-node",
                         "contextPath": "tutorials/context",
-                        "title": "Restrict Pod Count per Node"
+                        "title": "Restrict Pod Count per Node",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "other/restrict-ingress-host",
                         "contextPath": "tutorials/context",
-                        "title": "Unique Ingress Host"
+                        "title": "Unique Ingress Host",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "other/require-netpol",
                         "contextPath": "tutorials/context",
-                        "title": "Require NetworkPolicy"
+                        "title": "Require NetworkPolicy",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             },
@@ -74,7 +78,8 @@
                     {
                         "path": "other/block-updates-deletes",
                         "contextPath": "tutorials/context",
-                        "title": "Block Updates and Deletes"
+                        "title": "Block Updates and Deletes",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             },
@@ -84,7 +89,8 @@
                     {
                         "path": "other/check-serviceaccount",
                         "contextPath": "tutorials/context",
-                        "title": "Check ServiceAccount"
+                        "title": "Check ServiceAccount",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             },
@@ -93,8 +99,9 @@
                 "policies": [
                     {
                         "path": "other/sync-secrets",
-                        "clusterResourcesFile": "cloneSourceResource.yaml",
-                        "title": "Sync Secrets"
+                        "clusterResourcesFile": ".chainsaw-test/cloneSourceResource.yaml",
+                        "title": "Sync Secrets",
+                        "resourceFile": ".chainsaw-test/resource.yaml"
                     }
                 ]
             },
@@ -117,47 +124,58 @@
         "policies": [
             {
                 "path": "disallow-cri-sock-mount",
-                "title": "Disallow CRI socket mounts"
+                "title": "Disallow CRI socket mounts",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "disallow-default-namespace",
-                "title": "Disallow Default Namespace"
+                "title": "Disallow Default Namespace",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "disallow-empty-ingress-host",
-                "title": "Disallow empty Ingress host"
+                "title": "Disallow empty Ingress host",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "disallow-cri-sock-mount",
-                "title": "Disallow CRI socket mounts"
+                "title": "Disallow CRI socket mounts",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "disallow-latest-tag",
-                "title": "Disallow Latest Tag"
+                "title": "Disallow Latest Tag",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "require-drop-all",
-                "title": "Drop All Capabilities"
+                "title": "Drop All Capabilities",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "require-drop-cap-net-raw",
-                "title": "Drop CAP_NET_RAW"
+                "title": "Drop CAP_NET_RAW",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "require-labels",
-                "title": "Require Labels"
+                "title": "Require Labels",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "require-pod-requests-limits",
-                "title": "Require Limits and Requests"
+                "title": "Require Limits and Requests",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "require-probes",
-                "title": "Require Pod Probes"
+                "title": "Require Pod Probes",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "restrict-image-registries",
-                "title": "Restrict Image Registries"
+                "title": "Restrict Image Registries",
+                "resourceFile": ".kyverno-test/resource.yaml"
             }
         ]
     },
@@ -170,51 +188,63 @@
                 "policies": [
                     {
                         "path": "disallow-capabilities",
-                        "title": "Disallow Capabilities"
+                        "title": "Disallow Capabilities",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-host-namespaces",
-                        "title": "Disallow  Host Namespaces"
+                        "title": "Disallow  Host Namespaces",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-host-path",
-                        "title": "Disallow hostPath"
+                        "title": "Disallow hostPath",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-host-ports-range",
-                        "title": "Disallow hostPorts Range (Alternate)"
+                        "title": "Disallow hostPorts Range (Alternate)",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-host-ports",
-                        "title": "Disallow hostPorts"
+                        "title": "Disallow hostPorts",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-host-process",
-                        "title": "Disallow hostProcess"
+                        "title": "Disallow hostProcess",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-privileged-containers",
-                        "title": "Disallow Privileged Containers"
+                        "title": "Disallow Privileged Containers",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-proc-mount",
-                        "title": "Disallow procMount"
+                        "title": "Disallow procMount",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-selinux",
-                        "title": "Disallow SELinux"
+                        "title": "Disallow SELinux",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "restrict-apparmor-profiles",
-                        "title": "Restrict AppArmor"
+                        "title": "Restrict AppArmor",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "restrict-seccomp",
-                        "title": "Restrict Seccomp"
+                        "title": "Restrict Seccomp",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "restrict-sysctls",
-                        "title": "Restrict sysctls"
+                        "title": "Restrict sysctls",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             },
@@ -224,27 +254,33 @@
                 "policies": [
                     {
                         "path": "disallow-capabilities-strict",
-                        "title": "Disallow Capabilities (Strict)"
+                        "title": "Disallow Capabilities (Strict)",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "disallow-privilege-escalation",
-                        "title": "Disallow Privilege Escalation"
+                        "title": "Disallow Privilege Escalation",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "require-run-as-non-root-user",
-                        "title": "Require Run As Non-Root User"
+                        "title": "Require Run As Non-Root User",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "require-run-as-nonroot",
-                        "title": "Require runAsNonRoot"
+                        "title": "Require runAsNonRoot",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "restrict-seccomp-strict",
-                        "title": "Restrict Seccomp (Strict)"
+                        "title": "Restrict Seccomp (Strict)",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "restrict-volume-types",
-                        "title": "Restrict Volume Types"
+                        "title": "Restrict Volume Types",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             },
@@ -254,7 +290,8 @@
                 "policies": [
                     {
                         "path": "podsecurity-subrule-baseline",
-                        "title": "Baseline Pod Security Standards"
+                        "title": "Baseline Pod Security Standards",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             },
@@ -264,15 +301,18 @@
                 "policies": [
                     {
                         "path": "restricted-exclude-capabilities",
-                        "title": "Restricted Exclude Capabilities"
+                        "title": "Restricted Exclude Capabilities",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "restricted-exclude-seccomp",
-                        "title": "Restricted Exclude SECComp"
+                        "title": "Restricted Exclude SECComp",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "restricted-latest",
-                        "title": "Restricted Pod Security Standards"
+                        "title": "Restricted Pod Security Standards",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             }
@@ -287,15 +327,18 @@
                 "policies": [
                     {
                         "path": "cert-manager/limit-dnsnames",
-                        "title": "Limit DNS names"
+                        "title": "Limit DNS names",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "cert-manager/limit-duration",
-                        "title": "Limit duration"
+                        "title": "Limit duration",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     },
                     {
                         "path": "cert-manager/restrict-issuer",
-                        "title": "Restrict issuer"
+                        "title": "Restrict issuer",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             },
@@ -304,7 +347,8 @@
                 "policies": [
                     {
                         "path": "argo/appproject-clusterresourceblacklist",
-                        "title": "Cluster resource blacklist"
+                        "title": "Cluster resource blacklist",
+                        "resourceFile": ".kyverno-test/resource.yaml"
                     }
                 ]
             }
@@ -334,27 +378,33 @@
         "policies": [
             {
                 "path": "add-certificates-volume",
-                "title": "Add Certificates as a Volume"
+                "title": "Add Certificates as a Volume",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "add-default-resources",
-                "title": "Add Default Resources"
+                "title": "Add Default Resources",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "add-labels",
-                "title": "Add Labels"
+                "title": "Add Labels",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "allowed-annotations",
-                "title": "Allowed Annotations"
+                "title": "Allowed Annotations",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "check-env-vars",
-                "title": "Check Environment Variables"
+                "title": "Check Environment Variables",
+                "resourceFile": ".kyverno-test/resource.yaml"
             },
             {
                 "path": "require-base-image",
-                "title": "Check Image Base"
+                "title": "Check Image Base",
+                "resourceFile": ".kyverno-test/resource.yaml"
             }
         ]
     }
