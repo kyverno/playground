@@ -14,17 +14,17 @@
     :items-per-page="-1">
     <template v-slot:[`item.policy`]="{ item }">
       <v-avatar size="24px" rounded="0" class="mr-2 mb-1">
-        <v-img :src="`icons/${item.raw.icon}.png`" />
+        <v-img :src="`icons/${item.icon}.png`" />
       </v-avatar>
-      {{ item.raw.policy }}
+      {{ item.policy }}
     </template>
     <template v-slot:[`item.status`]="{ item }">
-      <StatusChip :status="item.raw.status" :key="item.raw.status" />
+      <StatusChip :status="item.status" :key="item.status" />
     </template>
     <template v-slot:expanded-row="{ columns, item }">
       <tr>
         <td :colspan="columns.length" class="py-2 table-expansion">
-          {{ item.raw.message }}
+          {{ item.message }}
         </td>
       </tr>
     </template>

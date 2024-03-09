@@ -113,7 +113,7 @@
     },
     {
         "name": "Best Practices",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/main/best-practices",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.11/best-practices",
         "policies": [
             {
                 "path": "disallow-cri-sock-mount",
@@ -166,7 +166,7 @@
         "subgroups": [
             {
                 "name": "Baseline",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/main/pod-security/baseline",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.11/pod-security/baseline",
                 "policies": [
                     {
                         "path": "disallow-capabilities",
@@ -220,7 +220,7 @@
             },
             {
                 "name": "Restricted",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/main/pod-security/restricted",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.11/pod-security/restricted",
                 "policies": [
                     {
                         "path": "disallow-capabilities-strict",
@@ -250,7 +250,7 @@
             },
             {
                 "name": "Subrule",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.11/pod-security/subrule",
                 "policies": [
                     {
                         "path": "podsecurity-subrule-baseline",
@@ -260,7 +260,7 @@
             },
             {
                 "name": "Subrule Restricted",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/main/pod-security/subrule/restricted",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.11/pod-security/subrule/restricted",
                 "policies": [
                     {
                         "path": "restricted-exclude-capabilities",
@@ -330,7 +330,7 @@
     },
     {
         "name": "Other",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/main/other",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.11/other",
         "policies": [
             {
                 "path": "a/add-certificates-volume",
