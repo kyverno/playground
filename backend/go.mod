@@ -11,7 +11,7 @@ require (
 	github.com/kyverno/kyverno v1.11.4
 	github.com/loopfz/gadgeto v0.11.3
 	github.com/spf13/cobra v1.8.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	gomodules.xyz/jsonpatch/v2 v2.4.0
 	k8s.io/api v0.29.0
 	k8s.io/apimachinery v0.29.0
