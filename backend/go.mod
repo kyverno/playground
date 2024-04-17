@@ -14,7 +14,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	gomodules.xyz/jsonpatch/v2 v2.4.0
 	k8s.io/api v0.29.3
-	k8s.io/apimachinery v0.29.3
+	k8s.io/apimachinery v0.29.4
 	k8s.io/client-go v0.29.3
 	sigs.k8s.io/controller-runtime v0.17.3
 	sigs.k8s.io/kubectl-validate v0.0.2
@@ -343,7 +343,7 @@ require (
 	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/oauth2 v0.14.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
