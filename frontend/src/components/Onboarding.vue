@@ -24,12 +24,12 @@
 
 <script setup lang="ts">
 import { layoutTheme } from '@/config'
-import { VOnboardingWrapper, VOnboardingStep } from 'v-onboarding'
-import { watch, ref } from 'vue'
+import { VOnboardingWrapper, VOnboardingStep, StepEntity } from 'v-onboarding'
+import { watch, ref, type PropType } from 'vue'
 
 defineProps({
   close: { type: Function },
-  steps: { type: Array }
+  steps: { type: Array as PropType<StepEntity[]>, default: () => [] }
 })
 
 const wrapper = ref(null)
