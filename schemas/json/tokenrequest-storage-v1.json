@@ -1,9 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "TokenRequest contains parameters of a service account token.",
-  "type": "object",
-  "required": [
-    "audience"
-  ],
   "properties": {
     "audience": {
       "description": "audience is the intended audience of the token in \"TokenRequestSpec\". It will default to the audiences of kube apiserver.",
@@ -14,12 +11,15 @@
     },
     "expirationSeconds": {
       "description": "expirationSeconds is the duration of validity of the token in \"TokenRequestSpec\". It has the same default value of \"ExpirationSeconds\" in \"TokenRequestSpec\".",
+      "format": "int64",
       "type": [
         "integer",
         "null"
-      ],
-      "format": "int64"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "audience"
+  ],
+  "type": "object"
 }

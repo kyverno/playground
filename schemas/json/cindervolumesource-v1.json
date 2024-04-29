@@ -1,9 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Represents a cinder volume resource in Openstack. A Cinder volume must exist before mounting to a container. The volume must also be in the same region as the kubelet. Cinder volumes support ownership management and SELinux relabeling.",
-  "type": "object",
-  "required": [
-    "volumeID"
-  ],
   "properties": {
     "fsType": {
       "description": "fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Examples: \"ext4\", \"xfs\", \"ntfs\". Implicitly inferred to be \"ext4\" if unspecified. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
@@ -21,10 +18,6 @@
     },
     "secretRef": {
       "description": "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
@@ -34,6 +27,10 @@
           ]
         }
       },
+      "type": [
+        "object",
+        "null"
+      ],
       "x-kubernetes-map-type": "atomic"
     },
     "volumeID": {
@@ -44,5 +41,8 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "volumeID"
+  ],
+  "type": "object"
 }

@@ -5,9 +5,10 @@ import (
 
 	"github.com/kyverno/kyverno/ext/resource/convert"
 	"github.com/kyverno/kyverno/ext/resource/loader"
-	"github.com/kyverno/playground/backend/pkg/resource"
 	"k8s.io/api/admissionregistration/v1alpha1"
 	"k8s.io/api/admissionregistration/v1beta1"
+
+	"github.com/kyverno/playground/backend/pkg/resource"
 )
 
 var (

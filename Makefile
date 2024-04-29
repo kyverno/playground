@@ -2,13 +2,12 @@
 # DEFAULTS #
 ############
 
-KIND_IMAGE           ?= kindest/node:v1.28.0
+KIND_IMAGE           ?= kindest/node:v1.29.2
 KIND_NAME            ?= kind
-KYVERNO_VERSION      ?= v1.11.0
+KYVERNO_VERSION      ?= v1.12.0
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,no-ingress,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
-PIP                  ?= "pip3"
 
 #############
 # VARIABLES #
@@ -43,18 +42,19 @@ endif
 #########
 
 TOOLS_DIR                          := $(PWD)/.tools
+CURRENT_DIR                        := $(PWD)
 HELM                               := $(TOOLS_DIR)/helm
-HELM_VERSION                       := v3.10.1
+HELM_VERSION                       := v3.14.0
 KIND                               := $(TOOLS_DIR)/kind
-KIND_VERSION                       := v0.20.0
+KIND_VERSION                       := v0.22.0
 KO                                 := $(TOOLS_DIR)/ko
-KO_VERSION                         := v0.14.1
+KO_VERSION                         := v0.15.2
 HELM_DOCS                          := $(TOOLS_DIR)/helm-docs
-HELM_DOCS_VERSION                  := v1.11.0
+HELM_DOCS_VERSION                  := v1.13.1
 GCI                                := $(TOOLS_DIR)/gci
-GCI_VERSION                        := v0.9.1
+GCI_VERSION                        := v0.13.4
 GOFUMPT                            := $(TOOLS_DIR)/gofumpt
-GOFUMPT_VERSION                    := v0.4.0
+GOFUMPT_VERSION                    := v0.6.0
 TOOLS                              := $(KIND) $(HELM) $(KO) $(HELM_DOCS) $(GCI) $(GOFUMPT)
 
 $(HELM):
@@ -119,32 +119,32 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@mkdir -p ./schemas/openapi/v3/apis/kyverno.io
 	@mkdir -p ./schemas/openapi/v3/apis/admissionregistration.k8s.io
 	@$(KIND) create cluster --name schema --image $(KIND_IMAGE) --config ./scripts/config/kind.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_admissionreports.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_backgroundscanreports.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_cleanuppolicies.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_clusteradmissionreports.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_clusterbackgroundscanreports.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_clustercleanuppolicies.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_clusterpolicies.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_policies.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_policyexceptions.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno.io_updaterequests.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/wgpolicyk8s.io_clusterpolicyreports.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/wgpolicyk8s.io_policyreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_admissionreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_backgroundscanreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_cleanuppolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_clusteradmissionreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_clusterbackgroundscanreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_clustercleanuppolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_clusterpolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_policies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_policyexceptions.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_updaterequests.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_clusterpolicyreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_policyreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/reports/reports.kyverno.io_clusterephemeralreports.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/reports/reports.kyverno.io_ephemeralreports.yaml
 	@sleep 15
 	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
-	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2alpha1 > ./schemas/openapi/v3/apis/kyverno.io/v2alpha1.json
-	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1alpha1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1alpha1.json
-	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1beta1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1beta1.json
+	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1.json
 	@$(KIND) delete cluster --name schema
 
 .PHONY: codegen-schema-json
 codegen-schema-json: codegen-schema-openapi ## Generate json schemas
-	@$(PIP) install openapi2jsonschema
 	@rm -rf ./schemas/json
-	@openapi2jsonschema ./schemas/openapi/v2/schema.json --kubernetes --stand-alone --expanded -o ./schemas/json
+	@mkdir -p ./schemas/json
+	@docker run -it --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v2,target=/v2 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/hectorm/openapi2jsonschema:v0.11 /v2/schema.json --kubernetes --stand-alone --expanded -o /json
 
 .PHONY: codegen-all
 codegen-all: codegen-helm-docs codegen-schema-json codegen-schema-openapi ## Generate all codegen
@@ -188,8 +188,7 @@ build-frontend: ## Build frontend
 	@cp schemas/json/policy-kyverno-v1.json frontend/src/schemas
 	@cp schemas/json/policy-kyverno-v2beta1.json frontend/src/schemas
 	@cp schemas/json/policyexception-kyverno-v2alpha1.json frontend/src/schemas
-	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1alpha1.json frontend/src/schemas
-	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1beta1.json frontend/src/schemas
+	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets

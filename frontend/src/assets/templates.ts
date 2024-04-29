@@ -19,7 +19,7 @@ spec:
               app.kubernetes.io/name: "?*"`
 
 export const ContextTemplate = `kubernetes:
-  version: '1.28'
+  version: '1.29'
 
 context:
   username: ''
