@@ -183,12 +183,13 @@ build-clean: ## Clean built files
 .PHONY: build-frontend
 build-frontend: ## Build frontend
 	@echo Building frontend... >&2
-	@cp schemas/json/clusterpolicy-kyverno-v1.json frontend/src/schemas
-	@cp schemas/json/clusterpolicy-kyverno-v2beta1.json frontend/src/schemas
-	@cp schemas/json/policy-kyverno-v1.json frontend/src/schemas
-	@cp schemas/json/policy-kyverno-v2beta1.json frontend/src/schemas
-	@cp schemas/json/policyexception-kyverno-v2alpha1.json frontend/src/schemas
-	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1.json frontend/src/schemas
+	@cp schemas/json/clusterpolicy-kyverno.io-v1.json frontend/src/schemas
+	@cp schemas/json/clusterpolicy-kyverno.io-v2beta1.json frontend/src/schemas
+	@cp schemas/json/policy-kyverno.io-v1.json frontend/src/schemas
+	@cp schemas/json/policy-kyverno.io-v2beta1.json frontend/src/schemas
+	@cp schemas/json/policyexception-kyverno.io-v2.json frontend/src/schemas
+	@cp schemas/json/policyexception-kyverno.io-v2beta1.json frontend/src/schemas
+	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1beta1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets

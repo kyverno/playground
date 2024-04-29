@@ -7,12 +7,12 @@ import { setDiagnosticsOptions } from 'monaco-yaml'
 import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 
-import policyexception from './schemas/policyexception-kyverno-v2alpha1.json'
-import clusterpolicyv1 from './schemas/clusterpolicy-kyverno-v1.json'
-import policyv1 from './schemas/policy-kyverno-v1.json'
-import clusterpolicyv2beta1 from './schemas/clusterpolicy-kyverno-v2beta1.json'
-import policyv2beta1 from './schemas/policy-kyverno-v2beta1.json'
-import vapv1alpha1 from './schemas/validatingadmissionpolicy-admissionregistration-v1alpha1.json'
+import policyexception from './schemas/policyexception-kyverno.io-v2beta1.json'
+import policyexceptionv2 from './schemas/policyexception-kyverno.io-v2.json'
+import clusterpolicyv1 from './schemas/clusterpolicy-kyverno.io-v1.json'
+import policyv1 from './schemas/policy-kyverno.io-v1.json'
+import clusterpolicyv2beta1 from './schemas/clusterpolicy-kyverno.io-v2beta1.json'
+import policyv2beta1 from './schemas/policy-kyverno.io-v2beta1.json'
 import vapv1beta1 from './schemas/validatingadmissionpolicy-admissionregistration-v1beta1.json'
 import context from './schemas/context.json'
 import { JSONSchema6 } from 'json-schema'
@@ -33,22 +33,21 @@ setDiagnosticsOptions({
           { $ref: '#/definitions/policy-v1' },
           { $ref: '#/definitions/clusterpolicy-v2beta1' },
           { $ref: '#/definitions/policy-v2beta1' },
-          { $ref: '#/definitions/vap-v1alpha1' },
-          { $ref: '#/definitions/vap-v1beta1' },
+          { $ref: '#/definitions/vap-v1beta1' }
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema6,
           'policy-v1': policyv1 as JSONSchema6,
           'clusterpolicy-v2beta1': clusterpolicyv2beta1 as JSONSchema6,
           'policy-v2beta1': policyv2beta1 as JSONSchema6,
-          'vap-v1alpha1': vapv1alpha1 as JSONSchema6,
-          'vap-v1beta1': vapv1beta1 as JSONSchema6,
+          'vap-v1beta1': vapv1beta1 as JSONSchema6
         }
       },
       uri: `${baseURL}/schemas/policies.json`,
       fileMatch: ['policy.yaml']
     },
-    { schema: policyexception as JSONSchema6, uri: `${baseURL}/schemas/policyexception.json`, fileMatch: ['policyexception.yaml'] },
+    { schema: policyexception as JSONSchema6, uri: `${baseURL}/schemas/policyexception-kyverno.io-v2beta1.json`, fileMatch: ['policyexception.yaml'] },
+    { schema: policyexceptionv2 as JSONSchema6, uri: `${baseURL}/schemas/policyexception-kyverno.io-v2.json`, fileMatch: ['policyexception.yaml'] },
     { schema: context as JSONSchema6, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
   ]
 })
