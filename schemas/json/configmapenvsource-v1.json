@@ -1,6 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "ConfigMapEnvSource selects a ConfigMap to populate the environment variables with.\n\nThe contents of the target ConfigMap's Data field will represent the key-value pairs as environment variables.",
-  "type": "object",
   "properties": {
     "name": {
       "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
@@ -17,5 +17,5 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

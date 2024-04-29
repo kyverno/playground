@@ -1,6 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "ObjectReference contains enough information to let you inspect or modify the referred object.",
-  "type": "object",
   "properties": {
     "apiVersion": {
       "description": "API version of the referent.",
@@ -52,6 +52,6 @@
       ]
     }
   },
-  "x-kubernetes-map-type": "atomic",
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object",
+  "x-kubernetes-map-type": "atomic"
 }

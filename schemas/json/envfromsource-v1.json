@@ -1,13 +1,9 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "EnvFromSource represents the source of a set of ConfigMaps",
-  "type": "object",
   "properties": {
     "configMapRef": {
       "description": "ConfigMapEnvSource selects a ConfigMap to populate the environment variables with.\n\nThe contents of the target ConfigMap's Data field will represent the key-value pairs as environment variables.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
@@ -23,7 +19,11 @@
             "null"
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "prefix": {
       "description": "An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.",
@@ -34,10 +34,6 @@
     },
     "secretRef": {
       "description": "SecretEnvSource selects a Secret to populate the environment variables with.\n\nThe contents of the target Secret's Data field will represent the key-value pairs as environment variables.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
@@ -53,8 +49,12 @@
             "null"
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

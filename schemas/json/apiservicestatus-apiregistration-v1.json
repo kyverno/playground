@@ -1,31 +1,19 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "APIServiceStatus contains derived information about an API server",
-  "type": "object",
   "properties": {
     "conditions": {
       "description": "Current service state of apiService.",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "APIServiceCondition describes the state of an APIService at a particular point",
-        "type": [
-          "object",
-          "null"
-        ],
-        "required": [
-          "type",
-          "status"
-        ],
         "properties": {
           "lastTransitionTime": {
             "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+            "format": "date-time",
             "type": [
               "string",
               "null"
-            ],
-            "format": "date-time"
+            ]
           },
           "message": {
             "description": "Human-readable message indicating details about last transition.",
@@ -49,8 +37,20 @@
             "description": "Type is the type of the condition.",
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "type",
+          "status"
+        ],
+        "type": [
+          "object",
+          "null"
+        ]
       },
+      "type": [
+        "array",
+        "null"
+      ],
       "x-kubernetes-list-map-keys": [
         "type"
       ],
@@ -59,5 +59,5 @@
       "x-kubernetes-patch-strategy": "merge"
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

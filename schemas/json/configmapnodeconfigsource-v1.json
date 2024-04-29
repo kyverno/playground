@@ -1,11 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
-  "type": "object",
-  "required": [
-    "namespace",
-    "name",
-    "kubeletConfigKey"
-  ],
   "properties": {
     "kubeletConfigKey": {
       "description": "KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure This field is required in all cases.",
@@ -43,5 +38,10 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "namespace",
+    "name",
+    "kubeletConfigKey"
+  ],
+  "type": "object"
 }

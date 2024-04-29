@@ -1,13 +1,9 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "DeploymentStrategy describes how to replace existing pods with new ones.",
-  "type": "object",
   "properties": {
     "rollingUpdate": {
       "description": "Spec to control the desired behavior of rolling update.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "maxSurge": {
           "oneOf": [
@@ -41,19 +37,23 @@
             }
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "type": {
       "description": "Type of deployment. Can be \"Recreate\" or \"RollingUpdate\". Default is RollingUpdate.\n\nPossible enum values:\n - `\"Recreate\"` Kill all existing pods before creating new ones.\n - `\"RollingUpdate\"` Replace the old ReplicaSets by new one using rolling update i.e gradually scale down the old ReplicaSets and scale up the new one.",
-      "type": [
-        "string",
-        "null"
-      ],
       "enum": [
         "Recreate",
         "RollingUpdate"
+      ],
+      "type": [
+        "string",
+        "null"
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

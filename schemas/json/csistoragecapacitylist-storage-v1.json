@@ -1,44 +1,30 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "CSIStorageCapacityList is a collection of CSIStorageCapacity objects.",
-  "type": "object",
-  "required": [
-    "items"
-  ],
   "properties": {
     "apiVersion": {
       "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "enum": [
+        "storage.k8s.io/v1"
+      ],
       "type": [
         "string",
         "null"
-      ],
-      "enum": [
-        "storage.k8s.io/v1"
       ]
     },
     "items": {
       "description": "items is the list of CSIStorageCapacity objects.",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "CSIStorageCapacity stores the result of one CSI GetCapacity call. For a given StorageClass, this describes the available capacity in a particular topology segment.  This can be used when considering where to instantiate new PersistentVolumes.\n\nFor example this can express things like: - StorageClass \"standard\" has \"1234 GiB\" available in \"topology.kubernetes.io/zone=us-east1\" - StorageClass \"localssd\" has \"10 GiB\" available in \"kubernetes.io/hostname=knode-abc123\"\n\nThe following three cases all imply that no capacity is available for a certain combination: - no object exists with suitable topology and storage class name - such an object exists, but the capacity is unset - such an object exists, but the capacity is zero\n\nThe producer of these objects can decide which approach is more suitable.\n\nThey are consumed by the kube-scheduler when a CSI driver opts into capacity-aware scheduling with CSIDriverSpec.StorageCapacity. The scheduler compares the MaximumVolumeSize against the requested size of pending volumes to filter out unsuitable nodes. If MaximumVolumeSize is unset, it falls back to a comparison against the less precise Capacity. If that is also unset, the scheduler assumes that capacity is insufficient and tries some other node.",
-        "type": [
-          "object",
-          "null"
-        ],
-        "required": [
-          "storageClassName"
-        ],
         "properties": {
           "apiVersion": {
             "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+            "enum": [
+              "storage.k8s.io/v1"
+            ],
             "type": [
               "string",
               "null"
-            ],
-            "enum": [
-              "storage.k8s.io/v1"
             ]
           },
           "capacity": {
@@ -59,12 +45,12 @@
           },
           "kind": {
             "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+            "enum": [
+              "CSIStorageCapacity"
+            ],
             "type": [
               "string",
               "null"
-            ],
-            "enum": [
-              "CSIStorageCapacity"
             ]
           },
           "maximumVolumeSize": {
@@ -85,60 +71,56 @@
           },
           "metadata": {
             "description": "ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.",
-            "type": [
-              "object",
-              "null"
-            ],
             "properties": {
               "annotations": {
-                "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "additionalProperties": {
                   "type": [
                     "string",
                     "null"
                   ]
-                }
+                },
+                "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "creationTimestamp": {
                 "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                "format": "date-time",
                 "type": [
                   "string",
                   "null"
-                ],
-                "format": "date-time"
+                ]
               },
               "deletionGracePeriodSeconds": {
                 "description": "Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.",
+                "format": "int64",
                 "type": [
                   "integer",
                   "null"
-                ],
-                "format": "int64"
+                ]
               },
               "deletionTimestamp": {
                 "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                "format": "date-time",
                 "type": [
                   "string",
                   "null"
-                ],
-                "format": "date-time"
+                ]
               },
               "finalizers": {
                 "description": "Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed. Finalizers may be processed and removed in any order.  Order is NOT enforced because it introduces significant risk of stuck finalizers. finalizers is a shared field, any actor with permission can reorder it. If the finalizer list is processed in order, then this can lead to a situation in which the component responsible for the first finalizer in the list is waiting for a signal (field value, external system, or other) produced by a component responsible for a finalizer later in the list, resulting in a deadlock. Without enforced ordering finalizers are free to order amongst themselves and are not vulnerable to ordering changes in the list.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "type": [
                     "string",
                     "null"
                   ]
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-patch-strategy": "merge"
               },
               "generateName": {
@@ -150,37 +132,29 @@
               },
               "generation": {
                 "description": "A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.",
+                "format": "int64",
                 "type": [
                   "integer",
                   "null"
-                ],
-                "format": "int64"
+                ]
               },
               "labels": {
-                "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "additionalProperties": {
                   "type": [
                     "string",
                     "null"
                   ]
-                }
+                },
+                "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "managedFields": {
                 "description": "ManagedFields maps workflow-id and version to the set of fields that are managed by that workflow. This is mostly for internal housekeeping, and users typically shouldn't need to set or understand this field. A workflow can be the user's name, a controller's name, or the name of a specific apply path like \"ci-cd\". The set of fields is always in the version that the workflow used when modifying the object.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "ManagedFieldsEntry is a workflow-id, a FieldSet and the group version of the resource that the fieldset applies to.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
                   "properties": {
                     "apiVersion": {
                       "description": "APIVersion defines the version of this resource that this field set applies to. The format is \"group/version\" just like the top-level APIVersion field. It is necessary to track the version of a field set because it cannot be automatically converted.",
@@ -226,14 +200,22 @@
                     },
                     "time": {
                       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                      "format": "date-time",
                       "type": [
                         "string",
                         "null"
-                      ],
-                      "format": "date-time"
+                      ]
                     }
-                  }
-                }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
               },
               "name": {
                 "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names",
@@ -251,22 +233,8 @@
               },
               "ownerReferences": {
                 "description": "List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "OwnerReference contains enough information to let you identify an owning object. An owning object must be in the same namespace as the dependent, or be cluster-scoped, so there is no namespace field.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "apiVersion",
-                    "kind",
-                    "name",
-                    "uid"
-                  ],
                   "properties": {
                     "apiVersion": {
                       "description": "API version of the referent.",
@@ -299,8 +267,22 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "apiVersion",
+                    "kind",
+                    "name",
+                    "uid"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ],
                   "x-kubernetes-map-type": "atomic"
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-patch-merge-key": "uid",
                 "x-kubernetes-patch-strategy": "merge"
               },
@@ -325,31 +307,19 @@
                   "null"
                 ]
               }
-            }
-          },
-          "nodeTopology": {
-            "description": "A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.",
+            },
             "type": [
               "object",
               "null"
-            ],
+            ]
+          },
+          "nodeTopology": {
+            "description": "A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.",
             "properties": {
               "matchExpressions": {
                 "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "key",
-                    "operator"
-                  ],
                   "properties": {
                     "key": {
                       "description": "key is the label key that the selector applies to.",
@@ -361,34 +331,50 @@
                     },
                     "values": {
                       "description": "values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.",
-                      "type": [
-                        "array",
-                        "null"
-                      ],
                       "items": {
                         "type": [
                           "string",
                           "null"
                         ]
-                      }
+                      },
+                      "type": [
+                        "array",
+                        "null"
+                      ]
                     }
-                  }
-                }
+                  },
+                  "required": [
+                    "key",
+                    "operator"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
               },
               "matchLabels": {
-                "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "additionalProperties": {
                   "type": [
                     "string",
                     "null"
                   ]
-                }
+                },
+                "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+                "type": [
+                  "object",
+                  "null"
+                ]
               }
             },
+            "type": [
+              "object",
+              "null"
+            ],
             "x-kubernetes-map-type": "atomic"
           },
           "storageClassName": {
@@ -396,6 +382,13 @@
             "type": "string"
           }
         },
+        "required": [
+          "storageClassName"
+        ],
+        "type": [
+          "object",
+          "null"
+        ],
         "x-kubernetes-group-version-kind": [
           {
             "group": "storage.k8s.io",
@@ -404,6 +397,10 @@
           }
         ]
       },
+      "type": [
+        "array",
+        "null"
+      ],
       "x-kubernetes-list-map-keys": [
         "name"
       ],
@@ -411,20 +408,16 @@
     },
     "kind": {
       "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "enum": [
+        "CSIStorageCapacityList"
+      ],
       "type": [
         "string",
         "null"
-      ],
-      "enum": [
-        "CSIStorageCapacityList"
       ]
     },
     "metadata": {
       "description": "ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "continue": {
           "description": "continue may be set if the user set a limit on the number of items returned, and indicates that the server has more data available. The value is opaque and may be used to issue another request to the endpoint that served this list to retrieve the next set of available objects. Continuing a consistent list may not be possible if the server configuration has changed or more than a few minutes have passed. The resourceVersion field returned when using this continue value will be identical to the value in the first response, unless you have received this token from an error message.",
@@ -435,11 +428,11 @@
         },
         "remainingItemCount": {
           "description": "remainingItemCount is the number of subsequent items in the list which are not included in this list response. If the list request contained label or field selectors, then the number of remaining items is unknown and the field will be left unset and omitted during serialization. If the list is complete (either because it is not chunking or because this is the last chunk), then there are no more remaining items and this field will be left unset and omitted during serialization. Servers older than v1.15 do not set this field. The intended use of the remainingItemCount is *estimating* the size of a collection. Clients should not rely on the remainingItemCount to be set or to be exact.",
+          "format": "int64",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int64"
+          ]
         },
         "resourceVersion": {
           "description": "String that identifies the server's internal version of this object that can be used by clients to determine when objects have changed. Value must be treated as opaque by clients and passed unmodified back to the server. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
@@ -455,15 +448,22 @@
             "null"
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
+  "required": [
+    "items"
+  ],
+  "type": "object",
   "x-kubernetes-group-version-kind": [
     {
       "group": "storage.k8s.io",
       "kind": "CSIStorageCapacityList",
       "version": "v1"
     }
-  ],
-  "$schema": "http://json-schema.org/schema#"
+  ]
 }

@@ -1,59 +1,55 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "CertificateSigningRequestSpec contains the certificate request.",
-  "type": "object",
-  "required": [
-    "request",
-    "signerName"
-  ],
   "properties": {
     "expirationSeconds": {
       "description": "expirationSeconds is the requested duration of validity of the issued certificate. The certificate signer may issue a certificate with a different validity duration so a client must check the delta between the notBefore and and notAfter fields in the issued certificate to determine the actual duration.\n\nThe v1.22+ in-tree implementations of the well-known Kubernetes signers will honor this field as long as the requested duration is not greater than the maximum duration they will honor per the --cluster-signing-duration CLI flag to the Kubernetes controller manager.\n\nCertificate signers may not honor this field for various reasons:\n\n  1. Old signer that is unaware of the field (such as the in-tree\n     implementations prior to v1.22)\n  2. Signer whose configured maximum is shorter than the requested duration\n  3. Signer whose configured minimum is longer than the requested duration\n\nThe minimum valid value for expirationSeconds is 600, i.e. 10 minutes.",
+      "format": "int32",
       "type": [
         "integer",
         "null"
-      ],
-      "format": "int32"
+      ]
     },
     "extra": {
-      "description": "extra contains extra attributes of the user that created the CertificateSigningRequest. Populated by the API server on creation and immutable.",
-      "type": [
-        "object",
-        "null"
-      ],
       "additionalProperties": {
-        "type": [
-          "array",
-          "null"
-        ],
         "items": {
           "type": [
             "string",
             "null"
           ]
-        }
-      }
+        },
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "description": "extra contains extra attributes of the user that created the CertificateSigningRequest. Populated by the API server on creation and immutable.",
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "groups": {
       "description": "groups contains group membership of the user that created the CertificateSigningRequest. Populated by the API server on creation and immutable.",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "type": [
           "string",
           "null"
         ]
       },
+      "type": [
+        "array",
+        "null"
+      ],
       "x-kubernetes-list-type": "atomic"
     },
     "request": {
       "description": "request contains an x509 certificate signing request encoded in a \"CERTIFICATE REQUEST\" PEM block. When serialized as JSON or YAML, the data is additionally base64-encoded.",
+      "format": "byte",
       "type": [
         "string",
         "null"
       ],
-      "format": "byte",
       "x-kubernetes-list-type": "atomic"
     },
     "signerName": {
@@ -72,16 +68,16 @@
     },
     "usages": {
       "description": "usages specifies a set of key usages requested in the issued certificate.\n\nRequests for TLS client certificates typically request: \"digital signature\", \"key encipherment\", \"client auth\".\n\nRequests for TLS serving certificates typically request: \"key encipherment\", \"digital signature\", \"server auth\".\n\nValid values are:\n \"signing\", \"digital signature\", \"content commitment\",\n \"key encipherment\", \"key agreement\", \"data encipherment\",\n \"cert sign\", \"crl sign\", \"encipher only\", \"decipher only\", \"any\",\n \"server auth\", \"client auth\",\n \"code signing\", \"email protection\", \"s/mime\",\n \"ipsec end system\", \"ipsec tunnel\", \"ipsec user\",\n \"timestamping\", \"ocsp signing\", \"microsoft sgc\", \"netscape sgc\"",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "type": [
           "string",
           "null"
         ]
       },
+      "type": [
+        "array",
+        "null"
+      ],
       "x-kubernetes-list-type": "atomic"
     },
     "username": {
@@ -92,5 +88,9 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "request",
+    "signerName"
+  ],
+  "type": "object"
 }

@@ -1,9 +1,5 @@
 {
-  "type": "object",
-  "required": [
-    "kind",
-    "name"
-  ],
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
     "apiGroup": {
       "description": "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
@@ -34,5 +30,9 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "kind",
+    "name"
+  ],
+  "type": "object"
 }

@@ -1,6 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Spec to control the desired behavior of daemon set rolling update.",
-  "type": "object",
   "properties": {
     "maxSurge": {
       "oneOf": [
@@ -35,5 +35,5 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

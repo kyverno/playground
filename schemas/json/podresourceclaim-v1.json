@@ -1,9 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "PodResourceClaim references exactly one ResourceClaim through a ClaimSource. It adds a name to it that uniquely identifies the ResourceClaim inside the Pod. Containers that need access to the ResourceClaim reference it with this name.",
-  "type": "object",
-  "required": [
-    "name"
-  ],
   "properties": {
     "name": {
       "description": "Name uniquely identifies this resource claim inside the pod. This must be a DNS_LABEL.",
@@ -14,10 +11,6 @@
     },
     "source": {
       "description": "ClaimSource describes a reference to a ResourceClaim.\n\nExactly one of these fields should be set.  Consumers of this type must treat an empty object as if it has an unknown value.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "resourceClaimName": {
           "description": "ResourceClaimName is the name of a ResourceClaim object in the same namespace as this pod.",
@@ -33,8 +26,15 @@
             "null"
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "name"
+  ],
+  "type": "object"
 }

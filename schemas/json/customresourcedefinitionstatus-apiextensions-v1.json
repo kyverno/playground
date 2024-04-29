@@ -1,30 +1,22 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "CustomResourceDefinitionStatus indicates the state of the CustomResourceDefinition",
-  "type": "object",
   "properties": {
     "acceptedNames": {
       "description": "CustomResourceDefinitionNames indicates the names to serve this CustomResourceDefinition",
-      "type": [
-        "object",
-        "null"
-      ],
-      "required": [
-        "plural",
-        "kind"
-      ],
       "properties": {
         "categories": {
           "description": "categories is a list of grouped resources this custom resource belongs to (e.g. 'all'). This is published in API discovery documents, and used by clients to support invocations like `kubectl get all`.",
-          "type": [
-            "array",
-            "null"
-          ],
           "items": {
             "type": [
               "string",
               "null"
             ]
-          }
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "kind": {
           "description": "kind is the serialized kind of the resource. It is normally CamelCase and singular. Custom resource instances will use this value as the `kind` attribute in API calls.",
@@ -43,16 +35,16 @@
         },
         "shortNames": {
           "description": "shortNames are short names for the resource, exposed in API discovery documents, and used by clients to support invocations like `kubectl get <shortname>`. It must be all lowercase.",
-          "type": [
-            "array",
-            "null"
-          ],
           "items": {
             "type": [
               "string",
               "null"
             ]
-          }
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "singular": {
           "description": "singular is the singular name of the resource. It must be all lowercase. Defaults to lowercased `kind`.",
@@ -61,32 +53,28 @@
             "null"
           ]
         }
-      }
+      },
+      "required": [
+        "plural",
+        "kind"
+      ],
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "conditions": {
       "description": "conditions indicate state for particular aspects of a CustomResourceDefinition",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "CustomResourceDefinitionCondition contains details for the current condition of this pod.",
-        "type": [
-          "object",
-          "null"
-        ],
-        "required": [
-          "type",
-          "status"
-        ],
         "properties": {
           "lastTransitionTime": {
             "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+            "format": "date-time",
             "type": [
               "string",
               "null"
-            ],
-            "format": "date-time"
+            ]
           },
           "message": {
             "description": "message is a human-readable message indicating details about last transition.",
@@ -110,8 +98,20 @@
             "description": "type is the type of the condition. Types include Established, NamesAccepted and Terminating.",
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "type",
+          "status"
+        ],
+        "type": [
+          "object",
+          "null"
+        ]
       },
+      "type": [
+        "array",
+        "null"
+      ],
       "x-kubernetes-list-map-keys": [
         "type"
       ],
@@ -119,17 +119,17 @@
     },
     "storedVersions": {
       "description": "storedVersions lists all versions of CustomResources that were ever persisted. Tracking these versions allows a migration path for stored versions in etcd. The field is mutable so a migration controller can finish a migration to another version (ensuring no old objects are left in storage), and then remove the rest of the versions from this list. Versions may not be removed from `spec.versions` while they exist in this list.",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "type": [
           "string",
           "null"
         ]
-      }
+      },
+      "type": [
+        "array",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

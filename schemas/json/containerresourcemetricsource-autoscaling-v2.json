@@ -1,11 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "ContainerResourceMetricSource indicates how to scale on a resource metric known to Kubernetes, as specified in requests and limits, describing each pod in the current scale target (e.g. CPU or memory).  The values will be averaged together before being compared to the target.  Such metrics are built in to Kubernetes, and have special scaling options on top of those available to normal per-pod metrics using the \"pods\" source.  Only one \"target\" type should be set.",
-  "type": "object",
-  "required": [
-    "name",
-    "target",
-    "container"
-  ],
   "properties": {
     "container": {
       "description": "container is the name of the container in the pods of the scaling target",
@@ -23,21 +18,14 @@
     },
     "target": {
       "description": "MetricTarget defines the target value, average value, or average utilization of a specific metric",
-      "type": [
-        "object",
-        "null"
-      ],
-      "required": [
-        "type"
-      ],
       "properties": {
         "averageUtilization": {
           "description": "averageUtilization is the target value of the average of the resource metric across all relevant pods, represented as a percentage of the requested value of the resource for the pods. Currently only valid for Resource metric source type",
+          "format": "int32",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int32"
+          ]
         },
         "averageValue": {
           "oneOf": [
@@ -75,8 +63,20 @@
             }
           ]
         }
-      }
+      },
+      "required": [
+        "type"
+      ],
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "name",
+    "target",
+    "container"
+  ],
+  "type": "object"
 }

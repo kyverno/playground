@@ -1,21 +1,17 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
-  "type": "object",
-  "required": [
-    "diskName",
-    "diskURI"
-  ],
   "properties": {
     "cachingMode": {
       "description": "cachingMode is the Host Caching mode: None, Read Only, Read Write.\n\nPossible enum values:\n - `\"None\"`\n - `\"ReadOnly\"`\n - `\"ReadWrite\"`",
-      "type": [
-        "string",
-        "null"
-      ],
       "enum": [
         "None",
         "ReadOnly",
         "ReadWrite"
+      ],
+      "type": [
+        "string",
+        "null"
       ]
     },
     "diskName": {
@@ -41,14 +37,14 @@
     },
     "kind": {
       "description": "kind expected values are Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared\n\nPossible enum values:\n - `\"Dedicated\"`\n - `\"Managed\"`\n - `\"Shared\"`",
-      "type": [
-        "string",
-        "null"
-      ],
       "enum": [
         "Dedicated",
         "Managed",
         "Shared"
+      ],
+      "type": [
+        "string",
+        "null"
       ]
     },
     "readOnly": {
@@ -59,5 +55,9 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "diskName",
+    "diskURI"
+  ],
+  "type": "object"
 }

@@ -10,7 +10,7 @@
     :headers="headers as any"
     class="result-table"
     show-expand
-    v-model:expanded="(expanded as any)"
+    v-model:expanded="expanded"
     :items-per-page="-1">
     <template v-slot:[`item.policy`]="{ item }">
       <v-avatar size="24px" rounded="0" class="mr-2 mb-1">

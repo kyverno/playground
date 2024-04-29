@@ -1,6 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "SELinuxOptions are the labels to be applied to the container",
-  "type": "object",
   "properties": {
     "level": {
       "description": "Level is SELinux level label that applies to the container.",
@@ -31,5 +31,5 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

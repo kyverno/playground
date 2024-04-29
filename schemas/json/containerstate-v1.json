@@ -1,33 +1,26 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "ContainerState holds a possible state of container. Only one of its members may be specified. If none of them is specified, the default one is ContainerStateWaiting.",
-  "type": "object",
   "properties": {
     "running": {
       "description": "ContainerStateRunning is a running state of a container.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "startedAt": {
           "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+          "format": "date-time",
           "type": [
             "string",
             "null"
-          ],
-          "format": "date-time"
+          ]
         }
-      }
-    },
-    "terminated": {
-      "description": "ContainerStateTerminated is a terminated state of a container.",
+      },
       "type": [
         "object",
         "null"
-      ],
-      "required": [
-        "exitCode"
-      ],
+      ]
+    },
+    "terminated": {
+      "description": "ContainerStateTerminated is a terminated state of a container.",
       "properties": {
         "containerID": {
           "description": "Container's ID in the format '<type>://<container_id>'",
@@ -38,16 +31,16 @@
         },
         "exitCode": {
           "description": "Exit status from the last termination of the container",
-          "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "type": "integer"
         },
         "finishedAt": {
           "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+          "format": "date-time",
           "type": [
             "string",
             "null"
-          ],
-          "format": "date-time"
+          ]
         },
         "message": {
           "description": "Message regarding the last termination of the container",
@@ -65,28 +58,31 @@
         },
         "signal": {
           "description": "Signal from the last termination of the container",
+          "format": "int32",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int32"
+          ]
         },
         "startedAt": {
           "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+          "format": "date-time",
           "type": [
             "string",
             "null"
-          ],
-          "format": "date-time"
+          ]
         }
-      }
-    },
-    "waiting": {
-      "description": "ContainerStateWaiting is a waiting state of a container.",
+      },
+      "required": [
+        "exitCode"
+      ],
       "type": [
         "object",
         "null"
-      ],
+      ]
+    },
+    "waiting": {
+      "description": "ContainerStateWaiting is a waiting state of a container.",
       "properties": {
         "message": {
           "description": "Message regarding why the container is not yet running.",
@@ -102,8 +98,12 @@
             "null"
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

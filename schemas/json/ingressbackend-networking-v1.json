@@ -1,17 +1,9 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "IngressBackend describes all endpoints for a given service and port.",
-  "type": "object",
   "properties": {
     "resource": {
       "description": "TypedLocalObjectReference contains enough information to let you locate the typed referenced object inside the same namespace.",
-      "type": [
-        "object",
-        "null"
-      ],
-      "required": [
-        "kind",
-        "name"
-      ],
       "properties": {
         "apiGroup": {
           "description": "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
@@ -29,17 +21,18 @@
           "type": "string"
         }
       },
-      "x-kubernetes-map-type": "atomic"
-    },
-    "service": {
-      "description": "IngressServiceBackend references a Kubernetes Service as a Backend.",
+      "required": [
+        "kind",
+        "name"
+      ],
       "type": [
         "object",
         "null"
       ],
-      "required": [
-        "name"
-      ],
+      "x-kubernetes-map-type": "atomic"
+    },
+    "service": {
+      "description": "IngressServiceBackend references a Kubernetes Service as a Backend.",
       "properties": {
         "name": {
           "description": "name is the referenced service. The service must exist in the same namespace as the Ingress object.",
@@ -47,10 +40,6 @@
         },
         "port": {
           "description": "ServiceBackendPort is the service port being referenced.",
-          "type": [
-            "object",
-            "null"
-          ],
           "properties": {
             "name": {
               "description": "name is the name of the port on the Service. This is a mutually exclusive setting with \"Number\".",
@@ -61,16 +50,27 @@
             },
             "number": {
               "description": "number is the numerical port number (e.g. 80) on the Service. This is a mutually exclusive setting with \"Name\".",
+              "format": "int32",
               "type": [
                 "integer",
                 "null"
-              ],
-              "format": "int32"
+              ]
             }
-          }
+          },
+          "type": [
+            "object",
+            "null"
+          ]
         }
-      }
+      },
+      "required": [
+        "name"
+      ],
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

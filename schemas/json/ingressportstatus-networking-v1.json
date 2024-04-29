@@ -1,10 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "IngressPortStatus represents the error condition of a service port",
-  "type": "object",
-  "required": [
-    "port",
-    "protocol"
-  ],
   "properties": {
     "error": {
       "description": "error is to record the problem with the service port The format of the error shall comply with the following rules: - built-in error values shall be specified in this file and those shall use\n  CamelCase names\n- cloud provider specific error values must have names that comply with the\n  format foo.example.com/CamelCase.",
@@ -15,24 +11,28 @@
     },
     "port": {
       "description": "port is the port number of the ingress port.",
+      "format": "int32",
       "type": [
         "integer",
         "null"
-      ],
-      "format": "int32"
+      ]
     },
     "protocol": {
       "description": "protocol is the protocol of the ingress port. The supported values are: \"TCP\", \"UDP\", \"SCTP\"\n\nPossible enum values:\n - `\"SCTP\"` is the SCTP protocol.\n - `\"TCP\"` is the TCP protocol.\n - `\"UDP\"` is the UDP protocol.",
-      "type": [
-        "string",
-        "null"
-      ],
       "enum": [
         "SCTP",
         "TCP",
         "UDP"
+      ],
+      "type": [
+        "string",
+        "null"
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "port",
+    "protocol"
+  ],
+  "type": "object"
 }

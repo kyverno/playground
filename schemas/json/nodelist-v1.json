@@ -1,109 +1,94 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "NodeList is the whole list of all Nodes which have been registered with master.",
-  "type": "object",
-  "required": [
-    "items"
-  ],
   "properties": {
     "apiVersion": {
       "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "enum": [
+        "v1"
+      ],
       "type": [
         "string",
         "null"
-      ],
-      "enum": [
-        "v1"
       ]
     },
     "items": {
       "description": "List of nodes",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "Node is a worker node in Kubernetes. Each node will have a unique identifier in the cache (i.e. in etcd).",
-        "type": [
-          "object",
-          "null"
-        ],
         "properties": {
           "apiVersion": {
             "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+            "enum": [
+              "v1"
+            ],
             "type": [
               "string",
               "null"
-            ],
-            "enum": [
-              "v1"
             ]
           },
           "kind": {
             "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+            "enum": [
+              "Node"
+            ],
             "type": [
               "string",
               "null"
-            ],
-            "enum": [
-              "Node"
             ]
           },
           "metadata": {
             "description": "ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.",
-            "type": [
-              "object",
-              "null"
-            ],
             "properties": {
               "annotations": {
-                "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "additionalProperties": {
                   "type": [
                     "string",
                     "null"
                   ]
-                }
+                },
+                "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "creationTimestamp": {
                 "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                "format": "date-time",
                 "type": [
                   "string",
                   "null"
-                ],
-                "format": "date-time"
+                ]
               },
               "deletionGracePeriodSeconds": {
                 "description": "Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.",
+                "format": "int64",
                 "type": [
                   "integer",
                   "null"
-                ],
-                "format": "int64"
+                ]
               },
               "deletionTimestamp": {
                 "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                "format": "date-time",
                 "type": [
                   "string",
                   "null"
-                ],
-                "format": "date-time"
+                ]
               },
               "finalizers": {
                 "description": "Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed. Finalizers may be processed and removed in any order.  Order is NOT enforced because it introduces significant risk of stuck finalizers. finalizers is a shared field, any actor with permission can reorder it. If the finalizer list is processed in order, then this can lead to a situation in which the component responsible for the first finalizer in the list is waiting for a signal (field value, external system, or other) produced by a component responsible for a finalizer later in the list, resulting in a deadlock. Without enforced ordering finalizers are free to order amongst themselves and are not vulnerable to ordering changes in the list.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "type": [
                     "string",
                     "null"
                   ]
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-patch-strategy": "merge"
               },
               "generateName": {
@@ -115,37 +100,29 @@
               },
               "generation": {
                 "description": "A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.",
+                "format": "int64",
                 "type": [
                   "integer",
                   "null"
-                ],
-                "format": "int64"
+                ]
               },
               "labels": {
-                "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "additionalProperties": {
                   "type": [
                     "string",
                     "null"
                   ]
-                }
+                },
+                "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "managedFields": {
                 "description": "ManagedFields maps workflow-id and version to the set of fields that are managed by that workflow. This is mostly for internal housekeeping, and users typically shouldn't need to set or understand this field. A workflow can be the user's name, a controller's name, or the name of a specific apply path like \"ci-cd\". The set of fields is always in the version that the workflow used when modifying the object.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "ManagedFieldsEntry is a workflow-id, a FieldSet and the group version of the resource that the fieldset applies to.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
                   "properties": {
                     "apiVersion": {
                       "description": "APIVersion defines the version of this resource that this field set applies to. The format is \"group/version\" just like the top-level APIVersion field. It is necessary to track the version of a field set because it cannot be automatically converted.",
@@ -191,14 +168,22 @@
                     },
                     "time": {
                       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                      "format": "date-time",
                       "type": [
                         "string",
                         "null"
-                      ],
-                      "format": "date-time"
+                      ]
                     }
-                  }
-                }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
               },
               "name": {
                 "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names",
@@ -216,22 +201,8 @@
               },
               "ownerReferences": {
                 "description": "List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "OwnerReference contains enough information to let you identify an owning object. An owning object must be in the same namespace as the dependent, or be cluster-scoped, so there is no namespace field.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "apiVersion",
-                    "kind",
-                    "name",
-                    "uid"
-                  ],
                   "properties": {
                     "apiVersion": {
                       "description": "API version of the referent.",
@@ -264,8 +235,22 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "apiVersion",
+                    "kind",
+                    "name",
+                    "uid"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ],
                   "x-kubernetes-map-type": "atomic"
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-patch-merge-key": "uid",
                 "x-kubernetes-patch-strategy": "merge"
               },
@@ -290,33 +275,20 @@
                   "null"
                 ]
               }
-            }
-          },
-          "spec": {
-            "description": "NodeSpec describes the attributes that a node is created with.",
+            },
             "type": [
               "object",
               "null"
-            ],
+            ]
+          },
+          "spec": {
+            "description": "NodeSpec describes the attributes that a node is created with.",
             "properties": {
               "configSource": {
                 "description": "NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil. This API is deprecated since 1.22",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "properties": {
                   "configMap": {
                     "description": "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
-                    "type": [
-                      "object",
-                      "null"
-                    ],
-                    "required": [
-                      "namespace",
-                      "name",
-                      "kubeletConfigKey"
-                    ],
                     "properties": {
                       "kubeletConfigKey": {
                         "description": "KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure This field is required in all cases.",
@@ -344,9 +316,22 @@
                           "null"
                         ]
                       }
-                    }
+                    },
+                    "required": [
+                      "namespace",
+                      "name",
+                      "kubeletConfigKey"
+                    ],
+                    "type": [
+                      "object",
+                      "null"
+                    ]
                   }
-                }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "externalID": {
                 "description": "Deprecated. Not all kubelets will set this field. Remove field after 1.13. see: https://issues.k8s.io/61966",
@@ -364,16 +349,16 @@
               },
               "podCIDRs": {
                 "description": "podCIDRs represents the IP ranges assigned to the node for usage by Pods on that node. If this field is specified, the 0th entry must match the podCIDR field. It may contain at most 1 value for each of IPv4 and IPv6.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "type": [
                     "string",
                     "null"
                   ]
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-patch-strategy": "merge"
               },
               "providerID": {
@@ -385,29 +370,17 @@
               },
               "taints": {
                 "description": "If specified, the node's taints.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "The node this Taint is attached to has the \"effect\" on any pod that does not tolerate the Taint.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "key",
-                    "effect"
-                  ],
                   "properties": {
                     "effect": {
                       "description": "Required. The effect of the taint on pods that do not tolerate the taint. Valid effects are NoSchedule, PreferNoSchedule and NoExecute.\n\nPossible enum values:\n - `\"NoExecute\"` Evict any already-running pods that do not tolerate the taint. Currently enforced by NodeController.\n - `\"NoSchedule\"` Do not allow new pods to schedule onto the node unless they tolerate the taint, but allow all pods submitted to Kubelet without going through the scheduler to start, and allow all already-running pods to continue running. Enforced by the scheduler.\n - `\"PreferNoSchedule\"` Like TaintEffectNoSchedule, but the scheduler tries not to schedule new pods onto the node, rather than prohibiting new pods from scheduling onto the node entirely. Enforced by the scheduler.",
-                      "type": "string",
                       "enum": [
                         "NoExecute",
                         "NoSchedule",
                         "PreferNoSchedule"
-                      ]
+                      ],
+                      "type": "string"
                     },
                     "key": {
                       "description": "Required. The taint key to be applied to a node.",
@@ -415,11 +388,11 @@
                     },
                     "timeAdded": {
                       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                      "format": "date-time",
                       "type": [
                         "string",
                         "null"
-                      ],
-                      "format": "date-time"
+                      ]
                     },
                     "value": {
                       "description": "The taint value corresponding to the taint key.",
@@ -428,8 +401,20 @@
                         "null"
                       ]
                     }
-                  }
-                }
+                  },
+                  "required": [
+                    "key",
+                    "effect"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
               },
               "unschedulable": {
                 "description": "Unschedulable controls node schedulability of new pods. By default, node is schedulable. More info: https://kubernetes.io/docs/concepts/nodes/node/#manual-node-administration",
@@ -438,31 +423,19 @@
                   "null"
                 ]
               }
-            }
-          },
-          "status": {
-            "description": "NodeStatus is information about the current status of a node.",
+            },
             "type": [
               "object",
               "null"
-            ],
+            ]
+          },
+          "status": {
+            "description": "NodeStatus is information about the current status of a node.",
             "properties": {
               "addresses": {
                 "description": "List of addresses reachable to the node. Queried from cloud provider, if available. More info: https://kubernetes.io/docs/concepts/nodes/node/#addresses Note: This field is declared as mergeable, but the merge key is not sufficiently unique, which can cause data corruption when it is merged. Callers should instead use a full-replacement patch. See https://pr.k8s.io/79391 for an example. Consumers should assume that addresses can change during the lifetime of a Node. However, there are some exceptions where this may not be possible, such as Pods that inherit a Node's address in its own status or consumers of the downward API (status.hostIP).",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "NodeAddress contains information for the node's address.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "type",
-                    "address"
-                  ],
                   "properties": {
                     "address": {
                       "description": "The node address.",
@@ -472,89 +445,89 @@
                       "description": "Node address type, one of Hostname, ExternalIP or InternalIP.",
                       "type": "string"
                     }
-                  }
+                  },
+                  "required": [
+                    "type",
+                    "address"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
                 },
-                "x-kubernetes-patch-merge-key": "type",
-                "x-kubernetes-patch-strategy": "merge"
-              },
-              "allocatable": {
-                "description": "Allocatable represents the resources of a node that are available for scheduling. Defaults to Capacity.",
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "additionalProperties": {
-                  "oneOf": [
-                    {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    {
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "capacity": {
-                "description": "Capacity represents the total resources of a node. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "additionalProperties": {
-                  "oneOf": [
-                    {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    {
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "conditions": {
-                "description": "Conditions is an array of current observed node conditions. More info: https://kubernetes.io/docs/concepts/nodes/node/#condition",
                 "type": [
                   "array",
                   "null"
                 ],
+                "x-kubernetes-patch-merge-key": "type",
+                "x-kubernetes-patch-strategy": "merge"
+              },
+              "allocatable": {
+                "additionalProperties": {
+                  "oneOf": [
+                    {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "description": "Allocatable represents the resources of a node that are available for scheduling. Defaults to Capacity.",
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "capacity": {
+                "additionalProperties": {
+                  "oneOf": [
+                    {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  ]
+                },
+                "description": "Capacity represents the total resources of a node. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "conditions": {
+                "description": "Conditions is an array of current observed node conditions. More info: https://kubernetes.io/docs/concepts/nodes/node/#condition",
                 "items": {
                   "description": "NodeCondition contains condition information for a node.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "type",
-                    "status"
-                  ],
                   "properties": {
                     "lastHeartbeatTime": {
                       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                      "format": "date-time",
                       "type": [
                         "string",
                         "null"
-                      ],
-                      "format": "date-time"
+                      ]
                     },
                     "lastTransitionTime": {
                       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                      "format": "date-time",
                       "type": [
                         "string",
                         "null"
-                      ],
-                      "format": "date-time"
+                      ]
                     },
                     "message": {
                       "description": "Human readable message indicating details about last transition.",
@@ -578,36 +551,31 @@
                       "description": "Type of node condition.",
                       "type": "string"
                     }
-                  }
+                  },
+                  "required": [
+                    "type",
+                    "status"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-patch-merge-key": "type",
                 "x-kubernetes-patch-strategy": "merge"
               },
               "config": {
                 "description": "NodeConfigStatus describes the status of the config assigned by Node.Spec.ConfigSource.",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "properties": {
                   "active": {
                     "description": "NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil. This API is deprecated since 1.22",
-                    "type": [
-                      "object",
-                      "null"
-                    ],
                     "properties": {
                       "configMap": {
                         "description": "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
-                        "type": [
-                          "object",
-                          "null"
-                        ],
-                        "required": [
-                          "namespace",
-                          "name",
-                          "kubeletConfigKey"
-                        ],
                         "properties": {
                           "kubeletConfigKey": {
                             "description": "KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure This field is required in all cases.",
@@ -635,28 +603,28 @@
                               "null"
                             ]
                           }
-                        }
+                        },
+                        "required": [
+                          "namespace",
+                          "name",
+                          "kubeletConfigKey"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
                       }
-                    }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
                   },
                   "assigned": {
                     "description": "NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil. This API is deprecated since 1.22",
-                    "type": [
-                      "object",
-                      "null"
-                    ],
                     "properties": {
                       "configMap": {
                         "description": "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
-                        "type": [
-                          "object",
-                          "null"
-                        ],
-                        "required": [
-                          "namespace",
-                          "name",
-                          "kubeletConfigKey"
-                        ],
                         "properties": {
                           "kubeletConfigKey": {
                             "description": "KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure This field is required in all cases.",
@@ -684,9 +652,22 @@
                               "null"
                             ]
                           }
-                        }
+                        },
+                        "required": [
+                          "namespace",
+                          "name",
+                          "kubeletConfigKey"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
                       }
-                    }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
                   },
                   "error": {
                     "description": "Error describes any problems reconciling the Spec.ConfigSource to the Active config. Errors may occur, for example, attempting to checkpoint Spec.ConfigSource to the local Assigned record, attempting to checkpoint the payload associated with Spec.ConfigSource, attempting to load or validate the Assigned config, etc. Errors may occur at different points while syncing config. Earlier errors (e.g. download or checkpointing errors) will not result in a rollback to LastKnownGood, and may resolve across Kubelet retries. Later errors (e.g. loading or validating a checkpointed config) will result in a rollback to LastKnownGood. In the latter case, it is usually possible to resolve the error by fixing the config assigned in Spec.ConfigSource. You can find additional information for debugging by searching the error message in the Kubelet log. Error is a human-readable description of the error state; machines can check whether or not Error is empty, but should not rely on the stability of the Error text across Kubelet versions.",
@@ -697,22 +678,9 @@
                   },
                   "lastKnownGood": {
                     "description": "NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil. This API is deprecated since 1.22",
-                    "type": [
-                      "object",
-                      "null"
-                    ],
                     "properties": {
                       "configMap": {
                         "description": "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
-                        "type": [
-                          "object",
-                          "null"
-                        ],
-                        "required": [
-                          "namespace",
-                          "name",
-                          "kubeletConfigKey"
-                        ],
                         "properties": {
                           "kubeletConfigKey": {
                             "description": "KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure This field is required in all cases.",
@@ -740,93 +708,94 @@
                               "null"
                             ]
                           }
-                        }
+                        },
+                        "required": [
+                          "namespace",
+                          "name",
+                          "kubeletConfigKey"
+                        ],
+                        "type": [
+                          "object",
+                          "null"
+                        ]
                       }
-                    }
-                  }
-                }
-              },
-              "daemonEndpoints": {
-                "description": "NodeDaemonEndpoints lists ports opened by daemons running on the Node.",
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "properties": {
-                  "kubeletEndpoint": {
-                    "description": "DaemonEndpoint contains information about a single Daemon endpoint.",
+                    },
                     "type": [
                       "object",
                       "null"
-                    ],
-                    "required": [
-                      "Port"
-                    ],
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "daemonEndpoints": {
+                "description": "NodeDaemonEndpoints lists ports opened by daemons running on the Node.",
+                "properties": {
+                  "kubeletEndpoint": {
+                    "description": "DaemonEndpoint contains information about a single Daemon endpoint.",
                     "properties": {
                       "Port": {
                         "description": "Port number of the given endpoint.",
-                        "type": "integer",
-                        "format": "int32"
+                        "format": "int32",
+                        "type": "integer"
                       }
-                    }
+                    },
+                    "required": [
+                      "Port"
+                    ],
+                    "type": [
+                      "object",
+                      "null"
+                    ]
                   }
-                }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "images": {
                 "description": "List of container images on this node",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "Describe a container image",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
                   "properties": {
                     "names": {
                       "description": "Names by which this image is known. e.g. [\"kubernetes.example/hyperkube:v1.0.7\", \"cloud-vendor.registry.example/cloud-vendor/hyperkube:v1.0.7\"]",
-                      "type": [
-                        "array",
-                        "null"
-                      ],
                       "items": {
                         "type": [
                           "string",
                           "null"
                         ]
-                      }
+                      },
+                      "type": [
+                        "array",
+                        "null"
+                      ]
                     },
                     "sizeBytes": {
                       "description": "The size of the image in bytes.",
+                      "format": "int64",
                       "type": [
                         "integer",
                         "null"
-                      ],
-                      "format": "int64"
+                      ]
                     }
-                  }
-                }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
               },
               "nodeInfo": {
                 "description": "NodeSystemInfo is a set of ids/uuids to uniquely identify the node.",
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "required": [
-                  "machineID",
-                  "systemUUID",
-                  "bootID",
-                  "kernelVersion",
-                  "osImage",
-                  "containerRuntimeVersion",
-                  "kubeletVersion",
-                  "kubeProxyVersion",
-                  "operatingSystem",
-                  "architecture"
-                ],
                 "properties": {
                   "architecture": {
                     "description": "The Architecture reported by the node",
@@ -868,36 +837,40 @@
                     "description": "SystemUUID reported by the node. For unique machine identification MachineID is preferred. This field is specific to Red Hat hosts https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/rhsm/uuid",
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "machineID",
+                  "systemUUID",
+                  "bootID",
+                  "kernelVersion",
+                  "osImage",
+                  "containerRuntimeVersion",
+                  "kubeletVersion",
+                  "kubeProxyVersion",
+                  "operatingSystem",
+                  "architecture"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "phase": {
                 "description": "NodePhase is the recently observed lifecycle phase of the node. More info: https://kubernetes.io/docs/concepts/nodes/node/#phase The field is never populated, and now is deprecated.\n\nPossible enum values:\n - `\"Pending\"` means the node has been created/added by the system, but not configured.\n - `\"Running\"` means the node has been configured and has Kubernetes components running.\n - `\"Terminated\"` means the node has been removed from the cluster.",
-                "type": [
-                  "string",
-                  "null"
-                ],
                 "enum": [
                   "Pending",
                   "Running",
                   "Terminated"
+                ],
+                "type": [
+                  "string",
+                  "null"
                 ]
               },
               "volumesAttached": {
                 "description": "List of volumes that are attached to the node.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "AttachedVolume describes a volume attached to a node",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "name",
-                    "devicePath"
-                  ],
                   "properties": {
                     "devicePath": {
                       "description": "DevicePath represents the device path where the volume should be available",
@@ -907,25 +880,45 @@
                       "description": "Name of the attached volume",
                       "type": "string"
                     }
-                  }
-                }
-              },
-              "volumesInUse": {
-                "description": "List of attachable volumes in use (mounted) by the node.",
+                  },
+                  "required": [
+                    "name",
+                    "devicePath"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
                 "type": [
                   "array",
                   "null"
-                ],
+                ]
+              },
+              "volumesInUse": {
+                "description": "List of attachable volumes in use (mounted) by the node.",
                 "items": {
                   "type": [
                     "string",
                     "null"
                   ]
-                }
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
               }
-            }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
           }
         },
+        "type": [
+          "object",
+          "null"
+        ],
         "x-kubernetes-group-version-kind": [
           {
             "group": "",
@@ -933,24 +926,24 @@
             "version": "v1"
           }
         ]
-      }
+      },
+      "type": [
+        "array",
+        "null"
+      ]
     },
     "kind": {
       "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "enum": [
+        "NodeList"
+      ],
       "type": [
         "string",
         "null"
-      ],
-      "enum": [
-        "NodeList"
       ]
     },
     "metadata": {
       "description": "ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "continue": {
           "description": "continue may be set if the user set a limit on the number of items returned, and indicates that the server has more data available. The value is opaque and may be used to issue another request to the endpoint that served this list to retrieve the next set of available objects. Continuing a consistent list may not be possible if the server configuration has changed or more than a few minutes have passed. The resourceVersion field returned when using this continue value will be identical to the value in the first response, unless you have received this token from an error message.",
@@ -961,11 +954,11 @@
         },
         "remainingItemCount": {
           "description": "remainingItemCount is the number of subsequent items in the list which are not included in this list response. If the list request contained label or field selectors, then the number of remaining items is unknown and the field will be left unset and omitted during serialization. If the list is complete (either because it is not chunking or because this is the last chunk), then there are no more remaining items and this field will be left unset and omitted during serialization. Servers older than v1.15 do not set this field. The intended use of the remainingItemCount is *estimating* the size of a collection. Clients should not rely on the remainingItemCount to be set or to be exact.",
+          "format": "int64",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int64"
+          ]
         },
         "resourceVersion": {
           "description": "String that identifies the server's internal version of this object that can be used by clients to determine when objects have changed. Value must be treated as opaque by clients and passed unmodified back to the server. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
@@ -981,15 +974,22 @@
             "null"
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
+  "required": [
+    "items"
+  ],
+  "type": "object",
   "x-kubernetes-group-version-kind": [
     {
       "group": "",
       "kind": "NodeList",
       "version": "v1"
     }
-  ],
-  "$schema": "http://json-schema.org/schema#"
+  ]
 }

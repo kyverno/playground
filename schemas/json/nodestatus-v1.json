@@ -1,23 +1,11 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "NodeStatus is information about the current status of a node.",
-  "type": "object",
   "properties": {
     "addresses": {
       "description": "List of addresses reachable to the node. Queried from cloud provider, if available. More info: https://kubernetes.io/docs/concepts/nodes/node/#addresses Note: This field is declared as mergeable, but the merge key is not sufficiently unique, which can cause data corruption when it is merged. Callers should instead use a full-replacement patch. See https://pr.k8s.io/79391 for an example. Consumers should assume that addresses can change during the lifetime of a Node. However, there are some exceptions where this may not be possible, such as Pods that inherit a Node's address in its own status or consumers of the downward API (status.hostIP).",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "NodeAddress contains information for the node's address.",
-        "type": [
-          "object",
-          "null"
-        ],
-        "required": [
-          "type",
-          "address"
-        ],
         "properties": {
           "address": {
             "description": "The node address.",
@@ -27,89 +15,89 @@
             "description": "Node address type, one of Hostname, ExternalIP or InternalIP.",
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "type",
+          "address"
+        ],
+        "type": [
+          "object",
+          "null"
+        ]
       },
-      "x-kubernetes-patch-merge-key": "type",
-      "x-kubernetes-patch-strategy": "merge"
-    },
-    "allocatable": {
-      "description": "Allocatable represents the resources of a node that are available for scheduling. Defaults to Capacity.",
-      "type": [
-        "object",
-        "null"
-      ],
-      "additionalProperties": {
-        "oneOf": [
-          {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          {
-            "type": [
-              "number",
-              "null"
-            ]
-          }
-        ]
-      }
-    },
-    "capacity": {
-      "description": "Capacity represents the total resources of a node. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
-      "type": [
-        "object",
-        "null"
-      ],
-      "additionalProperties": {
-        "oneOf": [
-          {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          {
-            "type": [
-              "number",
-              "null"
-            ]
-          }
-        ]
-      }
-    },
-    "conditions": {
-      "description": "Conditions is an array of current observed node conditions. More info: https://kubernetes.io/docs/concepts/nodes/node/#condition",
       "type": [
         "array",
         "null"
       ],
+      "x-kubernetes-patch-merge-key": "type",
+      "x-kubernetes-patch-strategy": "merge"
+    },
+    "allocatable": {
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        ]
+      },
+      "description": "Allocatable represents the resources of a node that are available for scheduling. Defaults to Capacity.",
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "capacity": {
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        ]
+      },
+      "description": "Capacity represents the total resources of a node. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity",
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "conditions": {
+      "description": "Conditions is an array of current observed node conditions. More info: https://kubernetes.io/docs/concepts/nodes/node/#condition",
       "items": {
         "description": "NodeCondition contains condition information for a node.",
-        "type": [
-          "object",
-          "null"
-        ],
-        "required": [
-          "type",
-          "status"
-        ],
         "properties": {
           "lastHeartbeatTime": {
             "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+            "format": "date-time",
             "type": [
               "string",
               "null"
-            ],
-            "format": "date-time"
+            ]
           },
           "lastTransitionTime": {
             "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+            "format": "date-time",
             "type": [
               "string",
               "null"
-            ],
-            "format": "date-time"
+            ]
           },
           "message": {
             "description": "Human readable message indicating details about last transition.",
@@ -133,36 +121,31 @@
             "description": "Type of node condition.",
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "type",
+          "status"
+        ],
+        "type": [
+          "object",
+          "null"
+        ]
       },
+      "type": [
+        "array",
+        "null"
+      ],
       "x-kubernetes-patch-merge-key": "type",
       "x-kubernetes-patch-strategy": "merge"
     },
     "config": {
       "description": "NodeConfigStatus describes the status of the config assigned by Node.Spec.ConfigSource.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "active": {
           "description": "NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil. This API is deprecated since 1.22",
-          "type": [
-            "object",
-            "null"
-          ],
           "properties": {
             "configMap": {
               "description": "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
-              "type": [
-                "object",
-                "null"
-              ],
-              "required": [
-                "namespace",
-                "name",
-                "kubeletConfigKey"
-              ],
               "properties": {
                 "kubeletConfigKey": {
                   "description": "KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure This field is required in all cases.",
@@ -190,28 +173,28 @@
                     "null"
                   ]
                 }
-              }
+              },
+              "required": [
+                "namespace",
+                "name",
+                "kubeletConfigKey"
+              ],
+              "type": [
+                "object",
+                "null"
+              ]
             }
-          }
+          },
+          "type": [
+            "object",
+            "null"
+          ]
         },
         "assigned": {
           "description": "NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil. This API is deprecated since 1.22",
-          "type": [
-            "object",
-            "null"
-          ],
           "properties": {
             "configMap": {
               "description": "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
-              "type": [
-                "object",
-                "null"
-              ],
-              "required": [
-                "namespace",
-                "name",
-                "kubeletConfigKey"
-              ],
               "properties": {
                 "kubeletConfigKey": {
                   "description": "KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure This field is required in all cases.",
@@ -239,9 +222,22 @@
                     "null"
                   ]
                 }
-              }
+              },
+              "required": [
+                "namespace",
+                "name",
+                "kubeletConfigKey"
+              ],
+              "type": [
+                "object",
+                "null"
+              ]
             }
-          }
+          },
+          "type": [
+            "object",
+            "null"
+          ]
         },
         "error": {
           "description": "Error describes any problems reconciling the Spec.ConfigSource to the Active config. Errors may occur, for example, attempting to checkpoint Spec.ConfigSource to the local Assigned record, attempting to checkpoint the payload associated with Spec.ConfigSource, attempting to load or validate the Assigned config, etc. Errors may occur at different points while syncing config. Earlier errors (e.g. download or checkpointing errors) will not result in a rollback to LastKnownGood, and may resolve across Kubelet retries. Later errors (e.g. loading or validating a checkpointed config) will result in a rollback to LastKnownGood. In the latter case, it is usually possible to resolve the error by fixing the config assigned in Spec.ConfigSource. You can find additional information for debugging by searching the error message in the Kubelet log. Error is a human-readable description of the error state; machines can check whether or not Error is empty, but should not rely on the stability of the Error text across Kubelet versions.",
@@ -252,22 +248,9 @@
         },
         "lastKnownGood": {
           "description": "NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil. This API is deprecated since 1.22",
-          "type": [
-            "object",
-            "null"
-          ],
           "properties": {
             "configMap": {
               "description": "ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node. This API is deprecated since 1.22: https://git.k8s.io/enhancements/keps/sig-node/281-dynamic-kubelet-configuration",
-              "type": [
-                "object",
-                "null"
-              ],
-              "required": [
-                "namespace",
-                "name",
-                "kubeletConfigKey"
-              ],
               "properties": {
                 "kubeletConfigKey": {
                   "description": "KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure This field is required in all cases.",
@@ -295,93 +278,94 @@
                     "null"
                   ]
                 }
-              }
+              },
+              "required": [
+                "namespace",
+                "name",
+                "kubeletConfigKey"
+              ],
+              "type": [
+                "object",
+                "null"
+              ]
             }
-          }
-        }
-      }
-    },
-    "daemonEndpoints": {
-      "description": "NodeDaemonEndpoints lists ports opened by daemons running on the Node.",
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "kubeletEndpoint": {
-          "description": "DaemonEndpoint contains information about a single Daemon endpoint.",
+          },
           "type": [
             "object",
             "null"
-          ],
-          "required": [
-            "Port"
-          ],
+          ]
+        }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "daemonEndpoints": {
+      "description": "NodeDaemonEndpoints lists ports opened by daemons running on the Node.",
+      "properties": {
+        "kubeletEndpoint": {
+          "description": "DaemonEndpoint contains information about a single Daemon endpoint.",
           "properties": {
             "Port": {
               "description": "Port number of the given endpoint.",
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "type": "integer"
             }
-          }
+          },
+          "required": [
+            "Port"
+          ],
+          "type": [
+            "object",
+            "null"
+          ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "images": {
       "description": "List of container images on this node",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "Describe a container image",
-        "type": [
-          "object",
-          "null"
-        ],
         "properties": {
           "names": {
             "description": "Names by which this image is known. e.g. [\"kubernetes.example/hyperkube:v1.0.7\", \"cloud-vendor.registry.example/cloud-vendor/hyperkube:v1.0.7\"]",
-            "type": [
-              "array",
-              "null"
-            ],
             "items": {
               "type": [
                 "string",
                 "null"
               ]
-            }
+            },
+            "type": [
+              "array",
+              "null"
+            ]
           },
           "sizeBytes": {
             "description": "The size of the image in bytes.",
+            "format": "int64",
             "type": [
               "integer",
               "null"
-            ],
-            "format": "int64"
+            ]
           }
-        }
-      }
+        },
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "type": [
+        "array",
+        "null"
+      ]
     },
     "nodeInfo": {
       "description": "NodeSystemInfo is a set of ids/uuids to uniquely identify the node.",
-      "type": [
-        "object",
-        "null"
-      ],
-      "required": [
-        "machineID",
-        "systemUUID",
-        "bootID",
-        "kernelVersion",
-        "osImage",
-        "containerRuntimeVersion",
-        "kubeletVersion",
-        "kubeProxyVersion",
-        "operatingSystem",
-        "architecture"
-      ],
       "properties": {
         "architecture": {
           "description": "The Architecture reported by the node",
@@ -423,36 +407,40 @@
           "description": "SystemUUID reported by the node. For unique machine identification MachineID is preferred. This field is specific to Red Hat hosts https://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/rhsm/uuid",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "machineID",
+        "systemUUID",
+        "bootID",
+        "kernelVersion",
+        "osImage",
+        "containerRuntimeVersion",
+        "kubeletVersion",
+        "kubeProxyVersion",
+        "operatingSystem",
+        "architecture"
+      ],
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "phase": {
       "description": "NodePhase is the recently observed lifecycle phase of the node. More info: https://kubernetes.io/docs/concepts/nodes/node/#phase The field is never populated, and now is deprecated.\n\nPossible enum values:\n - `\"Pending\"` means the node has been created/added by the system, but not configured.\n - `\"Running\"` means the node has been configured and has Kubernetes components running.\n - `\"Terminated\"` means the node has been removed from the cluster.",
-      "type": [
-        "string",
-        "null"
-      ],
       "enum": [
         "Pending",
         "Running",
         "Terminated"
+      ],
+      "type": [
+        "string",
+        "null"
       ]
     },
     "volumesAttached": {
       "description": "List of volumes that are attached to the node.",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "AttachedVolume describes a volume attached to a node",
-        "type": [
-          "object",
-          "null"
-        ],
-        "required": [
-          "name",
-          "devicePath"
-        ],
         "properties": {
           "devicePath": {
             "description": "DevicePath represents the device path where the volume should be available",
@@ -462,22 +450,34 @@
             "description": "Name of the attached volume",
             "type": "string"
           }
-        }
-      }
-    },
-    "volumesInUse": {
-      "description": "List of attachable volumes in use (mounted) by the node.",
+        },
+        "required": [
+          "name",
+          "devicePath"
+        ],
+        "type": [
+          "object",
+          "null"
+        ]
+      },
       "type": [
         "array",
         "null"
-      ],
+      ]
+    },
+    "volumesInUse": {
+      "description": "List of attachable volumes in use (mounted) by the node.",
       "items": {
         "type": [
           "string",
           "null"
         ]
-      }
+      },
+      "type": [
+        "array",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

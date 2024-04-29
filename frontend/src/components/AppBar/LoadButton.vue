@@ -62,7 +62,9 @@ const load = (name: string) => {
     config: input.config.value,
     exceptions: input.exceptions.value,
     clusterResources: input.clusterResources.value,
-    name: input.name
+    name: input.name,
+    vapBindings: input.vapBindings.value,
+    imageData: input.imageData.value
   })
 
   menu.value = false

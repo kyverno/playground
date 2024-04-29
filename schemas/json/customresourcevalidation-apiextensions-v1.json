@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "CustomResourceValidation is a list of validation methods for CustomResources.",
+  "properties": {
+    "openAPIV3Schema": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "type": "object"
+}

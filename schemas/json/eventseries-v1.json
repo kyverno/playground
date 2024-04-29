@@ -1,23 +1,23 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "EventSeries contain information on series of events, i.e. thing that was/is happening continuously for some time.",
-  "type": "object",
   "properties": {
     "count": {
       "description": "Number of occurrences in this series up to the last heartbeat time",
+      "format": "int32",
       "type": [
         "integer",
         "null"
-      ],
-      "format": "int32"
+      ]
     },
     "lastObservedTime": {
       "description": "MicroTime is version of Time with microsecond level precision.",
+      "format": "date-time",
       "type": [
         "string",
         "null"
-      ],
-      "format": "date-time"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

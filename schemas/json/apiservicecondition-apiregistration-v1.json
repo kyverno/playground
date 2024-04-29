@@ -1,18 +1,14 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "APIServiceCondition describes the state of an APIService at a particular point",
-  "type": "object",
-  "required": [
-    "type",
-    "status"
-  ],
   "properties": {
     "lastTransitionTime": {
       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+      "format": "date-time",
       "type": [
         "string",
         "null"
-      ],
-      "format": "date-time"
+      ]
     },
     "message": {
       "description": "Human-readable message indicating details about last transition.",
@@ -43,5 +39,9 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "type",
+    "status"
+  ],
+  "type": "object"
 }

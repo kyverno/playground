@@ -1,6 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface",
-  "type": "object",
   "properties": {
     "group": {
       "description": "Group is the API Group of the Resource.  \"*\" means all.",
@@ -52,5 +52,5 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

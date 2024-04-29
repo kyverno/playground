@@ -68,6 +68,7 @@ const submit = (): void => {
       resources: inputs.resource,
       oldResources: inputs.oldResource,
       policyExceptions: inputs.exceptions,
+      vapBindings: inputs.vapBindings,
       clusterResources: inputs.clusterResources,
       context: inputs.context,
       config: inputs.config,

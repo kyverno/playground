@@ -1,106 +1,94 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "ValidatingAdmissionPolicyList is a list of ValidatingAdmissionPolicy.",
-  "type": "object",
   "properties": {
     "apiVersion": {
       "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "enum": [
+        "admissionregistration.k8s.io/v1beta1"
+      ],
       "type": [
         "string",
         "null"
-      ],
-      "enum": [
-        "admissionregistration.k8s.io/v1beta1"
       ]
     },
     "items": {
       "description": "List of ValidatingAdmissionPolicy.",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "ValidatingAdmissionPolicy describes the definition of an admission validation policy that accepts or rejects an object without changing it.",
-        "type": [
-          "object",
-          "null"
-        ],
         "properties": {
           "apiVersion": {
             "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+            "enum": [
+              "admissionregistration.k8s.io/v1beta1"
+            ],
             "type": [
               "string",
               "null"
-            ],
-            "enum": [
-              "admissionregistration.k8s.io/v1beta1"
             ]
           },
           "kind": {
             "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+            "enum": [
+              "ValidatingAdmissionPolicy"
+            ],
             "type": [
               "string",
               "null"
-            ],
-            "enum": [
-              "ValidatingAdmissionPolicy"
             ]
           },
           "metadata": {
             "description": "ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.",
-            "type": [
-              "object",
-              "null"
-            ],
             "properties": {
               "annotations": {
-                "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "additionalProperties": {
                   "type": [
                     "string",
                     "null"
                   ]
-                }
+                },
+                "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "creationTimestamp": {
                 "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                "format": "date-time",
                 "type": [
                   "string",
                   "null"
-                ],
-                "format": "date-time"
+                ]
               },
               "deletionGracePeriodSeconds": {
                 "description": "Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.",
+                "format": "int64",
                 "type": [
                   "integer",
                   "null"
-                ],
-                "format": "int64"
+                ]
               },
               "deletionTimestamp": {
                 "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                "format": "date-time",
                 "type": [
                   "string",
                   "null"
-                ],
-                "format": "date-time"
+                ]
               },
               "finalizers": {
                 "description": "Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed. Finalizers may be processed and removed in any order.  Order is NOT enforced because it introduces significant risk of stuck finalizers. finalizers is a shared field, any actor with permission can reorder it. If the finalizer list is processed in order, then this can lead to a situation in which the component responsible for the first finalizer in the list is waiting for a signal (field value, external system, or other) produced by a component responsible for a finalizer later in the list, resulting in a deadlock. Without enforced ordering finalizers are free to order amongst themselves and are not vulnerable to ordering changes in the list.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "type": [
                     "string",
                     "null"
                   ]
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-patch-strategy": "merge"
               },
               "generateName": {
@@ -112,37 +100,29 @@
               },
               "generation": {
                 "description": "A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.",
+                "format": "int64",
                 "type": [
                   "integer",
                   "null"
-                ],
-                "format": "int64"
+                ]
               },
               "labels": {
-                "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "additionalProperties": {
                   "type": [
                     "string",
                     "null"
                   ]
-                }
+                },
+                "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
+                "type": [
+                  "object",
+                  "null"
+                ]
               },
               "managedFields": {
                 "description": "ManagedFields maps workflow-id and version to the set of fields that are managed by that workflow. This is mostly for internal housekeeping, and users typically shouldn't need to set or understand this field. A workflow can be the user's name, a controller's name, or the name of a specific apply path like \"ci-cd\". The set of fields is always in the version that the workflow used when modifying the object.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "ManagedFieldsEntry is a workflow-id, a FieldSet and the group version of the resource that the fieldset applies to.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
                   "properties": {
                     "apiVersion": {
                       "description": "APIVersion defines the version of this resource that this field set applies to. The format is \"group/version\" just like the top-level APIVersion field. It is necessary to track the version of a field set because it cannot be automatically converted.",
@@ -188,14 +168,22 @@
                     },
                     "time": {
                       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                      "format": "date-time",
                       "type": [
                         "string",
                         "null"
-                      ],
-                      "format": "date-time"
+                      ]
                     }
-                  }
-                }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
               },
               "name": {
                 "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names",
@@ -213,22 +201,8 @@
               },
               "ownerReferences": {
                 "description": "List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "OwnerReference contains enough information to let you identify an owning object. An owning object must be in the same namespace as the dependent, or be cluster-scoped, so there is no namespace field.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "apiVersion",
-                    "kind",
-                    "name",
-                    "uid"
-                  ],
                   "properties": {
                     "apiVersion": {
                       "description": "API version of the referent.",
@@ -261,8 +235,22 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "apiVersion",
+                    "kind",
+                    "name",
+                    "uid"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ],
                   "x-kubernetes-map-type": "atomic"
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-patch-merge-key": "uid",
                 "x-kubernetes-patch-strategy": "merge"
               },
@@ -287,31 +275,19 @@
                   "null"
                 ]
               }
-            }
-          },
-          "spec": {
-            "description": "ValidatingAdmissionPolicySpec is the specification of the desired behavior of the AdmissionPolicy.",
+            },
             "type": [
               "object",
               "null"
-            ],
+            ]
+          },
+          "spec": {
+            "description": "ValidatingAdmissionPolicySpec is the specification of the desired behavior of the AdmissionPolicy.",
             "properties": {
               "auditAnnotations": {
                 "description": "auditAnnotations contains CEL expressions which are used to produce audit annotations for the audit event of the API request. validations and auditAnnotations may not both be empty; a least one of validations or auditAnnotations is required.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "AuditAnnotation describes how to produce an audit annotation for an API request.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "key",
-                    "valueExpression"
-                  ],
                   "properties": {
                     "key": {
                       "description": "key specifies the audit annotation key. The audit annotation keys of a ValidatingAdmissionPolicy must be unique. The key must be a qualified name ([A-Za-z0-9][-A-Za-z0-9_.]*) no more than 63 bytes in length.\n\nThe key is combined with the resource name of the ValidatingAdmissionPolicy to construct an audit annotation key: \"{ValidatingAdmissionPolicy name}/{key}\".\n\nIf an admission webhook uses the same resource name as this ValidatingAdmissionPolicy and the same audit annotation key, the annotation key will be identical. In this case, the first annotation written with the key will be included in the audit event and all subsequent annotations with the same key will be discarded.\n\nRequired.",
@@ -321,8 +297,20 @@
                       "description": "valueExpression represents the expression which is evaluated by CEL to produce an audit annotation value. The expression must evaluate to either a string or null value. If the expression evaluates to a string, the audit annotation is included with the string value. If the expression evaluates to null or empty string the audit annotation will be omitted. The valueExpression may be no longer than 5kb in length. If the result of the valueExpression is more than 10kb in length, it will be truncated to 10kb.\n\nIf multiple ValidatingAdmissionPolicyBinding resources match an API request, then the valueExpression will be evaluated for each binding. All unique values produced by the valueExpressions will be joined together in a comma-separated list.\n\nRequired.",
                       "type": "string"
                     }
-                  }
+                  },
+                  "required": [
+                    "key",
+                    "valueExpression"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-list-type": "atomic"
               },
               "failurePolicy": {
@@ -334,20 +322,8 @@
               },
               "matchConditions": {
                 "description": "MatchConditions is a list of conditions that must be met for a request to be validated. Match conditions filter requests that have already been matched by the rules, namespaceSelector, and objectSelector. An empty list of matchConditions matches all requests. There are a maximum of 64 match conditions allowed.\n\nIf a parameter object is provided, it can be accessed via the `params` handle in the same manner as validation expressions.\n\nThe exact matching logic is (in order):\n  1. If ANY matchCondition evaluates to FALSE, the policy is skipped.\n  2. If ALL matchConditions evaluate to TRUE, the policy is evaluated.\n  3. If any matchCondition evaluates to an error (but none are FALSE):\n     - If failurePolicy=Fail, reject the request\n     - If failurePolicy=Ignore, the policy is skipped",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "MatchCondition represents a condition which must be fulfilled for a request to be sent to a webhook.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "name",
-                    "expression"
-                  ],
                   "properties": {
                     "expression": {
                       "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool. CEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests. 'oldObject' - The existing object. The value is null for CREATE requests. 'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest). 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
@@ -357,8 +333,20 @@
                       "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions, as well as providing an identifier for logging purposes. A good name should be descriptive of the associated expression. Name must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an optional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
                       "type": "string"
                     }
-                  }
+                  },
+                  "required": [
+                    "name",
+                    "expression"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-list-map-keys": [
                   "name"
                 ],
@@ -368,92 +356,80 @@
               },
               "matchConstraints": {
                 "description": "MatchResources decides whether to run the admission control policy on an object based on whether it meets the match criteria. The exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "properties": {
                   "excludeResourceRules": {
                     "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about. The exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
-                    "type": [
-                      "array",
-                      "null"
-                    ],
                     "items": {
                       "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
-                      "type": [
-                        "object",
-                        "null"
-                      ],
                       "properties": {
                         "apiGroups": {
                           "description": "APIGroups is the API groups the resources belong to. '*' is all groups. If '*' is present, the length of the slice must be one. Required.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "apiVersions": {
                           "description": "APIVersions is the API versions the resources belong to. '*' is all versions. If '*' is present, the length of the slice must be one. Required.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "operations": {
                           "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or * for all of those operations and any future admission operations that are added. If '*' is present, the length of the slice must be one. Required.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resourceNames": {
                           "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resources": {
                           "description": "Resources is a list of resources this rule applies to.\n\nFor example: 'pods' means pods. 'pods/log' means the log subresource of pods. '*' means all resources, but not subresources. 'pods/*' means all subresources of pods. '*/scale' means all scale subresources. '*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not overlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed. Required.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "scope": {
@@ -464,8 +440,16 @@
                           ]
                         }
                       },
+                      "type": [
+                        "object",
+                        "null"
+                      ],
                       "x-kubernetes-map-type": "atomic"
                     },
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "x-kubernetes-list-type": "atomic"
                   },
                   "matchPolicy": {
@@ -477,27 +461,11 @@
                   },
                   "namespaceSelector": {
                     "description": "A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.",
-                    "type": [
-                      "object",
-                      "null"
-                    ],
                     "properties": {
                       "matchExpressions": {
                         "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
-                        "type": [
-                          "array",
-                          "null"
-                        ],
                         "items": {
                           "description": "A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.",
-                          "type": [
-                            "object",
-                            "null"
-                          ],
-                          "required": [
-                            "key",
-                            "operator"
-                          ],
                           "properties": {
                             "key": {
                               "description": "key is the label key that the selector applies to.",
@@ -509,59 +477,59 @@
                             },
                             "values": {
                               "description": "values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.",
-                              "type": [
-                                "array",
-                                "null"
-                              ],
                               "items": {
                                 "type": [
                                   "string",
                                   "null"
                                 ]
-                              }
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
                             }
-                          }
-                        }
+                          },
+                          "required": [
+                            "key",
+                            "operator"
+                          ],
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
                       },
                       "matchLabels": {
-                        "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
-                        "type": [
-                          "object",
-                          "null"
-                        ],
                         "additionalProperties": {
                           "type": [
                             "string",
                             "null"
                           ]
-                        }
+                        },
+                        "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+                        "type": [
+                          "object",
+                          "null"
+                        ]
                       }
                     },
+                    "type": [
+                      "object",
+                      "null"
+                    ],
                     "x-kubernetes-map-type": "atomic"
                   },
                   "objectSelector": {
                     "description": "A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.",
-                    "type": [
-                      "object",
-                      "null"
-                    ],
                     "properties": {
                       "matchExpressions": {
                         "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
-                        "type": [
-                          "array",
-                          "null"
-                        ],
                         "items": {
                           "description": "A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.",
-                          "type": [
-                            "object",
-                            "null"
-                          ],
-                          "required": [
-                            "key",
-                            "operator"
-                          ],
                           "properties": {
                             "key": {
                               "description": "key is the label key that the selector applies to.",
@@ -573,117 +541,125 @@
                             },
                             "values": {
                               "description": "values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.",
-                              "type": [
-                                "array",
-                                "null"
-                              ],
                               "items": {
                                 "type": [
                                   "string",
                                   "null"
                                 ]
-                              }
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
                             }
-                          }
-                        }
+                          },
+                          "required": [
+                            "key",
+                            "operator"
+                          ],
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
                       },
                       "matchLabels": {
-                        "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
-                        "type": [
-                          "object",
-                          "null"
-                        ],
                         "additionalProperties": {
                           "type": [
                             "string",
                             "null"
                           ]
-                        }
+                        },
+                        "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+                        "type": [
+                          "object",
+                          "null"
+                        ]
                       }
                     },
+                    "type": [
+                      "object",
+                      "null"
+                    ],
                     "x-kubernetes-map-type": "atomic"
                   },
                   "resourceRules": {
                     "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches. The policy cares about an operation if it matches _any_ Rule.",
-                    "type": [
-                      "array",
-                      "null"
-                    ],
                     "items": {
                       "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
-                      "type": [
-                        "object",
-                        "null"
-                      ],
                       "properties": {
                         "apiGroups": {
                           "description": "APIGroups is the API groups the resources belong to. '*' is all groups. If '*' is present, the length of the slice must be one. Required.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "apiVersions": {
                           "description": "APIVersions is the API versions the resources belong to. '*' is all versions. If '*' is present, the length of the slice must be one. Required.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "operations": {
                           "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or * for all of those operations and any future admission operations that are added. If '*' is present, the length of the slice must be one. Required.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resourceNames": {
                           "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resources": {
                           "description": "Resources is a list of resources this rule applies to.\n\nFor example: 'pods' means pods. 'pods/log' means the log subresource of pods. '*' means all resources, but not subresources. 'pods/*' means all subresources of pods. '*/scale' means all scale subresources. '*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not overlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed. Required.",
-                          "type": [
-                            "array",
-                            "null"
-                          ],
                           "items": {
                             "type": [
                               "string",
                               "null"
                             ]
                           },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
                           "x-kubernetes-list-type": "atomic"
                         },
                         "scope": {
@@ -694,19 +670,27 @@
                           ]
                         }
                       },
+                      "type": [
+                        "object",
+                        "null"
+                      ],
                       "x-kubernetes-map-type": "atomic"
                     },
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "x-kubernetes-list-type": "atomic"
                   }
                 },
-                "x-kubernetes-map-type": "atomic"
-              },
-              "paramKind": {
-                "description": "ParamKind is a tuple of Group Kind and Version.",
                 "type": [
                   "object",
                   "null"
                 ],
+                "x-kubernetes-map-type": "atomic"
+              },
+              "paramKind": {
+                "description": "ParamKind is a tuple of Group Kind and Version.",
                 "properties": {
                   "apiVersion": {
                     "description": "APIVersion is the API group version the resources belong to. In format of \"group/version\". Required.",
@@ -723,23 +707,16 @@
                     ]
                   }
                 },
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "x-kubernetes-map-type": "atomic"
               },
               "validations": {
                 "description": "Validations contain CEL expressions which is used to apply the validation. Validations and AuditAnnotations may not both be empty; a minimum of one Validations or AuditAnnotations is required.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "Validation specifies the CEL expression which is used to apply the validation.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "expression"
-                  ],
                   "properties": {
                     "expression": {
                       "description": "Expression represents the expression which will be evaluated by CEL. ref: https://github.com/google/cel-spec CEL expressions have access to the contents of the API request/response, organized into CEL variables as well as some other useful variables:\n\n- 'object' - The object from the incoming request. The value is null for DELETE requests. - 'oldObject' - The existing object. The value is null for CREATE requests. - 'request' - Attributes of the API request([ref](/pkg/apis/admission/types.go#AdmissionRequest)). - 'params' - Parameter resource referred to by the policy binding being evaluated. Only populated if the policy has a ParamKind. - 'namespaceObject' - The namespace object that the incoming object belongs to. The value is null for cluster-scoped resources. - 'variables' - Map of composited variables, from its name to its lazily evaluated value.\n  For example, a variable named 'foo' can be accessed as 'variables.foo'.\n- 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n- 'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\n\nThe `apiVersion`, `kind`, `metadata.name` and `metadata.generateName` are always accessible from the root of the object. No other metadata properties are accessible.\n\nOnly property names of the form `[a-zA-Z_.-/][a-zA-Z0-9_.-/]*` are accessible. Accessible property names are escaped according to the following rules when accessed in the expression: - '__' escapes to '__underscores__' - '.' escapes to '__dot__' - '-' escapes to '__dash__' - '/' escapes to '__slash__' - Property names that exactly match a CEL RESERVED keyword escape to '__{keyword}__'. The keywords are:\n\t  \"true\", \"false\", \"null\", \"in\", \"as\", \"break\", \"const\", \"continue\", \"else\", \"for\", \"function\", \"if\",\n\t  \"import\", \"let\", \"loop\", \"package\", \"namespace\", \"return\".\nExamples:\n  - Expression accessing a property named \"namespace\": {\"Expression\": \"object.__namespace__ > 0\"}\n  - Expression accessing a property named \"x-prop\": {\"Expression\": \"object.x__dash__prop > 0\"}\n  - Expression accessing a property named \"redact__d\": {\"Expression\": \"object.redact__underscores__d > 0\"}\n\nEquality on arrays with list type of 'set' or 'map' ignores element order, i.e. [1, 2] == [2, 1]. Concatenation on arrays with x-kubernetes-list-type use the semantics of the list type:\n  - 'set': `X + Y` performs a union where the array positions of all elements in `X` are preserved and\n    non-intersecting elements in `Y` are appended, retaining their partial order.\n  - 'map': `X + Y` performs a merge where the array positions of all keys in `X` are preserved but the values\n    are overwritten by values in `Y` when the key sets of `X` and `Y` intersect. Elements in `Y` with\n    non-intersecting keys are appended, retaining their partial order.\nRequired.",
@@ -766,26 +743,25 @@
                         "null"
                       ]
                     }
-                  }
+                  },
+                  "required": [
+                    "expression"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
                 },
-                "x-kubernetes-list-type": "atomic"
-              },
-              "variables": {
-                "description": "Variables contain definitions of variables that can be used in composition of other expressions. Each variable is defined as a named CEL expression. The variables defined here will be available under `variables` in other expressions of the policy except MatchConditions because MatchConditions are evaluated before the rest of the policy.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after. Thus, Variables must be sorted by the order of first appearance and acyclic.",
                 "type": [
                   "array",
                   "null"
                 ],
+                "x-kubernetes-list-type": "atomic"
+              },
+              "variables": {
+                "description": "Variables contain definitions of variables that can be used in composition of other expressions. Each variable is defined as a named CEL expression. The variables defined here will be available under `variables` in other expressions of the policy except MatchConditions because MatchConditions are evaluated before the rest of the policy.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after. Thus, Variables must be sorted by the order of first appearance and acyclic.",
                 "items": {
                   "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "name",
-                    "expression"
-                  ],
                   "properties": {
                     "expression": {
                       "description": "Expression is the expression that will be evaluated as the value of the variable. The CEL expression has access to the same identifiers as the CEL expressions in Validation.",
@@ -796,8 +772,20 @@
                       "type": "string"
                     }
                   },
+                  "required": [
+                    "name",
+                    "expression"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ],
                   "x-kubernetes-map-type": "atomic"
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-list-map-keys": [
                   "name"
                 ],
@@ -805,39 +793,24 @@
                 "x-kubernetes-patch-merge-key": "name",
                 "x-kubernetes-patch-strategy": "merge"
               }
-            }
-          },
-          "status": {
-            "description": "ValidatingAdmissionPolicyStatus represents the status of an admission validation policy.",
+            },
             "type": [
               "object",
               "null"
-            ],
+            ]
+          },
+          "status": {
+            "description": "ValidatingAdmissionPolicyStatus represents the status of an admission validation policy.",
             "properties": {
               "conditions": {
                 "description": "The conditions represent the latest available observations of a policy's current state.",
-                "type": [
-                  "array",
-                  "null"
-                ],
                 "items": {
                   "description": "Condition contains details for one aspect of the current state of this API Resource.",
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "required": [
-                    "type",
-                    "status",
-                    "lastTransitionTime",
-                    "reason",
-                    "message"
-                  ],
                   "properties": {
                     "lastTransitionTime": {
                       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
-                      "type": "string",
-                      "format": "date-time"
+                      "format": "date-time",
+                      "type": "string"
                     },
                     "message": {
                       "description": "message is a human readable message indicating details about the transition. This may be an empty string.",
@@ -845,11 +818,11 @@
                     },
                     "observedGeneration": {
                       "description": "observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.",
+                      "format": "int64",
                       "type": [
                         "integer",
                         "null"
-                      ],
-                      "format": "int64"
+                      ]
                     },
                     "reason": {
                       "description": "reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.",
@@ -863,8 +836,23 @@
                       "description": "type of condition in CamelCase or in foo.example.com/CamelCase.",
                       "type": "string"
                     }
-                  }
+                  },
+                  "required": [
+                    "type",
+                    "status",
+                    "lastTransitionTime",
+                    "reason",
+                    "message"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
                 },
+                "type": [
+                  "array",
+                  "null"
+                ],
                 "x-kubernetes-list-map-keys": [
                   "type"
                 ],
@@ -872,35 +860,19 @@
               },
               "observedGeneration": {
                 "description": "The generation observed by the controller.",
+                "format": "int64",
                 "type": [
                   "integer",
                   "null"
-                ],
-                "format": "int64"
+                ]
               },
               "typeChecking": {
                 "description": "TypeChecking contains results of type checking the expressions in the ValidatingAdmissionPolicy",
-                "type": [
-                  "object",
-                  "null"
-                ],
                 "properties": {
                   "expressionWarnings": {
                     "description": "The type checking warnings for each expression.",
-                    "type": [
-                      "array",
-                      "null"
-                    ],
                     "items": {
                       "description": "ExpressionWarning is a warning information that targets a specific expression.",
-                      "type": [
-                        "object",
-                        "null"
-                      ],
-                      "required": [
-                        "fieldRef",
-                        "warning"
-                      ],
                       "properties": {
                         "fieldRef": {
                           "description": "The path to the field that refers the expression. For example, the reference to the expression of the first item of validations is \"spec.validations[0].expression\"",
@@ -910,15 +882,39 @@
                           "description": "The content of type checking information in a human-readable form. Each line of the warning contains the type that the expression is checked against, followed by the type check error from the compiler.",
                           "type": "string"
                         }
-                      }
+                      },
+                      "required": [
+                        "fieldRef",
+                        "warning"
+                      ],
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     },
+                    "type": [
+                      "array",
+                      "null"
+                    ],
                     "x-kubernetes-list-type": "atomic"
                   }
-                }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
               }
-            }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
           }
         },
+        "type": [
+          "object",
+          "null"
+        ],
         "x-kubernetes-group-version-kind": [
           {
             "group": "admissionregistration.k8s.io",
@@ -926,24 +922,24 @@
             "version": "v1beta1"
           }
         ]
-      }
+      },
+      "type": [
+        "array",
+        "null"
+      ]
     },
     "kind": {
       "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "enum": [
+        "ValidatingAdmissionPolicyList"
+      ],
       "type": [
         "string",
         "null"
-      ],
-      "enum": [
-        "ValidatingAdmissionPolicyList"
       ]
     },
     "metadata": {
       "description": "ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "continue": {
           "description": "continue may be set if the user set a limit on the number of items returned, and indicates that the server has more data available. The value is opaque and may be used to issue another request to the endpoint that served this list to retrieve the next set of available objects. Continuing a consistent list may not be possible if the server configuration has changed or more than a few minutes have passed. The resourceVersion field returned when using this continue value will be identical to the value in the first response, unless you have received this token from an error message.",
@@ -954,11 +950,11 @@
         },
         "remainingItemCount": {
           "description": "remainingItemCount is the number of subsequent items in the list which are not included in this list response. If the list request contained label or field selectors, then the number of remaining items is unknown and the field will be left unset and omitted during serialization. If the list is complete (either because it is not chunking or because this is the last chunk), then there are no more remaining items and this field will be left unset and omitted during serialization. Servers older than v1.15 do not set this field. The intended use of the remainingItemCount is *estimating* the size of a collection. Clients should not rely on the remainingItemCount to be set or to be exact.",
+          "format": "int64",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int64"
+          ]
         },
         "resourceVersion": {
           "description": "String that identifies the server's internal version of this object that can be used by clients to determine when objects have changed. Value must be treated as opaque by clients and passed unmodified back to the server. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
@@ -974,15 +970,19 @@
             "null"
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
+  "type": "object",
   "x-kubernetes-group-version-kind": [
     {
       "group": "admissionregistration.k8s.io",
       "kind": "ValidatingAdmissionPolicyList",
       "version": "v1beta1"
     }
-  ],
-  "$schema": "http://json-schema.org/schema#"
+  ]
 }

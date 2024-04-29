@@ -19,7 +19,7 @@ spec:
               app.kubernetes.io/name: "?*"`
 
 export const ContextTemplate = `kubernetes:
-  version: '1.28'
+  version: '1.29'
 
 context:
   username: ''
@@ -140,5 +140,17 @@ spec:
         - ''
         names:
         - ''`
+
+export const VAPBindingTemplate = `apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: "binding.example.com"
+spec:
+  policyName: "demo-policy.example.com"
+  validationActions: [Deny]
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        environment: test`
 
 export const ImageDataTemplate = ``

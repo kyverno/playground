@@ -1,83 +1,79 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods",
-  "type": "object",
   "properties": {
     "apiVersion": {
       "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "enum": [
+        "policy/v1"
+      ],
       "type": [
         "string",
         "null"
-      ],
-      "enum": [
-        "policy/v1"
       ]
     },
     "kind": {
       "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "enum": [
+        "PodDisruptionBudget"
+      ],
       "type": [
         "string",
         "null"
-      ],
-      "enum": [
-        "PodDisruptionBudget"
       ]
     },
     "metadata": {
       "description": "ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "annotations": {
-          "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
-          "type": [
-            "object",
-            "null"
-          ],
           "additionalProperties": {
             "type": [
               "string",
               "null"
             ]
-          }
+          },
+          "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
+          "type": [
+            "object",
+            "null"
+          ]
         },
         "creationTimestamp": {
           "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+          "format": "date-time",
           "type": [
             "string",
             "null"
-          ],
-          "format": "date-time"
+          ]
         },
         "deletionGracePeriodSeconds": {
           "description": "Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.",
+          "format": "int64",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int64"
+          ]
         },
         "deletionTimestamp": {
           "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+          "format": "date-time",
           "type": [
             "string",
             "null"
-          ],
-          "format": "date-time"
+          ]
         },
         "finalizers": {
           "description": "Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed. Finalizers may be processed and removed in any order.  Order is NOT enforced because it introduces significant risk of stuck finalizers. finalizers is a shared field, any actor with permission can reorder it. If the finalizer list is processed in order, then this can lead to a situation in which the component responsible for the first finalizer in the list is waiting for a signal (field value, external system, or other) produced by a component responsible for a finalizer later in the list, resulting in a deadlock. Without enforced ordering finalizers are free to order amongst themselves and are not vulnerable to ordering changes in the list.",
-          "type": [
-            "array",
-            "null"
-          ],
           "items": {
             "type": [
               "string",
               "null"
             ]
           },
+          "type": [
+            "array",
+            "null"
+          ],
           "x-kubernetes-patch-strategy": "merge"
         },
         "generateName": {
@@ -89,37 +85,29 @@
         },
         "generation": {
           "description": "A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.",
+          "format": "int64",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int64"
+          ]
         },
         "labels": {
-          "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
-          "type": [
-            "object",
-            "null"
-          ],
           "additionalProperties": {
             "type": [
               "string",
               "null"
             ]
-          }
+          },
+          "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
+          "type": [
+            "object",
+            "null"
+          ]
         },
         "managedFields": {
           "description": "ManagedFields maps workflow-id and version to the set of fields that are managed by that workflow. This is mostly for internal housekeeping, and users typically shouldn't need to set or understand this field. A workflow can be the user's name, a controller's name, or the name of a specific apply path like \"ci-cd\". The set of fields is always in the version that the workflow used when modifying the object.",
-          "type": [
-            "array",
-            "null"
-          ],
           "items": {
             "description": "ManagedFieldsEntry is a workflow-id, a FieldSet and the group version of the resource that the fieldset applies to.",
-            "type": [
-              "object",
-              "null"
-            ],
             "properties": {
               "apiVersion": {
                 "description": "APIVersion defines the version of this resource that this field set applies to. The format is \"group/version\" just like the top-level APIVersion field. It is necessary to track the version of a field set because it cannot be automatically converted.",
@@ -165,14 +153,22 @@
               },
               "time": {
                 "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                "format": "date-time",
                 "type": [
                   "string",
                   "null"
-                ],
-                "format": "date-time"
+                ]
               }
-            }
-          }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "name": {
           "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names",
@@ -190,22 +186,8 @@
         },
         "ownerReferences": {
           "description": "List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.",
-          "type": [
-            "array",
-            "null"
-          ],
           "items": {
             "description": "OwnerReference contains enough information to let you identify an owning object. An owning object must be in the same namespace as the dependent, or be cluster-scoped, so there is no namespace field.",
-            "type": [
-              "object",
-              "null"
-            ],
-            "required": [
-              "apiVersion",
-              "kind",
-              "name",
-              "uid"
-            ],
             "properties": {
               "apiVersion": {
                 "description": "API version of the referent.",
@@ -238,8 +220,22 @@
                 "type": "string"
               }
             },
+            "required": [
+              "apiVersion",
+              "kind",
+              "name",
+              "uid"
+            ],
+            "type": [
+              "object",
+              "null"
+            ],
             "x-kubernetes-map-type": "atomic"
           },
+          "type": [
+            "array",
+            "null"
+          ],
           "x-kubernetes-patch-merge-key": "uid",
           "x-kubernetes-patch-strategy": "merge"
         },
@@ -264,14 +260,14 @@
             "null"
           ]
         }
-      }
-    },
-    "spec": {
-      "description": "PodDisruptionBudgetSpec is a description of a PodDisruptionBudget.",
+      },
       "type": [
         "object",
         "null"
-      ],
+      ]
+    },
+    "spec": {
+      "description": "PodDisruptionBudgetSpec is a description of a PodDisruptionBudget.",
       "properties": {
         "maxUnavailable": {
           "oneOf": [
@@ -307,27 +303,11 @@
         },
         "selector": {
           "description": "A label selector is a label query over a set of resources. The result of matchLabels and matchExpressions are ANDed. An empty label selector matches all objects. A null label selector matches no objects.",
-          "type": [
-            "object",
-            "null"
-          ],
           "properties": {
             "matchExpressions": {
               "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
-              "type": [
-                "array",
-                "null"
-              ],
               "items": {
                 "description": "A label selector requirement is a selector that contains values, a key, and an operator that relates the key and values.",
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "required": [
-                  "key",
-                  "operator"
-                ],
                 "properties": {
                   "key": {
                     "description": "key is the label key that the selector applies to.",
@@ -339,86 +319,81 @@
                   },
                   "values": {
                     "description": "values is an array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.",
-                    "type": [
-                      "array",
-                      "null"
-                    ],
                     "items": {
                       "type": [
                         "string",
                         "null"
                       ]
-                    }
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ]
                   }
-                }
-              }
+                },
+                "required": [
+                  "key",
+                  "operator"
+                ],
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "type": [
+                "array",
+                "null"
+              ]
             },
             "matchLabels": {
-              "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
-              "type": [
-                "object",
-                "null"
-              ],
               "additionalProperties": {
                 "type": [
                   "string",
                   "null"
                 ]
-              }
+              },
+              "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels map is equivalent to an element of matchExpressions, whose key field is \"key\", the operator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+              "type": [
+                "object",
+                "null"
+              ]
             }
           },
+          "type": [
+            "object",
+            "null"
+          ],
           "x-kubernetes-map-type": "atomic"
         },
         "unhealthyPodEvictionPolicy": {
           "description": "UnhealthyPodEvictionPolicy defines the criteria for when unhealthy pods should be considered for eviction. Current implementation considers healthy pods, as pods that have status.conditions item with type=\"Ready\",status=\"True\".\n\nValid policies are IfHealthyBudget and AlwaysAllow. If no policy is specified, the default behavior will be used, which corresponds to the IfHealthyBudget policy.\n\nIfHealthyBudget policy means that running pods (status.phase=\"Running\"), but not yet healthy can be evicted only if the guarded application is not disrupted (status.currentHealthy is at least equal to status.desiredHealthy). Healthy pods will be subject to the PDB for eviction.\n\nAlwaysAllow policy means that all running pods (status.phase=\"Running\"), but not yet healthy are considered disrupted and can be evicted regardless of whether the criteria in a PDB is met. This means perspective running pods of a disrupted application might not get a chance to become healthy. Healthy pods will be subject to the PDB for eviction.\n\nAdditional policies may be added in the future. Clients making eviction decisions should disallow eviction of unhealthy pods if they encounter an unrecognized policy in this field.\n\nThis field is beta-level. The eviction API uses this field when the feature gate PDBUnhealthyPodEvictionPolicy is enabled (enabled by default).\n\nPossible enum values:\n - `\"AlwaysAllow\"` policy means that all running pods (status.phase=\"Running\"), but not yet healthy are considered disrupted and can be evicted regardless of whether the criteria in a PDB is met. This means perspective running pods of a disrupted application might not get a chance to become healthy. Healthy pods will be subject to the PDB for eviction.\n - `\"IfHealthyBudget\"` policy means that running pods (status.phase=\"Running\"), but not yet healthy can be evicted only if the guarded application is not disrupted (status.currentHealthy is at least equal to status.desiredHealthy). Healthy pods will be subject to the PDB for eviction.",
-          "type": [
-            "string",
-            "null"
-          ],
           "enum": [
             "AlwaysAllow",
             "IfHealthyBudget"
+          ],
+          "type": [
+            "string",
+            "null"
           ]
         }
-      }
-    },
-    "status": {
-      "description": "PodDisruptionBudgetStatus represents information about the status of a PodDisruptionBudget. Status may trail the actual state of a system.",
+      },
       "type": [
         "object",
         "null"
-      ],
-      "required": [
-        "disruptionsAllowed",
-        "currentHealthy",
-        "desiredHealthy",
-        "expectedPods"
-      ],
+      ]
+    },
+    "status": {
+      "description": "PodDisruptionBudgetStatus represents information about the status of a PodDisruptionBudget. Status may trail the actual state of a system.",
       "properties": {
         "conditions": {
           "description": "Conditions contain conditions for PDB. The disruption controller sets the DisruptionAllowed condition. The following are known values for the reason field (additional reasons could be added in the future): - SyncFailed: The controller encountered an error and wasn't able to compute\n              the number of allowed disruptions. Therefore no disruptions are\n              allowed and the status of the condition will be False.\n- InsufficientPods: The number of pods are either at or below the number\n                    required by the PodDisruptionBudget. No disruptions are\n                    allowed and the status of the condition will be False.\n- SufficientPods: There are more pods than required by the PodDisruptionBudget.\n                  The condition will be True, and the number of allowed\n                  disruptions are provided by the disruptionsAllowed property.",
-          "type": [
-            "array",
-            "null"
-          ],
           "items": {
             "description": "Condition contains details for one aspect of the current state of this API Resource.",
-            "type": [
-              "object",
-              "null"
-            ],
-            "required": [
-              "type",
-              "status",
-              "lastTransitionTime",
-              "reason",
-              "message"
-            ],
             "properties": {
               "lastTransitionTime": {
                 "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
-                "type": "string",
-                "format": "date-time"
+                "format": "date-time",
+                "type": "string"
               },
               "message": {
                 "description": "message is a human readable message indicating details about the transition. This may be an empty string.",
@@ -426,11 +401,11 @@
               },
               "observedGeneration": {
                 "description": "observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.",
+                "format": "int64",
                 "type": [
                   "integer",
                   "null"
-                ],
-                "format": "int64"
+                ]
               },
               "reason": {
                 "description": "reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.",
@@ -444,8 +419,23 @@
                 "description": "type of condition in CamelCase or in foo.example.com/CamelCase.",
                 "type": "string"
               }
-            }
+            },
+            "required": [
+              "type",
+              "status",
+              "lastTransitionTime",
+              "reason",
+              "message"
+            ],
+            "type": [
+              "object",
+              "null"
+            ]
           },
+          "type": [
+            "array",
+            "null"
+          ],
           "x-kubernetes-list-map-keys": [
             "type"
           ],
@@ -455,56 +445,66 @@
         },
         "currentHealthy": {
           "description": "current number of healthy pods",
-          "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "type": "integer"
         },
         "desiredHealthy": {
           "description": "minimum desired number of healthy pods",
-          "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "type": "integer"
         },
         "disruptedPods": {
+          "additionalProperties": {
+            "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "description": "DisruptedPods contains information about pods whose eviction was processed by the API server eviction subresource handler but has not yet been observed by the PodDisruptionBudget controller. A pod will be in this map from the time when the API server processed the eviction request to the time when the pod is seen by PDB controller as having been marked for deletion (or after a timeout). The key in the map is the name of the pod and the value is the time when the API server processed the eviction request. If the deletion didn't occur and a pod is still there it will be removed from the list automatically by PodDisruptionBudget controller after some time. If everything goes smooth this map should be empty for the most of the time. Large number of entries in the map may indicate problems with pod deletions.",
           "type": [
             "object",
             "null"
-          ],
-          "additionalProperties": {
-            "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time"
-          }
+          ]
         },
         "disruptionsAllowed": {
           "description": "Number of pod disruptions that are currently allowed.",
-          "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "type": "integer"
         },
         "expectedPods": {
           "description": "total number of pods counted by this disruption budget",
-          "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "type": "integer"
         },
         "observedGeneration": {
           "description": "Most recent generation observed when updating this PDB status. DisruptionsAllowed and other status information is valid only if observedGeneration equals to PDB's object generation.",
+          "format": "int64",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int64"
+          ]
         }
-      }
+      },
+      "required": [
+        "disruptionsAllowed",
+        "currentHealthy",
+        "desiredHealthy",
+        "expectedPods"
+      ],
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
+  "type": "object",
   "x-kubernetes-group-version-kind": [
     {
       "group": "policy",
       "kind": "PodDisruptionBudget",
       "version": "v1"
     }
-  ],
-  "$schema": "http://json-schema.org/schema#"
+  ]
 }

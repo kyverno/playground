@@ -1,14 +1,14 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "MetricValueStatus holds the current value for a metric",
-  "type": "object",
   "properties": {
     "averageUtilization": {
       "description": "currentAverageUtilization is the current value of the average of the resource metric across all relevant pods, represented as a percentage of the requested value of the resource for the pods.",
+      "format": "int32",
       "type": [
         "integer",
         "null"
-      ],
-      "format": "int32"
+      ]
     },
     "averageValue": {
       "oneOf": [
@@ -43,5 +43,5 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

@@ -1,9 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "PortworxVolumeSource represents a Portworx volume resource.",
-  "type": "object",
-  "required": [
-    "volumeID"
-  ],
   "properties": {
     "fsType": {
       "description": "fSType represents the filesystem type to mount Must be a filesystem type supported by the host operating system. Ex. \"ext4\", \"xfs\". Implicitly inferred to be \"ext4\" if unspecified.",
@@ -27,5 +24,8 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "volumeID"
+  ],
+  "type": "object"
 }

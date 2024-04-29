@@ -1,17 +1,9 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Represents storage that is managed by an external CSI volume driver (Beta feature)",
-  "type": "object",
-  "required": [
-    "driver",
-    "volumeHandle"
-  ],
   "properties": {
     "controllerExpandSecretRef": {
       "description": "SecretReference represents a Secret Reference. It has enough information to retrieve secret in any namespace",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "name is unique within a namespace to reference a secret resource.",
@@ -28,14 +20,14 @@
           ]
         }
       },
+      "type": [
+        "object",
+        "null"
+      ],
       "x-kubernetes-map-type": "atomic"
     },
     "controllerPublishSecretRef": {
       "description": "SecretReference represents a Secret Reference. It has enough information to retrieve secret in any namespace",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "name is unique within a namespace to reference a secret resource.",
@@ -52,6 +44,10 @@
           ]
         }
       },
+      "type": [
+        "object",
+        "null"
+      ],
       "x-kubernetes-map-type": "atomic"
     },
     "driver": {
@@ -70,10 +66,6 @@
     },
     "nodeExpandSecretRef": {
       "description": "SecretReference represents a Secret Reference. It has enough information to retrieve secret in any namespace",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "name is unique within a namespace to reference a secret resource.",
@@ -90,14 +82,14 @@
           ]
         }
       },
+      "type": [
+        "object",
+        "null"
+      ],
       "x-kubernetes-map-type": "atomic"
     },
     "nodePublishSecretRef": {
       "description": "SecretReference represents a Secret Reference. It has enough information to retrieve secret in any namespace",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "name is unique within a namespace to reference a secret resource.",
@@ -114,14 +106,14 @@
           ]
         }
       },
+      "type": [
+        "object",
+        "null"
+      ],
       "x-kubernetes-map-type": "atomic"
     },
     "nodeStageSecretRef": {
       "description": "SecretReference represents a Secret Reference. It has enough information to retrieve secret in any namespace",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "name is unique within a namespace to reference a secret resource.",
@@ -138,6 +130,10 @@
           ]
         }
       },
+      "type": [
+        "object",
+        "null"
+      ],
       "x-kubernetes-map-type": "atomic"
     },
     "readOnly": {
@@ -148,17 +144,17 @@
       ]
     },
     "volumeAttributes": {
-      "description": "volumeAttributes of the volume to publish.",
-      "type": [
-        "object",
-        "null"
-      ],
       "additionalProperties": {
         "type": [
           "string",
           "null"
         ]
-      }
+      },
+      "description": "volumeAttributes of the volume to publish.",
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "volumeHandle": {
       "description": "volumeHandle is the unique volume name returned by the CSI volume plugin\u2019s CreateVolume to refer to the volume on all subsequent calls. Required.",
@@ -168,5 +164,9 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "driver",
+    "volumeHandle"
+  ],
+  "type": "object"
 }
