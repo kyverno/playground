@@ -144,7 +144,8 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 codegen-schema-json: codegen-schema-openapi ## Generate json schemas
 	@rm -rf ./schemas/json
 	@mkdir -p ./schemas/json
-	@docker run -it --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v2,target=/v2 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/hectorm/openapi2jsonschema:v0.11 /v2/schema.json --kubernetes --stand-alone --expanded -o /json
+	@chmod 777 ./schemas/json
+	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v2,target=/v2 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/hectorm/openapi2jsonschema:v0.11 /v2/schema.json --kubernetes --stand-alone --expanded -o /json
 
 .PHONY: codegen-all
 codegen-all: codegen-helm-docs codegen-schema-json codegen-schema-openapi ## Generate all codegen
