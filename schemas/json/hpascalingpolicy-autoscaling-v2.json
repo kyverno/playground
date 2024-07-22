@@ -1,19 +1,14 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "HPAScalingPolicy is a single policy which must hold true for a specified past interval.",
-  "type": "object",
-  "required": [
-    "type",
-    "value",
-    "periodSeconds"
-  ],
   "properties": {
     "periodSeconds": {
       "description": "periodSeconds specifies the window of time for which the policy should hold true. PeriodSeconds must be greater than zero and less than or equal to 1800 (30 min).",
+      "format": "int32",
       "type": [
         "integer",
         "null"
-      ],
-      "format": "int32"
+      ]
     },
     "type": {
       "description": "type is used to specify the scaling policy.",
@@ -24,12 +19,17 @@
     },
     "value": {
       "description": "value contains the amount of change which is permitted by the policy. It must be greater than zero",
+      "format": "int32",
       "type": [
         "integer",
         "null"
-      ],
-      "format": "int32"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "type",
+    "value",
+    "periodSeconds"
+  ],
+  "type": "object"
 }

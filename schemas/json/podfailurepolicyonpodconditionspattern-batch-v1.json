@@ -1,10 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "PodFailurePolicyOnPodConditionsPattern describes a pattern for matching an actual pod condition type.",
-  "type": "object",
-  "required": [
-    "type",
-    "status"
-  ],
   "properties": {
     "status": {
       "description": "Specifies the required Pod condition status. To match a pod condition it is required that the specified status equals the pod condition status. Defaults to True.",
@@ -21,5 +17,9 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "type",
+    "status"
+  ],
+  "type": "object"
 }

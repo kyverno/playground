@@ -6,19 +6,33 @@
     <div class="app-logo">
       <template v-if="display.mdAndUp.value">
         <v-img src="/kyverno-logo.png" />
-        <v-chip size="small" style="position: absolute; bottom: 12px; right: -80px">v1.11</v-chip>
+        <v-chip size="small" style="position: absolute; bottom: 12px; right: -80px">v1.12.5</v-chip>
       </template>
       <template v-if="display.smAndDown.value">
         <v-img src="/favicon.png" width="80" />
-        <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px">Kyverno v1.11</v-chip>
+        <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px"
+          >Kyverno v1.12.5</v-chip
+        >
       </template>
     </div>
     <template v-slot:append>
-      <v-btn href="http://kyverno.io" target="_blank" class="mr-1" title="Kyverno Documentation" v-if="display.mdAndUp.value">
+      <v-btn
+        href="http://kyverno.io"
+        target="_blank"
+        class="mr-1"
+        title="Kyverno Documentation"
+        v-if="display.mdAndUp.value"
+      >
         <v-img src="/favicon.png" :height="24" :width="24" alt="Kyverno Logo" class="mr-2" />
         Docs
       </v-btn>
-      <v-btn icon="mdi-github" href="https://github.com/kyverno/playground" target="_blank" class="mr-2" title="GitHub: Kyverno Playground" />
+      <v-btn
+        icon="mdi-github"
+        href="https://github.com/kyverno/playground"
+        target="_blank"
+        class="mr-2"
+        title="GitHub: Kyverno Playground"
+      />
       <template v-if="display.mdAndUp.value">
         <slot name="desktop-actions" />
       </template>
@@ -33,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useDisplay } from 'vuetify'
 import ConfigMenu from './ConfigMenu.vue'
 
 const display = useDisplay()

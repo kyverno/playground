@@ -1,31 +1,19 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "NamespaceStatus is information about the current status of a Namespace.",
-  "type": "object",
   "properties": {
     "conditions": {
       "description": "Represents the latest available observations of a namespace's current state.",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "description": "NamespaceCondition contains details about state of namespace.",
-        "type": [
-          "object",
-          "null"
-        ],
-        "required": [
-          "type",
-          "status"
-        ],
         "properties": {
           "lastTransitionTime": {
             "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+            "format": "date-time",
             "type": [
               "string",
               "null"
-            ],
-            "format": "date-time"
+            ]
           },
           "message": {
             "type": [
@@ -47,22 +35,34 @@
             "description": "Type of namespace controller condition.",
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "type",
+          "status"
+        ],
+        "type": [
+          "object",
+          "null"
+        ]
       },
+      "type": [
+        "array",
+        "null"
+      ],
       "x-kubernetes-patch-merge-key": "type",
       "x-kubernetes-patch-strategy": "merge"
     },
     "phase": {
       "description": "Phase is the current lifecycle phase of the namespace. More info: https://kubernetes.io/docs/tasks/administer-cluster/namespaces/\n\nPossible enum values:\n - `\"Active\"` means the namespace is available for use in the system\n - `\"Terminating\"` means the namespace is undergoing graceful termination",
-      "type": [
-        "string",
-        "null"
-      ],
       "enum": [
         "Active",
         "Terminating"
+      ],
+      "type": [
+        "string",
+        "null"
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

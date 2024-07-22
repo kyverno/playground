@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deployment-pass
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -26,6 +27,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deployment-fail
+  namespace: default
 spec:
   replicas: 1
   selector:

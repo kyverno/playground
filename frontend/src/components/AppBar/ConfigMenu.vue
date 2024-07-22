@@ -17,7 +17,8 @@
           density="compact"
           item-title="name"
           item-value="theme"
-          class="mt-2" />
+          class="mt-2"
+        />
         <v-select
           :items="options.editorThemes"
           label="Editor Theme"
@@ -27,10 +28,25 @@
           density="compact"
           item-title="name"
           item-value="theme"
-          class="mt-4" />
-        <v-btn @click="reset" prepend-icon="mdi-delete" block class="mt-4" variant="outlined" color="error">Reset Options</v-btn>
+          class="mt-4"
+        />
+        <v-btn
+          @click="reset"
+          prepend-icon="mdi-delete"
+          block
+          class="mt-4"
+          variant="outlined"
+          color="error"
+          >Reset Options</v-btn
+        >
 
-        <v-chip v-if="version" style="width: 100%" class="mt-3 justify-center font-weight-medium" size="small" label>
+        <v-chip
+          v-if="version"
+          style="width: 100%"
+          class="mt-3 justify-center font-weight-medium"
+          size="small"
+          label
+        >
           Version: {{ version.substring(0, 10) }}
         </v-chip>
       </v-card-text>
@@ -39,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useDisplay } from 'vuetify'
 import { useConfig } from '@/config'
 import { usePreferredDark } from '@vueuse/core'
 

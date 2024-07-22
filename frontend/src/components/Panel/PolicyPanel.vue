@@ -1,6 +1,12 @@
 <template>
   <v-card style="height: 800px">
-    <EditorToolbar id="policy-panel" title="Policies" v-model="inputs.policy" :restore-value="state.policy.value" :info="options.panels.policyInfo">
+    <EditorToolbar
+      id="policy-panel"
+      title="Policies"
+      v-model="inputs.policy"
+      :restore-value="state.policy.value"
+      :info="options.panels.policyInfo"
+    >
       <template #append-actions v-if="config.cluster">
         <ClusterPolicyButton />
       </template>

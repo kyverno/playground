@@ -1,5 +1,5 @@
-import { RemovableRef, useLocalStorage } from '@vueuse/core'
-import { Ref, ref, watch } from 'vue'
+import { type RemovableRef, useLocalStorage } from '@vueuse/core'
+import { type Ref, ref, watch } from 'vue'
 
 export type Template = {
   name: string
@@ -9,7 +9,9 @@ export type Template = {
 const normalizeName = (name: string) => name.replaceAll(';;', ';').trim()
 const convertNames = (names: string) => names.split(';;').filter((l) => !!l)
 
-export const getTemplates = (panel: string): { list: Ref<string[]>; add: (template: string) => void; remove: (template: string) => void } => {
+export const getTemplates = (
+  panel: string
+): { list: Ref<string[]>; add: (template: string) => void; remove: (template: string) => void } => {
   const persisted = useLocalStorage<string>(`${panel}:templates:list`, '')
 
   const list = ref<string[]>(convertNames(persisted.value || ''))

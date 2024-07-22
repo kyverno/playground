@@ -7,7 +7,8 @@
     v-model="inputs.resource"
     v-model:original="inputs.oldResource"
     :options="options"
-    :uri="uri" />
+    :uri="uri"
+  />
 </template>
 
 <script setup lang="ts">

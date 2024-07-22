@@ -1,11 +1,21 @@
 <template>
-  <v-btn id="start-btn" size="large" :prepend-icon="icon" :color="color" :loading="loading" class="play" rounded @click="submit">Start</v-btn>
+  <v-btn
+    id="start-btn"
+    size="large"
+    :prepend-icon="icon"
+    :color="color"
+    :loading="loading"
+    class="play"
+    rounded
+    @click="submit"
+    >Start</v-btn
+  >
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { MarkerSeverity, editor } from 'monaco-editor'
-import { EngineResponse, ErrorResponse } from '@/types'
+import type { EngineResponse, ErrorResponse } from '@/types'
 import { resolveAPI } from '@/utils'
 import { inputs } from '@/store'
 import { parse } from 'yaml'
@@ -68,6 +78,7 @@ const submit = (): void => {
       resources: inputs.resource,
       oldResources: inputs.oldResource,
       policyExceptions: inputs.exceptions,
+      vapBindings: inputs.vapBindings,
       clusterResources: inputs.clusterResources,
       context: inputs.context,
       config: inputs.config,
@@ -91,7 +102,10 @@ const submit = (): void => {
                 err.violations.reduce((error, e) => {
                   const policy = [e.policyNamespace, e.policyName].filter((s) => !!s).join('/')
 
-                  return error + `<h2 class="text-subtitle-2 mb-1">${policy}</h2><p class="mb-0 pb-0">${e.field}: ${e.detail}</p>`
+                  return (
+                    error +
+                    `<h2 class="text-subtitle-2 mb-1">${policy}</h2><p class="mb-0 pb-0">${e.field}: ${e.detail}</p>`
+                  )
                 }, `<h1 class="text-subtitle-1 mb-2">Invalid Policy:</h1>`)
               )
             )

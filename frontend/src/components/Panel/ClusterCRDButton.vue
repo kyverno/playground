@@ -3,7 +3,8 @@
     :default-resource="defaultResource"
     :model-value="modelValue"
     @update:model-value="(res: string) => emit('update:modelValue', res)"
-    label="From Cluster" />
+    label="From Cluster"
+  />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'

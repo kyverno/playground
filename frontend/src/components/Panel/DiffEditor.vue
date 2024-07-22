@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { ref, toRefs, computed, onMounted, reactive } from 'vue'
 import * as monaco from 'monaco-editor'
-import { PropType } from 'vue'
+import { type PropType } from 'vue'
 import { watch } from 'vue'
 import { onBeforeUnmount } from 'vue'
 import { useEditorFix } from '@/functions/editor'
@@ -19,10 +19,19 @@ const props = defineProps({
   language: { type: String, default: 'javascript' },
   theme: { type: String, default: 'vs' },
   id: { type: String, required: true },
-  options: { type: Object as PropType<monaco.editor.IStandaloneDiffEditorConstructionOptions>, default: () => ({}) }
+  options: {
+    type: Object as PropType<monaco.editor.IStandaloneDiffEditorConstructionOptions>,
+    default: () => ({})
+  }
 })
 
-const emit = defineEmits(['editorWillMount', 'editorDidMount', 'update:modelValue', 'update:original', 'switchWordWrap'])
+const emit = defineEmits([
+  'editorWillMount',
+  'editorDidMount',
+  'update:modelValue',
+  'update:original',
+  'switchWordWrap'
+])
 
 const { width, height } = toRefs(props)
 

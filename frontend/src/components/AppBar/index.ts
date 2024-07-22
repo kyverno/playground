@@ -8,4 +8,14 @@ import ShareButton from './ShareButton.vue'
 import OnboardingButton from './OnboardingButton.vue'
 import SaveButton from './SaveButton.vue'
 
-export { AppBar, ConfigMenu, ExportButton, ImportButton, LoadButton, MobileMenu, ShareButton, OnboardingButton, SaveButton }
+export {
+  AppBar,
+  ConfigMenu,
+  ExportButton,
+  ImportButton,
+  LoadButton,
+  MobileMenu,
+  ShareButton,
+  OnboardingButton,
+  SaveButton
+}

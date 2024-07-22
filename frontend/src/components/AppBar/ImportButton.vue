@@ -1,13 +1,22 @@
 <template>
   <input type="file" ref="input" style="display: none" :accept="props.accept" @change="send" />
-  <v-btn small @click="select" prepend-icon="mdi-import" :loading="loading" :color="color" :variant="variant" :block="block" :class="btnClass">
+  <v-btn
+    small
+    @click="select"
+    prepend-icon="mdi-import"
+    :loading="loading"
+    :color="color"
+    :variant="variant"
+    :block="block"
+    :class="btnClass"
+  >
     Import Profiles
   </v-btn>
   <v-snackbar color="error" :model-value="!!error">{{ error }}</v-snackbar>
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { type PropType, ref } from 'vue'
 import { watch } from 'vue'
 import { importProfiles } from '@/functions/export'
 

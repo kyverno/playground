@@ -15,7 +15,15 @@ export type Policy = {
   title: string
 }
 
-export type ExampleResponse = [string, string, string, string | undefined, string | undefined, string | undefined, string | undefined]
+export type ExampleResponse = [
+  string,
+  string,
+  string,
+  string | undefined,
+  string | undefined,
+  string | undefined,
+  string | undefined
+]
 
 export type LoadConfig = {
   start?: () => void
@@ -57,10 +65,18 @@ export const loadPolicy = async (url: string, policy: Policy, config?: LoadConfi
 
         return resp.text()
       }),
-      policy.crdsFile ? fetch(`${url}/${folder}/${policy.crdsFile}`).then((resp) => resp.text()) : Promise.resolve(),
-      policy.exceptionsFile ? fetch(`${url}/${folder}/${policy.exceptionsFile}`).then((resp) => resp.text()) : Promise.resolve(),
-      policy.clusterResourcesFile ? fetch(`${url}/${folder}/${policy.clusterResourcesFile}`).then((resp) => resp.text()) : Promise.resolve(),
-      policy.oldResourceFile ? fetch(`${url}/${folder}/${policy.oldResourceFile}`).then((resp) => resp.text()) : Promise.resolve()
+      policy.crdsFile
+        ? fetch(`${url}/${folder}/${policy.crdsFile}`).then((resp) => resp.text())
+        : Promise.resolve(),
+      policy.exceptionsFile
+        ? fetch(`${url}/${folder}/${policy.exceptionsFile}`).then((resp) => resp.text())
+        : Promise.resolve(),
+      policy.clusterResourcesFile
+        ? fetch(`${url}/${folder}/${policy.clusterResourcesFile}`).then((resp) => resp.text())
+        : Promise.resolve(),
+      policy.oldResourceFile
+        ? fetch(`${url}/${folder}/${policy.oldResourceFile}`).then((resp) => resp.text())
+        : Promise.resolve()
     ]
 
     config?.start?.()

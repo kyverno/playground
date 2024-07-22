@@ -1,17 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Info contains versioning information. how we'll want to distribute that information.",
-  "type": "object",
-  "required": [
-    "major",
-    "minor",
-    "gitVersion",
-    "gitCommit",
-    "gitTreeState",
-    "buildDate",
-    "goVersion",
-    "compiler",
-    "platform"
-  ],
   "properties": {
     "buildDate": {
       "type": [
@@ -68,5 +57,16 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "major",
+    "minor",
+    "gitVersion",
+    "gitCommit",
+    "gitTreeState",
+    "buildDate",
+    "goVersion",
+    "compiler",
+    "platform"
+  ],
+  "type": "object"
 }

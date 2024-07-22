@@ -1,5 +1,7 @@
 <template>
-  <v-alert color="error" variant="outlined" class="mb-2" v-if="error">Failed to load namespaces: {{ error }}</v-alert>
+  <v-alert color="error" variant="outlined" class="mb-2" v-if="error"
+    >Failed to load namespaces: {{ error }}</v-alert
+  >
   <v-autocomplete
     clearable
     variant="outlined"
@@ -9,7 +11,8 @@
     :items="data"
     @update:modelValue="(ns: string) => emit('update:modelValue', ns)"
     :model-value="prop.modelValue"
-    label="Namespace" />
+    label="Namespace"
+  />
 </template>
 
 <script setup lang="ts">
