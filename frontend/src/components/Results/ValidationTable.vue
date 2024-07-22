@@ -11,7 +11,8 @@
     class="result-table"
     show-expand
     v-model:expanded="expanded"
-    :items-per-page="-1">
+    :items-per-page="-1"
+  >
     <template v-slot:[`item.policy`]="{ item }">
       <v-avatar size="24px" rounded="0" class="mr-2 mb-1">
         <v-img :src="`icons/${item.icon}.png`" />
@@ -36,7 +37,7 @@
 <script setup lang="ts">
 import { type PropType, computed, ref } from 'vue'
 import hash from 'object-hash'
-import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useDisplay } from 'vuetify'
 import { useConfig } from '@/config'
 import type { Validation, RuleStatus } from '@/types'
 import StatusChip from './StatusChip.vue'
@@ -93,7 +94,9 @@ const items = computed(() => {
         id: 'id',
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
-        resource: [validation.resource.metadata.namespace, validation.resource.metadata.name].filter((s) => !!s).join('/'),
+        resource: [validation.resource.metadata.namespace, validation.resource.metadata.name]
+          .filter((s) => !!s)
+          .join('/'),
         policy: policy.metadata.name,
         rule: 'resource does not match any rule',
         message: 'no validation triggered',
@@ -118,7 +121,9 @@ const items = computed(() => {
         icon,
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
-        resource: [validation.resource.metadata.namespace, validation.resource.metadata.name].filter((s) => !!s).join('/'),
+        resource: [validation.resource.metadata.namespace, validation.resource.metadata.name]
+          .filter((s) => !!s)
+          .join('/'),
         policy: policy.metadata.name,
         rule: ruleName,
         message: rule.message,

@@ -40,7 +40,17 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
   }
 
   profiles.map((p) => {
-    const { policy, resource, context, config, oldResource, customResourceDefinitions, clusterResources, exceptions, imageData } = createInput(p)
+    const {
+      policy,
+      resource,
+      context,
+      config,
+      oldResource,
+      customResourceDefinitions,
+      clusterResources,
+      exceptions,
+      imageData
+    } = createInput(p)
 
     exports.push({
       name: p,

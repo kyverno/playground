@@ -18,7 +18,10 @@ type Example = {
 }
 
 const isDark = usePreferredDark()
-export const layoutTheme = useLocalStorage<'light' | 'dark'>('config:layoutTheme', isDark.value ? 'dark' : 'light')
+export const layoutTheme = useLocalStorage<'light' | 'dark'>(
+  'config:layoutTheme',
+  isDark.value ? 'dark' : 'light'
+)
 watch(isDark, (dark: boolean) => {
   layoutTheme.value = dark ? 'dark' : 'light'
 })
@@ -42,7 +45,8 @@ export const options = {
     vapBindingInfo: 'Configure ValidatingAdmissionPolicyBinding Resources',
     crdInfo: 'Define unknown CRDs you want to use as resource',
     configInfo: 'Configure the Kyverno Engine',
-    clusterResourcesInfo: 'Already existing resources to simulate clone operations or context substitution',
+    clusterResourcesInfo:
+      'Already existing resources to simulate clone operations or context substitution',
     imageDataInfo: 'Simulate loading of not accessable ImageData'
   },
   onboarding: {

@@ -1,6 +1,9 @@
 import * as monaco from 'monaco-editor'
 
-function fixAddCommand(editor: monaco.editor.IStandaloneCodeEditor, context: string): { dispose(): void } {
+function fixAddCommand(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  context: string
+): { dispose(): void } {
   const addCommand = editor.addCommand
 
   editor.addCommand = function addCommand_hijacked(keybinding, handler) {

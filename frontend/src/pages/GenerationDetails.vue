@@ -17,7 +17,9 @@
                 <v-alert type="error">
                   Details not found
                   <template #append>
-                    <v-btn flat color="error" :min-width="150" size="large" @click="close">Close</v-btn>
+                    <v-btn flat color="error" :min-width="150" size="large" @click="close"
+                      >Close</v-btn
+                    >
                   </template>
                 </v-alert>
               </v-card-text>
@@ -26,7 +28,14 @@
                   <RuleDetails :details="details" />
                 </v-card-text>
                 <v-card-text v-if="details.status !== 'pass'">{{ details.message }}</v-card-text>
-                <ManocoEditor :height="600" language="yaml" :model-value="details.generatedResource" :theme="editorTheme" :options="options" id="generation" />
+                <ManocoEditor
+                  :height="600"
+                  language="yaml"
+                  :model-value="details.generatedResource"
+                  :theme="editorTheme"
+                  :options="options"
+                  id="generation"
+                />
               </template>
             </v-card>
           </v-col>

@@ -46,9 +46,21 @@ configureMonacoYaml(monaco, {
       uri: `${baseURL}/schemas/policies.json`,
       fileMatch: ['policy.yaml']
     },
-    { schema: policyexception as JSONSchema, uri: `${baseURL}/schemas/policyexception-kyverno.io-v2beta1.json`, fileMatch: ['policyexception.yaml'] },
-    { schema: policyexceptionv2 as JSONSchema, uri: `${baseURL}/schemas/policyexception-kyverno.io-v2.json`, fileMatch: ['policyexception.yaml'] },
-    { schema: context as JSONSchema, uri: `${baseURL}/schemas/context.json`, fileMatch: ['context.yaml'] }
+    {
+      schema: policyexception as JSONSchema,
+      uri: `${baseURL}/schemas/policyexception-kyverno.io-v2beta1.json`,
+      fileMatch: ['policyexception.yaml']
+    },
+    {
+      schema: policyexceptionv2 as JSONSchema,
+      uri: `${baseURL}/schemas/policyexception-kyverno.io-v2.json`,
+      fileMatch: ['policyexception.yaml']
+    },
+    {
+      schema: context as JSONSchema,
+      uri: `${baseURL}/schemas/context.json`,
+      fileMatch: ['context.yaml']
+    }
   ]
 })
 

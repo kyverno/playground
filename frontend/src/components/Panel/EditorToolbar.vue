@@ -7,7 +7,8 @@
         v-if="restoreValue"
         :disabled="restoreValue === modelValue"
         @click="() => emit('update:modelValue', restoreValue)"
-        :title="`Restore ${title}`" />
+        :title="`Restore ${title}`"
+      />
     </template>
     <v-toolbar-title :class="restoreValue ? 'ml-0' : ''">
       {{ title }}

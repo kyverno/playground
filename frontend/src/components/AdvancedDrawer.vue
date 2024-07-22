@@ -4,7 +4,8 @@
     temporary
     width="400"
     location="right"
-    @update:modelValue="(event: boolean) => emit('update:modelValue', event)">
+    @update:modelValue="(event: boolean) => emit('update:modelValue', event)"
+  >
     <v-card flat>
       <v-list>
         <v-list-item>
@@ -14,15 +15,26 @@
             :info="options.panels.contextInfo"
             v-model="inputs.context"
             uri="context.yaml"
-            :template="ContextTemplate" />
+            :template="ContextTemplate"
+          />
         </v-list-item>
         <v-list-item>
           <KyvernoConfig />
         </v-list-item>
         <v-list-item>
-          <AdvancedConfigDialog id="crd" title="Custom Resource Definitions" :info="options.panels.crdInfo" v-model="inputs.customResourceDefinitions">
+          <AdvancedConfigDialog
+            id="crd"
+            title="Custom Resource Definitions"
+            :info="options.panels.crdInfo"
+            v-model="inputs.customResourceDefinitions"
+          >
             <template #actions="{ update, content }">
-              <ClusterCRDButton @update:model-value="update" :model-value="content" label="From Cluster" v-if="config.cluster" />
+              <ClusterCRDButton
+                @update:model-value="update"
+                :model-value="content"
+                label="From Cluster"
+                v-if="config.cluster"
+              />
             </template>
           </AdvancedConfigDialog>
         </v-list-item>
@@ -33,9 +45,14 @@
             :info="options.panels.exceptionsInfo"
             v-model="inputs.exceptions"
             :template="PolicyExceptionTemplate"
-            uri="policyexception.yaml">
+            uri="policyexception.yaml"
+          >
             <template #actions="{ update, content }">
-              <ClusterExceptionButton @update:model-value="update" :model-value="content" v-if="config.cluster" />
+              <ClusterExceptionButton
+                @update:model-value="update"
+                :model-value="content"
+                v-if="config.cluster"
+              />
             </template>
           </AdvancedConfigDialog>
         </v-list-item>
@@ -46,24 +63,42 @@
             :info="options.panels.vapBindingInfo"
             v-model="inputs.vapBindings"
             :template="VAPBindingTemplate"
-            uri="vapbindings.yaml"></AdvancedConfigDialog>
+            uri="vapbindings.yaml"
+          ></AdvancedConfigDialog>
         </v-list-item>
         <v-list-item>
-          <AdvancedConfigDialog id="clusterResources" title="Cluster Resources" :info="options.panels.clusterResourcesInfo" v-model="inputs.clusterResources">
+          <AdvancedConfigDialog
+            id="clusterResources"
+            title="Cluster Resources"
+            :info="options.panels.clusterResourcesInfo"
+            v-model="inputs.clusterResources"
+          >
             <template #actions="{ update, content }">
-              <ClusterResourceButton @update:model-value="update" :model-value="content" label="From Cluster" v-if="config.cluster" />
+              <ClusterResourceButton
+                @update:model-value="update"
+                :model-value="content"
+                label="From Cluster"
+                v-if="config.cluster"
+              />
             </template>
           </AdvancedConfigDialog>
         </v-list-item>
         <v-list-item>
-          <AdvancedConfigDialog id="imageDate" title="Image Data" :info="options.panels.imageDataInfo" v-model="inputs.imageData" />
+          <AdvancedConfigDialog
+            id="imageDate"
+            title="Image Data"
+            :info="options.panels.imageDataInfo"
+            v-model="inputs.imageData"
+          />
         </v-list-item>
       </v-list>
     </v-card>
 
     <template v-slot:append>
       <div class="pa-2">
-        <v-btn flat color="primary" block @click="() => emit('update:modelValue', false)">Close</v-btn>
+        <v-btn flat color="primary" block @click="() => emit('update:modelValue', false)"
+          >Close</v-btn
+        >
       </div>
     </template>
   </v-navigation-drawer>

@@ -7,7 +7,8 @@
           v-if="step && step.content"
           :title="step.content.title"
           :min-width="350"
-          :color="layoutTheme === 'dark' ? 'grey-darken-2' : 'grey-lighten-4'">
+          :color="layoutTheme === 'dark' ? 'grey-darken-2' : 'grey-lighten-4'"
+        >
           <v-card-text>{{ step.content.description }}</v-card-text>
           <v-card-actions>
             <v-btn @click="close">Close</v-btn>

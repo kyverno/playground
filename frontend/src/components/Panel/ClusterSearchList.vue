@@ -1,6 +1,12 @@
 <template>
   <v-list class="border py-0" v-model="selections">
-    <v-virtual-scroll :items="foundings" :height="441" width="568" :max-height="foundings.length * 49" v-if="foundings.length">
+    <v-virtual-scroll
+      :items="foundings"
+      :height="441"
+      width="568"
+      :max-height="foundings.length * 49"
+      v-if="foundings.length"
+    >
       <template v-slot:default="{ item }">
         <v-list-item @click="() => select(item)">
           <template v-slot:prepend>
@@ -46,7 +52,9 @@ const selections = computed({
 })
 
 const select = (res: Resource) => {
-  const index = selections.value.findIndex((i) => `${i.namespace}/${i.name}` === `${res.namespace}/${res.name}`)
+  const index = selections.value.findIndex(
+    (i) => `${i.namespace}/${i.name}` === `${res.namespace}/${res.name}`
+  )
   if (index === -1) {
     selections.value.push(res)
     return

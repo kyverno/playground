@@ -1,4 +1,11 @@
-import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate, CustomResourceDefinitionsTemplate, ImageDataTemplate } from '@/assets/templates'
+import {
+  ConfigTemplate,
+  ContextTemplate,
+  PolicyTemplate,
+  ResourceTemplate,
+  CustomResourceDefinitionsTemplate,
+  ImageDataTemplate
+} from '@/assets/templates'
 import { reactive } from 'vue'
 import { useState, type Inputs } from '@/composables'
 import { type ResourceKind } from '@/composables/api'

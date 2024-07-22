@@ -8,7 +8,8 @@
         :block="block"
         title="create a shareable URL with the current input"
         :class="btnClass"
-        id="share-button">
+        id="share-button"
+      >
         Share
       </v-btn>
     </template>
@@ -17,7 +18,9 @@
       <v-divider />
       <v-container>
         <v-row>
-          <v-col cols="3" class="my-0 align-self-center"><h3 class="text-h6 d-inline">Include</h3></v-col>
+          <v-col cols="3" class="my-0 align-self-center"
+            ><h3 class="text-h6 d-inline">Include</h3></v-col
+          >
           <v-col class="my-0">
             <v-checkbox hide-details label="Context" v-model="values.context" />
           </v-col>
@@ -34,7 +37,14 @@
         <v-spacer />
         <v-tooltip :model-value="copied" location="top" text="Copied" :open-on-hover="false">
           <template v-slot:activator="{ props }">
-            <v-btn variant="tonal" :color="btnColor" @click="copy(url)" :disabled="!isSupported" v-bind="props">Copy URL to Clipboard</v-btn>
+            <v-btn
+              variant="tonal"
+              :color="btnColor"
+              @click="copy(url)"
+              :disabled="!isSupported"
+              v-bind="props"
+              >Copy URL to Clipboard</v-btn
+            >
           </template>
         </v-tooltip>
       </v-card-actions>

@@ -18,7 +18,7 @@ export default defineConfig({
     vuetify({
       autoImport: true
     }),
-    vueDevTools(),
+    vueDevTools()
   ],
   define: {
     'process.env': {},

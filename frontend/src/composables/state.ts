@@ -1,4 +1,9 @@
-import { ContextTemplate, PolicyTemplate, ResourceTemplate, ConfigTemplate } from '@/assets/templates'
+import {
+  ContextTemplate,
+  PolicyTemplate,
+  ResourceTemplate,
+  ConfigTemplate
+} from '@/assets/templates'
 import { useLocalStorage } from '@vueuse/core'
 
 export const loadedPolicy = useLocalStorage<string>('loaded:policy', PolicyTemplate)

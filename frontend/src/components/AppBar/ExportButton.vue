@@ -1,7 +1,14 @@
 <template>
   <v-dialog v-model="dialog" width="300px">
     <template v-slot:activator="{ props }">
-      <v-btn prepend-icon="mdi-export" :variant="variant" :block="block" class="mr-2 text-left justify-start" v-bind="props">Export Profiles</v-btn>
+      <v-btn
+        prepend-icon="mdi-export"
+        :variant="variant"
+        :block="block"
+        class="mr-2 text-left justify-start"
+        v-bind="props"
+        >Export Profiles</v-btn
+      >
     </template>
     <v-card title="Select Profiles">
       <v-list select-strategy="classic">
@@ -30,8 +37,19 @@
       </v-list>
       <v-divider />
       <v-card-text>
-        <v-btn block class="mb-3" variant="outlined" :color="btnColor" @click="persist" :loading="loading" prepend-icon="mdi-download">Export</v-btn>
-        <v-btn block class="mb-2" variant="outlined" prepend-icon="mdi-close" @click="close">Cancel</v-btn>
+        <v-btn
+          block
+          class="mb-3"
+          variant="outlined"
+          :color="btnColor"
+          @click="persist"
+          :loading="loading"
+          prepend-icon="mdi-download"
+          >Export</v-btn
+        >
+        <v-btn block class="mb-2" variant="outlined" prepend-icon="mdi-close" @click="close"
+          >Cancel</v-btn
+        >
       </v-card-text>
     </v-card>
   </v-dialog>

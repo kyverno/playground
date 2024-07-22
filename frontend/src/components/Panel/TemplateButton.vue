@@ -1,7 +1,12 @@
 <template>
   <v-menu location="bottom" :close-on-content-click="false" v-model="menu">
     <template #activator="{ props }">
-      <v-tooltip location="top" content-class="no-opacity-tooltip" text="Load Resource from predefined Templates" theme="dark">
+      <v-tooltip
+        location="top"
+        content-class="no-opacity-tooltip"
+        text="Load Resource from predefined Templates"
+        theme="dark"
+      >
         <template #activator="{ props: tooltip }">
           <v-btn v-bind="{ ...tooltip, ...props }" icon="mdi-note-text"></v-btn>
         </template>
@@ -9,7 +14,14 @@
     </template>
     <v-list>
       <v-list-item>
-        <v-text-field variant="outlined" density="compact" hide-details placeholder="Search" class="pb-2" v-model="search" />
+        <v-text-field
+          variant="outlined"
+          density="compact"
+          hide-details
+          placeholder="Search"
+          class="pb-2"
+          v-model="search"
+        />
       </v-list-item>
       <v-divider />
       <v-virtual-scroll :items="templates" :height="350" width="210">

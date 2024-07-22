@@ -1,6 +1,11 @@
 <template>
   <v-app :theme="layoutTheme">
-    <Onboarding @wrapper="(reference) => (wrapper = reference)" :steps="steps" @finish="onboarding = false" :close="finish" />
+    <Onboarding
+      @wrapper="(reference) => (wrapper = reference)"
+      :steps="steps"
+      @finish="onboarding = false"
+      :close="finish"
+    />
     <AppBar>
       <template #prepend-actions>
         <v-app-bar-nav-icon @click="drawer = !drawer" id="example-menu"></v-app-bar-nav-icon>
@@ -17,7 +22,12 @@
       </template>
 
       <template #desktop-append>
-        <v-btn @click="() => (advanced = !advanced)" prepend-icon="mdi-application-settings" id="advanced-btn">Advanced</v-btn>
+        <v-btn
+          @click="() => (advanced = !advanced)"
+          prepend-icon="mdi-application-settings"
+          id="advanced-btn"
+          >Advanced</v-btn
+        >
       </template>
     </AppBar>
     <ExampleDrawer v-model="drawer" />
@@ -33,12 +43,18 @@
           </v-col>
         </v-row>
         <HelpButton />
-        <StartButton @on-response="handleResponse" @on-error="handleError" :error-state="showError" />
+        <StartButton
+          @on-response="handleResponse"
+          @on-error="handleError"
+          :error-state="showError"
+        />
       </v-container>
       <ErrorBar v-model="showError" :text="errorText" />
       <ResultDialog v-model="showResults" :results="results" :policy="inputs.policy" />
       <v-card v-if="state.name.value" class="state-card">
-        <v-card-text class="text-body-2 font-weight-medium py-2">Loaded State: {{ state.name.value }}</v-card-text>
+        <v-card-text class="text-body-2 font-weight-medium py-2"
+          >Loaded State: {{ state.name.value }}</v-card-text
+        >
       </v-card>
       <AdvancedDrawer v-model="advanced" />
     </v-main>

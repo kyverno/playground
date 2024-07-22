@@ -17,7 +17,9 @@
                 <v-alert type="error">
                   Details not found
                   <template #append>
-                    <v-btn flat color="error" :min-width="150" size="large" @click="close">Close</v-btn>
+                    <v-btn flat color="error" :min-width="150" size="large" @click="close"
+                      >Close</v-btn
+                    >
                   </template>
                 </v-alert>
               </v-card-text>
@@ -33,7 +35,8 @@
                   :original="details.originalReosurce"
                   :model-value="details.patchedResource"
                   :theme="editorTheme"
-                  :options="options" />
+                  :options="options"
+                />
               </template>
             </v-card>
           </v-col>

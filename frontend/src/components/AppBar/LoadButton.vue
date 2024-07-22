@@ -1,18 +1,47 @@
 <template>
   <v-menu location="bottom" :close-on-content-click="false" v-model="menu">
     <template v-slot:activator="{ props }">
-      <v-btn prepend-icon="mdi-folder" :class="btnClass" v-bind="props" :block="block" :variant="variant" id="load-button">Load</v-btn>
+      <v-btn
+        prepend-icon="mdi-folder"
+        :class="btnClass"
+        v-bind="props"
+        :block="block"
+        :variant="variant"
+        id="load-button"
+        >Load</v-btn
+      >
     </template>
     <v-list class="py-0">
       <v-list-item class="py-0 pl-0">
-        <v-btn prepend-icon="mdi-open-in-app" variant="text" block @click="loadDefault" class="mr-2 text-left justify-start">Default</v-btn>
+        <v-btn
+          prepend-icon="mdi-open-in-app"
+          variant="text"
+          block
+          @click="loadDefault"
+          class="mr-2 text-left justify-start"
+          >Default</v-btn
+        >
       </v-list-item>
       <v-divider />
       <template v-for="item in list" :key="item">
         <v-list-item class="py-0 pl-0">
-          <v-btn prepend-icon="mdi-open-in-app" variant="text" block @click="load(item)" class="mr-2 text-left justify-start">{{ item }}</v-btn>
+          <v-btn
+            prepend-icon="mdi-open-in-app"
+            variant="text"
+            block
+            @click="load(item)"
+            class="mr-2 text-left justify-start"
+            >{{ item }}</v-btn
+          >
           <template #append>
-            <v-btn small class="my-1" variant="flat" @click="remove(item)" icon="mdi-close" title="remove entry" />
+            <v-btn
+              small
+              class="my-1"
+              variant="flat"
+              @click="remove(item)"
+              icon="mdi-close"
+              title="remove entry"
+            />
           </template>
         </v-list-item>
         <v-divider />

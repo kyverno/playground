@@ -18,10 +18,18 @@ const props = defineProps({
   language: { type: String, default: 'javascript' },
   theme: { type: String, default: 'vs' },
   id: { type: String, required: true },
-  options: { type: Object as PropType<monaco.editor.IStandaloneEditorConstructionOptions>, default: () => ({}) }
+  options: {
+    type: Object as PropType<monaco.editor.IStandaloneEditorConstructionOptions>,
+    default: () => ({})
+  }
 })
 
-const emit = defineEmits(['editorWillMount', 'editorDidMount', 'update:modelValue', 'switchWordWrap'])
+const emit = defineEmits([
+  'editorWillMount',
+  'editorDidMount',
+  'update:modelValue',
+  'switchWordWrap'
+])
 
 const { width, height } = toRefs(props)
 
