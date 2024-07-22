@@ -141,4 +141,16 @@ spec:
         names:
         - ''`
 
+export const VAPBindingTemplate = `apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: "binding.example.com"
+spec:
+  policyName: "demo-policy.example.com"
+  validationActions: [Deny]
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        environment: test`
+
 export const ImageDataTemplate = ``

@@ -1,6 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "WindowsSecurityContextOptions contain Windows-specific options and credentials.",
-  "type": "object",
   "properties": {
     "gmsaCredentialSpec": {
       "description": "GMSACredentialSpec is where the GMSA admission webhook (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the GMSA credential spec named by the GMSACredentialSpecName field.",
@@ -31,5 +31,5 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

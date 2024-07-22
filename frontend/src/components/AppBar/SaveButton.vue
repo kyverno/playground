@@ -1,7 +1,15 @@
 <template>
   <v-menu location="bottom" :close-on-content-click="false" v-model="menu">
     <template v-slot:activator="{ props }">
-      <v-btn prepend-icon="mdi-content-save" :class="btnClass" v-bind="props" :block="block" :variant="variant" id="save-button">Save</v-btn>
+      <v-btn
+        prepend-icon="mdi-content-save"
+        :class="btnClass"
+        v-bind="props"
+        :block="block"
+        :variant="variant"
+        id="save-button"
+        >Save</v-btn
+      >
     </template>
     <v-list class="py-0">
       <template v-for="item in list" :key="item">
@@ -12,7 +20,8 @@
             variant="text"
             block
             @click="persist(item)"
-            class="mr-2 text-left justify-start">
+            class="mr-2 text-left justify-start"
+          >
             {{ item }}
           </v-btn>
         </v-list-item>
@@ -22,7 +31,14 @@
       <v-list-item class="py-0 pl-0">
         <v-dialog v-model="dialog" width="600px" transition="fade-transition">
           <template v-slot:activator="{ props }">
-            <v-btn prepend-icon="mdi-plus" variant="text" block v-bind="props" class="mr-2 text-left justify-start">New State</v-btn>
+            <v-btn
+              prepend-icon="mdi-plus"
+              variant="text"
+              block
+              v-bind="props"
+              class="mr-2 text-left justify-start"
+              >New State</v-btn
+            >
           </template>
 
           <v-card title="Persist your current Input">
@@ -47,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue'
+import { type PropType, ref, watch } from 'vue'
 import { btnColor } from '@/config'
 import { updateInput, getPersisted, useState } from '@/composables'
 import { computed } from 'vue'

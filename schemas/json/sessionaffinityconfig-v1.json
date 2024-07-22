@@ -1,24 +1,24 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "SessionAffinityConfig represents the configurations of session affinity.",
-  "type": "object",
   "properties": {
     "clientIP": {
       "description": "ClientIPConfig represents the configurations of Client IP based session affinity.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "timeoutSeconds": {
           "description": "timeoutSeconds specifies the seconds of ClientIP type session sticky time. The value must be >0 && <=86400(for 1 day) if ServiceAffinity == \"ClientIP\". Default value is 10800(for 3 hours).",
+          "format": "int32",
           "type": [
             "integer",
             "null"
-          ],
-          "format": "int32"
+          ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }

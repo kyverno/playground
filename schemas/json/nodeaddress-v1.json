@@ -1,10 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "NodeAddress contains information for the node's address.",
-  "type": "object",
-  "required": [
-    "type",
-    "address"
-  ],
   "properties": {
     "address": {
       "description": "The node address.",
@@ -21,5 +17,9 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "type",
+    "address"
+  ],
+  "type": "object"
 }

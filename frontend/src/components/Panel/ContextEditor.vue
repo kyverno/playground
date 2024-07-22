@@ -6,7 +6,8 @@
     :modelValue="props.modelValue"
     @update:modelValue="(event: string) => emit('update:modelValue', event)"
     :options="options"
-    :uri="uri" />
+    :uri="uri"
+  />
 </template>
 
 <script setup lang="ts">

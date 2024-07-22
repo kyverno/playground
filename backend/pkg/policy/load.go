@@ -5,8 +5,8 @@ import (
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2beta1 "github.com/kyverno/kyverno/api/kyverno/v2beta1"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/convert"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
+	"github.com/kyverno/kyverno/ext/resource/convert"
+	"github.com/kyverno/kyverno/ext/resource/loader"
 	"k8s.io/api/admissionregistration/v1alpha1"
 	"k8s.io/api/admissionregistration/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime/schema"

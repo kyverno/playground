@@ -1,26 +1,22 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "CertificateSigningRequestCondition describes a condition of a CertificateSigningRequest object",
-  "type": "object",
-  "required": [
-    "type",
-    "status"
-  ],
   "properties": {
     "lastTransitionTime": {
       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+      "format": "date-time",
       "type": [
         "string",
         "null"
-      ],
-      "format": "date-time"
+      ]
     },
     "lastUpdateTime": {
       "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+      "format": "date-time",
       "type": [
         "string",
         "null"
-      ],
-      "format": "date-time"
+      ]
     },
     "message": {
       "description": "message contains a human readable message with details about the request state",
@@ -51,5 +47,9 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "type",
+    "status"
+  ],
+  "type": "object"
 }

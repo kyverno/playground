@@ -1,45 +1,41 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "SelfSubjectReviewStatus is filled by the kube-apiserver and sent back to a user.",
-  "type": "object",
   "properties": {
     "userInfo": {
       "description": "UserInfo holds the information about the user needed to implement the user.Info interface.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "extra": {
-          "description": "Any additional information provided by the authenticator.",
-          "type": [
-            "object",
-            "null"
-          ],
           "additionalProperties": {
-            "type": [
-              "array",
-              "null"
-            ],
             "items": {
               "type": [
                 "string",
                 "null"
               ]
-            }
-          }
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "description": "Any additional information provided by the authenticator.",
+          "type": [
+            "object",
+            "null"
+          ]
         },
         "groups": {
           "description": "The names of groups this user is a part of.",
-          "type": [
-            "array",
-            "null"
-          ],
           "items": {
             "type": [
               "string",
               "null"
             ]
-          }
+          },
+          "type": [
+            "array",
+            "null"
+          ]
         },
         "uid": {
           "description": "A unique value that identifies this user across time. If this user is deleted and another user by the same name is added, they will have different UIDs.",
@@ -55,8 +51,12 @@
             "null"
           ]
         }
-      }
+      },
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "type": "object"
 }
