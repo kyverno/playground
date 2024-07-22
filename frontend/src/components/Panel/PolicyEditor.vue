@@ -9,10 +9,16 @@
       @editorDidMount="monacoSetup"
       :uri="uri"
       id="policy"
-      :height="752" />
+      :height="752"
+    />
     <v-card class="config" theme="dark" color="black" v-if="false">
       <v-card-text class="my-0 py-1">
-        <v-switch v-model="autocompleteOnEnter" label="autocomplete" hide-details density="compact" />
+        <v-switch
+          v-model="autocompleteOnEnter"
+          label="autocomplete"
+          hide-details
+          density="compact"
+        />
       </v-card-text>
     </v-card>
   </div>

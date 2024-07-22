@@ -1,5 +1,7 @@
 <template>
-  <v-alert color="error" variant="outlined" class="mb-2" v-if="error">Failed to load resource types: {{ error }}</v-alert>
+  <v-alert color="error" variant="outlined" class="mb-2" v-if="error"
+    >Failed to load resource types: {{ error }}</v-alert
+  >
   <v-autocomplete
     variant="outlined"
     hide-details
@@ -8,13 +10,14 @@
     v-model="resource"
     return-object
     density="comfortable"
-    :loading="loading" />
+    :loading="loading"
+  />
 </template>
 
 <script setup lang="ts">
-import { Resource, useAPI } from '@/composables/api'
+import { type Resource, useAPI } from '@/composables/api'
 import { computed } from 'vue'
-import { PropType } from 'vue'
+import { type PropType } from 'vue'
 import { state } from '@/store'
 
 const { kinds, loading, error } = useAPI()

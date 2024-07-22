@@ -14,13 +14,25 @@
           <namespace-select v-model="namespace" />
         </simple-row>
         <simple-row>
-          <v-text-field v-model="name" label="ConfigMap Name" variant="outlined" hide-details density="comfortable" />
+          <v-text-field
+            v-model="name"
+            label="ConfigMap Name"
+            variant="outlined"
+            hide-details
+            density="comfortable"
+          />
         </simple-row>
       </v-container>
       <v-card-actions>
         <v-btn @click="dialog = false">Close</v-btn>
         <v-spacer />
-        <v-btn :loading="loading" :disabled="!name || !namespace" @click="() => load()" :color="error ? 'error' : undefined">Load Config</v-btn>
+        <v-btn
+          :loading="loading"
+          :disabled="!name || !namespace"
+          @click="() => load()"
+          :color="error ? 'error' : undefined"
+          >Load Config</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -43,7 +55,12 @@ const emit = defineEmits(['update'])
 
 const load = () => {
   loading.value = true
-  loadResource({ apiVersion: 'v1', kind: 'ConfigMap', namespace: namespace.value, name: name.value })
+  loadResource({
+    apiVersion: 'v1',
+    kind: 'ConfigMap',
+    namespace: namespace.value,
+    name: name.value
+  })
     .then((response) => {
       const results = resourceToYAML(response)
 

@@ -1,22 +1,19 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Represents a Ceph Filesystem mount that lasts the lifetime of a pod Cephfs volumes do not support ownership management or SELinux relabeling.",
-  "type": "object",
-  "required": [
-    "monitors"
-  ],
   "properties": {
     "monitors": {
       "description": "monitors is Required: Monitors is a collection of Ceph monitors More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "type": [
           "string",
           "null"
         ]
-      }
+      },
+      "type": [
+        "array",
+        "null"
+      ]
     },
     "path": {
       "description": "path is Optional: Used as the mounted root, rather than the full Ceph tree, default is /",
@@ -41,10 +38,6 @@
     },
     "secretRef": {
       "description": "SecretReference represents a Secret Reference. It has enough information to retrieve secret in any namespace",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "name is unique within a namespace to reference a secret resource.",
@@ -61,6 +54,10 @@
           ]
         }
       },
+      "type": [
+        "object",
+        "null"
+      ],
       "x-kubernetes-map-type": "atomic"
     },
     "user": {
@@ -71,5 +68,8 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "monitors"
+  ],
+  "type": "object"
 }

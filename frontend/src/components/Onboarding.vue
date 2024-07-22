@@ -7,7 +7,8 @@
           v-if="step && step.content"
           :title="step.content.title"
           :min-width="350"
-          :color="layoutTheme === 'dark' ? 'grey-darken-2' : 'grey-lighten-4'">
+          :color="layoutTheme === 'dark' ? 'grey-darken-2' : 'grey-lighten-4'"
+        >
           <v-card-text>{{ step.content.description }}</v-card-text>
           <v-card-actions>
             <v-btn @click="close">Close</v-btn>
@@ -24,12 +25,12 @@
 
 <script setup lang="ts">
 import { layoutTheme } from '@/config'
-import { VOnboardingWrapper, VOnboardingStep } from 'v-onboarding'
-import { watch, ref } from 'vue'
+import { VOnboardingWrapper, VOnboardingStep, type StepEntity } from 'v-onboarding'
+import { watch, ref, type PropType } from 'vue'
 
 defineProps({
   close: { type: Function },
-  steps: { type: Array }
+  steps: { type: Array as PropType<StepEntity[]>, default: () => [] }
 })
 
 const wrapper = ref(null)

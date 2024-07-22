@@ -1,19 +1,36 @@
 <template>
-  <v-dialog :model-value="props.modelValue" width="90%" @update:model-value="emit('update:modelValue', false)">
+  <v-dialog
+    :model-value="props.modelValue"
+    width="90%"
+    @update:model-value="emit('update:modelValue', false)"
+  >
     <v-card>
       <v-toolbar color="transparent">
         <v-toolbar-title>Results</v-toolbar-title>
         <template v-slot:append>
-          <v-checkbox variant="compact" label="Hide no match results" hide-details v-model="hideNoMatch" class="mr-4" />
+          <v-checkbox
+            variant="compact"
+            label="Hide no match results"
+            hide-details
+            v-model="hideNoMatch"
+            class="mr-4"
+          />
           <v-btn flat icon="mdi-close" @click="emit('update:modelValue', false)"></v-btn>
         </template>
       </v-toolbar>
       <v-divider />
       <v-card-text v-if="!hasResults">
-        <v-alert type="warning" variant="outlined">No resource matched any rule of the provided policies. Please check your manifests.</v-alert>
+        <v-alert type="warning" variant="outlined"
+          >No resource matched any rule of the provided policies. Please check your
+          manifests.</v-alert
+        >
       </v-card-text>
       <MutationTable :results="mutations" v-if="hasResults && mutations.length" />
-      <MutationTable :results="verifications" v-if="hasResults && verifications.length" title="ImageVerification Results" />
+      <MutationTable
+        :results="verifications"
+        v-if="hasResults && verifications.length"
+        title="ImageVerification Results"
+      />
       <ValidationTable :results="validations" v-if="hasResults && validations.length" />
       <GenerationTable :results="generations" v-if="hasResults && generations.length" />
       <v-card-actions>
@@ -21,7 +38,14 @@
         <v-spacer />
         <v-tooltip :model-value="copied" location="top" text="Copied" :open-on-hover="false">
           <template v-slot:activator="{ props }">
-            <v-btn variant="tonal" :color="btnColor" @click="copy(policy)" :disabled="!isSupported" v-bind="props">Copy Policy to Clipboard</v-btn>
+            <v-btn
+              variant="tonal"
+              :color="btnColor"
+              @click="copy(policy)"
+              :disabled="!isSupported"
+              v-bind="props"
+              >Copy Policy to Clipboard</v-btn
+            >
           </template>
         </v-tooltip>
       </v-card-actions>
@@ -30,8 +54,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
-import { EngineResponse } from '@/types'
+import { computed, type PropType } from 'vue'
+import type { EngineResponse } from '@/types'
 import { useClipboard } from '@vueuse/core'
 import { useConfig, btnColor } from '@/config'
 import ValidationTable from './ValidationTable.vue'
@@ -46,10 +70,18 @@ const props = defineProps({
 
 const hasResults = computed(() => {
   return (
-    (props.results.validation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) ||
-    (props.results.mutation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) ||
-    (props.results.imageVerification || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0) ||
-    (props.results.generation || []).some((v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0)
+    (props.results.validation || []).some(
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+    ) ||
+    (props.results.mutation || []).some(
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+    ) ||
+    (props.results.imageVerification || []).some(
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+    ) ||
+    (props.results.generation || []).some(
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+    )
   )
 })
 

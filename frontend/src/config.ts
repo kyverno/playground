@@ -1,6 +1,6 @@
 import { useLocalStorage, usePreferredDark } from '@vueuse/core'
 import { watch, computed } from 'vue'
-import { Policy } from './functions/github'
+import { type Policy } from './functions/github'
 import examples from '../public/tutorials/tutorials.json'
 
 export type Config = {
@@ -18,7 +18,10 @@ type Example = {
 }
 
 const isDark = usePreferredDark()
-export const layoutTheme = useLocalStorage<'light' | 'dark'>('config:layoutTheme', isDark.value ? 'dark' : 'light')
+export const layoutTheme = useLocalStorage<'light' | 'dark'>(
+  'config:layoutTheme',
+  isDark.value ? 'dark' : 'light'
+)
 watch(isDark, (dark: boolean) => {
   layoutTheme.value = dark ? 'dark' : 'light'
 })
@@ -39,9 +42,11 @@ export const options = {
     resourceInfo: 'Kubernetes resources which get applied to policies',
     contextInfo: 'Context information like admission context, variables, and Kubernetes version',
     exceptionsInfo: 'Configure Kyverno PolicyException Resources',
+    vapBindingInfo: 'Configure ValidatingAdmissionPolicyBinding Resources',
     crdInfo: 'Define unknown CRDs you want to use as resource',
     configInfo: 'Configure the Kyverno Engine',
-    clusterResourcesInfo: 'Already existing resources to simulate clone operations or context substitution',
+    clusterResourcesInfo:
+      'Already existing resources to simulate clone operations or context substitution',
     imageDataInfo: 'Simulate loading of not accessable ImageData'
   },
   onboarding: {

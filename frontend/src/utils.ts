@@ -1,5 +1,6 @@
 export const resolveAPI = () => {
-  const api: string = import.meta.env.VITE_API_HOST || `${window.location.origin}${window.location.pathname}`
+  const api: string =
+    import.meta.env.VITE_API_HOST || `${window.location.origin}${window.location.pathname}`
 
   return `${api.trim().replace(/\/+$/, '')}/api`
 }

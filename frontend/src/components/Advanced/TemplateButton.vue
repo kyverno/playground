@@ -6,22 +6,48 @@
     <v-list class="py-0 mb-2">
       <template v-if="list.length > 10">
         <v-list-item>
-          <v-text-field variant="outlined" density="compact" hide-details placeholder="Search" class="pb-2" v-model="search" />
+          <v-text-field
+            variant="outlined"
+            density="compact"
+            hide-details
+            placeholder="Search"
+            class="pb-2"
+            v-model="search"
+          />
         </v-list-item>
         <v-divider />
       </template>
       <template v-if="baseTemplate">
         <v-list-item class="py-0 pl-0">
-          <v-btn prepend-icon="mdi-open-in-app" variant="flat" block @click="selectDefault" class="mr-2 text-left justify-start">Default</v-btn>
+          <v-btn
+            prepend-icon="mdi-open-in-app"
+            variant="flat"
+            block
+            @click="selectDefault"
+            class="mr-2 text-left justify-start"
+            >Default</v-btn
+          >
         </v-list-item>
       </template>
       <v-virtual-scroll :items="templates" :height="height" min-width="210">
         <template v-slot:default="{ item }">
           <v-divider />
           <v-list-item class="py-0 pl-0">
-            <v-btn prepend-icon="mdi-open-in-app" variant="flat" block @click="loadTemplate(item)" class="mr-2 text-left justify-start">{{ item }}</v-btn>
+            <v-btn
+              prepend-icon="mdi-open-in-app"
+              variant="flat"
+              block
+              @click="loadTemplate(item)"
+              class="mr-2 text-left justify-start"
+              >{{ item }}</v-btn
+            >
             <template v-slot:append>
-              <v-btn icon="mdi-close" size="small" variant="flat" @click="() => removeTemplate(item)" />
+              <v-btn
+                icon="mdi-close"
+                size="small"
+                variant="flat"
+                @click="() => removeTemplate(item)"
+              />
             </template>
           </v-list-item>
         </template>
@@ -36,14 +62,23 @@
           block
           height="48"
           variant="text"
-          @click="() => add(selected)">
+          @click="() => add(selected)"
+        >
           Update {{ selected }}
         </v-btn>
       </template>
       <v-divider v-if="list.length" />
       <v-dialog v-model="dialog" width="600px" transition="fade-transition">
         <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" prepend-icon="mdi-content-save" class="mr-2 text-left justify-start" :disabled="!content" block height="48" variant="text">
+          <v-btn
+            v-bind="props"
+            prepend-icon="mdi-content-save"
+            class="mr-2 text-left justify-start"
+            :disabled="!content"
+            block
+            height="48"
+            variant="text"
+          >
             Save as Template
           </v-btn>
         </template>
