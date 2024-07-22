@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue'
+import { type PropType, ref, watch } from 'vue'
 import { btnColor } from '@/config'
 import { updateInput, getPersisted, useState } from '@/composables'
 import { computed } from 'vue'

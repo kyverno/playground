@@ -1,5 +1,5 @@
-import { RemovableRef, useLocalStorage } from '@vueuse/core'
-import { Ref, ref, watch } from 'vue'
+import { type RemovableRef, useLocalStorage } from '@vueuse/core'
+import { type Ref, ref, watch } from 'vue'
 
 export type Template = {
   name: string

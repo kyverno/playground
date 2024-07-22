@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { type PropType, ref } from 'vue'
 import { watch } from 'vue'
 import { importProfiles } from '@/functions/export'
 

@@ -41,7 +41,7 @@
 import { getPersisted } from '@/composables'
 import { btnColor } from '@/config'
 import { computed } from 'vue'
-import { PropType, ref } from 'vue'
+import { type PropType, ref } from 'vue'
 import { convertProfiles } from '@/functions/export'
 
 defineProps({

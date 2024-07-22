@@ -15,11 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import { computed, type PropType } from 'vue'
 import hash from 'object-hash'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useRouter } from 'vue-router'
-import { Generation, RuleStatus } from '@/types'
+import type { Generation, RuleStatus } from '@/types'
 import { useSessionStorage } from '@vueuse/core'
 import StatusChip from './StatusChip.vue'
 import MsgTooltip from './MsgTooltip.vue'

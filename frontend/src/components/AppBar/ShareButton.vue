@@ -45,9 +45,9 @@
 import { ref, watch, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useClipboard } from '@vueuse/core'
-import { PropType } from 'vue'
+import { type PropType } from 'vue'
 import { btnColor } from '@/config'
-import { generateContent, Config } from '@/functions/share'
+import { generateContent, type Config } from '@/functions/share'
 
 defineProps({
   btnClass: { type: String, default: '' },

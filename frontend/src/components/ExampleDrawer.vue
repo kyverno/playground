@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useConfig } from '@/config'
-import { Policy, loadPolicy } from '@/functions/github'
+import { type Policy, loadPolicy } from '@/functions/github'
 import { init } from '@/store'
 const { options } = useConfig()
 

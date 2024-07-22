@@ -47,7 +47,7 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSessionStorage } from '@vueuse/core'
-import { RuleStatus } from '@/types'
+import type { RuleStatus } from '@/types'
 import { layoutTheme, editorTheme } from '@/config'
 import { RuleDetails } from '@/components/Details'
 import { DiffEditor } from '@/components/Panel'

@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { ref, toRefs, computed, onMounted, reactive } from 'vue'
 import * as monaco from 'monaco-editor'
-import { PropType } from 'vue'
+import { type PropType } from 'vue'
 import { watch } from 'vue'
 import { onBeforeUnmount } from 'vue'
 import { useEditorFix } from '@/functions/editor'

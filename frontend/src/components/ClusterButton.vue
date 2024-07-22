@@ -67,9 +67,9 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ref, watch, PropType } from 'vue'
+import { ref, watch, type PropType } from 'vue'
 import { layoutTheme } from '@/config'
-import { useAPI, resourcesToYAML, ResourceKind } from '@/composables/api'
+import { useAPI, resourcesToYAML, type ResourceKind } from '@/composables/api'
 import { mergeResources } from '@/utils'
 import ClusterSearchList from '@/components/Panel/ClusterSearchList.vue'
 import ModeSelect from '@/components/ModeSelect.vue'

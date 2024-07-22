@@ -1,6 +1,6 @@
 import { useLocalStorage, usePreferredDark } from '@vueuse/core'
 import { watch, computed } from 'vue'
-import { Policy } from './functions/github'
+import { type Policy } from './functions/github'
 import examples from '../public/tutorials/tutorials.json'
 
 export type Config = {

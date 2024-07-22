@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { PropType } from 'vue'
+import { type PropType } from 'vue'
 
 type Resource = { namespace?: string; name: string }
 

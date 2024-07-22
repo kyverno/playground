@@ -1,7 +1,7 @@
 import { ConfigTemplate, ContextTemplate, PolicyTemplate, ResourceTemplate, CustomResourceDefinitionsTemplate, ImageDataTemplate } from '@/assets/templates'
 import { reactive } from 'vue'
-import { useState, Inputs } from '@/composables'
-import { ResourceKind } from '@/composables/api'
+import { useState, type Inputs } from '@/composables'
+import { type ResourceKind } from '@/composables/api'
 
 type State = {
   kinds: ResourceKind[]

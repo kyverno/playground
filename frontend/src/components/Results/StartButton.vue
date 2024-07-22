@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { MarkerSeverity, editor } from 'monaco-editor'
-import { EngineResponse, ErrorResponse } from '@/types'
+import type { EngineResponse, ErrorResponse } from '@/types'
 import { resolveAPI } from '@/utils'
 import { inputs } from '@/store'
 import { parse } from 'yaml'

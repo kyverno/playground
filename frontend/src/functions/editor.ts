@@ -1,4 +1,4 @@
-import monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor'
 
 function fixAddCommand(editor: monaco.editor.IStandaloneCodeEditor, context: string): { dispose(): void } {
   const addCommand = editor.addCommand

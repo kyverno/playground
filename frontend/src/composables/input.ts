@@ -1,5 +1,5 @@
 import { useLocalStorage } from '@vueuse/core'
-import { Ref, ref, watch } from 'vue'
+import { type Ref, ref, watch } from 'vue'
 
 export type Inputs = {
   name?: string

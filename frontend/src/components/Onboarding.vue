@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { layoutTheme } from '@/config'
-import { VOnboardingWrapper, VOnboardingStep, StepEntity } from 'v-onboarding'
+import { VOnboardingWrapper, VOnboardingStep, type StepEntity } from 'v-onboarding'
 import { watch, ref, type PropType } from 'vue'
 
 defineProps({

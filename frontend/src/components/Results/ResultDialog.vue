@@ -30,8 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
-import { EngineResponse } from '@/types'
+import { computed, type PropType } from 'vue'
+import type { EngineResponse } from '@/types'
 import { useClipboard } from '@vueuse/core'
 import { useConfig, btnColor } from '@/config'
 import ValidationTable from './ValidationTable.vue'

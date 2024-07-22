@@ -1,5 +1,5 @@
 import { layoutTheme } from './config'
-import { RuleStatus } from './types'
+import type { RuleStatus } from './types'
 
 const statusToColor: { [status in RuleStatus]: string } = {
   skip: '#616161',

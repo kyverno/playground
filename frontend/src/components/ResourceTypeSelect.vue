@@ -12,9 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import { Resource, useAPI } from '@/composables/api'
+import { type Resource, useAPI } from '@/composables/api'
 import { computed } from 'vue'
-import { PropType } from 'vue'
+import { type PropType } from 'vue'
 import { state } from '@/store'
 
 const { kinds, loading, error } = useAPI()

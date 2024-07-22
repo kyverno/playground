@@ -34,11 +34,11 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref } from 'vue'
+import { type PropType, computed, ref } from 'vue'
 import hash from 'object-hash'
 import { useDisplay } from 'vuetify/lib/framework.mjs'
 import { useConfig } from '@/config'
-import { Validation, RuleStatus } from '@/types'
+import type { Validation, RuleStatus } from '@/types'
 import StatusChip from './StatusChip.vue'
 
 type Item = {

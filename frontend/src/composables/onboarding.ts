@@ -1,5 +1,5 @@
 import { useVOnboarding } from 'v-onboarding'
-import { Ref, ref } from 'vue'
+import { type Ref, ref } from 'vue'
 
 export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
   const wrapper = ref(null)

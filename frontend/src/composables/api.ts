@@ -1,5 +1,5 @@
 import { resolveAPI } from '@/utils'
-import { Ref, reactive, ref } from 'vue'
+import { type Ref, reactive, ref } from 'vue'
 import { stringify } from 'yaml'
 
 export type Config = {

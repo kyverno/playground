@@ -30,7 +30,7 @@ import { createInput, removeInput, getPersisted } from '@/composables'
 import { setDefaults, init } from '@/store'
 import { ref } from 'vue'
 import ImportButton from './ImportButton.vue'
-import { PropType } from 'vue'
+import { type PropType } from 'vue'
 
 defineProps({
   btnClass: { type: String, default: '' },

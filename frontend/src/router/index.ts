@@ -1,7 +1,7 @@
 import Home from '@/pages/Home.vue'
 import MutationDetails from '@/pages/MutationDetails.vue'
 import GenerationDetails from '@/pages/GenerationDetails.vue'
-import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router'
+import { type RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
