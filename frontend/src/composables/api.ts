@@ -1,5 +1,5 @@
 import { resolveAPI } from '@/utils'
-import { Ref, reactive, ref } from 'vue'
+import { type Ref, reactive, ref } from 'vue'
 import { stringify } from 'yaml'
 
 export type Config = {
@@ -97,17 +97,25 @@ const fetchWrapper = <T, R = undefined>(method: string, api: string, request?: R
   })
 }
 
-const fetchNamespaces = (api: string) => () => fetchWrapper<string[]>('GET', `${api}/cluster/namespaces`)
+const fetchNamespaces = (api: string) => () =>
+  fetchWrapper<string[]>('GET', `${api}/cluster/namespaces`)
 
 const fetchResources = (api: string) => (request: ListRequest) => {
-  return fetchWrapper<SearchResult[]>('GET', `${api}/cluster/search?` + new URLSearchParams(request).toString())
+  return fetchWrapper<SearchResult[]>(
+    'GET',
+    `${api}/cluster/search?` + new URLSearchParams(request).toString()
+  )
 }
 
 const fetchResource = (api: string) => (request: ResourceRequest) => {
-  return fetchWrapper<object>('GET', `${api}/cluster/resource?` + new URLSearchParams(request).toString())
+  return fetchWrapper<object>(
+    'GET',
+    `${api}/cluster/resource?` + new URLSearchParams(request).toString()
+  )
 }
 
-const fetchKinds = (api: string) => () => fetchWrapper<ResourceKind[]>('GET', `${api}/cluster/kinds`)
+const fetchKinds = (api: string) => () =>
+  fetchWrapper<ResourceKind[]>('GET', `${api}/cluster/kinds`)
 
 export const useAPI = <T>() => {
   const api = resolveAPI()
@@ -125,4 +133,5 @@ export const useAPI = <T>() => {
 
 export const resourceToYAML = (resource: object): string => stringify(resource, { lineWidth: 0 })
 
-export const resourcesToYAML = (resources: object[]): string => resources.map((r) => resourceToYAML(r)).join('---\n')
+export const resourcesToYAML = (resources: object[]): string =>
+  resources.map((r) => resourceToYAML(r)).join('---\n')

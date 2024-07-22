@@ -29,13 +29,19 @@
           :options="options"
           class="border"
           @editor-did-mount="initRefresh"
-          :uri="uriParsed" />
+          :uri="uriParsed"
+        />
       </v-card-text>
       <v-card-actions>
         <v-btn @click="dialog = false">Close</v-btn>
         <v-spacer />
         <v-btn @click="() => update('')" prepend-icon="mdi-delete">Clear</v-btn>
-        <template-button :panel="id" :content="content" @select="update" :base-template="template" />
+        <template-button
+          :panel="id"
+          :content="content"
+          @select="update"
+          :base-template="template"
+        />
         <UploadButton label="Upload" @click="update" :tooltip="false" />
         <slot name="actions" :update="update" :content="content" />
         <v-spacer />

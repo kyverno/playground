@@ -14,5 +14,10 @@ import PolicyTypeSelect from '../PolicyTypeSelect.vue'
 import SimpleRow from '../SimpleRow.vue'
 import { inputs } from '@/store'
 
-const defaultResource = ref({ title: 'kyverno.io/v1 ClusterPolicy', apiVersion: 'kyverno.io/v1', kind: 'ClusterPolicy', clusterScoped: true })
+const defaultResource = ref({
+  title: 'kyverno.io/v1 ClusterPolicy',
+  apiVersion: 'kyverno.io/v1',
+  kind: 'ClusterPolicy',
+  clusterScoped: true
+})
 </script>

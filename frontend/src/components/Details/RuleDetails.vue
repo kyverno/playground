@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
-import { RuleStatus } from '@/types'
+import type { PropType } from 'vue'
+import type { RuleStatus } from '@/types'
 
 type Details = {
   apiVersion: string

@@ -1,7 +1,15 @@
 <template>
   <v-dialog v-model="dialog" width="80%" :theme="layoutTheme">
     <template v-slot:activator="{ props }">
-      <v-btn :height="44" :width="44" v-bind="props" icon="mdi-help" color="primary" class="help" style="z-index: 9" />
+      <v-btn
+        :height="44"
+        :width="44"
+        v-bind="props"
+        icon="mdi-help"
+        color="primary"
+        class="help"
+        style="z-index: 9"
+      />
     </template>
 
     <v-card>
@@ -14,8 +22,8 @@
         <h2 class="text-h6 mb-2 mt-3">Project Status</h2>
 
         <p>
-          Please note that this project is currently in an alpha phase and is released as a preview build. If you encounter any problems, please feel free to
-          file a bug report.
+          Please note that this project is currently in an alpha phase and is released as a preview
+          build. If you encounter any problems, please feel free to file a bug report.
         </p>
 
         <h2 class="text-h6 mb-2 mt-3">This Playground supports the following kinds of rules</h2>
@@ -32,14 +40,18 @@
         <h2 class="text-h6 mb-2 mt-3">Context and Variables</h2>
 
         <p>
-          It is currently not possible to do actual API calls. It is only possible to mock variables using the
+          It is currently not possible to do actual API calls. It is only possible to mock variables
+          using the
           <code>variables</code>
           configuration in the context input.
         </p>
 
         <h2 class="text-h6 mb-2 mt-3">Multiple Manifests</h2>
 
-        <p>It is supported to define multiple policies and/or resources as inputs. Context and variables will be shared for all executions.</p>
+        <p>
+          It is supported to define multiple policies and/or resources as inputs. Context and
+          variables will be shared for all executions.
+        </p>
 
         <h2 class="text-h6 mb-2 mt-3">Load Manifests</h2>
 
@@ -49,7 +61,10 @@
             The "URL" Button loads a manifest from an external URL
             <br />
             Example:
-            <a href="https://raw.githubusercontent.com/kyverno/policies/main/best-practices/disallow-latest-tag/disallow-latest-tag.yaml" target="_blank">
+            <a
+              href="https://raw.githubusercontent.com/kyverno/policies/main/best-practices/disallow-latest-tag/disallow-latest-tag.yaml"
+              target="_blank"
+            >
               https://raw.githubusercontent.com/kyverno/policies/main/best-practices/disallow-latest-tag/disallow-latest-tag.yaml
             </a>
           </li>
@@ -59,18 +74,22 @@
 
         <ul class="pl-4 my-2 text-body-1">
           <li>
-            Save new state: Your current state is saved in your local storage as a named profile, which means it is only available on your current machine and
-            browser.
+            Save new state: Your current state is saved in your local storage as a named profile,
+            which means it is only available on your current machine and browser.
           </li>
-          <li>Load a profile from your local storage, load the default profile to reset your current state to its defaults.</li>
+          <li>
+            Load a profile from your local storage, load the default profile to reset your current
+            state to its defaults.
+          </li>
           <li>Update a profile by selecting your current profile from the storage menu.</li>
         </ul>
 
         <h2 class="text-h6 mb-2 mt-3">Share</h2>
 
         <p>
-          Share your current state with others by sending the created link. This link contains your state as a compressed base64 string, which means that this
-          link will never expire or become invalid.
+          Share your current state with others by sending the created link. This link contains your
+          state as a compressed base64 string, which means that this link will never expire or
+          become invalid.
         </p>
       </v-card-text>
       <v-divider />
