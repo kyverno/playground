@@ -7,7 +7,8 @@
     :items="modes"
     @update:modelValue="(ns: string) => emit('update:modelValue', ns)"
     :model-value="prop.modelValue"
-    label="Mode" />
+    label="Mode"
+  />
 </template>
 
 <script setup lang="ts">

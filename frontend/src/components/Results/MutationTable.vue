@@ -1,12 +1,24 @@
 <template>
   <v-card-title class="my-2 text-subtitle-1">{{ title }}</v-card-title>
   <v-divider />
-  <v-data-table density="default" hover :items="items" :headers="(headers as any)" class="result-table" :items-per-page="-1">
+  <v-data-table
+    density="default"
+    hover
+    :items="items"
+    :headers="headers as any"
+    class="result-table"
+    :items-per-page="-1"
+  >
     <template v-slot:[`item.status`]="{ item }">
       <StatusChip :status="item.status" :key="item.status" />
     </template>
     <template v-slot:[`item.details`]="{ item }">
-      <v-btn @click="details(item)" variant="text" icon="mdi-open-in-new" v-if="item.status === 'pass'" />
+      <v-btn
+        @click="details(item)"
+        variant="text"
+        icon="mdi-open-in-new"
+        v-if="item.status === 'pass'"
+      />
       <MsgTooltip :msg="item.message" v-else />
     </template>
     <template #bottom></template>
@@ -15,11 +27,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue'
+import { computed, type PropType } from 'vue'
 import hash from 'object-hash'
-import { useDisplay } from 'vuetify/lib/framework.mjs'
+import { useDisplay } from 'vuetify'
 import { useRouter } from 'vue-router'
-import { Mutation, RuleStatus } from '@/types'
+import type { Mutation, RuleStatus } from '@/types'
 import { useSessionStorage } from '@vueuse/core'
 import MsgTooltip from './MsgTooltip.vue'
 import StatusChip from './StatusChip.vue'
@@ -77,7 +89,9 @@ const items = computed(() => {
         id: '',
         apiVersion: mutation.resource.apiVersion,
         kind: mutation.resource.kind,
-        resource: [mutation.resource.metadata.namespace, mutation.resource.metadata.name].filter((s) => !!s).join('/'),
+        resource: [mutation.resource.metadata.namespace, mutation.resource.metadata.name]
+          .filter((s) => !!s)
+          .join('/'),
         policy: policy.metadata.name,
         rule: rule.name,
         message: rule.message,

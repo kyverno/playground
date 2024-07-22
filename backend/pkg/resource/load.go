@@ -2,8 +2,8 @@ package resource
 
 import (
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
-	yamlutils "github.com/kyverno/kyverno/pkg/utils/yaml"
+	"github.com/kyverno/kyverno/ext/resource/loader"
+	yamlutils "github.com/kyverno/kyverno/ext/yaml"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 

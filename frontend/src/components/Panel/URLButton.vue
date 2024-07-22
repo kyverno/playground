@@ -1,7 +1,12 @@
 <template>
   <v-dialog v-model="dialog" width="600px" :theme="layoutTheme">
     <template v-slot:activator="{ props }">
-      <v-tooltip location="bottom" content-class="no-opacity-tooltip" text="Import from URL" theme="dark">
+      <v-tooltip
+        location="bottom"
+        content-class="no-opacity-tooltip"
+        text="Import from URL"
+        theme="dark"
+      >
         <template v-slot:activator="{ props: tooltip }">
           <v-btn v-bind="{ ...tooltip, ...props }" icon="mdi-web"></v-btn>
         </template>

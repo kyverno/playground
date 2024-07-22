@@ -1,6 +1,12 @@
 <template>
   <v-card>
-    <EditorToolbar id="context-panel" title="Context" :info="options.panels.contextInfo" v-model="inputs.context" :restore-value="state.context.value">
+    <EditorToolbar
+      id="context-panel"
+      title="Context"
+      :info="options.panels.contextInfo"
+      v-model="inputs.context"
+      :restore-value="state.context.value"
+    >
       <template #append-actions>
         <v-btn :icon="collapse ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggle" />
       </template>

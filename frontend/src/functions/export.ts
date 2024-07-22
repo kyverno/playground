@@ -16,6 +16,7 @@ export type ProfileExport = {
     clutserResources?: string
     exceptions?: string
     imageData?: string
+    vapBindings?: string
   }[]
 }
 
@@ -33,12 +34,23 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       customResourceDefinitions: inputs.customResourceDefinitions,
       clusterResources: inputs.clusterResources,
       exceptions: inputs.exceptions,
-      imageData: inputs.imageData
+      imageData: inputs.imageData,
+      vapBindings: inputs.vapBindings
     })
   }
 
   profiles.map((p) => {
-    const { policy, resource, context, config, oldResource, customResourceDefinitions, clusterResources, exceptions, imageData } = createInput(p)
+    const {
+      policy,
+      resource,
+      context,
+      config,
+      oldResource,
+      customResourceDefinitions,
+      clusterResources,
+      exceptions,
+      imageData
+    } = createInput(p)
 
     exports.push({
       name: p,
@@ -50,7 +62,8 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       customResourceDefinitions: customResourceDefinitions.value,
       clusterResources: clusterResources.value,
       exceptions: exceptions.value,
-      imageData: imageData.value
+      imageData: imageData.value,
+      vapBindings: inputs.vapBindings
     })
   })
 
@@ -87,7 +100,8 @@ export const importProfiles = async (content: string) => {
       customResourceDefinitions: currentState?.customResourceDefinitions,
       clusterResources: currentState?.clutserResources,
       exceptions: currentState?.exceptions,
-      imageData: currentState?.imageData
+      imageData: currentState?.imageData,
+      vapBindings: currentState?.vapBindings
     })
   }
 
@@ -108,7 +122,8 @@ export const importProfiles = async (content: string) => {
         customResourceDefinitions: profile?.customResourceDefinitions,
         clusterResources: profile?.clutserResources,
         exceptions: profile?.exceptions,
-        imageData: profile.imageData
+        imageData: profile.imageData,
+        vapBindings: profile?.vapBindings
       })
     })
 }

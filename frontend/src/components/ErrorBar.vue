@@ -5,7 +5,8 @@
     color="error"
     max-width="80%"
     :width="856"
-    :timeout="8000">
+    :timeout="8000"
+  >
     <span v-html="text" class="d-block" />
     <template v-slot:actions>
       <v-btn variant="text" @click="emit('update:modelValue', false)">Close</v-btn>

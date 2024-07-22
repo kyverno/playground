@@ -1,9 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "ResourceClaim references one entry in PodSpec.ResourceClaims.",
-  "type": "object",
-  "required": [
-    "name"
-  ],
   "properties": {
     "name": {
       "description": "Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.",
@@ -13,5 +10,8 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "name"
+  ],
+  "type": "object"
 }
