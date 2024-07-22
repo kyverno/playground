@@ -1,7 +1,13 @@
 <template>
   <v-dialog v-model="dialog" width="600px" :theme="layoutTheme">
     <template v-slot:activator="{ props }">
-      <v-tooltip location="bottom" content-class="no-opacity-tooltip" text="Import from Cluster" theme="dark" v-if="!label">
+      <v-tooltip
+        location="bottom"
+        content-class="no-opacity-tooltip"
+        text="Import from Cluster"
+        theme="dark"
+        v-if="!label"
+      >
         <template v-slot:activator="{ props: tooltip }">
           <v-btn v-bind="{ ...tooltip, ...props }" icon="mdi-kubernetes" />
         </template>
@@ -22,7 +28,13 @@
               <namespace-select v-model="namespace" />
             </simple-row>
             <simple-row>
-              <v-text-field v-model="name" label="Name" variant="outlined" hide-details density="comfortable" />
+              <v-text-field
+                v-model="name"
+                label="Name"
+                variant="outlined"
+                hide-details
+                density="comfortable"
+              />
             </simple-row>
             <simple-row>
               <mode-select v-model="mode" />
@@ -31,12 +43,18 @@
           <v-card-actions>
             <v-btn @click="dialog = false">Close</v-btn>
             <v-spacer />
-            <v-btn @click="search" :loading="loadingResources" :color="errorResources ? 'error' : undefined">Search</v-btn>
+            <v-btn
+              @click="search"
+              :loading="loadingResources"
+              :color="errorResources ? 'error' : undefined"
+              >Search</v-btn
+            >
             <v-btn
               :loading="loading"
               :disabled="!name || !resourceAPI"
               @click="() => load([{ name: name || '', namespace }])"
-              :color="error ? 'error' : undefined">
+              :color="error ? 'error' : undefined"
+            >
               Load Resource
             </v-btn>
           </v-card-actions>
@@ -57,7 +75,12 @@
             <v-btn @click="dialog = false">Close</v-btn>
             <v-btn @click="window = 0">Back</v-btn>
             <v-spacer />
-            <v-btn :loading="loading" :disabled="!selections.length || !resourceAPI" @click="() => load(selections)" :color="error ? 'error' : undefined">
+            <v-btn
+              :loading="loading"
+              :disabled="!selections.length || !resourceAPI"
+              @click="() => load(selections)"
+              :color="error ? 'error' : undefined"
+            >
               Load Resources
             </v-btn>
           </v-card-actions>
@@ -67,9 +90,9 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ref, watch, PropType } from 'vue'
+import { ref, watch, type PropType } from 'vue'
 import { layoutTheme } from '@/config'
-import { useAPI, resourcesToYAML, ResourceKind } from '@/composables/api'
+import { useAPI, resourcesToYAML, type ResourceKind } from '@/composables/api'
 import { mergeResources } from '@/utils'
 import ClusterSearchList from '@/components/Panel/ClusterSearchList.vue'
 import ModeSelect from '@/components/ModeSelect.vue'
@@ -105,7 +128,12 @@ watch(resourceAPI, (api) => {
   }
 })
 
-const { loading: loadingResources, error: errorResources, resources: loadResources, data: foundings } = useAPI<Resource[]>()
+const {
+  loading: loadingResources,
+  error: errorResources,
+  resources: loadResources,
+  data: foundings
+} = useAPI<Resource[]>()
 
 const search = () => {
   const { apiVersion, kind } = resourceAPI.value
@@ -132,7 +160,9 @@ const { loading, error, resource: loadResource } = useAPI<object[]>()
 const load = (res: Resource[]) => {
   const { apiVersion, kind } = resourceAPI.value
 
-  const promises = res.map(({ namespace, name }) => loadResource({ apiVersion, kind, namespace: namespace || '', name }))
+  const promises = res.map(({ namespace, name }) =>
+    loadResource({ apiVersion, kind, namespace: namespace || '', name })
+  )
 
   loading.value = true
   Promise.all(promises)

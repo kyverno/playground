@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 import { mapStatus } from '@/mapper'
-import { RuleStatus } from '@/types'
+import type { RuleStatus } from '@/types'
 
 const props = defineProps({
   status: { type: String as PropType<RuleStatus>, required: true }
