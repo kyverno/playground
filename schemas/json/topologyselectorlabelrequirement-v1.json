@@ -1,10 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "A topology selector requirement is a selector that matches given label. This is an alpha feature and may change in the future.",
-  "type": "object",
-  "required": [
-    "key",
-    "values"
-  ],
   "properties": {
     "key": {
       "description": "The label key that the selector applies to.",
@@ -15,17 +11,21 @@
     },
     "values": {
       "description": "An array of string values. One value must match the label to be selected. Each entry in Values is ORed.",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "type": [
           "string",
           "null"
         ]
-      }
+      },
+      "type": [
+        "array",
+        "null"
+      ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "key",
+    "values"
+  ],
+  "type": "object"
 }

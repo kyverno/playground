@@ -1,5 +1,5 @@
 import { useVOnboarding } from 'v-onboarding'
-import { Ref, ref } from 'vue'
+import { type Ref, ref } from 'vue'
 
 export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
   const wrapper = ref(null)
@@ -61,7 +61,8 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
       attachTo: { element: '#config-btn' },
       content: {
         title: 'Kyverno Configuration',
-        description: 'The Kyverno configuration can be changed to update resource filters or the default registry.'
+        description:
+          'The Kyverno configuration can be changed to update resource filters or the default registry.'
       }
     },
     {
@@ -82,7 +83,8 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
       attachTo: { element: '#clusterResources-btn' },
       content: {
         title: 'Cluster Resources',
-        description: 'Simulate existing resources in the cluster to test variable substitution or when testing generate rules using the clone declaration.'
+        description:
+          'Simulate existing resources in the cluster to test variable substitution or when testing generate rules using the clone declaration.'
       },
       on: {
         afterStep: () => {
@@ -116,17 +118,26 @@ export const useOnboarding = (drawer: Ref<boolean>, advanced: Ref<boolean>) => {
     },
     {
       attachTo: { element: '#save-button' },
-      content: { title: 'Save Button', description: 'Save your tests locally as named profiles for further testing at a later time.' }
+      content: {
+        title: 'Save Button',
+        description:
+          'Save your tests locally as named profiles for further testing at a later time.'
+      }
     },
     {
       attachTo: { element: '#load-button' },
-      content: { title: 'Load Button', description: 'Load your local persisted profiles or reset your inputs with the default profile.' }
+      content: {
+        title: 'Load Button',
+        description:
+          'Load your local persisted profiles or reset your inputs with the default profile.'
+      }
     },
     {
       attachTo: { element: '#start-btn' },
       content: {
         title: 'Start Button',
-        description: 'Begin testing policies against resources with the provided context. The Results window will return the results of all provided resources.'
+        description:
+          'Begin testing policies against resources with the provided context. The Results window will return the results of all provided resources.'
       }
     }
   ]

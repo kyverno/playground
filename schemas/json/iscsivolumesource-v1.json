@@ -1,11 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Represents an ISCSI disk. ISCSI volumes can only be mounted as read/write once. ISCSI volumes support ownership management and SELinux relabeling.",
-  "type": "object",
-  "required": [
-    "targetPortal",
-    "iqn",
-    "lun"
-  ],
   "properties": {
     "chapAuthDiscovery": {
       "description": "chapAuthDiscovery defines whether support iSCSI Discovery CHAP authentication",
@@ -51,24 +46,24 @@
     },
     "lun": {
       "description": "lun represents iSCSI Target Lun number.",
+      "format": "int32",
       "type": [
         "integer",
         "null"
-      ],
-      "format": "int32"
+      ]
     },
     "portals": {
       "description": "portals is the iSCSI Target Portal List. The portal is either an IP or ip_addr:port if the port is other than default (typically TCP ports 860 and 3260).",
-      "type": [
-        "array",
-        "null"
-      ],
       "items": {
         "type": [
           "string",
           "null"
         ]
-      }
+      },
+      "type": [
+        "array",
+        "null"
+      ]
     },
     "readOnly": {
       "description": "readOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false.",
@@ -79,10 +74,6 @@
     },
     "secretRef": {
       "description": "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
-      "type": [
-        "object",
-        "null"
-      ],
       "properties": {
         "name": {
           "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
@@ -92,6 +83,10 @@
           ]
         }
       },
+      "type": [
+        "object",
+        "null"
+      ],
       "x-kubernetes-map-type": "atomic"
     },
     "targetPortal": {
@@ -102,5 +97,10 @@
       ]
     }
   },
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "targetPortal",
+    "iqn",
+    "lun"
+  ],
+  "type": "object"
 }

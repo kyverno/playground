@@ -1,9 +1,19 @@
 <template>
   <v-card :height="height">
-    <EditorToolbar title="Resources" id="resource-panel" :info="options.panels.resourceInfo" v-model="inputs.resource" :restore-value="state.resource.value">
+    <EditorToolbar
+      title="Resources"
+      id="resource-panel"
+      :info="options.panels.resourceInfo"
+      v-model="inputs.resource"
+      :restore-value="state.resource.value"
+    >
       <template #prepend-actions>
         <TemplateButton @select="onSelect" />
-        <v-tooltip location="bottom" content-class="no-opacity-tooltip" text="Switch between normal and difference mode to define an old and new resource">
+        <v-tooltip
+          location="bottom"
+          content-class="no-opacity-tooltip"
+          text="Switch between normal and difference mode to define an old and new resource"
+        >
           <template v-slot:activator="{ props }">
             <v-btn icon="mdi-format-page-split" v-bind="props" @click="switchEditor" />
           </template>
@@ -14,7 +24,14 @@
       </template>
     </EditorToolbar>
     <template v-if="inputs.diffResources">
-      <v-toolbar density="compact" height="40" flat border color="grey-darken-3" v-show="inputs.diffResources">
+      <v-toolbar
+        density="compact"
+        height="40"
+        flat
+        border
+        color="grey-darken-3"
+        v-show="inputs.diffResources"
+      >
         <span class="d-inline-block pl-11 text-subtitle-2" style="width: 50%">Old Resource</span>
         <span class="d-inline-block pl-8 text-subtitle-2" style="width: 50%">New Resource</span>
       </v-toolbar>

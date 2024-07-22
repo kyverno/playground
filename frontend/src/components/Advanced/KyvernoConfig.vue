@@ -1,5 +1,11 @@
 <template>
-  <AdvancedConfigDialog id="config" title="Kyverno Config" :info="options.panels.configInfo" v-model="inputs.config" :template="ConfigTemplate">
+  <AdvancedConfigDialog
+    id="config"
+    title="Kyverno Config"
+    :info="options.panels.configInfo"
+    v-model="inputs.config"
+    :template="ConfigTemplate"
+  >
     <template #actions="{ update }">
       <ClusterConfigButton v-if="config.cluster" @update="update" />
     </template>

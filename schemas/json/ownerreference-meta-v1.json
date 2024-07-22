@@ -1,12 +1,6 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "OwnerReference contains enough information to let you identify an owning object. An owning object must be in the same namespace as the dependent, or be cluster-scoped, so there is no namespace field.",
-  "type": "object",
-  "required": [
-    "apiVersion",
-    "kind",
-    "name",
-    "uid"
-  ],
   "properties": {
     "apiVersion": {
       "description": "API version of the referent.",
@@ -51,6 +45,12 @@
       ]
     }
   },
-  "x-kubernetes-map-type": "atomic",
-  "$schema": "http://json-schema.org/schema#"
+  "required": [
+    "apiVersion",
+    "kind",
+    "name",
+    "uid"
+  ],
+  "type": "object",
+  "x-kubernetes-map-type": "atomic"
 }

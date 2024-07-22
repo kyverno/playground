@@ -5,7 +5,14 @@
         {{ options.onboarding.text }}
 
         <template #append>
-          <v-btn flat color="info" :min-width="150" size="large" @click="() => (showOnboarding = false)">Close</v-btn>
+          <v-btn
+            flat
+            color="info"
+            :min-width="150"
+            size="large"
+            @click="() => (showOnboarding = false)"
+            >Close</v-btn
+          >
         </template>
       </v-alert>
     </v-col>

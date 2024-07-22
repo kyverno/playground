@@ -8,7 +8,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/gin-gonic/gin"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource/loader"
+	"github.com/kyverno/kyverno/ext/resource/loader"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/loopfz/gadgeto/tonic"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
@@ -35,6 +35,10 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		}
 		params.ImageData = in.ImageData
 		policies, vaps, err := in.LoadPolicies(policyLoader)
+		if err != nil {
+			return nil, fmt.Errorf("unable to load policies: %w", err)
+		}
+		vapbs, err := in.LoadVAPBindings(policyLoader)
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policies: %w", err)
 		}
@@ -87,7 +91,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		results, err := processor.Run(ctx, policies, vaps, resources, oldResources)
+		results, err := processor.Run(ctx, policies, vaps, vapbs, resources, oldResources)
 		if err != nil {
 			return nil, err
 		}

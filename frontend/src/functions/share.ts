@@ -7,6 +7,7 @@ export type Config = {
   clusterResources: boolean
   exceptions: boolean
   context: boolean
+  vapBindings: boolean
 }
 
 export const generateContent = (config: Config): string => {
@@ -19,7 +20,8 @@ export const generateContent = (config: Config): string => {
       ...(config.config ? { config: inputs.config } : {}),
       ...(config.crds ? { customResourceDefinitions: inputs.customResourceDefinitions } : {}),
       ...(config.clusterResources ? { clusterResources: inputs.clusterResources } : {}),
-      ...(config.exceptions ? { exceptions: inputs.exceptions } : {})
+      ...(config.exceptions ? { exceptions: inputs.exceptions } : {}),
+      ...(config.vapBindings ? { vapBindings: inputs.vapBindings } : {})
     })
   )
 }
