@@ -31,4 +31,5 @@ flags:
       - google
 
 variables:
-  hosts: "[\"www.github.com\", \"www.kyverno.com\", \"www.nirmata.com\"]"
+  hosts: ["www.github.com", "www.kyverno.com", "www.nirmata.com"]
+  allhosts: ["www.github.com", "www.kyverno.com", "www.nirmata.com"]
