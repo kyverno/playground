@@ -3,11 +3,16 @@ package cluster
 import (
 	"context"
 	"errors"
+	"reflect"
+	"unsafe"
 
 	"github.com/kyverno/kyverno/api/kyverno/v2beta1"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 type fakeCluster struct{}
@@ -37,17 +42,40 @@ func (c fakeCluster) PolicyExceptionSelector(namespace string, exceptions ...*v2
 }
 
 func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Interface, error) {
-	dClient := dclient.NewEmptyFakeClient()
-	for i := range objects {
-		res := objects[i]
-		_, err := dClient.CreateResource(context.TODO(), res.GetAPIVersion(), res.GetKind(), res.GetNamespace(), &res, false)
-		if err != nil {
-			return nil, err
-		}
+	s := runtime.NewScheme()
+	gvr := make(map[schema.GroupVersionResource]string)
+
+	for _, o := range objects {
+		plural, _ := meta.UnsafeGuessKindToResource(o.GroupVersionKind())
+
+		s.AddKnownTypeWithName(o.GroupVersionKind(), &o)
+
+		gvr[plural] = o.GetKind() + "List"
 	}
+
+	resources := make([]runtime.Object, 0, len(objects))
+
+	for _, res := range objects {
+		resources = append(resources, &res)
+	}
+
+	dClient, _ := dclient.NewFakeClient(s, gvr, resources...)
+
+	addDiscovery(dClient)
+
 	return dClient, nil
 }
 
 func (c fakeCluster) IsFake() bool {
 	return true
+}
+
+// workaround to set fake discovery client
+func addDiscovery(f dclient.Interface) {
+	pointerVal := reflect.ValueOf(f)
+	val := reflect.Indirect(pointerVal)
+	member := val.FieldByName("disco")
+	ptrToY := unsafe.Pointer(member.UnsafeAddr())
+	realPtrToY := (*dclient.IDiscovery)(ptrToY)
+	*realPtrToY = dclient.NewFakeDiscoveryClient(nil)
 }

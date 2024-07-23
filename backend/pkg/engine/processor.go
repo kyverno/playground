@@ -317,9 +317,17 @@ func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new 
 		}
 	}
 
+	admissionOperation := true
+	for _, r := range policy.GetSpec().Rules {
+		if r.HasMutateExisting() {
+			admissionOperation = false
+		}
+	}
+
 	context = context.
 		WithPolicy(policy).
-		WithNamespaceLabels(p.params.Context.NamespaceLabels)
+		WithNamespaceLabels(p.params.Context.NamespaceLabels).
+		WithAdmissionOperation(admissionOperation)
 
 	return context, nil
 }
