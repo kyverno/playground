@@ -36,6 +36,16 @@
                   :model-value="details.patchedResource"
                   :theme="editorTheme"
                   :options="options"
+                  v-if="details.originalReosurce"
+                />
+                <MonacoEditor
+                  id="mutate"
+                  :height="600"
+                  language="yaml"
+                  :model-value="details.patchedResource"
+                  :theme="editorTheme"
+                  :options="options"
+                  v-else
                 />
               </template>
             </v-card>
@@ -53,7 +63,7 @@ import { useSessionStorage } from '@vueuse/core'
 import type { RuleStatus } from '@/types'
 import { layoutTheme, editorTheme } from '@/config'
 import { RuleDetails } from '@/components/Details'
-import { DiffEditor } from '@/components/Panel'
+import { DiffEditor, MonacoEditor } from '@/components/Panel'
 import { AppBar } from '@/components/AppBar'
 
 const route = useRoute()
