@@ -3,8 +3,6 @@ package cluster
 import (
 	"context"
 	"errors"
-	"reflect"
-	"unsafe"
 
 	"github.com/kyverno/kyverno/api/kyverno/v2beta1"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
@@ -44,6 +42,7 @@ func (c fakeCluster) PolicyExceptionSelector(namespace string, exceptions ...*v2
 func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Interface, error) {
 	s := runtime.NewScheme()
 	gvr := make(map[schema.GroupVersionResource]string)
+	list := []schema.GroupVersionResource{}
 
 	for _, o := range objects {
 		plural, _ := meta.UnsafeGuessKindToResource(o.GroupVersionKind())
@@ -51,6 +50,8 @@ func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Inte
 		s.AddKnownTypeWithName(o.GroupVersionKind(), &o)
 
 		gvr[plural] = o.GetKind() + "List"
+
+		list = append(list, plural)
 	}
 
 	resources := make([]runtime.Object, 0, len(objects))
@@ -60,22 +61,11 @@ func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Inte
 	}
 
 	dClient, _ := dclient.NewFakeClient(s, gvr, resources...)
-
-	addDiscovery(dClient)
+	dClient.SetDiscovery(dclient.NewFakeDiscoveryClient(list))
 
 	return dClient, nil
 }
 
 func (c fakeCluster) IsFake() bool {
 	return true
-}
-
-// workaround to set fake discovery client
-func addDiscovery(f dclient.Interface) {
-	pointerVal := reflect.ValueOf(f)
-	val := reflect.Indirect(pointerVal)
-	member := val.FieldByName("disco")
-	ptrToY := unsafe.Pointer(member.UnsafeAddr())
-	realPtrToY := (*dclient.IDiscovery)(ptrToY)
-	*realPtrToY = dclient.NewFakeDiscoveryClient(nil)
 }
