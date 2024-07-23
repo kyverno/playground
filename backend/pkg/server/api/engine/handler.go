@@ -17,6 +17,7 @@ import (
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
+	"github.com/kyverno/playground/backend/pkg/resource"
 )
 
 func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
@@ -34,14 +35,16 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			return nil, fmt.Errorf("unable to load params: %w", err)
 		}
 		params.ImageData = in.ImageData
-		policies, vaps, err := in.LoadPolicies(policyLoader)
+		policies, vaps, vapbs, err := in.LoadPolicies(policyLoader)
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policies: %w", err)
 		}
-		vapbs, err := in.LoadVAPBindings(policyLoader)
+		vapbsWindow, err := in.LoadVAPBindings(policyLoader)
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policies: %w", err)
 		}
+		vapbs = append(vapbs, vapbsWindow...)
+
 		resourceLoader, err := in.ResourceLoader(cl, params.Kubernetes.Version, config)
 		if err != nil {
 			return nil, err
@@ -66,7 +69,11 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policy exceptions: %w", err)
 		}
-		dClient, err := cl.DClient(clusterResources...)
+
+		clusterResources = append(oldResources, clusterResources...)
+		namespaces := resource.GenerateNamespaces(append(resources, clusterResources...))
+
+		dClient, err := cl.DClient(resource.Combine(clusterResources, namespaces)...)
 		if err != nil {
 			return nil, err
 		}

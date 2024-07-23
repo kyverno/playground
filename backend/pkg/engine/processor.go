@@ -43,6 +43,7 @@ type Processor struct {
 	config        config.Configuration
 	jmesPath      jmespath.Interface
 	cluster       cluster.Cluster
+	dClient       dclient.Interface
 }
 
 func (p *Processor) Run(
@@ -61,11 +62,6 @@ func (p *Processor) Run(
 	))
 	if violations := validatePolicies(policies); len(violations) > 0 {
 		return nil, PolicyViolationError{Violations: violations}
-	}
-
-	dClient, err := p.cluster.DClient()
-	if err != nil {
-		return nil, err
 	}
 
 	response := &models.Results{}
@@ -142,7 +138,7 @@ func (p *Processor) Run(
 				}
 			}
 
-			result, err := validatingadmissionpolicy.Validate(pData, resource, make(map[string]map[string]string), dClient)
+			result, err := validatingadmissionpolicy.Validate(pData, resource, make(map[string]map[string]string), p.dClient)
 			if err != nil {
 				return nil, err
 			}
@@ -428,5 +424,6 @@ func NewProcessor(
 		config:        cfg,
 		jmesPath:      jp,
 		cluster:       cluster,
+		dClient:       dClient,
 	}, nil
 }

@@ -2,6 +2,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: zk-pdb
+  namespace: default
 spec:
   minAvailable: 2
   selector:

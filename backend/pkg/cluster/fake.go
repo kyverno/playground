@@ -39,28 +39,22 @@ func (c fakeCluster) PolicyExceptionSelector(namespace string, exceptions ...*v2
 	return NewPolicyExceptionSelector(namespace, nil, exceptions...)
 }
 
-func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Interface, error) {
+func (c fakeCluster) DClient(objects ...runtime.Object) (dclient.Interface, error) {
 	s := runtime.NewScheme()
 	gvr := make(map[schema.GroupVersionResource]string)
 	list := []schema.GroupVersionResource{}
 
 	for _, o := range objects {
-		plural, _ := meta.UnsafeGuessKindToResource(o.GroupVersionKind())
+		plural, _ := meta.UnsafeGuessKindToResource(o.GetObjectKind().GroupVersionKind())
 
-		s.AddKnownTypeWithName(o.GroupVersionKind(), &o)
+		s.AddKnownTypeWithName(o.GetObjectKind().GroupVersionKind(), o)
 
-		gvr[plural] = o.GetKind() + "List"
+		gvr[plural] = o.GetObjectKind().GroupVersionKind().Kind + "List"
 
 		list = append(list, plural)
 	}
 
-	resources := make([]runtime.Object, 0, len(objects))
-
-	for _, res := range objects {
-		resources = append(resources, &res)
-	}
-
-	dClient, _ := dclient.NewFakeClient(s, gvr, resources...)
+	dClient, _ := dclient.NewFakeClient(s, gvr, objects...)
 	dClient.SetDiscovery(dclient.NewFakeDiscoveryClient(list))
 
 	return dClient, nil

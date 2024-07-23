@@ -12,6 +12,7 @@ import (
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/dynamic"
@@ -35,7 +36,7 @@ type Cluster interface {
 	Namespaces(context.Context) ([]string, error)
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
-	DClient(...unstructured.Unstructured) (dclient.Interface, error)
+	DClient(...runtime.Object) (dclient.Interface, error)
 	PolicyExceptionSelector(namespace string, exceptions ...*v2beta1.PolicyException) engineapi.PolicyExceptionSelector
 	IsFake() bool
 }
@@ -143,7 +144,7 @@ func (c cluster) PolicyExceptionSelector(namespace string, exceptions ...*v2beta
 	return NewPolicyExceptionSelector(namespace, c.kyvernoClient, exceptions...)
 }
 
-func (c cluster) DClient(_ ...unstructured.Unstructured) (dclient.Interface, error) {
+func (c cluster) DClient(_ ...runtime.Object) (dclient.Interface, error) {
 	return c.dClient, nil
 }
 

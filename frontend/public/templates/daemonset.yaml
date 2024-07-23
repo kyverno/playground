@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd-elasticsearch
+  namespace: default
   labels:
     k8s-app: fluentd-logging
 spec:
