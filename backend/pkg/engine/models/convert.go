@@ -27,8 +27,24 @@ func convertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 }
 
 func ConvertResponse(in engineapi.EngineResponse) Response {
-	patchedResource, _ := yaml.Marshal(in.PatchedResource.Object)
-	resource, _ := yaml.Marshal(in.Resource.Object)
+	var patchedResource, resource []byte
+
+	var targets []map[string]interface{}
+	for _, r := range in.PolicyResponse.Rules {
+		if t, _, _ := r.PatchedTarget(); t != nil {
+			targets = append(targets, t.Object)
+		}
+	}
+
+	if len(targets) == 0 {
+		patchedResource, _ = yaml.Marshal(in.PatchedResource.Object)
+		resource, _ = yaml.Marshal(in.Resource.Object)
+	} else if len(targets) == 1 {
+		patchedResource, _ = yaml.Marshal(targets[0])
+	} else if len(targets) > 1 {
+		patchedResource, _ = yaml.Marshal(targets)
+	}
+
 	out := Response{
 		OriginalResource: string(resource),
 		Resource:         in.Resource,

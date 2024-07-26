@@ -61,6 +61,8 @@ onMounted(() => {
   editor = monaco.editor.createDiffEditor(root.value, {
     theme: props.theme,
     automaticLayout: true,
+    renderSideBySide: true,
+    useInlineViewWhenSpaceIsLimited: false,
     ...props.options
   })
 

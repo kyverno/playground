@@ -7,7 +7,10 @@ import (
 	"github.com/kyverno/kyverno/api/kyverno/v2beta1"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 type fakeCluster struct{}
@@ -36,15 +39,24 @@ func (c fakeCluster) PolicyExceptionSelector(namespace string, exceptions ...*v2
 	return NewPolicyExceptionSelector(namespace, nil, exceptions...)
 }
 
-func (c fakeCluster) DClient(objects ...unstructured.Unstructured) (dclient.Interface, error) {
-	dClient := dclient.NewEmptyFakeClient()
-	for i := range objects {
-		res := objects[i]
-		_, err := dClient.CreateResource(context.TODO(), res.GetAPIVersion(), res.GetKind(), res.GetNamespace(), &res, false)
-		if err != nil {
-			return nil, err
-		}
+func (c fakeCluster) DClient(objects ...runtime.Object) (dclient.Interface, error) {
+	s := runtime.NewScheme()
+	gvr := make(map[schema.GroupVersionResource]string)
+	list := []schema.GroupVersionResource{}
+
+	for _, o := range objects {
+		plural, _ := meta.UnsafeGuessKindToResource(o.GetObjectKind().GroupVersionKind())
+
+		s.AddKnownTypeWithName(o.GetObjectKind().GroupVersionKind(), o)
+
+		gvr[plural] = o.GetObjectKind().GroupVersionKind().Kind + "List"
+
+		list = append(list, plural)
 	}
+
+	dClient, _ := dclient.NewFakeClient(s, gvr, objects...)
+	dClient.SetDiscovery(dclient.NewFakeDiscoveryClient(list))
+
 	return dClient, nil
 }
 

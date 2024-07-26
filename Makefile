@@ -191,6 +191,7 @@ build-frontend: ## Build frontend
 	@cp schemas/json/policyexception-kyverno.io-v2.json frontend/src/schemas
 	@cp schemas/json/policyexception-kyverno.io-v2beta1.json frontend/src/schemas
 	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1beta1.json frontend/src/schemas
+	@cp schemas/json/validatingadmissionpolicybinding-admissionregistration-v1beta1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets
