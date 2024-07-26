@@ -7,7 +7,7 @@ require (
 	github.com/evanphx/json-patch/v5 v5.9.0
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-logr/logr v1.4.1
+	github.com/go-logr/logr v1.4.2
 	github.com/kyverno/kyverno v1.12.5
 	github.com/loopfz/gadgeto v0.11.4
 	github.com/spf13/cobra v1.8.1
