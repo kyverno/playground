@@ -382,7 +382,7 @@ func newEngine(
 
 func NewProcessor(
 	params *models.Parameters,
-	cluster cluster.Cluster,
+	cl cluster.Cluster,
 	kyvernoConfig *corev1.ConfigMap,
 	dClient dclient.Interface,
 	cmResolver engineapi.ConfigmapResolver,
@@ -393,7 +393,24 @@ func NewProcessor(
 		cfg.Load(kyvernoConfig)
 	}
 	jp := jmespath.New(cfg)
-	rclient, err := registryclient.New(registryclient.WithLocalKeychain())
+
+	registryOptions := []registryclient.Option{}
+
+	if len(params.Flags.Registry.PullSecrets) > 0 {
+		registryOptions = append(registryOptions, registryclient.WithKeychainPullSecrets(cluster.NewSecretLister(dClient, kyvernoConfig.Namespace), params.Flags.Registry.PullSecrets...))
+	} else {
+		registryOptions = append(registryOptions, registryclient.WithLocalKeychain())
+	}
+
+	if len(params.Flags.Registry.CredentialHelpers) > 0 {
+		registryOptions = append(registryOptions, registryclient.WithCredentialProviders(params.Flags.Registry.CredentialHelpers...))
+	}
+
+	if params.Flags.Registry.AllowInsecure {
+		registryOptions = append(registryOptions, registryclient.WithAllowInsecureRegistry())
+	}
+
+	rclient, err := registryclient.New(registryOptions...)
 	if err != nil {
 		return nil, err
 	}
@@ -423,7 +440,7 @@ func NewProcessor(
 		genController: contr,
 		config:        cfg,
 		jmesPath:      jp,
-		cluster:       cluster,
+		cluster:       cl,
 		dClient:       dClient,
 	}, nil
 }
