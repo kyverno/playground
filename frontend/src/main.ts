@@ -14,8 +14,8 @@ import clusterpolicyv1 from './schemas/clusterpolicy-kyverno.io-v1.json'
 import policyv1 from './schemas/policy-kyverno.io-v1.json'
 import clusterpolicyv2beta1 from './schemas/clusterpolicy-kyverno.io-v2beta1.json'
 import policyv2beta1 from './schemas/policy-kyverno.io-v2beta1.json'
-import vapv1beta1 from './schemas/validatingadmissionpolicy-admissionregistration-v1beta1.json'
-import vapbv1beta1 from './schemas/validatingadmissionpolicybinding-admissionregistration-v1beta1.json'
+import vapv1beta1 from './schemas/validatingadmissionpolicy-admissionregistration-v1.json'
+import vapbv1beta1 from './schemas/validatingadmissionpolicybinding-admissionregistration-v1.json'
 import context from './schemas/context.json'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
