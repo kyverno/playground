@@ -1,5 +1,0 @@
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "JSON represents any valid JSON value. These types are supported: bool, int64, float64, string, []interface{}, map[string]interface{} and nil.",
-  "type": "object"
-}

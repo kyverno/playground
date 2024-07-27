@@ -2,7 +2,7 @@
 # DEFAULTS #
 ############
 
-KIND_IMAGE           ?= kindest/node:v1.29.2
+KIND_IMAGE           ?= kindest/node:v1.30.2
 KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= v1.12.5
 KOCACHE              ?= /tmp/ko-cache
@@ -114,7 +114,7 @@ codegen-helm-docs: ## Generate helm docs
 .PHONY: codegen-schema-openapi
 codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@echo Generate openapi schema... >&2
-	@rm -rf ./schemas
+	@rm -rf ./schemas/openapi
 	@mkdir -p ./schemas/openapi/v2
 	@mkdir -p ./schemas/openapi/v3/apis/kyverno.io
 	@mkdir -p ./schemas/openapi/v3/apis/admissionregistration.k8s.io
@@ -134,24 +134,17 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/reports/reports.kyverno.io_clusterephemeralreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/reports/reports.kyverno.io_ephemeralreports.yaml
 	@sleep 15
-	@kubectl get --raw /openapi/v2 > ./schemas/openapi/v2/schema.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
+	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2 > ./schemas/openapi/v3/apis/kyverno.io/v2.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
 	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1.json
 	@$(KIND) delete cluster --name schema
 
-.PHONY: codegen-schema-json
-codegen-schema-json: codegen-schema-openapi ## Generate json schemas
-	@rm -rf ./schemas/json
-	@mkdir -p ./schemas/json
-	@chmod 777 ./schemas/json
-	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v2,target=/v2 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/hectorm/openapi2jsonschema:v0.11 /v2/schema.json --kubernetes --stand-alone --expanded -o /json
-
 .PHONY: codegen-all
-codegen-all: codegen-helm-docs codegen-schema-json codegen-schema-openapi ## Generate all codegen
+codegen-all: codegen-helm-docs codegen-schema-openapi ## Generate all codegen
 
 .PHONY: verify-schemas
-verify-schemas: codegen-schema-openapi codegen-schema-json ## Check openapi and json schemas are up to date
+verify-schemas: codegen-schema-openapi ## Check openapi and json schemas are up to date
 	@echo Checking openapi schemas are up to date... >&2
 	@git --no-pager diff -- schemas
 	@echo 'If this test fails, it is because the git diff is non-empty after running "make codegen-schema-openapi".' >&2
@@ -167,7 +160,7 @@ verify-helm-docs: codegen-helm-docs ## Check Helm charts are up to date
 	@git diff --quiet --exit-code -- charts
 
 .PHONY: verify-codegen
-verify-codegen: verify-helm-docs verify-schemas ## Verify all generated code and docs are up to date
+verify-codegen: verify-helm-docs ## Verify all generated code and docs are up to date
 
 #########
 # BUILD #
@@ -184,14 +177,14 @@ build-clean: ## Clean built files
 .PHONY: build-frontend
 build-frontend: ## Build frontend
 	@echo Building frontend... >&2
-	@cp schemas/json/clusterpolicy-kyverno.io-v1.json frontend/src/schemas
-	@cp schemas/json/clusterpolicy-kyverno.io-v2beta1.json frontend/src/schemas
-	@cp schemas/json/policy-kyverno.io-v1.json frontend/src/schemas
-	@cp schemas/json/policy-kyverno.io-v2beta1.json frontend/src/schemas
-	@cp schemas/json/policyexception-kyverno.io-v2.json frontend/src/schemas
-	@cp schemas/json/policyexception-kyverno.io-v2beta1.json frontend/src/schemas
-	@cp schemas/json/validatingadmissionpolicy-admissionregistration-v1beta1.json frontend/src/schemas
-	@cp schemas/json/validatingadmissionpolicybinding-admissionregistration-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/clusterpolicy-kyverno.io-v1.json frontend/src/schemas
+	@cp schemas/json/v3/clusterpolicy-kyverno.io-v2beta1.json frontend/src/schemas
+	@cp schemas/json/v3/policy-kyverno.io-v1.json frontend/src/schemas
+	@cp schemas/json/v3/policy-kyverno.io-v2beta1.json frontend/src/schemas
+	@cp schemas/json/v3/policyexception-kyverno.io-v2.json frontend/src/schemas
+	@cp schemas/json/v3/policyexception-kyverno.io-v2beta1.json frontend/src/schemas
+	@cp schemas/json/v3/validatingadmissionpolicy-admissionregistration-v1.json frontend/src/schemas
+	@cp schemas/json/v3/validatingadmissionpolicybinding-admissionregistration-v1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
 .PHONY: build-backend-assets

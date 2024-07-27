@@ -1,0 +1,58 @@
+{
+  "oneOf": [
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.ManagedFieldsEntry.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.Patch.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.Preconditions.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.Status.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.StatusCause.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.StatusDetails.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.Time.json"
+    },
+    {
+      "$ref": "io.kyverno.v1.ClusterPolicy.json"
+    },
+    {
+      "$ref": "io.kyverno.v1.ClusterPolicyList.json"
+    },
+    {
+      "$ref": "io.kyverno.v1.Policy.json"
+    },
+    {
+      "$ref": "io.kyverno.v1.PolicyList.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.util.intstr.IntOrString.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.api.resource.Quantity.json"
+    }
+  ]
+}
