@@ -1,10 +1,103 @@
 {
   "oneOf": [
     {
+      "$ref": "io.k8s.api.admissionregistration.v1.AuditAnnotation.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ExpressionWarning.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.MatchCondition.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.MatchResources.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.MutatingWebhook.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.MutatingWebhookConfiguration.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.MutatingWebhookConfigurationList.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.NamedRuleWithOperations.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ParamKind.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ParamRef.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.RuleWithOperations.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ServiceReference.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.TypeChecking.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicy.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBinding.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBindingList.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBindingSpec.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyList.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicySpec.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyStatus.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingWebhook.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingWebhookConfiguration.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.ValidatingWebhookConfigurationList.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.Validation.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.Variable.json"
+    },
+    {
+      "$ref": "io.k8s.api.admissionregistration.v1.WebhookClientConfig.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.APIResource.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.Condition.json"
+    },
+    {
       "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.DeleteOptions.json"
     },
     {
       "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector.json"
+    },
+    {
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement.json"
     },
     {
       "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta.json"
@@ -37,16 +130,10 @@
       "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.Time.json"
     },
     {
-      "$ref": "io.kyverno.v1.ClusterPolicy.json"
+      "$ref": "io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent.json"
     },
     {
-      "$ref": "io.kyverno.v1.ClusterPolicyList.json"
-    },
-    {
-      "$ref": "io.kyverno.v1.Policy.json"
-    },
-    {
-      "$ref": "io.kyverno.v1.PolicyList.json"
+      "$ref": "io.k8s.apimachinery.pkg.runtime.RawExtension.json"
     },
     {
       "$ref": "io.k8s.apimachinery.pkg.util.intstr.IntOrString.json"

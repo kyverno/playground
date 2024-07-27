@@ -140,11 +140,21 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1.json
 	@$(KIND) delete cluster --name schema
 
+.PHONY: codegen-schema-json
+codegen-schema-json: codegen-schema-openapi ## Generate json schemas
+	@rm -rf ./schemas/json
+	@mkdir -p ./schemas/json
+	@chmod 777 ./schemas/json
+	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/kyverno.io/v1.json --kubernetes --stand-alone --expanded -o /json/v3
+	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/kyverno.io/v2beta1.json --kubernetes --stand-alone --expanded -o /json/v3
+	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/kyverno.io/v2.json --kubernetes --stand-alone --expanded -o /json/v3
+	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/admissionregistration.k8s.io/v1.json --kubernetes --stand-alone --expanded -o /json/v3
+
 .PHONY: codegen-all
-codegen-all: codegen-helm-docs codegen-schema-openapi ## Generate all codegen
+codegen-all: codegen-helm-docs codegen-schema-json ## Generate all codegen
 
 .PHONY: verify-schemas
-verify-schemas: codegen-schema-openapi ## Check openapi and json schemas are up to date
+verify-schemas: codegen-schema-json ## Check openapi and json schemas are up to date
 	@echo Checking openapi schemas are up to date... >&2
 	@git --no-pager diff -- schemas
 	@echo 'If this test fails, it is because the git diff is non-empty after running "make codegen-schema-openapi".' >&2
@@ -160,7 +170,7 @@ verify-helm-docs: codegen-helm-docs ## Check Helm charts are up to date
 	@git diff --quiet --exit-code -- charts
 
 .PHONY: verify-codegen
-verify-codegen: verify-helm-docs ## Verify all generated code and docs are up to date
+verify-codegen: verify-helm-docs verify-schemas ## Verify all generated code and docs are up to date
 
 #########
 # BUILD #
