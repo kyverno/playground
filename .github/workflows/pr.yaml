@@ -129,7 +129,7 @@ jobs:
         uses: golangci/golangci-lint-action@aaa42aa0628b4ae2578232a66b541047968fac86 # v6.1.0
         with:
           working-directory: backend
-          version: v1.54.2
+          version: v1.61.0
 
   helm-install:
     runs-on: ubuntu-latest
