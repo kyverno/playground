@@ -58,7 +58,7 @@ const props = defineProps({
   results: { type: Array as PropType<Validation[]>, default: () => [] }
 })
 
-const expanded = ref<number[]>([])
+const expanded = ref<string[]>([])
 
 const display = useDisplay()
 
