@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/kyverno/kyverno/api/kyverno/v2beta1"
+	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -35,7 +35,7 @@ func (c fakeCluster) Get(ctx context.Context, apiVersion string, kind string, na
 	return nil, errors.New("getting resource not supported in fake cluster")
 }
 
-func (c fakeCluster) PolicyExceptionSelector(namespace string, exceptions ...*v2beta1.PolicyException) engineapi.PolicyExceptionSelector {
+func (c fakeCluster) PolicyExceptionSelector(namespace string, exceptions ...*v2.PolicyException) engineapi.PolicyExceptionSelector {
 	return NewPolicyExceptionSelector(namespace, nil, exceptions...)
 }
 
