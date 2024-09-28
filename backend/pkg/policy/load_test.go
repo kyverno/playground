@@ -72,14 +72,17 @@ func Test_Load(t *testing.T) {
 		wantPolicies: 1,
 		wantVaps:     1,
 	}}
+
+	schemas, _ := data.Schemas()
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			bytes, err := os.ReadFile(tt.policies)
 			require.NoError(t, err)
 			loader, err := loader.New(
 				openapiclient.NewComposite(
-					openapiclient.NewGitHubBuiltins("1.28"),
-					openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"),
+					openapiclient.NewGitHubBuiltins("1.30"),
+					openapiclient.NewLocalSchemaFiles(schemas),
 				),
 			)
 			require.NoError(t, err)

@@ -8,6 +8,7 @@ import (
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
+	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
@@ -24,7 +25,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/validatingadmissionpolicy"
 	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
-	"k8s.io/api/admissionregistration/v1alpha1"
+	"k8s.io/api/admissionregistration/v1beta1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,8 +50,8 @@ type Processor struct {
 func (p *Processor) Run(
 	ctx context.Context,
 	policies []kyvernov1.PolicyInterface,
-	vaps []v1alpha1.ValidatingAdmissionPolicy,
-	vapbs []v1alpha1.ValidatingAdmissionPolicyBinding,
+	vaps []v1beta1.ValidatingAdmissionPolicy,
+	vapbs []v1beta1.ValidatingAdmissionPolicyBinding,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -221,11 +222,9 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 		return models.ConvertResponse(response), nil
 	}
 
-	gr := toGenerateRequest(policy, new)
-
 	var newRuleResponse []engineapi.RuleResponse
 	for _, rule := range response.PolicyResponse.Rules {
-		genRes, err := p.genController.ApplyGeneratePolicy(logr.Discard(), policyContext, gr, []string{rule.Name()})
+		genRes, err := p.genController.ApplyGeneratePolicy(logr.Discard(), policyContext, []string{rule.Name()})
 		if err != nil {
 			return models.Response{}, err
 		}
@@ -294,7 +293,7 @@ func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new 
 			DryRun:  &p.params.Context.DryRun,
 			Options: runtime.RawExtension{},
 		},
-		kyvernov1beta1.RequestInfo{
+		v2.RequestInfo{
 			AdmissionUserInfo: userInfo,
 			Roles:             p.params.Context.Roles,
 			ClusterRoles:      p.params.Context.ClusterRoles,

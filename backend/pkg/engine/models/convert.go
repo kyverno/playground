@@ -21,7 +21,7 @@ func convertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 		// // patchedTargetSubresourceName is the name of the subresource which is patched, empty if the resource patched is not a subresource.
 		// PatchedTargetSubresourceName string
 		PodSecurityChecks: in.PodSecurityChecks(),
-		Exception:         in.Exception(),
+		Exceptions:        in.Exceptions(),
 	}
 	return out
 }
