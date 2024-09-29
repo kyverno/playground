@@ -2,6 +2,29 @@ apiVersion: v1
 entries:
   kyverno-playground:
   - apiVersion: v2
+    appVersion: v0.4.2
+    created: "2024-09-29T08:04:58.683586075Z"
+    description: Kyverno Playground Web Application
+    digest: 6f92e8aa243f0e6da30515b6a1ff0aff7dfba34eb92d865e8b6e67bc2230579f
+    icon: https://github.com/kyverno/kyverno/raw/main/img/logo.png
+    keywords:
+    - kubernetes
+    - nirmata
+    - policy agent
+    - validating webhook
+    - admissions controller
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - name: Nirmata
+      url: https://kyverno.io/
+    name: kyverno-playground
+    sources:
+    - https://github.com/kyverno/playground
+    type: application
+    urls:
+    - https://kyverno.github.io/playground/kyverno-playground-v0.4.2.tgz
+    version: v0.4.2
+  - apiVersion: v2
     appVersion: v0.4.1
     created: "2024-07-27T10:02:53.789031963Z"
     description: Kyverno Playground Web Application
@@ -264,4 +287,4 @@ entries:
     urls:
     - https://kyverno.github.io/playground/kyverno-playground-v0.0.1-alpha.1.tgz
     version: v0.0.1-alpha.1
-generated: "2024-07-27T10:02:53.787938556Z"
+generated: "2024-09-29T08:04:58.681844271Z"
