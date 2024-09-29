@@ -28,7 +28,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 
 	policyClient := openapiclient.NewComposite(
 		openapiclient.NewLocalSchemaFiles(schemas),
-		openapiclient.NewGitHubBuiltins("1.30"),
+		openapiclient.NewGitHubBuiltins("1.31"),
 	)
 	policyLoader, err := loader.New(policyClient)
 	if err != nil {

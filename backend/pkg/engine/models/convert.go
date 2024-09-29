@@ -3,7 +3,7 @@ package models
 import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
-	"k8s.io/api/admissionregistration/v1alpha1"
+	"k8s.io/api/admissionregistration/v1beta1"
 	"sigs.k8s.io/yaml"
 )
 
@@ -54,7 +54,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 	if in.Policy().GetType() == engineapi.KyvernoPolicyType {
 		out.Policy = in.Policy().MetaObject().(kyvernov1.PolicyInterface)
 	} else {
-		out.ValidatingAdmissionPolicy = in.Policy().MetaObject().(*v1alpha1.ValidatingAdmissionPolicy)
+		out.ValidatingAdmissionPolicy = in.Policy().MetaObject().(*v1beta1.ValidatingAdmissionPolicy)
 	}
 	for _, ruleresponse := range in.PolicyResponse.Rules {
 		out.PolicyResponse.Rules = append(out.PolicyResponse.Rules, convertRuleResponse(ruleresponse))
