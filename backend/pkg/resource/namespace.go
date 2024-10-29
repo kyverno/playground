@@ -7,15 +7,72 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-func GenerateNamespaces(objects []unstructured.Unstructured) []runtime.Object {
+func AppendNamespaces(resources []unstructured.Unstructured, clusterResources []unstructured.Unstructured) []runtime.Object {
 	namespaces := make(map[string]runtime.Object, 0)
+	results := make([]runtime.Object, 0)
 
-	for _, res := range objects {
+	for _, res := range clusterResources {
+		if res.GetKind() == "Namespace" {
+			namespaces[res.GetName()] = &res
+			continue
+		} else {
+			results = append(results, &res)
+		}
+
+		ns := res.GetNamespace()
+		if _, ok := namespaces[ns]; ok {
+			continue
+		}
+
+		if ns != "" {
+			namespaces[ns] = &unstructured.Unstructured{
+				Object: map[string]any{
+					"apiVersion": "v1",
+					"kind":       "Namespace",
+					"metadata": map[string]any{
+						"name": res.GetNamespace(),
+					},
+				},
+			}
+		}
+	}
+
+	for _, res := range resources {
+		ns := res.GetNamespace()
+		if _, ok := namespaces[ns]; ok {
+			continue
+		}
+
+		if ns != "" {
+			namespaces[ns] = &unstructured.Unstructured{
+				Object: map[string]any{
+					"apiVersion": "v1",
+					"kind":       "Namespace",
+					"metadata": map[string]any{
+						"name": res.GetNamespace(),
+					},
+				},
+			}
+		}
+	}
+
+	for _, ns := range namespaces {
+		results = append(results, ns)
+	}
+
+	return results
+}
+
+func FilterNamespaces(objects []runtime.Object) []runtime.Object {
+	namespaces := make([]runtime.Object, 0, len(objects))
+
+	for _, r := range objects {
+		res := r.(*unstructured.Unstructured)
 		if res.GetKind() != "Namespace" {
 			continue
 		}
 
-		namespaces[res.GetName()] = &v1.Namespace{
+		namespaces = append(namespaces, &v1.Namespace{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "Namespace",
 				APIVersion: "v1",
@@ -26,34 +83,10 @@ func GenerateNamespaces(objects []unstructured.Unstructured) []runtime.Object {
 				Annotations:     res.GetAnnotations(),
 				OwnerReferences: res.GetOwnerReferences(),
 			},
-		}
+		})
 	}
 
-	for _, res := range objects {
-		ns := res.GetNamespace()
-		if _, ok := namespaces[ns]; ok {
-			continue
-		}
-
-		if ns != "" {
-			namespaces[ns] = &v1.Namespace{
-				TypeMeta: metav1.TypeMeta{
-					Kind:       "Namespace",
-					APIVersion: "v1",
-				},
-				ObjectMeta: metav1.ObjectMeta{
-					Name: res.GetNamespace(),
-				},
-			}
-		}
-	}
-
-	resources := make([]runtime.Object, 0, len(namespaces))
-	for _, ns := range namespaces {
-		resources = append(resources, ns)
-	}
-
-	return resources
+	return namespaces
 }
 
 func Combine(objects []unstructured.Unstructured, namespaces []runtime.Object) []runtime.Object {
