@@ -36,8 +36,8 @@ type Cluster interface {
 	Namespaces(context.Context) ([]string, error)
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
-	DClient(...runtime.Object) (dclient.Interface, error)
-	PolicyExceptionSelector(namespace string, exceptions ...*v2.PolicyException) engineapi.PolicyExceptionSelector
+	DClient([]runtime.Object, ...runtime.Object) (dclient.Interface, error)
+	PolicyExceptionSelector(namespace string, exceptions ...*v2beta1.PolicyException) engineapi.PolicyExceptionSelector
 	IsFake() bool
 }
 
@@ -144,7 +144,7 @@ func (c cluster) PolicyExceptionSelector(namespace string, exceptions ...*v2.Pol
 	return NewPolicyExceptionSelector(namespace, c.kyvernoClient, exceptions...)
 }
 
-func (c cluster) DClient(_ ...runtime.Object) (dclient.Interface, error) {
+func (c cluster) DClient(resources []runtime.Object, _ ...runtime.Object) (dclient.Interface, error) {
 	return c.dClient, nil
 }
 

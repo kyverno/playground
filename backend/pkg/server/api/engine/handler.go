@@ -76,9 +76,9 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		}
 
 		clusterResources = append(oldResources, clusterResources...)
-		namespaces := resource.GenerateNamespaces(append(resources, clusterResources...))
+		clusterObjects := resource.AppendNamespaces(resources, clusterResources)
 
-		dClient, err := cl.DClient(resource.Combine(clusterResources, namespaces)...)
+		dClient, err := cl.DClient(resource.ToObjects(resources), clusterObjects...)
 		if err != nil {
 			return nil, err
 		}
