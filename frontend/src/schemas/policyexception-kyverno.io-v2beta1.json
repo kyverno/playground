@@ -472,6 +472,12 @@
         },
         "match": {
           "description": "Match defines match clause used to check if a resource applies to the exception",
+          "not": {
+            "required": [
+              "any",
+              "all"
+            ]
+          },
           "properties": {
             "all": {
               "description": "All allows specifying resources which will be ANDed",
@@ -493,6 +499,12 @@
                   },
                   "resources": {
                     "description": "ResourceDescription contains information about the resource being created or modified.",
+                    "not": {
+                      "required": [
+                        "name",
+                        "names"
+                      ]
+                    },
                     "properties": {
                       "annotations": {
                         "additionalProperties": {
@@ -567,7 +579,8 @@
                                   "type": [
                                     "array",
                                     "null"
-                                  ]
+                                  ],
+                                  "x-kubernetes-list-type": "atomic"
                                 }
                               },
                               "required": [
@@ -582,7 +595,8 @@
                             "type": [
                               "array",
                               "null"
-                            ]
+                            ],
+                            "x-kubernetes-list-type": "atomic"
                           },
                           "matchLabels": {
                             "additionalProperties": {
@@ -664,7 +678,8 @@
                                   "type": [
                                     "array",
                                     "null"
-                                  ]
+                                  ],
+                                  "x-kubernetes-list-type": "atomic"
                                 }
                               },
                               "required": [
@@ -679,7 +694,8 @@
                             "type": [
                               "array",
                               "null"
-                            ]
+                            ],
+                            "x-kubernetes-list-type": "atomic"
                           },
                           "matchLabels": {
                             "additionalProperties": {
@@ -794,6 +810,12 @@
                   },
                   "resources": {
                     "description": "ResourceDescription contains information about the resource being created or modified.",
+                    "not": {
+                      "required": [
+                        "name",
+                        "names"
+                      ]
+                    },
                     "properties": {
                       "annotations": {
                         "additionalProperties": {
@@ -868,7 +890,8 @@
                                   "type": [
                                     "array",
                                     "null"
-                                  ]
+                                  ],
+                                  "x-kubernetes-list-type": "atomic"
                                 }
                               },
                               "required": [
@@ -883,7 +906,8 @@
                             "type": [
                               "array",
                               "null"
-                            ]
+                            ],
+                            "x-kubernetes-list-type": "atomic"
                           },
                           "matchLabels": {
                             "additionalProperties": {
@@ -965,7 +989,8 @@
                                   "type": [
                                     "array",
                                     "null"
-                                  ]
+                                  ],
+                                  "x-kubernetes-list-type": "atomic"
                                 }
                               },
                               "required": [
@@ -980,7 +1005,8 @@
                             "type": [
                               "array",
                               "null"
-                            ]
+                            ],
+                            "x-kubernetes-list-type": "atomic"
                           },
                           "matchLabels": {
                             "additionalProperties": {
@@ -1172,5 +1198,6 @@
       "kind": "PolicyException",
       "version": "v2beta1"
     }
-  ]
+  ],
+  "x-kubernetes-selectable-fields": []
 }

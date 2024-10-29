@@ -21,9 +21,14 @@ import (
 )
 
 func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
+	schemas, err := data.Schemas()
+	if err != nil {
+		return nil, err
+	}
+
 	policyClient := openapiclient.NewComposite(
-		openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"),
-		openapiclient.NewGitHubBuiltins("1.28"),
+		openapiclient.NewLocalSchemaFiles(schemas),
+		openapiclient.NewGitHubBuiltins("1.31"),
 	)
 	policyLoader, err := loader.New(policyClient)
 	if err != nil {
@@ -71,9 +76,9 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		}
 
 		clusterResources = append(oldResources, clusterResources...)
-		namespaces := resource.GenerateNamespaces(append(resources, clusterResources...))
+		clusterObjects := resource.AppendNamespaces(resources, clusterResources)
 
-		dClient, err := cl.DClient(resource.Combine(clusterResources, namespaces)...)
+		dClient, err := cl.DClient(resource.ToObjects(resources), clusterObjects...)
 		if err != nil {
 			return nil, err
 		}

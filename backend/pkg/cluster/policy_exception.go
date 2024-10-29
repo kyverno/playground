@@ -2,31 +2,33 @@ package cluster
 
 import (
 	"context"
+	"slices"
 
-	"github.com/kyverno/kyverno/api/kyverno/v2beta1"
+	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/pkg/client/clientset/versioned"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
 )
 
 type policyExceptionSelector struct {
-	additional    []*v2beta1.PolicyException
+	additional    []*v2.PolicyException
 	kyvernoClient versioned.Interface
 	namespace     string
 }
 
-func (c policyExceptionSelector) List(selector labels.Selector) ([]*v2beta1.PolicyException, error) {
-	var exceptions []*v2beta1.PolicyException
+func (c policyExceptionSelector) Find(policy, rule string) ([]*v2.PolicyException, error) {
+	var exceptions []*v2.PolicyException
 	if c.kyvernoClient != nil {
-		list, err := c.kyvernoClient.KyvernoV2alpha1().PolicyExceptions(c.namespace).List(context.TODO(), metav1.ListOptions{
-			LabelSelector: selector.String(),
-		})
+		list, err := c.kyvernoClient.KyvernoV2().PolicyExceptions(c.namespace).List(context.TODO(), metav1.ListOptions{})
 		if err == nil {
-			for i := range list.Items {
-				pe := v2beta1.PolicyException(list.Items[i])
-				exceptions = append(exceptions, &pe)
+			for i, exc := range list.Items {
+				for _, e := range exc.Spec.Exceptions {
+					if e.PolicyName == policy && slices.Contains(e.RuleNames, rule) {
+						pe := v2.PolicyException(list.Items[i])
+						exceptions = append(exceptions, &pe)
+					}
+				}
 			}
 		} else if !kerrors.IsNotFound(err) {
 			return nil, err
@@ -40,7 +42,7 @@ func (c policyExceptionSelector) List(selector labels.Selector) ([]*v2beta1.Poli
 	return exceptions, nil
 }
 
-func NewPolicyExceptionSelector(namespace string, client versioned.Interface, exceptions ...*v2beta1.PolicyException) engineapi.PolicyExceptionSelector {
+func NewPolicyExceptionSelector(namespace string, client versioned.Interface, exceptions ...*v2.PolicyException) engineapi.PolicyExceptionSelector {
 	return policyExceptionSelector{
 		additional:    exceptions,
 		kyvernoClient: client,

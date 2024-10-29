@@ -33,6 +33,7 @@
         "certificates.k8s.io/v1alpha1",
         "certificates.k8s.io/v1beta1",
         "coordination.k8s.io/v1",
+        "coordination.k8s.io/v1alpha1",
         "coordination.k8s.io/v1beta1",
         "discovery.k8s.io/v1",
         "discovery.k8s.io/v1beta1",
@@ -56,7 +57,7 @@
         "rbac.authorization.k8s.io/v1",
         "rbac.authorization.k8s.io/v1alpha1",
         "rbac.authorization.k8s.io/v1beta1",
-        "resource.k8s.io/v1alpha2",
+        "resource.k8s.io/v1alpha3",
         "scheduling.k8s.io/v1",
         "scheduling.k8s.io/v1alpha1",
         "scheduling.k8s.io/v1beta1",
@@ -291,6 +292,11 @@
     {
       "group": "coordination.k8s.io",
       "kind": "DeleteOptions",
+      "version": "v1alpha1"
+    },
+    {
+      "group": "coordination.k8s.io",
+      "kind": "DeleteOptions",
       "version": "v1beta1"
     },
     {
@@ -406,7 +412,7 @@
     {
       "group": "resource.k8s.io",
       "kind": "DeleteOptions",
-      "version": "v1alpha2"
+      "version": "v1alpha3"
     },
     {
       "group": "scheduling.k8s.io",
