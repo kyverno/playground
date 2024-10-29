@@ -7,7 +7,7 @@ import (
 	json_patch "github.com/evanphx/json-patch/v5"
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
+	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
@@ -21,10 +21,11 @@ import (
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
+	"github.com/kyverno/kyverno/pkg/utils/report"
 	"github.com/kyverno/kyverno/pkg/validatingadmissionpolicy"
 	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
-	"k8s.io/api/admissionregistration/v1alpha1"
+	"k8s.io/api/admissionregistration/v1beta1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,8 +50,8 @@ type Processor struct {
 func (p *Processor) Run(
 	ctx context.Context,
 	policies []kyvernov1.PolicyInterface,
-	vaps []v1alpha1.ValidatingAdmissionPolicy,
-	vapbs []v1alpha1.ValidatingAdmissionPolicyBinding,
+	vaps []v1beta1.ValidatingAdmissionPolicy,
+	vapbs []v1beta1.ValidatingAdmissionPolicyBinding,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -221,28 +222,32 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 		return models.ConvertResponse(response), nil
 	}
 
-	gr := toGenerateRequest(policy, new)
-
 	var newRuleResponse []engineapi.RuleResponse
 	for _, rule := range response.PolicyResponse.Rules {
-		genRes, err := p.genController.ApplyGeneratePolicy(logr.Discard(), policyContext, gr, []string{rule.Name()})
+		genRes, err := p.genController.ApplyGeneratePolicy(logr.Discard(), policyContext, []string{rule.Name()})
 		if err != nil {
 			return models.Response{}, err
 		}
+
 		if len(genRes) == 0 {
 			continue
 		}
-		unstrGenResource, err := p.genController.GetUnstrResource(genRes[0])
-		if err != nil {
-			return models.Response{}, err
-		}
 
-		// cleanup metadata
-		if meta, ok := unstrGenResource.Object["metadata"]; ok {
-			delete(meta.(map[string]any), "managedFields")
-		}
+		for _, g := range genRes {
+			unstrGenResource, err := p.genController.GetUnstrResources(g)
+			if err != nil {
+				return models.Response{}, err
+			}
 
-		newRuleResponse = append(newRuleResponse, *rule.WithGeneratedResource(*unstrGenResource))
+			for _, unstr := range unstrGenResource {
+				// cleanup metadata
+				if meta, ok := unstr.Object["metadata"]; ok {
+					delete(meta.(map[string]any), "managedFields")
+				}
+			}
+
+			newRuleResponse = append(newRuleResponse, *rule.WithGeneratedResources(unstrGenResource))
+		}
 	}
 	response.PolicyResponse.Rules = newRuleResponse
 
@@ -294,7 +299,7 @@ func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new 
 			DryRun:  &p.params.Context.DryRun,
 			Options: runtime.RawExtension{},
 		},
-		kyvernov1beta1.RequestInfo{
+		v2.RequestInfo{
 			AdmissionUserInfo: userInfo,
 			Roles:             p.params.Context.Roles,
 			ClusterRoles:      p.params.Context.ClusterRoles,
@@ -342,21 +347,6 @@ func validatePolicies(policies []kyvernov1.PolicyInterface) []models.PolicyValid
 		}
 	}
 	return result
-}
-
-func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) kyvernov1beta1.UpdateRequest {
-	return kyvernov1beta1.UpdateRequest{
-		Spec: kyvernov1beta1.UpdateRequestSpec{
-			Type:   kyvernov1beta1.Generate,
-			Policy: policy.GetName(),
-			Resource: kyvernov1.ResourceSpec{
-				Kind:       resource.GetKind(),
-				Namespace:  resource.GetNamespace(),
-				Name:       resource.GetName(),
-				APIVersion: resource.GetAPIVersion(),
-			},
-		},
-	}
 }
 
 func newEngine(
@@ -432,7 +422,22 @@ func NewProcessor(
 		dClient = dclient.NewEmptyFakeClient()
 	}
 
-	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, logr.Discard(), jp)
+	contr := generate.NewGenerateController(
+		dClient,
+		nil,
+		nil,
+		engine,
+		nil,
+		nil,
+		nil,
+		nil,
+		cfg,
+		nil,
+		logr.Discard(),
+		jp,
+		report.NewReportingConfig(),
+		nil,
+	)
 
 	return &Processor{
 		params:        params,
