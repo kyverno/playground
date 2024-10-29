@@ -37,7 +37,7 @@ type Cluster interface {
 	Search(context.Context, string, string, string, map[string]string) ([]SearchResult, error)
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
 	DClient([]runtime.Object, ...runtime.Object) (dclient.Interface, error)
-	PolicyExceptionSelector(namespace string, exceptions ...*v2beta1.PolicyException) engineapi.PolicyExceptionSelector
+	PolicyExceptionSelector(namespace string, exceptions ...*v2.PolicyException) engineapi.PolicyExceptionSelector
 	IsFake() bool
 }
 

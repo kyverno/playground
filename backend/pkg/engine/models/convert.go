@@ -3,12 +3,23 @@ package models
 import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	"github.com/kyverno/playground/backend/pkg/utils"
 	"k8s.io/api/admissionregistration/v1beta1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
 )
 
 func convertRuleResponse(in engineapi.RuleResponse) RuleResponse {
-	generatedResource, _ := yaml.Marshal(in.GeneratedResource().Object)
+	var generatedResource []byte
+
+	if len(in.GeneratedResources()) > 1 {
+		generatedResource, _ = yaml.Marshal(utils.Map(in.GeneratedResources(), func(ob *unstructured.Unstructured) map[string]any {
+			return ob.Object
+		}))
+	} else if len(in.GeneratedResources()) == 1 {
+		generatedResource, _ = yaml.Marshal(in.GeneratedResources()[0].Object)
+	}
+
 	out := RuleResponse{
 		Name:              in.Name(),
 		RuleType:          in.RuleType(),
