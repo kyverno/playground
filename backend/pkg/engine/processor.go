@@ -7,7 +7,6 @@ import (
 	json_patch "github.com/evanphx/json-patch/v5"
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
 	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
@@ -348,21 +347,6 @@ func validatePolicies(policies []kyvernov1.PolicyInterface) []models.PolicyValid
 		}
 	}
 	return result
-}
-
-func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) kyvernov1beta1.UpdateRequest {
-	return kyvernov1beta1.UpdateRequest{
-		Spec: kyvernov1beta1.UpdateRequestSpec{
-			Type:   kyvernov1beta1.Generate,
-			Policy: policy.GetName(),
-			Resource: kyvernov1.ResourceSpec{
-				Kind:       resource.GetKind(),
-				Namespace:  resource.GetNamespace(),
-				Name:       resource.GetName(),
-				APIVersion: resource.GetAPIVersion(),
-			},
-		},
-	}
 }
 
 func newEngine(
