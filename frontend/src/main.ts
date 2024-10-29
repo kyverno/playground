@@ -14,8 +14,8 @@ import clusterpolicyv1 from './schemas/clusterpolicy-kyverno.io-v1.json'
 import policyv1 from './schemas/policy-kyverno.io-v1.json'
 import clusterpolicyv2beta1 from './schemas/clusterpolicy-kyverno.io-v2beta1.json'
 import policyv2beta1 from './schemas/policy-kyverno.io-v2beta1.json'
-import vapv1beta1 from './schemas/validatingadmissionpolicy-admissionregistration-v1.json'
-import vapbv1beta1 from './schemas/validatingadmissionpolicybinding-admissionregistration-v1.json'
+import vapv1 from './schemas/validatingadmissionpolicy-admissionregistration-v1.json'
+import vapbv1 from './schemas/validatingadmissionpolicybinding-admissionregistration-v1.json'
 import context from './schemas/context.json'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
@@ -42,8 +42,8 @@ configureMonacoYaml(monaco, {
           'policy-v1': policyv1 as JSONSchema,
           'clusterpolicy-v2beta1': clusterpolicyv2beta1 as JSONSchema,
           'policy-v2beta1': policyv2beta1 as JSONSchema,
-          'vap-v1beta1': vapv1beta1 as JSONSchema,
-          'vapb-v1beta1': vapbv1beta1 as JSONSchema
+          'vap-v1': vapv1 as JSONSchema,
+          'vapb-v1': vapbv1 as JSONSchema
         }
       },
       uri: `${baseURL}/schemas/policies.json`,

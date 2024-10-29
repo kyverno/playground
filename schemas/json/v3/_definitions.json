@@ -652,6 +652,9 @@
       "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyBindingList": {
         "description": "ValidatingAdmissionPolicyBindingList is a list of ValidatingAdmissionPolicyBinding.",
         "type": "object",
+        "required": [
+          "items"
+        ],
         "properties": {
           "apiVersion": {
             "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -740,6 +743,9 @@
       "io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicyList": {
         "description": "ValidatingAdmissionPolicyList is a list of ValidatingAdmissionPolicy.",
         "type": "object",
+        "required": [
+          "items"
+        ],
         "properties": {
           "apiVersion": {
             "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -1402,6 +1408,7 @@
               "certificates.k8s.io/v1alpha1",
               "certificates.k8s.io/v1beta1",
               "coordination.k8s.io/v1",
+              "coordination.k8s.io/v1alpha1",
               "coordination.k8s.io/v1beta1",
               "discovery.k8s.io/v1",
               "discovery.k8s.io/v1beta1",
@@ -1425,7 +1432,7 @@
               "rbac.authorization.k8s.io/v1",
               "rbac.authorization.k8s.io/v1alpha1",
               "rbac.authorization.k8s.io/v1beta1",
-              "resource.k8s.io/v1alpha2",
+              "resource.k8s.io/v1alpha3",
               "scheduling.k8s.io/v1",
               "scheduling.k8s.io/v1alpha1",
               "scheduling.k8s.io/v1beta1",
@@ -1617,6 +1624,11 @@
           {
             "group": "coordination.k8s.io",
             "kind": "DeleteOptions",
+            "version": "v1alpha1"
+          },
+          {
+            "group": "coordination.k8s.io",
+            "kind": "DeleteOptions",
             "version": "v1beta1"
           },
           {
@@ -1732,7 +1744,7 @@
           {
             "group": "resource.k8s.io",
             "kind": "DeleteOptions",
-            "version": "v1alpha2"
+            "version": "v1alpha3"
           },
           {
             "group": "scheduling.k8s.io",
@@ -2077,8 +2089,7 @@
             "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
             "type": "string",
             "enum": [
-              "v1",
-              "resource.k8s.io/v1alpha2"
+              "v1"
             ]
           },
           "code": {
@@ -2129,11 +2140,6 @@
             "group": "",
             "kind": "Status",
             "version": "v1"
-          },
-          {
-            "group": "resource.k8s.io",
-            "kind": "Status",
-            "version": "v1alpha2"
           }
         ]
       },
@@ -2365,6 +2371,11 @@
           {
             "group": "coordination.k8s.io",
             "kind": "WatchEvent",
+            "version": "v1alpha1"
+          },
+          {
+            "group": "coordination.k8s.io",
+            "kind": "WatchEvent",
             "version": "v1beta1"
           },
           {
@@ -2480,7 +2491,7 @@
           {
             "group": "resource.k8s.io",
             "kind": "WatchEvent",
-            "version": "v1alpha2"
+            "version": "v1alpha3"
           },
           {
             "group": "scheduling.k8s.io",
