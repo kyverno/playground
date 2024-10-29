@@ -1,12 +1,13 @@
 package engine
 
 import (
+	"os"
 	"testing/fstest"
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	kyvernov2beta1 "github.com/kyverno/kyverno/api/kyverno/v2beta1"
+	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/ext/resource/loader"
-	"k8s.io/api/admissionregistration/v1alpha1"
+	"k8s.io/api/admissionregistration/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/openapi"
@@ -43,7 +44,7 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	return &params, nil
 }
 
-func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1alpha1.ValidatingAdmissionPolicy, []v1alpha1.ValidatingAdmissionPolicyBinding, error) {
+func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1beta1.ValidatingAdmissionPolicy, []v1beta1.ValidatingAdmissionPolicyBinding, error) {
 	return policy.Load(policyLoader, []byte(r.Policies))
 }
 
@@ -59,11 +60,11 @@ func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstru
 	return resource.LoadResources(resourceLoader, []byte(r.OldResources))
 }
 
-func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2beta1.PolicyException, error) {
+func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2.PolicyException, error) {
 	return exception.Load([]byte(r.PolicyExceptions))
 }
 
-func (r *EngineRequest) LoadVAPBindings(policyLoader loader.Loader) ([]v1alpha1.ValidatingAdmissionPolicyBinding, error) {
+func (r *EngineRequest) LoadVAPBindings(policyLoader loader.Loader) ([]v1beta1.ValidatingAdmissionPolicyBinding, error) {
 	return vapbinding.Load(policyLoader, []byte(r.VAPBindings))
 }
 
@@ -77,7 +78,7 @@ func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.Config
 func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion string, config APIConfiguration) (loader.Loader, error) {
 	var clients []openapi.Client
 	if cluster != nil && !cluster.IsFake() {
-		dclient, err := cluster.DClient()
+		dclient, err := cluster.DClient(nil)
 		if err != nil {
 			return nil, err
 		}
@@ -89,21 +90,31 @@ func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion stri
 		}
 		clients = append(clients, openapiclient.NewHardcodedBuiltins(kubeVersion))
 	}
-	clients = append(clients, openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"))
+
+	schemas, err := data.Schemas()
+	if err != nil {
+		return nil, err
+	}
+
+	clients = append(clients, openapiclient.NewLocalSchemaFiles(schemas))
 	if len(r.CustomResourceDefinitions) != 0 {
 		mapFs := fstest.MapFS{
 			"crds.yaml": &fstest.MapFile{
 				Data: []byte(r.CustomResourceDefinitions),
 			},
 		}
-		clients = append(clients, openapiclient.NewLocalCRDFiles(mapFs, "."))
+		clients = append(clients, openapiclient.NewLocalCRDFiles(mapFs))
 	}
 	for _, crd := range config.LocalCrds {
-		clients = append(clients, openapiclient.NewLocalCRDFiles(nil, crd))
+		clients = append(clients, openapiclient.NewLocalCRDFiles(os.DirFS(crd)))
 	}
 	for _, crd := range config.BuiltInCrds {
-		fs, path := data.BuiltInCrds(crd)
-		clients = append(clients, openapiclient.NewLocalCRDFiles(fs, path))
+		fs, err := data.BuiltInCrds(crd)
+		if err != nil {
+			return nil, err
+		}
+
+		clients = append(clients, openapiclient.NewLocalCRDFiles(fs))
 	}
 	return loader.New(openapiclient.NewComposite(clients...))
 }

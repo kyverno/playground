@@ -1,7 +1,7 @@
 [
     {
         "name": "Tutorials",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.12/",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/",
         "color": "orange-darken-3",
         "subgroups": [
             {
@@ -120,7 +120,7 @@
     },
     {
         "name": "Best Practices",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.12/best-practices",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/best-practices",
         "policies": [
             {
                 "path": "disallow-cri-sock-mount",
@@ -184,7 +184,7 @@
         "subgroups": [
             {
                 "name": "Baseline",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.12/pod-security/baseline",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/pod-security/baseline",
                 "policies": [
                     {
                         "path": "disallow-capabilities",
@@ -250,7 +250,7 @@
             },
             {
                 "name": "Restricted",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.12/pod-security/restricted",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/pod-security/restricted",
                 "policies": [
                     {
                         "path": "disallow-capabilities-strict",
@@ -286,7 +286,7 @@
             },
             {
                 "name": "Subrule",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.12/pod-security/subrule",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/pod-security/subrule",
                 "policies": [
                     {
                         "path": "podsecurity-subrule-baseline",
@@ -297,7 +297,7 @@
             },
             {
                 "name": "Subrule Restricted",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.12/pod-security/subrule/restricted",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/pod-security/subrule/restricted",
                 "policies": [
                     {
                         "path": "restricted-exclude-capabilities",
@@ -320,7 +320,7 @@
     },
     {
         "name": "Custom Resources",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.12",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13",
         "subgroups": [
             {
                 "name": "Cert Manager",
@@ -374,7 +374,7 @@
     },
     {
         "name": "Other",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.12/other",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/other",
         "policies": [
             {
                 "path": "add-certificates-volume",
