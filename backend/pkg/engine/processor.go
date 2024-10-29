@@ -7,7 +7,6 @@ import (
 	json_patch "github.com/evanphx/json-patch/v5"
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	kyvernov1beta1 "github.com/kyverno/kyverno/api/kyverno/v1beta1"
 	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
@@ -22,6 +21,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
+	"github.com/kyverno/kyverno/pkg/utils/report"
 	"github.com/kyverno/kyverno/pkg/validatingadmissionpolicy"
 	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
@@ -228,20 +228,26 @@ func (p *Processor) generate(ctx context.Context, policy kyvernov1.PolicyInterfa
 		if err != nil {
 			return models.Response{}, err
 		}
+
 		if len(genRes) == 0 {
 			continue
 		}
-		unstrGenResource, err := p.genController.GetUnstrResource(genRes[0])
-		if err != nil {
-			return models.Response{}, err
-		}
 
-		// cleanup metadata
-		if meta, ok := unstrGenResource.Object["metadata"]; ok {
-			delete(meta.(map[string]any), "managedFields")
-		}
+		for _, g := range genRes {
+			unstrGenResource, err := p.genController.GetUnstrResources(g)
+			if err != nil {
+				return models.Response{}, err
+			}
 
-		newRuleResponse = append(newRuleResponse, *rule.WithGeneratedResource(*unstrGenResource))
+			for _, unstr := range unstrGenResource {
+				// cleanup metadata
+				if meta, ok := unstr.Object["metadata"]; ok {
+					delete(meta.(map[string]any), "managedFields")
+				}
+			}
+
+			newRuleResponse = append(newRuleResponse, *rule.WithGeneratedResources(unstrGenResource))
+		}
 	}
 	response.PolicyResponse.Rules = newRuleResponse
 
@@ -343,21 +349,6 @@ func validatePolicies(policies []kyvernov1.PolicyInterface) []models.PolicyValid
 	return result
 }
 
-func toGenerateRequest(policy kyvernov1.PolicyInterface, resource unstructured.Unstructured) kyvernov1beta1.UpdateRequest {
-	return kyvernov1beta1.UpdateRequest{
-		Spec: kyvernov1beta1.UpdateRequestSpec{
-			Type:   kyvernov1beta1.Generate,
-			Policy: policy.GetName(),
-			Resource: kyvernov1.ResourceSpec{
-				Kind:       resource.GetKind(),
-				Namespace:  resource.GetNamespace(),
-				Name:       resource.GetName(),
-				APIVersion: resource.GetAPIVersion(),
-			},
-		},
-	}
-}
-
 func newEngine(
 	cfg config.Configuration,
 	jp jmespath.Interface,
@@ -431,7 +422,22 @@ func NewProcessor(
 		dClient = dclient.NewEmptyFakeClient()
 	}
 
-	contr := generate.NewGenerateController(dClient, nil, nil, engine, nil, nil, nil, nil, cfg, nil, logr.Discard(), jp)
+	contr := generate.NewGenerateController(
+		dClient,
+		nil,
+		nil,
+		engine,
+		nil,
+		nil,
+		nil,
+		nil,
+		cfg,
+		nil,
+		logr.Discard(),
+		jp,
+		report.NewReportingConfig(),
+		nil,
+	)
 
 	return &Processor{
 		params:        params,

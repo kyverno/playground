@@ -78,7 +78,7 @@ func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.Config
 func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion string, config APIConfiguration) (loader.Loader, error) {
 	var clients []openapi.Client
 	if cluster != nil && !cluster.IsFake() {
-		dclient, err := cluster.DClient()
+		dclient, err := cluster.DClient(nil)
 		if err != nil {
 			return nil, err
 		}

@@ -6,14 +6,12 @@
     <div class="app-logo">
       <template v-if="display.mdAndUp.value">
         <v-img src="/kyverno-logo.png" />
-        <v-chip size="small" style="position: absolute; bottom: 12px; right: -90px"
-          >v1.13.0-rc.1</v-chip
-        >
+        <v-chip size="small" style="position: absolute; bottom: 12px; right: -90px">v1.13.0</v-chip>
       </template>
       <template v-if="display.smAndDown.value">
         <v-img src="/favicon.png" width="80" />
         <v-chip size="small" style="position: absolute; bottom: 16px; left: 90px"
-          >Kyverno v1.13.0-rc.1</v-chip
+          >Kyverno v1.13.0</v-chip
         >
       </template>
     </div>
