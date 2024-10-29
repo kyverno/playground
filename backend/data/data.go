@@ -14,10 +14,10 @@ var schemas embed.FS
 //go:embed crds
 var builtInCrds embed.FS
 
-func Schemas() fs.FS {
-	return schemas
+func Schemas() (fs.FS, error) {
+	return fs.Sub(schemas, "schemas")
 }
 
-func BuiltInCrds(crd string) (fs.FS, string) {
-	return builtInCrds, filepath.Join(crdsFolder, crd)
+func BuiltInCrds(crd string) (fs.FS, error) {
+	return fs.Sub(builtInCrds, filepath.Join(crdsFolder, crd))
 }

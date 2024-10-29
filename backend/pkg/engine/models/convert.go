@@ -3,12 +3,24 @@ package models
 import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
-	"k8s.io/api/admissionregistration/v1alpha1"
+	"k8s.io/api/admissionregistration/v1beta1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
+
+	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
 func convertRuleResponse(in engineapi.RuleResponse) RuleResponse {
-	generatedResource, _ := yaml.Marshal(in.GeneratedResource().Object)
+	var generatedResource []byte
+
+	if len(in.GeneratedResources()) > 1 {
+		generatedResource, _ = yaml.Marshal(utils.Map(in.GeneratedResources(), func(ob *unstructured.Unstructured) map[string]any {
+			return ob.Object
+		}))
+	} else if len(in.GeneratedResources()) == 1 {
+		generatedResource, _ = yaml.Marshal(in.GeneratedResources()[0].Object)
+	}
+
 	out := RuleResponse{
 		Name:              in.Name(),
 		RuleType:          in.RuleType(),
@@ -21,7 +33,7 @@ func convertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 		// // patchedTargetSubresourceName is the name of the subresource which is patched, empty if the resource patched is not a subresource.
 		// PatchedTargetSubresourceName string
 		PodSecurityChecks: in.PodSecurityChecks(),
-		Exception:         in.Exception(),
+		Exceptions:        in.Exceptions(),
 	}
 	return out
 }
@@ -54,7 +66,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 	if in.Policy().GetType() == engineapi.KyvernoPolicyType {
 		out.Policy = in.Policy().MetaObject().(kyvernov1.PolicyInterface)
 	} else {
-		out.ValidatingAdmissionPolicy = in.Policy().MetaObject().(*v1alpha1.ValidatingAdmissionPolicy)
+		out.ValidatingAdmissionPolicy = in.Policy().MetaObject().(*v1beta1.ValidatingAdmissionPolicy)
 	}
 	for _, ruleresponse := range in.PolicyResponse.Rules {
 		out.PolicyResponse.Rules = append(out.PolicyResponse.Rules, convertRuleResponse(ruleresponse))
