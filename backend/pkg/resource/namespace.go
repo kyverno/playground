@@ -88,17 +88,3 @@ func FilterNamespaces(objects []runtime.Object) []runtime.Object {
 
 	return namespaces
 }
-
-func Combine(objects []unstructured.Unstructured, namespaces []runtime.Object) []runtime.Object {
-	resources := make([]runtime.Object, 0, len(objects))
-
-	for _, res := range objects {
-		if res.GetKind() == "Namespace" {
-			continue
-		}
-
-		resources = append(resources, &res)
-	}
-
-	return append(resources, namespaces...)
-}

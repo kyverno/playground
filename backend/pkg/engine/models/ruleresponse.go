@@ -27,5 +27,5 @@ type RuleResponse struct {
 	// podSecurityChecks contains pod security checks (only if this is a pod security rule)
 	PodSecurityChecks *engineapi.PodSecurityChecks `json:"podSecurityChecks"`
 	// exception is the exception applied (if any)
-	Exceptions []v2.PolicyException `json:"exception s"`
+	Exceptions []v2.PolicyException `json:"exceptions"`
 }

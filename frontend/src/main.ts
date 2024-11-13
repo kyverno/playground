@@ -34,8 +34,8 @@ configureMonacoYaml(monaco, {
           { $ref: '#/definitions/policy-v1' },
           { $ref: '#/definitions/clusterpolicy-v2beta1' },
           { $ref: '#/definitions/policy-v2beta1' },
-          { $ref: '#/definitions/vap-v1beta1' },
-          { $ref: '#/definitions/vapb-v1beta1' }
+          { $ref: '#/definitions/vap-v1' },
+          { $ref: '#/definitions/vapb-v1' }
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema,
