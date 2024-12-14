@@ -2,7 +2,7 @@
 
 Kyverno Playground Web Application
 
-![Version: 0.3.7](https://img.shields.io/badge/Version-0.3.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.3.7](https://img.shields.io/badge/AppVersion-v0.3.7-informational?style=flat-square)
+![Version: 0.3.8](https://img.shields.io/badge/Version-0.3.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.3.8](https://img.shields.io/badge/AppVersion-v0.3.8-informational?style=flat-square)
 
 ## About
 
@@ -96,6 +96,7 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | config.ui.sponsor | string | `""` | Sponsor name |
 | config.engine.builtinCrds | list | `[]` | Builtin CRDs enabled (`argocd`, `cert-manager`, `prometheus-operator`, `tekton-pipelines`) |
 | config.engine.localCrds | list | `[]` | Paths to folders containing yaml definitions for CRDs |
+| config.versions | list | `[]` | list of additional Kyverno Playground versions |
 
 ## Source Code
 
