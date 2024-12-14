@@ -96,6 +96,7 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | config.ui.sponsor | string | `""` | Sponsor name |
 | config.engine.builtinCrds | list | `[]` | Builtin CRDs enabled (`argocd`, `cert-manager`, `prometheus-operator`, `tekton-pipelines`) |
 | config.engine.localCrds | list | `[]` | Paths to folders containing yaml definitions for CRDs |
+| config.version | list | `[]` | list of additional Kyverno Playground versions |
 
 ## Source Code
 

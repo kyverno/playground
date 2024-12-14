@@ -5,6 +5,7 @@ import { stringify } from 'yaml'
 export type Config = {
   sponsor: string
   cluster: boolean
+  versions: Array<{ name: string; url: string }>
 }
 
 export type ListRequest = {
@@ -32,7 +33,8 @@ export type SearchResult = { namespace: string; name: string }
 
 export const config = reactive<Config>({
   sponsor: '',
-  cluster: false
+  cluster: false,
+  versions: []
 })
 
 const fetchConfig = (api: string, loading: Ref<boolean>, error: Ref<Error | undefined>) => () => {
@@ -54,9 +56,10 @@ const fetchConfig = (api: string, loading: Ref<boolean>, error: Ref<Error | unde
 
       return resp.json()
     })
-    .then(({ sponsor, cluster }: Config) => {
+    .then(({ sponsor, cluster, versions }: Config) => {
       config.sponsor = sponsor
       config.cluster = cluster
+      config.versions = versions
     })
     .catch((err) => {
       error.value = err

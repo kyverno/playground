@@ -15,11 +15,12 @@ type EngineConfiguration = apiengine.APIConfiguration
 
 type APIConfiguration struct {
 	EngineConfiguration
-	Sponsor string
+	Versions []apiconfig.Version
+	Sponsor  string
 }
 
 func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster, config APIConfiguration) error {
-	if err := apiconfig.AddRoutes(group, cluster, config.Sponsor); err != nil {
+	if err := apiconfig.AddRoutes(group, cluster, config.Sponsor, config.Versions); err != nil {
 		return err
 	}
 	if err := apiengine.AddRoutes(group, cluster, config.EngineConfiguration); err != nil {

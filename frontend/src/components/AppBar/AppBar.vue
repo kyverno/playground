@@ -2,19 +2,49 @@
   <v-app-bar flat border>
     <template v-slot:prepend>
       <slot name="prepend-actions" />
+
+      <div class="ml-2 my-1">
+        <template v-if="display.mdAndUp.value">
+          <img src="/kyverno-logo.png" class="logo" />
+
+          <v-chip
+            v-if="!config.versions?.length"
+            size="small"
+            style="position: absolute; bottom: 12px; right: -90px"
+          >
+            v1.12.6
+          </v-chip>
+        </template>
+        <template v-if="display.smAndDown.value">
+          <img src="/favicon.png" class="logo" />
+          <v-chip
+            v-if="!config.versions?.length"
+            size="small"
+            style="position: absolute; bottom: 16px; left: 90px"
+          >
+            Kyverno v1.12.6
+          </v-chip>
+        </template>
+      </div>
     </template>
-    <div class="app-logo">
-      <template v-if="display.mdAndUp.value">
-        <v-img src="/kyverno-logo.png" />
-        <v-chip size="small" style="position: absolute; bottom: 12px; right: -80px">v1.12.6</v-chip>
-      </template>
-      <template v-if="display.smAndDown.value">
-        <v-img src="/favicon.png" width="80" />
-        <v-chip size="small" style="position: absolute; bottom: 16px; left: 80px"
-          >Kyverno v1.12.5</v-chip
-        >
-      </template>
-    </div>
+
+    <v-toolbar-actions>
+      <v-menu v-if="config.versions.length" open-on-hover>
+        <template v-slot:activator="{ props }">
+          <v-btn variant="outlined" class="text-none" rounded="xl" v-bind="props">v1.12.6</v-btn>
+        </template>
+
+        <v-list variant="flat" class="my-0 py-0 border">
+          <template v-for="(version, i) in config.versions" :key="version.name">
+            <v-list-item :href="version.url">
+              <v-list-item-title>{{ version.name }}</v-list-item-title>
+            </v-list-item>
+            <v-divider v-if="i < config.versions.length - 1" />
+          </template>
+        </v-list>
+      </v-menu>
+    </v-toolbar-actions>
+
     <template v-slot:append>
       <v-btn
         href="http://kyverno.io"
@@ -49,15 +79,19 @@
 <script setup lang="ts">
 import { useDisplay } from 'vuetify'
 import ConfigMenu from './ConfigMenu.vue'
+import { useAPIConfig } from '@/composables/api'
 
 const display = useDisplay()
+const { config } = useAPIConfig()
 </script>
 
-<style scoped>
-.app-logo {
-  width: 200px;
-  height: 62px;
-  position: absolute;
-  left: 70px;
+<style>
+.logo {
+  max-height: 58px;
+  margin-top: 6px;
+}
+
+.v-toolbar__prepend {
+  margin-right: 24px;
 }
 </style>
