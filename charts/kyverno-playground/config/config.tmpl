@@ -1,4 +1,4 @@
 versions:
 {{- with .Values.config.versions }}
-  {{- toYaml . | nindent 2 }}
+  {{- toYaml . | nindent 4 }}
 {{- end }}
