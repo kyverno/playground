@@ -34,7 +34,7 @@ setDiagnosticsOptions({
           { $ref: '#/definitions/clusterpolicy-v2beta1' },
           { $ref: '#/definitions/policy-v2beta1' },
           { $ref: '#/definitions/vap-v1alpha1' },
-          { $ref: '#/definitions/vap-v1beta1' },
+          { $ref: '#/definitions/vap-v1beta1' }
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema6,
@@ -42,7 +42,7 @@ setDiagnosticsOptions({
           'clusterpolicy-v2beta1': clusterpolicyv2beta1 as JSONSchema6,
           'policy-v2beta1': policyv2beta1 as JSONSchema6,
           'vap-v1alpha1': vapv1alpha1 as JSONSchema6,
-          'vap-v1beta1': vapv1beta1 as JSONSchema6,
+          'vap-v1beta1': vapv1beta1 as JSONSchema6
         }
       },
       uri: `${baseURL}/schemas/policies.json`,

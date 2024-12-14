@@ -1,5 +1,5 @@
 <template>
-  <VOnboardingWrapper ref="wrapper" :steps="steps" @finish="emit('finish')">
+  <VOnboardingWrapper ref="wrapper" :steps="steps as StepEntity[]" @finish="emit('finish')">
     <template #default="{ previous, next, step, isFirst, isLast }">
       <VOnboardingStep>
         <v-card
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { layoutTheme } from '@/config'
-import { VOnboardingWrapper, VOnboardingStep } from 'v-onboarding'
+import { VOnboardingWrapper, VOnboardingStep, StepEntity } from 'v-onboarding'
 import { watch, ref } from 'vue'
 
 defineProps({

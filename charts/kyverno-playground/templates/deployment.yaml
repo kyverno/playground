@@ -13,8 +13,9 @@ spec:
       {{- include "kyverno-playground.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        checksum/secret: {{ include (print .Template.BasePath "/config.yaml") . | sha256sum | quote }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -33,6 +34,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           args:
+            - --config=/config.yaml
             - --gin-mode={{ .Values.config.gin.mode }}
             - --gin-cors={{ .Values.config.gin.cors }}
             - --gin-log={{ .Values.config.gin.logger }}
@@ -69,11 +71,18 @@ spec:
           volumeMounts:
             - mountPath: {{ .Values.tufRootMountPath }}
               name: sigstore
+            - mountPath: /config.yaml
+              name: config-file
+              readOnly: true
+              subPath: config.yaml
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
       - name: sigstore
         emptyDir: {}
+      - name: config-file
+        configMap:
+          name: {{ include "kyverno-playground.fullname" . }}-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
