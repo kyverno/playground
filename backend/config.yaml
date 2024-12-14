@@ -1,0 +1,5 @@
+versions:
+- name: Kyverno v1.13
+  url: http://playground.kyverno.io
+- name: Kyverno v1.12
+  url: http://playground.kyverno.io/v1.12/
