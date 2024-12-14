@@ -66,7 +66,7 @@ func (c *Client) ListResource(ctx context.Context, apiVersion string, kind strin
 	return c.inner.ListResource(ctx, apiVersion, kind, namespace, lselector)
 }
 
-func (c *Client) DeleteResource(_ context.Context, _ string, _ string, _ string, _ string, _ bool) error {
+func (c *Client) DeleteResource(_ context.Context, _ string, _ string, _ string, _ string, _ bool, _ metav1.DeleteOptions) error {
 	return nil
 }
 

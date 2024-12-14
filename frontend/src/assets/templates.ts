@@ -44,6 +44,8 @@ flags:
     enabled: false
   generateValidatingAdmissionPolicy:
     enabled: false
+  autogenV2:
+    enabled: false
   registry:
     allowInsecure: false
     pullSecrets: []

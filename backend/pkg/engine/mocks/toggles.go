@@ -8,14 +8,16 @@ type toggles struct {
 	enableDeferredLoading             bool
 	generateValidatingAdmissionPolicy bool
 	dumpMutatePatches                 bool
+	autogenV2                         bool
 }
 
-func Toggles(protectManagedResources, forceFailurePolicyIgnore, enableDeferredLoading, generateValidatingAdmissionPolicy bool) toggle.Toggles {
+func Toggles(protectManagedResources, forceFailurePolicyIgnore, enableDeferredLoading, generateValidatingAdmissionPolicy, autogenV2 bool) toggle.Toggles {
 	return toggles{
 		protectManagedResources:           protectManagedResources,
 		forceFailurePolicyIgnore:          forceFailurePolicyIgnore,
 		enableDeferredLoading:             enableDeferredLoading,
 		generateValidatingAdmissionPolicy: generateValidatingAdmissionPolicy,
+		autogenV2:                         autogenV2,
 	}
 }
 
@@ -36,5 +38,9 @@ func (t toggles) GenerateValidatingAdmissionPolicy() bool {
 }
 
 func (t toggles) DumpMutatePatches() bool {
+	return t.dumpMutatePatches
+}
+
+func (t toggles) AutogenV2() bool {
 	return t.dumpMutatePatches
 }

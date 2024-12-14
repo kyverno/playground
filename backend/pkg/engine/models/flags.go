@@ -8,4 +8,5 @@ type Flags struct {
 	ForceFailurePolicyIgnore          ForceFailurePolicyIgnore          `json:"forceFailurePolicyIgnore"`
 	EnableDeferredLoading             EnableDeferredLoading             `json:"enableDeferredLoading"`
 	GenerateValidatingAdmissionPolicy GenerateValidatingAdmissionPolicy `json:"generateValidatingAdmissionPolicy"`
+	AutogenV2                         AutogenV2                         `json:"autogenV2"`
 }

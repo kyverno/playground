@@ -60,6 +60,7 @@ func (p *Processor) Run(
 		p.params.Flags.ForceFailurePolicyIgnore.Enabled,
 		p.params.Flags.EnableDeferredLoading.Enabled,
 		p.params.Flags.GenerateValidatingAdmissionPolicy.Enabled,
+		p.params.Flags.AutogenV2.Enabled,
 	))
 	if violations := validatePolicies(policies); len(violations) > 0 {
 		return nil, PolicyViolationError{Violations: violations}
