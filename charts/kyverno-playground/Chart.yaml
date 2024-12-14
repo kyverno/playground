@@ -1,7 +1,7 @@
 apiVersion: v2
 name: kyverno-playground
 type: application
-version: 0.4.3
+version: 0.4.4
 appVersion: v0.4.3
 icon: https://github.com/kyverno/kyverno/raw/main/img/logo.png
 description: Kyverno Playground Web Application
