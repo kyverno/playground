@@ -13,9 +13,11 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/config"
 	"github.com/kyverno/playground/backend/pkg/engine"
 	"github.com/kyverno/playground/backend/pkg/server"
 	"github.com/kyverno/playground/backend/pkg/server/api"
+	apiconfig "github.com/kyverno/playground/backend/pkg/server/api/config"
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
@@ -25,6 +27,7 @@ type commandFlags struct {
 	uiFlags      uiFlags
 	engineFlags  engineFlags
 	clusterFlags clusterFlags
+	configFile   string
 }
 
 type serverFlags struct {
@@ -58,6 +61,7 @@ func NewRootCommand() *cobra.Command {
 	res := &cobra.Command{
 		RunE: command.Run,
 	}
+	res.Flags().StringVar(&command.configFile, "config", "", "path to an optional config file")
 	// server flags
 	res.Flags().StringVar(&command.serverFlags.host, "server-host", "0.0.0.0", "server host")
 	res.Flags().IntVar(&command.serverFlags.port, "server-port", 8080, "server port")
@@ -78,6 +82,12 @@ func NewRootCommand() *cobra.Command {
 }
 
 func (c *commandFlags) Run(_ *cobra.Command, _ []string) error {
+	cfg := &config.Config{}
+	err := config.Load(cfg, c.configFile)
+	if err != nil {
+		return err
+	}
+
 	// initialise gin framework
 	gin.SetMode(c.ginFlags.mode)
 	tonic.SetBindHook(tonic.DefaultBindingHookMaxBodyBytes(int64(c.ginFlags.maxBodySize)))
@@ -111,6 +121,9 @@ func (c *commandFlags) Run(_ *cobra.Command, _ []string) error {
 			BuiltInCrds: c.engineFlags.builtInCrds,
 			LocalCrds:   c.engineFlags.localCrds,
 		},
+		Versions: utils.Map(cfg.Versions, func(version config.Version) apiconfig.Version {
+			return apiconfig.Version(version)
+		}),
 	}
 	// register API routes (with/without cluster support)
 	if c.clusterFlags.cluster {

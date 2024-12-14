@@ -1,3 +1,7 @@
+version: 2
+
+project_name: kyverno-playground
+
 before:
   hooks:
     - go mod tidy
@@ -10,6 +14,7 @@ builds:
       - windows
       - darwin
     binary: kyverno-playground
+    mod_timestamp: "{{ .CommitTimestamp }}"
     flags:
       - -trimpath
     ldflags:
@@ -22,7 +27,7 @@ kos:
       - '{{ if not .Prerelease }}latest{{ end }}' 
     bare: true
     preserve_import_paths: false
-    sbom: none
+    sbom: spdx
     platforms:
       - all
     flags:
@@ -66,7 +71,7 @@ sboms:
     artifacts: source
 
 snapshot:
-  name_template: '{{ incpatch .Version }}-next'
+  version_template: '{{ incpatch .Version }}-next'
 
 release:
   prerelease: auto
