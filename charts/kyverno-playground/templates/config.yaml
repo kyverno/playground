@@ -5,4 +5,5 @@ metadata:
   labels:
     {{- include "kyverno-playground.labels" . | nindent 4 }}
 data:
-  config.yaml: {{ tpl (.Files.Get "config/config.tmpl") . }}
+  config.yaml: |
+    {{ tpl (.Files.Get "config/config.tmpl") . }}

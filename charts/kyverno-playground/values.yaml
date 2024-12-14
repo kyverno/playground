@@ -190,7 +190,7 @@ config:
     # -- Paths to folders containing yaml definitions for CRDs
     localCrds: []
   # -- list of additional Kyverno Playground versions
-  version: []
+  versions: []
     # - name: Kyverno v1.13
     #   url: https://playground.kyverno.io/
     # - name: Kyverno v1.12
