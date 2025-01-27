@@ -36,10 +36,9 @@
 
         <v-list variant="flat" class="my-0 py-0 border">
           <template v-for="(version, i) in config.versions" :key="version.name">
-            <v-list-item :href="version.url">
+            <v-list-item v-if="i == 0" :href="version.url">
               <v-list-item-title>{{ version.name }}</v-list-item-title>
             </v-list-item>
-            <v-divider v-if="i < config.versions.length - 1" />
           </template>
         </v-list>
       </v-menu>

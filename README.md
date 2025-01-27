@@ -24,6 +24,7 @@ The playground currently supports:
 **NOTES:**
 - This tool only works with public image registries
 - No data is gathered, stored, or shared
+- Only support the lastest version for now
 
 ## Features
 
