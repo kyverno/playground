@@ -60,7 +60,7 @@ spec:
 )
 
 func Test_LoadResources(t *testing.T) {
-	l, err := loader.New(openapiclient.NewHardcodedBuiltins("1.27"))
+	l, err := loader.New(openapiclient.NewHardcodedBuiltins("1.28"))
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -87,7 +87,13 @@ func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion stri
 		if err != nil {
 			return nil, err
 		}
-		clients = append(clients, openapiclient.NewHardcodedBuiltins(kubeVersion))
+
+		client := openapiclient.NewHardcodedBuiltins(kubeVersion)
+		if _, err := client.Paths(); err == nil {
+			clients = append(clients, client)
+		} else {
+			clients = append(clients, openapiclient.NewGitHubBuiltins(kubeVersion))
+		}
 	}
 	clients = append(clients, openapiclient.NewLocalSchemaFiles(data.Schemas(), "schemas"))
 	if len(r.CustomResourceDefinitions) != 0 {
