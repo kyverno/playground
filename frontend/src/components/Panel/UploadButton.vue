@@ -10,26 +10,27 @@
       <v-btn
         v-bind="props"
         @click="select"
-        icon="mdi-upload"
         :loading="loading"
         :color="btnColor"
         :variant="variant"
         :width="width"
         :class="btnClass"
-      />
+      >
+        <svg-icon type="mdi" :path="path"></svg-icon>
+      </v-btn>
     </template>
   </v-tooltip>
   <v-btn
     v-else
     v-bind="props"
     @click="select"
-    prepend-icon="mdi-upload"
     :loading="loading"
     :color="btnColor"
     :variant="variant"
     :width="width"
     :class="btnClass"
   >
+    <svg-icon type="mdi" :path="path"></svg-icon>
     {{ label }}
   </v-btn>
 </template>
@@ -37,6 +38,8 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { ref } from 'vue'
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiFileDownload } from '@mdi/js'
 
 const props = defineProps({
   accept: { type: String, default: '.yaml,.yml,text/yaml,application/x-yaml' },
@@ -47,6 +50,8 @@ const props = defineProps({
   tooltip: { type: Boolean, default: true },
   btnClass: { type: String }
 })
+
+const path = mdiFileDownload
 
 const input = ref<HTMLInputElement | null>(null)
 
