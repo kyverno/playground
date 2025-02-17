@@ -13,7 +13,7 @@ require (
 	github.com/knadh/koanf/v2 v2.1.2
 	github.com/kyverno/kyverno v1.13.4
 	github.com/loopfz/gadgeto v0.11.4
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	gomodules.xyz/jsonpatch/v2 v2.4.0
 	k8s.io/api v0.32.0
@@ -292,7 +292,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.7.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.3.0 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
