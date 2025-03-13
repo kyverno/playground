@@ -16,17 +16,17 @@ var (
 	vapV1      = v1.SchemeGroupVersion.WithKind("ValidatingAdmissionPolicyBinding")
 )
 
-func Load(l loader.Loader, content []byte) ([]v1beta1.ValidatingAdmissionPolicyBinding, error) {
+func Load(l loader.Loader, content []byte) ([]v1.ValidatingAdmissionPolicyBinding, error) {
 	untyped, err := resource.LoadResources(l, content)
 	if err != nil {
 		return nil, err
 	}
-	var bindings []v1beta1.ValidatingAdmissionPolicyBinding
+	var bindings []v1.ValidatingAdmissionPolicyBinding
 	for _, object := range untyped {
 		gvk := object.GroupVersionKind()
 		switch gvk {
 		case vapV1beta1, vapV1:
-			typed, err := convert.To[v1beta1.ValidatingAdmissionPolicyBinding](object)
+			typed, err := convert.To[v1.ValidatingAdmissionPolicyBinding](object)
 			if err != nil {
 				return nil, err
 			}

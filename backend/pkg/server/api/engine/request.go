@@ -6,8 +6,9 @@ import (
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
+	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
 	"github.com/kyverno/kyverno/ext/resource/loader"
-	"k8s.io/api/admissionregistration/v1beta1"
+	v1 "k8s.io/api/admissionregistration/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/openapi"
@@ -44,7 +45,7 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	return &params, nil
 }
 
-func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1beta1.ValidatingAdmissionPolicy, []v1beta1.ValidatingAdmissionPolicyBinding, error) {
+func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, error) {
 	return policy.Load(policyLoader, []byte(r.Policies))
 }
 
@@ -64,7 +65,7 @@ func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2.PolicyException, er
 	return exception.Load([]byte(r.PolicyExceptions))
 }
 
-func (r *EngineRequest) LoadVAPBindings(policyLoader loader.Loader) ([]v1beta1.ValidatingAdmissionPolicyBinding, error) {
+func (r *EngineRequest) LoadVAPBindings(policyLoader loader.Loader) ([]v1.ValidatingAdmissionPolicyBinding, error) {
 	return vapbinding.Load(policyLoader, []byte(r.VAPBindings))
 }
 

@@ -63,8 +63,8 @@ func (c *Client) ListResource(ctx context.Context, apiVersion string, kind strin
 	return c.inner.ListResource(ctx, apiVersion, kind, namespace, lselector)
 }
 
-func (c *Client) DeleteResource(ctx context.Context, apiVersion string, kind string, namespace string, name string, dryRun bool) error {
-	return c.fake.DeleteResource(ctx, apiVersion, kind, namespace, name, dryRun)
+func (c *Client) DeleteResource(ctx context.Context, apiVersion string, kind string, namespace string, name string, dryRun bool, options metav1.DeleteOptions) error {
+	return c.fake.DeleteResource(ctx, apiVersion, kind, namespace, name, dryRun, options)
 }
 
 func (c *Client) CreateResource(ctx context.Context, apiVersion string, kind string, namespace string, obj interface{}, dryRun bool) (*unstructured.Unstructured, error) {

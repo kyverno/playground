@@ -8,7 +8,13 @@ import (
 	"github.com/go-logr/logr"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
+	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
+	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/data"
+	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
+	celengine "github.com/kyverno/kyverno/pkg/cel/engine"
+	"github.com/kyverno/kyverno/pkg/cel/matching"
+	celpolicy "github.com/kyverno/kyverno/pkg/cel/policy"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
@@ -17,20 +23,22 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
+	gctxstore "github.com/kyverno/kyverno/pkg/globalcontext/store"
 	"github.com/kyverno/kyverno/pkg/imageverifycache"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
 	"github.com/kyverno/kyverno/pkg/utils/report"
-	"github.com/kyverno/kyverno/pkg/validatingadmissionpolicy"
 	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
-	"k8s.io/api/admissionregistration/v1beta1"
+	v1 "k8s.io/api/admissionregistration/v1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/restmapper"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/mocks"
@@ -45,13 +53,15 @@ type Processor struct {
 	jmesPath      jmespath.Interface
 	cluster       cluster.Cluster
 	dClient       dclient.Interface
+	restMapper    meta.RESTMapper
 }
 
 func (p *Processor) Run(
 	ctx context.Context,
 	policies []kyvernov1.PolicyInterface,
-	vaps []v1beta1.ValidatingAdmissionPolicy,
-	vapbs []v1beta1.ValidatingAdmissionPolicyBinding,
+	vaps []v1.ValidatingAdmissionPolicy,
+	vapbs []v1.ValidatingAdmissionPolicyBinding,
+	vpols []v1alpha1.ValidatingPolicy,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -68,6 +78,13 @@ func (p *Processor) Run(
 	response := &models.Results{}
 
 	oldMaxIndex := len(oldResources) - 1
+
+	celEngine, err := newCELEngine(p.dClient, vpols, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	contextProvider, err := celpolicy.NewContextProvider(p.dClient, nil, gctxstore.New())
 
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
@@ -132,21 +149,55 @@ func (p *Processor) Run(
 			resource = resources[i]
 		}
 		for _, policy := range vaps {
-			pData := validatingadmissionpolicy.NewPolicyData(policy)
+			pData := admissionpolicy.NewPolicyData(policy)
 			for _, binding := range vapbs {
 				if binding.Spec.PolicyName == policy.Name {
 					pData.AddBinding(binding)
 				}
 			}
 
-			result, err := validatingadmissionpolicy.Validate(pData, resource, make(map[string]map[string]string), p.dClient)
+			result, err := admissionpolicy.Validate(pData, resource, make(map[string]map[string]string), p.dClient)
 			if err != nil {
 				return nil, err
 			}
 
 			response.Validation = append(response.Validation, models.ConvertResponse(result))
 		}
+
+		if len(vpols) > 0 {
+			gvk := resource.GroupVersionKind()
+			mapping, err := p.restMapper.RESTMapping(gvk.GroupKind(), gvk.Version)
+			if err != nil {
+				return nil, err
+			}
+
+			// validate
+			resp, err := celEngine.Handle(ctx, celengine.Request(
+				contextProvider,
+				resource.GroupVersionKind(),
+				mapping.Resource,
+				"",
+				resource.GetName(),
+				resource.GetNamespace(),
+				admissionv1.Create,
+				&resource,
+				nil,
+				false,
+				nil,
+			))
+			if err != nil {
+				return nil, err
+			}
+
+			for _, result := range resp.Policies {
+				resp := engineapi.NewEngineResponse(resource, engineapi.NewValidatingPolicy(&result.Policy), p.params.Context.NamespaceLabels).
+					WithPolicyResponse(engineapi.PolicyResponse{Rules: result.Rules})
+
+				response.Validation = append(response.Validation, models.ConvertResponse(resp))
+			}
+		}
 	}
+
 	return response, nil
 }
 
@@ -357,6 +408,7 @@ func newEngine(
 	rclient engineapi.RegistryClientFactory,
 	factory engineapi.ContextLoaderFactory,
 	exceptionSelector engineapi.PolicyExceptionSelector,
+	isCluster *bool,
 ) (engineapi.Engine, error) {
 	return kyvernoengine.NewEngine(
 		cfg,
@@ -367,6 +419,26 @@ func newEngine(
 		ivClient,
 		factory,
 		exceptionSelector,
+		isCluster,
+	), nil
+}
+
+func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.CELPolicyException) (celengine.Engine, error) {
+	provider, err := celengine.NewProvider(celpolicy.NewCompiler(), vpolicies, exceptions)
+	if err != nil {
+		return nil, err
+	}
+	return celengine.NewEngine(
+		provider.CompiledValidationPolicies,
+		func(name string) *corev1.Namespace {
+			ns, err := dClient.GetKubeClient().CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
+			if err != nil {
+				return nil
+			}
+
+			return ns
+		},
+		matching.NewMatcher(),
 	), nil
 }
 
@@ -405,6 +477,11 @@ func NewProcessor(
 		return nil, err
 	}
 
+	apiGroupResources, err := data.APIGroupResources()
+	if err != nil {
+		return nil, err
+	}
+
 	engine, err := newEngine(
 		cfg,
 		jp,
@@ -413,6 +490,7 @@ func NewProcessor(
 		mocks.NewRegistryClientFactory(rclient, params.ImageData),
 		mocks.ContextLoaderFactory(cmResolver),
 		exceptionSelector,
+		nil,
 	)
 	if err != nil {
 		return nil, err
@@ -447,5 +525,6 @@ func NewProcessor(
 		jmesPath:      jp,
 		cluster:       cl,
 		dClient:       dClient,
+		restMapper:    restmapper.NewDiscoveryRESTMapper(apiGroupResources),
 	}, nil
 }

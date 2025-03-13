@@ -28,6 +28,7 @@ func Test_Load(t *testing.T) {
 		wantPolicies int
 		wantVaps     int
 		wantVapbs    int
+		wantVpols    int
 		wantErr      bool
 	}{{
 		name:     "invalid policy",
@@ -86,7 +87,7 @@ func Test_Load(t *testing.T) {
 				),
 			)
 			require.NoError(t, err)
-			if policies, vaps, vapbs, err := Load(loader, bytes); (err != nil) != tt.wantErr {
+			if policies, vaps, vapbs, vpols, err := Load(loader, bytes); (err != nil) != tt.wantErr {
 				t.Errorf("Load() error = %v, wantErr %v", err, tt.wantErr)
 			} else if len(policies) != tt.wantPolicies {
 				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(policies), tt.wantPolicies)
@@ -94,6 +95,8 @@ func Test_Load(t *testing.T) {
 				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(vaps), tt.wantVaps)
 			} else if len(vapbs) != tt.wantVapbs {
 				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(vaps), tt.wantVaps)
+			} else if len(vpols) != tt.wantVpols {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(vpols), tt.wantVpols)
 			}
 		})
 	}

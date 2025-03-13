@@ -1,16 +1,14 @@
 package models
 
 import (
-	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
-	"k8s.io/api/admissionregistration/v1beta1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
 
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
-func convertRuleResponse(in engineapi.RuleResponse) RuleResponse {
+func convertRuleResponse(policy string, in engineapi.RuleResponse) RuleResponse {
 	var generatedResource []byte
 
 	if len(in.GeneratedResources()) > 1 {
@@ -21,8 +19,13 @@ func convertRuleResponse(in engineapi.RuleResponse) RuleResponse {
 		generatedResource, _ = yaml.Marshal(in.GeneratedResources()[0].Object)
 	}
 
+	name := in.Name()
+	if name == "" {
+		name = policy
+	}
+
 	out := RuleResponse{
-		Name:              in.Name(),
+		Name:              name,
 		RuleType:          in.RuleType(),
 		Message:           in.Message(),
 		Status:            in.Status(),
@@ -63,13 +66,16 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		NamespaceLabels:  in.NamespaceLabels(),
 		PatchedResource:  string(patchedResource),
 	}
-	if in.Policy().GetType() == engineapi.KyvernoPolicyType {
-		out.Policy = in.Policy().MetaObject().(kyvernov1.PolicyInterface)
-	} else {
-		out.ValidatingAdmissionPolicy = in.Policy().MetaObject().(*v1beta1.ValidatingAdmissionPolicy)
+	if in.Policy().AsKyvernoPolicy() != nil {
+		out.Policy = in.Policy().AsKyvernoPolicy()
+	} else if in.Policy().AsValidatingPolicy() != nil {
+		out.ValidationPolicy = in.Policy().AsValidatingPolicy()
+	} else if in.Policy().AsValidatingAdmissionPolicy() != nil {
+		out.ValidatingAdmissionPolicy = in.Policy().AsValidatingAdmissionPolicy()
 	}
+
 	for _, ruleresponse := range in.PolicyResponse.Rules {
-		out.PolicyResponse.Rules = append(out.PolicyResponse.Rules, convertRuleResponse(ruleresponse))
+		out.PolicyResponse.Rules = append(out.PolicyResponse.Rules, convertRuleResponse(in.Policy().GetName(), ruleresponse))
 	}
 	return out
 }
