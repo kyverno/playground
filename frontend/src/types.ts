@@ -54,8 +54,9 @@ export type Result = RequireOnlyOne<
   {
     policy?: Policy
     validatingAdmissionPolicy?: Policy
+    validatingPolicy?: Policy
   },
-  'policy' | 'validatingAdmissionPolicy'
+  'policy' | 'validatingAdmissionPolicy' | 'validatingPolicy'
 >
 
 export type Validation = Result & {

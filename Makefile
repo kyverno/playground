@@ -4,7 +4,7 @@
 
 KIND_IMAGE           ?= kindest/node:v1.31.0
 KIND_NAME            ?= kind
-KYVERNO_VERSION      ?= v1.13.2
+KYVERNO_VERSION      ?= main
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,no-ingress,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
@@ -117,6 +117,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@rm -rf ./schemas/openapi
 	@mkdir -p ./schemas/openapi/v2
 	@mkdir -p ./schemas/openapi/v3/apis/kyverno.io
+	@mkdir -p ./schemas/openapi/v3/apis/policies.kyverno.io
 	@mkdir -p ./schemas/openapi/v3/apis/admissionregistration.k8s.io
 	@$(KIND) create cluster --name schema --image $(KIND_IMAGE) --config ./scripts/config/kind.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_cleanuppolicies.yaml
@@ -126,6 +127,8 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_policies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_policyexceptions.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_updaterequests.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_validatingpolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_celpolicyexceptions.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_clusterpolicyreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_policyreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/reports/reports.kyverno.io_clusterephemeralreports.yaml
@@ -134,6 +137,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v1 > ./schemas/openapi/v3/apis/kyverno.io/v1.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2 > ./schemas/openapi/v3/apis/kyverno.io/v2.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
+	@kubectl get --raw /openapi/v3/apis/policies.kyverno.io/v1alpha1 > ./schemas/openapi/v3/apis/policies.kyverno.io/v1alpha1.json
 	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1.json
 	@$(KIND) delete cluster --name schema
 
@@ -145,6 +149,7 @@ codegen-schema-json: codegen-schema-openapi ## Generate json schemas
 	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/kyverno.io/v1.json --kubernetes --stand-alone --expanded -o /json/v3
 	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/kyverno.io/v2beta1.json --kubernetes --stand-alone --expanded -o /json/v3
 	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/kyverno.io/v2.json --kubernetes --stand-alone --expanded -o /json/v3
+	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/policies.kyverno.io/v1alpha1.json --kubernetes --stand-alone --expanded -o /json/v3
 	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/admissionregistration.k8s.io/v1.json --kubernetes --stand-alone --expanded -o /json/v3
 
 .PHONY: codegen-all
@@ -191,6 +196,10 @@ build-frontend: ## Build frontend
 	@cp schemas/json/v3/policyexception-kyverno.io-v2.json frontend/src/schemas
 	@cp schemas/json/v3/policyexception-kyverno.io-v2beta1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingadmissionpolicy-admissionregistration-v1.json frontend/src/schemas
+	@cp schemas/json/v3/celpolicyexception-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/celpolicyexceptionlist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/validatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/validatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingadmissionpolicybinding-admissionregistration-v1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 
@@ -198,7 +207,9 @@ build-frontend: ## Build frontend
 build-backend-assets: build-frontend ## Build backend assets
 	@echo Building backend assets... >&2
 	@rm -rf backend/pkg/server/ui/dist && cp -r frontend/dist backend/pkg/server/ui/dist
-	@rm -rf backend/data/schemas && mkdir -p backend/data/schemas/apis/kyverno.io && cp -r schemas/openapi/v3/apis/kyverno.io/* backend/data/schemas/apis/kyverno.io
+	@rm -rf backend/data/schemas
+	@mkdir -p backend/data/schemas/apis/kyverno.io && cp -r schemas/openapi/v3/apis/kyverno.io/* backend/data/schemas/apis/kyverno.io
+	@mkdir -p backend/data/schemas/apis/policies.kyverno.io && cp -r schemas/openapi/v3/apis/policies.kyverno.io/* backend/data/schemas/apis/policies.kyverno.io
 
 .PHONY: build-backend
 build-backend: build-backend-assets ## Build backend
@@ -240,7 +251,6 @@ run: build-backend-assets ## Run locally (with connected cluster)
 		--gin-mode=release \
 		--gin-log \
 		--gin-max-body-size=2097152 \
-		--ui-sponsor=nirmata \
 		--cluster \
 		--engine-builtin-crds=argocd \
 		--engine-builtin-crds=cert-manager \
@@ -254,7 +264,6 @@ run-standalone: build-backend-assets ## Run locally (without connected cluster)
 		--gin-mode=release \
 		--gin-log \
 		--gin-max-body-size=2097152 \
-		--ui-sponsor=nirmata \
 		--engine-builtin-crds=argocd \
 		--engine-builtin-crds=cert-manager \
 		--engine-builtin-crds=prometheus-operator \
