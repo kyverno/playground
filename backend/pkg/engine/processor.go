@@ -39,6 +39,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/restmapper"
+	"k8s.io/utils/ptr"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/mocks"
@@ -137,17 +138,7 @@ func (p *Processor) Run(
 			}
 			response.Generation = append(response.Generation, result)
 		}
-	}
-	// validating admissin policies
-	for i := range resources {
-		var resource unstructured.Unstructured
-		if p.params.Context.Operation == kyvernov1.Delete {
-			resource = resources[i]
-		} else if p.params.Context.Operation == kyvernov1.Update {
-			resource = resources[i]
-		} else {
-			resource = resources[i]
-		}
+
 		for _, policy := range vaps {
 			pData := admissionpolicy.NewPolicyData(policy)
 			for _, binding := range vapbs {
@@ -156,7 +147,7 @@ func (p *Processor) Run(
 				}
 			}
 
-			result, err := admissionpolicy.Validate(pData, resource, make(map[string]map[string]string), p.dClient)
+			result, err := admissionpolicy.Validate(pData, newResource, make(map[string]map[string]string), p.dClient)
 			if err != nil {
 				return nil, err
 			}
@@ -165,32 +156,42 @@ func (p *Processor) Run(
 		}
 
 		if len(vpols) > 0 {
-			gvk := resource.GroupVersionKind()
+			gvk := newResource.GroupVersionKind()
 			mapping, err := p.restMapper.RESTMapping(gvk.GroupKind(), gvk.Version)
 			if err != nil {
 				return nil, err
 			}
 
 			// validate
-			resp, err := celEngine.Handle(ctx, celengine.Request(
+			resp, err := celEngine.Handle(ctx, celengine.RequestFromAdmission(
 				contextProvider,
-				resource.GroupVersionKind(),
-				mapping.Resource,
-				"",
-				resource.GetName(),
-				resource.GetNamespace(),
-				admissionv1.Create,
-				&resource,
-				nil,
-				false,
-				nil,
+				admissionv1.AdmissionRequest{
+					UID:                "abc-123",
+					Kind:               metav1.GroupVersionKind(gvk),
+					Resource:           metav1.GroupVersionResource(mapping.Resource),
+					SubResource:        "",
+					RequestKind:        ptr.To(metav1.GroupVersionKind(gvk)),
+					RequestResource:    ptr.To(metav1.GroupVersionResource(mapping.Resource)),
+					RequestSubResource: "",
+					Name:               newResource.GetName(),
+					Namespace:          newResource.GetNamespace(),
+					Operation:          admissionv1.Operation(p.params.Context.Operation),
+					Object:             runtime.RawExtension{Object: &newResource},
+					OldObject:          runtime.RawExtension{Object: &oldResource},
+					UserInfo: authenticationv1.UserInfo{
+						UID:      "user-123",
+						Username: p.params.Context.Username,
+						Groups:   p.params.Context.Groups,
+						Extra:    nil,
+					},
+				},
 			))
 			if err != nil {
 				return nil, err
 			}
 
 			for _, result := range resp.Policies {
-				resp := engineapi.NewEngineResponse(resource, engineapi.NewValidatingPolicy(&result.Policy), p.params.Context.NamespaceLabels).
+				resp := engineapi.NewEngineResponse(newResource, engineapi.NewValidatingPolicy(&result.Policy), p.params.Context.NamespaceLabels).
 					WithPolicyResponse(engineapi.PolicyResponse{Rules: result.Rules})
 
 				response.Validation = append(response.Validation, models.ConvertResponse(resp))
