@@ -81,7 +81,8 @@ const headers = computed(() => {
 
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, mutation) => {
-    const policy = mutation.policy || mutation.validatingAdmissionPolicy
+    const policy =
+      mutation.policy || mutation.validatingAdmissionPolicy || mutation.validatingPolicy
 
     const rules = mutation.policyResponse.rules || []
     rules.forEach((rule) => {

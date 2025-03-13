@@ -80,7 +80,8 @@ const headers = computed(() => {
 
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, generation) => {
-    const policy = generation.policy || generation.validatingAdmissionPolicy
+    const policy =
+      generation.policy || generation.validatingAdmissionPolicy || generation.validatingPolicy
 
     const rules = generation.policyResponse.rules || []
 
