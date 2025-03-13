@@ -2,8 +2,6 @@ module github.com/kyverno/playground/backend
 
 go 1.23.4
 
-toolchain go1.24.0
-
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/evanphx/json-patch/v5 v5.9.11
