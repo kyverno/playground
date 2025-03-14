@@ -24,6 +24,15 @@ func convertRuleResponse(policy string, in engineapi.RuleResponse) RuleResponse 
 		name = policy
 	}
 
+	properties := make(map[string]string)
+	for k, v := range in.Properties() {
+		if v == "" {
+			continue
+		}
+
+		properties[k] = v
+	}
+
 	out := RuleResponse{
 		Name:              name,
 		RuleType:          in.RuleType(),
@@ -37,6 +46,7 @@ func convertRuleResponse(policy string, in engineapi.RuleResponse) RuleResponse 
 		// PatchedTargetSubresourceName string
 		PodSecurityChecks: in.PodSecurityChecks(),
 		Exceptions:        in.Exceptions(),
+		Properties:        properties,
 	}
 	return out
 }

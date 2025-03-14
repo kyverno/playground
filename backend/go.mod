@@ -11,7 +11,7 @@ require (
 	github.com/knadh/koanf/parsers/yaml v0.1.0
 	github.com/knadh/koanf/providers/file v1.1.2
 	github.com/knadh/koanf/v2 v2.1.2
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20250313070140-d56e6037a4cf
+	github.com/kyverno/kyverno v1.5.0-rc1.0.20250314125125-af550f54d5e7
 	github.com/loopfz/gadgeto v0.11.4
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
@@ -280,7 +280,7 @@ require (
 	github.com/sigstore/sigstore v1.9.1 // indirect
 	github.com/sigstore/sigstore-go v0.6.2 // indirect
 	github.com/sigstore/sigstore/pkg/signature/kms/aws v1.9.1 // indirect
-	github.com/sigstore/sigstore/pkg/signature/kms/azure v1.9.0 // indirect
+	github.com/sigstore/sigstore/pkg/signature/kms/azure v1.9.1 // indirect
 	github.com/sigstore/sigstore/pkg/signature/kms/gcp v1.9.1 // indirect
 	github.com/sigstore/sigstore/pkg/signature/kms/hashivault v1.9.1 // indirect
 	github.com/sigstore/timestamp-authority v1.2.2 // indirect
