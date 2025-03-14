@@ -27,4 +27,6 @@ type RuleResponse struct {
 	PodSecurityChecks *engineapi.PodSecurityChecks `json:"podSecurityChecks"`
 	// exception is the exception applied (if any)
 	Exceptions []engineapi.GenericException `json:"exceptions"`
+	// properties are the additional properties from the rule that will be added to the policy report result
+	Properties map[string]string `json:"properties"`
 }
