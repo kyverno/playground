@@ -76,7 +76,7 @@ func (c fakeCluster) DClient(resources []runtime.Object, objects ...runtime.Obje
 	}
 
 	dyn := fake.NewSimpleDynamicClientWithCustomListKinds(s, gvr, objects...)
-	kclient := kubefake.NewSimpleClientset(resource.FilterNamespaces(objects)...)
+	kclient := kubefake.NewSimpleClientset(resource.ConvertResources(objects)...)
 
 	dClient, _ := dclient.NewClient(context.Background(), dyn, kclient, time.Hour)
 	dClient.SetDiscovery(dclient.NewFakeDiscoveryClient(list))
