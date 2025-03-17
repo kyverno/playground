@@ -88,7 +88,10 @@ const { hideNoMatch } = useConfig()
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, validation) => {
     const policy =
-      validation.policy || validation.validatingAdmissionPolicy || validation.validatingPolicy
+      validation.policy ||
+      validation.validatingAdmissionPolicy ||
+      validation.validatingPolicy ||
+      validation.imageVerificationPolicy
 
     if (!validation.policyResponse.rules && !hideNoMatch.value) {
       results.push({
