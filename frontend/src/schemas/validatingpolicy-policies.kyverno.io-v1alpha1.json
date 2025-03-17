@@ -1464,7 +1464,10 @@
         },
         "message": {
           "description": "Message is a human readable message indicating details about the generation of ValidatingAdmissionPolicy/MutatingAdmissionPolicy\nIt is an empty string when ValidatingAdmissionPolicy/MutatingAdmissionPolicy is successfully generated.",
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "ready": {
           "description": "The ready of a policy is a high-level summary of where the policy is in its lifecycle.\nThe conditions array, the reason and message fields contain more detail about the policy's status.",
@@ -1474,9 +1477,6 @@
           ]
         }
       },
-      "required": [
-        "message"
-      ],
       "type": [
         "object",
         "null"

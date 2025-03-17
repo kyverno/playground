@@ -13,8 +13,9 @@ type Response struct {
 	// Resource is the original resource
 	Resource unstructured.Unstructured `json:"resource"`
 	// Policy is the original policy
-	Policy           kyvernov1.PolicyInterface  `json:"policy"`
-	ValidationPolicy *v1alpha1.ValidatingPolicy `json:"validatingPolicy"`
+	Policy                  kyvernov1.PolicyInterface         `json:"policy"`
+	ValidationPolicy        *v1alpha1.ValidatingPolicy        `json:"validatingPolicy"`
+	ImageVerificationPolicy *v1alpha1.ImageVerificationPolicy `json:"imageVerificationPolicy"`
 	// ValidatingAdmissionPolicy is the original policy
 	ValidatingAdmissionPolicy *v1.ValidatingAdmissionPolicy `json:"validatingAdmissionPolicy"`
 	// namespaceLabels given by policy context

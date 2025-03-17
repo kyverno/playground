@@ -13,6 +13,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	celengine "github.com/kyverno/kyverno/pkg/cel/engine"
+	contextlib "github.com/kyverno/kyverno/pkg/cel/libs/context"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	celpolicy "github.com/kyverno/kyverno/pkg/cel/policy"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
@@ -42,6 +43,7 @@ import (
 	"k8s.io/utils/ptr"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/engine/ivpol"
 	"github.com/kyverno/playground/backend/pkg/engine/mocks"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
@@ -63,6 +65,7 @@ func (p *Processor) Run(
 	vaps []v1.ValidatingAdmissionPolicy,
 	vapbs []v1.ValidatingAdmissionPolicyBinding,
 	vpols []v1alpha1.ValidatingPolicy,
+	ivpols []v1alpha1.ImageVerificationPolicy,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -81,6 +84,11 @@ func (p *Processor) Run(
 	oldMaxIndex := len(oldResources) - 1
 
 	celEngine, err := newCELEngine(p.dClient, vpols, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	ivpolEngine, err := newIVPEngine(p.dClient, ivpols, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -155,37 +163,23 @@ func (p *Processor) Run(
 			response.Validation = append(response.Validation, models.ConvertResponse(result))
 		}
 
-		if len(vpols) > 0 {
-			gvk := newResource.GroupVersionKind()
-			mapping, err := p.restMapper.RESTMapping(gvk.GroupKind(), gvk.Version)
+		if len(ivpols) > 0 {
+			resp, _, err := ivpolEngine.HandleMutating(ctx, p.newCELRequest(contextProvider, newResource, oldResource))
 			if err != nil {
 				return nil, err
 			}
 
+			for _, result := range resp.Policies {
+				resp := engineapi.NewEngineResponse(newResource, engineapi.NewImageVerificationPolicy(result.Policy), p.params.Context.NamespaceLabels).
+					WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{result.Result}})
+
+				response.Validation = append(response.Validation, models.ConvertResponse(resp))
+			}
+		}
+
+		if len(vpols) > 0 {
 			// validate
-			resp, err := celEngine.Handle(ctx, celengine.RequestFromAdmission(
-				contextProvider,
-				admissionv1.AdmissionRequest{
-					UID:                "abc-123",
-					Kind:               metav1.GroupVersionKind(gvk),
-					Resource:           metav1.GroupVersionResource(mapping.Resource),
-					SubResource:        "",
-					RequestKind:        ptr.To(metav1.GroupVersionKind(gvk)),
-					RequestResource:    ptr.To(metav1.GroupVersionResource(mapping.Resource)),
-					RequestSubResource: "",
-					Name:               newResource.GetName(),
-					Namespace:          newResource.GetNamespace(),
-					Operation:          admissionv1.Operation(p.params.Context.Operation),
-					Object:             runtime.RawExtension{Object: &newResource},
-					OldObject:          runtime.RawExtension{Object: &oldResource},
-					UserInfo: authenticationv1.UserInfo{
-						UID:      "user-123",
-						Username: p.params.Context.Username,
-						Groups:   p.params.Context.Groups,
-						Extra:    nil,
-					},
-				},
-			))
+			resp, err := celEngine.Handle(ctx, p.newCELRequest(contextProvider, newResource, oldResource))
 			if err != nil {
 				return nil, err
 			}
@@ -441,6 +435,59 @@ func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPoli
 		},
 		matching.NewMatcher(),
 	), nil
+}
+
+func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageVerificationPolicy, exceptions []*v1alpha1.CELPolicyException) (celengine.ImageVerifyEngine, error) {
+	provider, err := ivpol.NewProvider(celpolicy.NewCompiler(), policies, exceptions)
+	if err != nil {
+		return nil, err
+	}
+	return celengine.NewImageVerifyEngine(
+		provider.ImageVerificationPolicies,
+		func(name string) *corev1.Namespace {
+			ns, err := dClient.GetKubeClient().CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
+			if err != nil {
+				return nil
+			}
+
+			return ns
+		},
+		matching.NewMatcher(),
+		dClient.GetKubeClient().CoreV1().Secrets(""),
+		nil,
+	), nil
+}
+
+func (p *Processor) newCELRequest(contextProvider contextlib.ContextInterface, resource, oldResource unstructured.Unstructured) celengine.EngineRequest {
+	gvk := resource.GroupVersionKind()
+	mapping, err := p.restMapper.RESTMapping(gvk.GroupKind(), gvk.Version)
+	if err != nil {
+		return celengine.EngineRequest{}
+	}
+
+	return celengine.RequestFromAdmission(
+		contextProvider,
+		admissionv1.AdmissionRequest{
+			UID:                "abc-123",
+			Kind:               metav1.GroupVersionKind(gvk),
+			Resource:           metav1.GroupVersionResource(mapping.Resource),
+			SubResource:        "",
+			RequestKind:        ptr.To(metav1.GroupVersionKind(gvk)),
+			RequestResource:    ptr.To(metav1.GroupVersionResource(mapping.Resource)),
+			RequestSubResource: "",
+			Name:               resource.GetName(),
+			Namespace:          resource.GetNamespace(),
+			Operation:          admissionv1.Operation(p.params.Context.Operation),
+			Object:             runtime.RawExtension{Object: &resource},
+			OldObject:          runtime.RawExtension{Object: &oldResource},
+			UserInfo: authenticationv1.UserInfo{
+				UID:      "user-123",
+				Username: p.params.Context.Username,
+				Groups:   p.params.Context.Groups,
+				Extra:    nil,
+			},
+		},
+	)
 }
 
 func NewProcessor(

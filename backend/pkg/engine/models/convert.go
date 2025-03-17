@@ -82,6 +82,8 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		out.ValidationPolicy = in.Policy().AsValidatingPolicy()
 	} else if in.Policy().AsValidatingAdmissionPolicy() != nil {
 		out.ValidatingAdmissionPolicy = in.Policy().AsValidatingAdmissionPolicy()
+	} else if in.Policy().AsImageVerificationPolicy() != nil {
+		out.ImageVerificationPolicy = in.Policy().AsImageVerificationPolicy()
 	}
 
 	for _, ruleresponse := range in.PolicyResponse.Rules {

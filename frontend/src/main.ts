@@ -17,6 +17,7 @@ import policyv2beta1 from './schemas/policy-kyverno.io-v2beta1.json'
 import vapv1 from './schemas/validatingadmissionpolicy-admissionregistration-v1.json'
 import vapbv1 from './schemas/validatingadmissionpolicybinding-admissionregistration-v1.json'
 import vpolv1alpha1 from './schemas/validatingpolicy-policies.kyverno.io-v1alpha1.json'
+import ivpolv1alpha1 from './schemas/imageverificationpolicy-policies.kyverno.io-v1alpha1.json'
 import context from './schemas/context.json'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
@@ -37,7 +38,8 @@ configureMonacoYaml(monaco, {
           { $ref: '#/definitions/policy-v2beta1' },
           { $ref: '#/definitions/vap-v1' },
           { $ref: '#/definitions/vapb-v1' },
-          { $ref: '#/definitions/validatingpolicy-v1alpha1' }
+          { $ref: '#/definitions/validatingpolicy-v1alpha1' },
+          { $ref: '#/definitions/imageverificationpolicy-v1alpha1' }
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema,
@@ -46,7 +48,8 @@ configureMonacoYaml(monaco, {
           'policy-v2beta1': policyv2beta1 as JSONSchema,
           'vap-v1': vapv1 as JSONSchema,
           'vapb-v1': vapbv1 as JSONSchema,
-          'validatingpolicy-v1alpha1': vpolv1alpha1 as JSONSchema
+          'validatingpolicy-v1alpha1': vpolv1alpha1 as JSONSchema,
+          'imageverificationpolicy-v1alpha1': ivpolv1alpha1 as JSONSchema
         }
       },
       uri: `${baseURL}/schemas/policies.json`,
@@ -65,6 +68,11 @@ configureMonacoYaml(monaco, {
     {
       schema: vpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/validatingpolicy-policies.kyverno.io-v1alpha1.json`,
+      fileMatch: ['validatingpolicy.yaml']
+    },
+    {
+      schema: ivpolv1alpha1 as JSONSchema,
+      uri: `${baseURL}/schemas/imageverificationpolicy-policies.kyverno.io-v1alpha1.json`,
       fileMatch: ['validatingpolicy.yaml']
     },
     {
