@@ -26,10 +26,10 @@ var (
 	vapbV1          = v1.SchemeGroupVersion.WithKind("ValidatingAdmissionPolicyBinding")
 	vapbV1beta1     = v1beta1.SchemeGroupVersion.WithKind("ValidatingAdmissionPolicyBinding")
 	vpolV1alpha1    = policiesv1alpha1.SchemeGroupVersion.WithKind("ValidatingPolicy")
-	ivpolV1alpha1   = policiesv1alpha1.SchemeGroupVersion.WithKind("ImageVerificationPolicy")
+	ivpolV1alpha1   = policiesv1alpha1.SchemeGroupVersion.WithKind("ImageValidatingPolicy")
 )
 
-func Load(l loader.Loader, content []byte) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageVerificationPolicy, error) {
+func Load(l loader.Loader, content []byte) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageValidatingPolicy, error) {
 	untyped, err := resource.LoadResources(l, content)
 	if err != nil {
 		return nil, nil, nil, nil, nil, err
@@ -38,7 +38,7 @@ func Load(l loader.Loader, content []byte) ([]kyvernov1.PolicyInterface, []v1.Va
 	var vaps []v1.ValidatingAdmissionPolicy
 	var vapbs []v1.ValidatingAdmissionPolicyBinding
 	var vpols []v1alpha1.ValidatingPolicy
-	var ivpols []v1alpha1.ImageVerificationPolicy
+	var ivpols []v1alpha1.ImageValidatingPolicy
 	for _, object := range untyped {
 		gvk := object.GroupVersionKind()
 		switch gvk {
@@ -73,7 +73,7 @@ func Load(l loader.Loader, content []byte) ([]kyvernov1.PolicyInterface, []v1.Va
 			}
 			vpols = append(vpols, *typed)
 		case ivpolV1alpha1:
-			typed, err := convert.To[v1alpha1.ImageVerificationPolicy](object)
+			typed, err := convert.To[v1alpha1.ImageValidatingPolicy](object)
 			if err != nil {
 				return nil, nil, nil, nil, nil, err
 			}

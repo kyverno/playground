@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "ImageVerificationPolicyList is a list of ImageVerificationPolicy",
+  "description": "ImageValidatingPolicyList is a list of ImageValidatingPolicy",
   "properties": {
     "apiVersion": {
       "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -13,7 +13,7 @@
       ]
     },
     "items": {
-      "description": "List of imageverificationpolicies. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md",
+      "description": "List of imagevalidatingpolicies. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md",
       "items": {
         "properties": {
           "apiVersion": {
@@ -29,7 +29,7 @@
           "kind": {
             "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
             "enum": [
-              "ImageVerificationPolicy"
+              "ImageValidatingPolicy"
             ],
             "type": [
               "string",
@@ -329,7 +329,7 @@
             "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata"
           },
           "spec": {
-            "description": "ImageVerificationPolicySpec is the specification of the desired behavior of the ImageVerificationPolicy.",
+            "description": "ImageValidatingPolicySpec is the specification of the desired behavior of the ImageValidatingPolicy.",
             "properties": {
               "attestations": {
                 "description": "Attestations provides a list of image metadata to verify",
@@ -1290,37 +1290,8 @@
                 ],
                 "x-kubernetes-list-type": "set"
               },
-              "variables": {
-                "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.",
-                "items": {
-                  "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
-                  "properties": {
-                    "expression": {
-                      "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
-                      "type": "string"
-                    },
-                    "name": {
-                      "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "expression",
-                    "name"
-                  ],
-                  "type": [
-                    "object",
-                    "null"
-                  ],
-                  "x-kubernetes-map-type": "atomic"
-                },
-                "type": [
-                  "array",
-                  "null"
-                ]
-              },
-              "verifications": {
-                "description": "Verifications contain CEL expressions which is used to apply the image verification checks.",
+              "validations": {
+                "description": "Validations contain CEL expressions which is used to apply the image validation checks.",
                 "items": {
                   "description": "Validation specifies the CEL expression which is used to apply the validation.",
                   "properties": {
@@ -1361,6 +1332,35 @@
                 "type": "array",
                 "x-kubernetes-list-type": "atomic"
               },
+              "variables": {
+                "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.",
+                "items": {
+                  "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
+                  "properties": {
+                    "expression": {
+                      "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "name"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "x-kubernetes-map-type": "atomic"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
               "verifyDigest": {
                 "default": true,
                 "description": "VerifyDigest validates that images have a digest.",
@@ -1389,7 +1389,7 @@
             },
             "required": [
               "attestors",
-              "verifications"
+              "validations"
             ],
             "type": "object"
           },
@@ -1401,14 +1401,14 @@
                   "rules": {
                     "items": {
                       "properties": {
-                        "metadata": {
+                        "name": {
                           "type": [
-                            "object",
+                            "string",
                             "null"
                           ]
                         },
                         "spec": {
-                          "description": "ImageVerificationPolicySpec is the specification of the desired behavior of the ImageVerificationPolicy.",
+                          "description": "ImageValidatingPolicySpec is the specification of the desired behavior of the ImageValidatingPolicy.",
                           "properties": {
                             "attestations": {
                               "description": "Attestations provides a list of image metadata to verify",
@@ -2369,37 +2369,8 @@
                               ],
                               "x-kubernetes-list-type": "set"
                             },
-                            "variables": {
-                              "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.",
-                              "items": {
-                                "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
-                                "properties": {
-                                  "expression": {
-                                    "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
-                                    "type": "string"
-                                  },
-                                  "name": {
-                                    "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "expression",
-                                  "name"
-                                ],
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
-                                "x-kubernetes-map-type": "atomic"
-                              },
-                              "type": [
-                                "array",
-                                "null"
-                              ]
-                            },
-                            "verifications": {
-                              "description": "Verifications contain CEL expressions which is used to apply the image verification checks.",
+                            "validations": {
+                              "description": "Validations contain CEL expressions which is used to apply the image validation checks.",
                               "items": {
                                 "description": "Validation specifies the CEL expression which is used to apply the validation.",
                                 "properties": {
@@ -2440,6 +2411,35 @@
                               "type": "array",
                               "x-kubernetes-list-type": "atomic"
                             },
+                            "variables": {
+                              "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.",
+                              "items": {
+                                "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
+                                "properties": {
+                                  "expression": {
+                                    "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "expression",
+                                  "name"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "x-kubernetes-map-type": "atomic"
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
+                            },
                             "verifyDigest": {
                               "default": true,
                               "description": "VerifyDigest validates that images have a digest.",
@@ -2468,7 +2468,7 @@
                           },
                           "required": [
                             "attestors",
-                            "verifications"
+                            "validations"
                           ],
                           "type": "object"
                         }
@@ -2492,80 +2492,89 @@
                   "null"
                 ]
               },
-              "conditions": {
-                "items": {
-                  "description": "Condition contains details for one aspect of the current state of this API Resource.",
-                  "properties": {
-                    "lastTransitionTime": {
-                      "description": "lastTransitionTime is the last time the condition transitioned from one status to another.\nThis should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "message": {
-                      "description": "message is a human readable message indicating details about the transition.\nThis may be an empty string.",
-                      "maxLength": 32768,
-                      "type": "string"
-                    },
-                    "observedGeneration": {
-                      "description": "observedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
-                      "format": "int64",
-                      "minimum": 0,
+              "conditionStatus": {
+                "description": "ConditionStatus is the shared status across all policy types",
+                "properties": {
+                  "conditions": {
+                    "items": {
+                      "description": "Condition contains details for one aspect of the current state of this API Resource.",
+                      "properties": {
+                        "lastTransitionTime": {
+                          "description": "lastTransitionTime is the last time the condition transitioned from one status to another.\nThis should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
+                          "format": "date-time",
+                          "type": "string"
+                        },
+                        "message": {
+                          "description": "message is a human readable message indicating details about the transition.\nThis may be an empty string.",
+                          "maxLength": 32768,
+                          "type": "string"
+                        },
+                        "observedGeneration": {
+                          "description": "observedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                          "format": "int64",
+                          "minimum": 0,
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "reason": {
+                          "description": "reason contains a programmatic identifier indicating the reason for the condition's last transition.\nProducers of specific condition types may define expected values and meanings for this field,\nand whether the values are considered a guaranteed API.\nThe value should be a CamelCase string.\nThis field may not be empty.",
+                          "maxLength": 1024,
+                          "minLength": 1,
+                          "pattern": "^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$",
+                          "type": "string"
+                        },
+                        "status": {
+                          "description": "status of the condition, one of True, False, Unknown.",
+                          "enum": [
+                            "True",
+                            "False",
+                            "Unknown"
+                          ],
+                          "type": "string"
+                        },
+                        "type": {
+                          "description": "type of condition in CamelCase or in foo.example.com/CamelCase.",
+                          "maxLength": 316,
+                          "pattern": "^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "lastTransitionTime",
+                        "message",
+                        "reason",
+                        "status",
+                        "type"
+                      ],
                       "type": [
-                        "integer",
+                        "object",
                         "null"
                       ]
                     },
-                    "reason": {
-                      "description": "reason contains a programmatic identifier indicating the reason for the condition's last transition.\nProducers of specific condition types may define expected values and meanings for this field,\nand whether the values are considered a guaranteed API.\nThe value should be a CamelCase string.\nThis field may not be empty.",
-                      "maxLength": 1024,
-                      "minLength": 1,
-                      "pattern": "^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$",
-                      "type": "string"
-                    },
-                    "status": {
-                      "description": "status of the condition, one of True, False, Unknown.",
-                      "enum": [
-                        "True",
-                        "False",
-                        "Unknown"
-                      ],
-                      "type": "string"
-                    },
-                    "type": {
-                      "description": "type of condition in CamelCase or in foo.example.com/CamelCase.",
-                      "maxLength": 316,
-                      "pattern": "^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$",
-                      "type": "string"
-                    }
+                    "type": [
+                      "array",
+                      "null"
+                    ]
                   },
-                  "required": [
-                    "lastTransitionTime",
-                    "message",
-                    "reason",
-                    "status",
-                    "type"
-                  ],
-                  "type": [
-                    "object",
-                    "null"
-                  ]
+                  "message": {
+                    "description": "Message is a human readable message indicating details about the generation of ValidatingAdmissionPolicy/MutatingAdmissionPolicy\nIt is an empty string when ValidatingAdmissionPolicy/MutatingAdmissionPolicy is successfully generated.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "ready": {
+                    "description": "The ready of a policy is a high-level summary of where the policy is in its lifecycle.\nThe conditions array, the reason and message fields contain more detail about the policy's status.",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  }
                 },
                 "type": [
-                  "array",
-                  "null"
-                ]
-              },
-              "message": {
-                "description": "Message is a human readable message indicating details about the generation of ValidatingAdmissionPolicy/MutatingAdmissionPolicy\nIt is an empty string when ValidatingAdmissionPolicy/MutatingAdmissionPolicy is successfully generated.",
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "ready": {
-                "description": "The ready of a policy is a high-level summary of where the policy is in its lifecycle.\nThe conditions array, the reason and message fields contain more detail about the policy's status.",
-                "type": [
-                  "boolean",
+                  "object",
                   "null"
                 ]
               }
@@ -2586,7 +2595,7 @@
         "x-kubernetes-group-version-kind": [
           {
             "group": "policies.kyverno.io",
-            "kind": "ImageVerificationPolicy",
+            "kind": "ImageValidatingPolicy",
             "version": "v1alpha1"
           }
         ],
@@ -2600,7 +2609,7 @@
     "kind": {
       "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
       "enum": [
-        "ImageVerificationPolicyList"
+        "ImageValidatingPolicyList"
       ],
       "type": [
         "string",
@@ -2658,7 +2667,7 @@
   "x-kubernetes-group-version-kind": [
     {
       "group": "policies.kyverno.io",
-      "kind": "ImageVerificationPolicyList",
+      "kind": "ImageValidatingPolicyList",
       "version": "v1alpha1"
     }
   ],

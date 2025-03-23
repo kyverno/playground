@@ -13,7 +13,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	celengine "github.com/kyverno/kyverno/pkg/cel/engine"
-	contextlib "github.com/kyverno/kyverno/pkg/cel/libs/context"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	celpolicy "github.com/kyverno/kyverno/pkg/cel/policy"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
@@ -43,7 +42,6 @@ import (
 	"k8s.io/utils/ptr"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
-	"github.com/kyverno/playground/backend/pkg/engine/ivpol"
 	"github.com/kyverno/playground/backend/pkg/engine/mocks"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
@@ -65,7 +63,7 @@ func (p *Processor) Run(
 	vaps []v1.ValidatingAdmissionPolicy,
 	vapbs []v1.ValidatingAdmissionPolicyBinding,
 	vpols []v1alpha1.ValidatingPolicy,
-	ivpols []v1alpha1.ImageVerificationPolicy,
+	ivpols []v1alpha1.ImageValidatingPolicy,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -437,8 +435,8 @@ func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPoli
 	), nil
 }
 
-func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageVerificationPolicy, exceptions []*v1alpha1.CELPolicyException) (celengine.ImageVerifyEngine, error) {
-	provider, err := ivpol.NewProvider(celpolicy.NewCompiler(), policies, exceptions)
+func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidatingPolicy, exceptions []*v1alpha1.CELPolicyException) (celengine.ImageVerifyEngine, error) {
+	provider, err := celengine.NewIVPOLProvider(policies)
 	if err != nil {
 		return nil, err
 	}
@@ -458,7 +456,7 @@ func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageVerificati
 	), nil
 }
 
-func (p *Processor) newCELRequest(contextProvider contextlib.ContextInterface, resource, oldResource unstructured.Unstructured) celengine.EngineRequest {
+func (p *Processor) newCELRequest(contextProvider celpolicy.ContextInterface, resource, oldResource unstructured.Unstructured) celengine.EngineRequest {
 	gvk := resource.GroupVersionKind()
 	mapping, err := p.restMapper.RESTMapping(gvk.GroupKind(), gvk.Version)
 	if err != nil {
