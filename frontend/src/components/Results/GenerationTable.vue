@@ -84,7 +84,7 @@ const items = computed(() => {
       generation.policy ||
       generation.validatingAdmissionPolicy ||
       generation.validatingPolicy ||
-      generation.imageVerificationPolicy
+      generation.imageValidationPolicy
 
     const rules = generation.policyResponse.rules || []
 

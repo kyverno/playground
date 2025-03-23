@@ -45,7 +45,7 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	return &params, nil
 }
 
-func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageVerificationPolicy, error) {
+func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageValidatingPolicy, error) {
 	return policy.Load(policyLoader, []byte(r.Policies))
 }
 

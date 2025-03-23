@@ -4,7 +4,7 @@
 
 KIND_IMAGE           ?= kindest/node:v1.31.0
 KIND_NAME            ?= kind
-KYVERNO_VERSION      ?= main
+KYVERNO_VERSION      ?= v1.14.0-alpha.1
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,no-ingress,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
@@ -129,7 +129,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_updaterequests.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_validatingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_celpolicyexceptions.yaml
-	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_imageverificationpolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_imagevalidatingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_clusterpolicyreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_policyreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/reports/reports.kyverno.io_clusterephemeralreports.yaml
@@ -199,8 +199,8 @@ build-frontend: ## Build frontend
 	@cp schemas/json/v3/validatingadmissionpolicy-admissionregistration-v1.json frontend/src/schemas
 	@cp schemas/json/v3/celpolicyexception-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/celpolicyexceptionlist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
-	@cp schemas/json/v3/imageverificationpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
-	@cp schemas/json/v3/imageverificationpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/imagevalidatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingadmissionpolicybinding-admissionregistration-v1.json frontend/src/schemas
