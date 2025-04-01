@@ -10,7 +10,7 @@
       <v-btn
         v-bind="props"
         @click="select"
-        icon="mdi-upload"
+        icon="mdi-file-upload"
         :loading="loading"
         :color="btnColor"
         :variant="variant"
@@ -23,7 +23,7 @@
     v-else
     v-bind="props"
     @click="select"
-    prepend-icon="mdi-upload"
+    prepend-icon="mdi-file-upload"
     :loading="loading"
     :color="btnColor"
     :variant="variant"
