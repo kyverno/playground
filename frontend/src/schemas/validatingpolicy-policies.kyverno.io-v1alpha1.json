@@ -345,6 +345,52 @@
           ],
           "x-kubernetes-list-type": "atomic"
         },
+        "autogen": {
+          "description": "AutogenConfiguration defines the configuration for the generation controller.",
+          "properties": {
+            "podControllers": {
+              "description": "PodControllers specifies whether to generate a pod controllers rules.",
+              "properties": {
+                "controllers": {
+                  "items": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                }
+              },
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "validatingAdmissionPolicy": {
+              "description": "ValidatingAdmissionPolicy specifies whether to generate a Kubernetes ValidatingAdmissionPolicy.",
+              "properties": {
+                "enabled": {
+                  "description": "Enabled specifies whether to generate a Kubernetes ValidatingAdmissionPolicy.\nOptional. Defaults to \"false\" if not specified.",
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        },
         "evaluation": {
           "description": "EvaluationConfiguration defines the configuration for the policy evaluation.",
           "properties": {
@@ -399,14 +445,6 @@
           "description": "failurePolicy defines how to handle failures for the admission policy. Failures can\noccur from CEL expression parse errors, type check errors, runtime errors and invalid\nor mis-configured policy definitions or bindings.\n\nA policy is invalid if spec.paramKind refers to a non-existent Kind.\nA binding is invalid if spec.paramRef.name refers to a non-existent resource.\n\nfailurePolicy does not define how validations that evaluate to false are handled.\n\nWhen failurePolicy is set to Fail, ValidatingAdmissionPolicyBinding validationActions\ndefine how failures are enforced.\n\nAllowed values are Ignore or Fail. Defaults to Fail.",
           "type": [
             "string",
-            "null"
-          ]
-        },
-        "generate": {
-          "default": false,
-          "description": "Generate specifies whether to generate a Kubernetes ValidatingAdmissionPolicy.\nOptional. Defaults to \"false\" if not specified.",
-          "type": [
-            "boolean",
             "null"
           ]
         },
