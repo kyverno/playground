@@ -623,6 +623,8 @@ github.com/kyverno/kyverno-json v0.0.4-0.20240730143747-aade3d42fc0e h1:gh9iMuJS
 github.com/kyverno/kyverno-json v0.0.4-0.20240730143747-aade3d42fc0e/go.mod h1:3LgZogzltja+Sx0o5CIa7d7+991v8sWXHskU0fWSOsQ=
 github.com/kyverno/pkg/ext v0.0.0-20240418121121-df8add26c55c h1:lAolpR9H8BwM5lRRvgCQ8JowswyxZRH+fgtIQzHFVCk=
 github.com/kyverno/pkg/ext v0.0.0-20240418121121-df8add26c55c/go.mod h1:02vxM0GNXz9+B/i6+rMfWAIwibUuAH+qFsd73IFskgQ=
+github.com/kyverno/pod-security-admission v0.0.0-20250314164903-c9a58987cebb h1:/1RaFL03kzKUjLFOwti7p4CLmzih+JeZtpJ+HR6/VTE=
+github.com/kyverno/pod-security-admission v0.0.0-20250314164903-c9a58987cebb/go.mod h1:K1saHV9cPicHSnQuavHxR1zohKhHMajbk8e0Z7pXAdc=
 github.com/leodido/go-urn v1.4.0 h1:WT9HwE9SGECu3lg4d/dIA+jxlljEa1/ffXKmRjqdmIQ=
 github.com/leodido/go-urn v1.4.0/go.mod h1:bvxc+MVxLKB4z00jd1z+Dvzr47oO32F/QSNjSBOlFxI=
 github.com/letsencrypt/boulder v0.0.0-20240823215653-da7865cb107b h1:j3RD0lOLpskJ4BWK49hIKjXbt0Imoi4J4KvSd6XK898=
@@ -1231,8 +1233,6 @@ k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff h1:/usPimJzUKKu+m+TE36gUy
 k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff/go.mod h1:5jIi+8yX4RIb8wk3XwBo5Pq2ccx4FP10ohkbSKCZoK8=
 k8s.io/kubectl v0.32.3 h1:VMi584rbboso+yjfv0d8uBHwwxbC438LKq+dXd5tOAI=
 k8s.io/kubectl v0.32.3/go.mod h1:6Euv2aso5GKzo/UVMacV6C7miuyevpfI91SvBvV9Zdg=
-k8s.io/pod-security-admission v0.32.3 h1:scV0PQc3PdD6sXOMHukPZOCzGCGZeVN5z999gHBpkOc=
-k8s.io/pod-security-admission v0.32.3/go.mod h1:K1saHV9cPicHSnQuavHxR1zohKhHMajbk8e0Z7pXAdc=
 k8s.io/utils v0.0.0-20250321185631-1f6e0b77f77e h1:KqK5c/ghOm8xkHYhlodbp6i6+r+ChV2vuAuVRdFbLro=
 k8s.io/utils v0.0.0-20250321185631-1f6e0b77f77e/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 nullprogram.com/x/optparse v1.0.0/go.mod h1:KdyPE+Igbe0jQUrVfMqDMeJQIJZEuyV7pjYmp6pbG50=
