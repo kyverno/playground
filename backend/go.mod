@@ -1,7 +1,6 @@
 module github.com/kyverno/playground/backend
 
 go 1.24.0
-
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/evanphx/json-patch/v5 v5.9.11
@@ -11,7 +10,7 @@ require (
 	github.com/knadh/koanf/parsers/yaml v0.1.0
 	github.com/knadh/koanf/providers/file v1.1.2
 	github.com/knadh/koanf/v2 v2.1.2
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20250331194458-fc75c2bacbe8
+	github.com/kyverno/kyverno v1.14.0-alpha.1
 	github.com/loopfz/gadgeto v0.11.4
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
