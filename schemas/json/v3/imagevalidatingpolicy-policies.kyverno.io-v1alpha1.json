@@ -853,7 +853,7 @@
           "items": {
             "properties": {
               "expression": {
-                "description": "Expression defines CEL expression to extact images from the resource.",
+                "description": "Expression defines CEL expression to extract images from the resource.",
                 "type": "string"
               },
               "name": {
@@ -1935,7 +1935,7 @@
                         "items": {
                           "properties": {
                             "expression": {
-                              "description": "Expression defines CEL expression to extact images from the resource.",
+                              "description": "Expression defines CEL expression to extract images from the resource.",
                               "type": "string"
                             },
                             "name": {

@@ -416,7 +416,7 @@ func newEngine(
 	), nil
 }
 
-func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.CELPolicyException) (celengine.Engine, error) {
+func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.PolicyException) (celengine.Engine, error) {
 	provider, err := celengine.NewProvider(celpolicy.NewCompiler(), vpolicies, exceptions)
 	if err != nil {
 		return nil, err
@@ -435,7 +435,7 @@ func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPoli
 	), nil
 }
 
-func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidatingPolicy, exceptions []*v1alpha1.CELPolicyException) (celengine.ImageVerifyEngine, error) {
+func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidatingPolicy, exceptions []*v1alpha1.PolicyException) (celengine.ImageVerifyEngine, error) {
 	provider, err := celengine.NewIVPOLProvider(policies)
 	if err != nil {
 		return nil, err
