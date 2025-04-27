@@ -397,15 +397,71 @@
                     "properties": {
                       "cert": {
                         "description": "Certificate is the to the public certificate for local signature verification.",
+                        "oneOf": [
+                          {
+                            "required": [
+                              "value"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "expression"
+                            ]
+                          }
+                        ],
+                        "properties": {
+                          "expression": {
+                            "description": "Expression defines the a CEL expression input.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "value": {
+                            "description": "Value defines the raw string input.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
                         "type": [
-                          "string",
+                          "object",
                           "null"
                         ]
                       },
                       "certChain": {
                         "description": "CertificateChain is the list of CA certificates in PEM format which will be needed\nwhen building the certificate chain for the signing certificate. Must start with the\nparent intermediate CA certificate of the signing certificate and end with the root certificate",
+                        "oneOf": [
+                          {
+                            "required": [
+                              "value"
+                            ]
+                          },
+                          {
+                            "required": [
+                              "expression"
+                            ]
+                          }
+                        ],
+                        "properties": {
+                          "expression": {
+                            "description": "Expression defines the a CEL expression input.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "value": {
+                            "description": "Value defines the raw string input.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
                         "type": [
-                          "string",
+                          "object",
                           "null"
                         ]
                       }
@@ -476,6 +532,13 @@
                           "null"
                         ]
                       },
+                      "expression": {
+                        "description": "Expression is a Expression expression that returns the public key.",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
                       "hashAlgorithm": {
                         "description": "HashAlgorithm specifues signature algorithm for public keys. Supported values are\nsha224, sha256, sha384 and sha512. Defaults to sha256.",
                         "type": [
@@ -489,30 +552,6 @@
                           "string",
                           "null"
                         ]
-                      },
-                      "secretRef": {
-                        "description": "SecretRef sets a reference to a secret with the key.",
-                        "properties": {
-                          "name": {
-                            "description": "name is unique within a namespace to reference a secret resource.",
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          },
-                          "namespace": {
-                            "description": "namespace defines the space within which the secret name must be unique.",
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          }
-                        },
-                        "type": [
-                          "object",
-                          "null"
-                        ],
-                        "x-kubernetes-map-type": "atomic"
                       }
                     },
                     "type": [
@@ -682,19 +721,75 @@
                 "properties": {
                   "certs": {
                     "description": "Certs define the cert chain for Notary signature verification",
-                    "type": "string"
+                    "oneOf": [
+                      {
+                        "required": [
+                          "value"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "expression"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "expression": {
+                        "description": "Expression defines the a CEL expression input.",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "value": {
+                        "description": "Value defines the raw string input.",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
                   },
                   "tsaCerts": {
                     "description": "TSACerts define the cert chain for verifying timestamps of notary signature",
+                    "oneOf": [
+                      {
+                        "required": [
+                          "value"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "expression"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "expression": {
+                        "description": "Expression defines the a CEL expression input.",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "value": {
+                        "description": "Value defines the raw string input.",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
                     "type": [
-                      "string",
+                      "object",
                       "null"
                     ]
                   }
                 },
-                "required": [
-                  "certs"
-                ],
                 "type": [
                   "object",
                   "null"
@@ -710,6 +805,36 @@
             ]
           },
           "type": "array"
+        },
+        "autogen": {
+          "description": "AutogenConfiguration defines the configuration for the generation controller.",
+          "properties": {
+            "podControllers": {
+              "description": "PodControllers specifies whether to generate a pod controllers rules.",
+              "properties": {
+                "controllers": {
+                  "items": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "type": [
+                    "array",
+                    "null"
+                  ]
+                }
+              },
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          },
+          "type": [
+            "object",
+            "null"
+          ]
         },
         "credentials": {
           "description": "Credentials provides credentials that will be used for authentication with registry.",
@@ -813,38 +938,12 @@
         },
         "failurePolicy": {
           "description": "FailurePolicy defines how to handle failures for the admission policy. Failures can\noccur from CEL expression parse errors, type check errors, runtime errors and invalid\nor mis-configured policy definitions or bindings.",
+          "enum": [
+            "Ignore",
+            "Fail"
+          ],
           "type": [
             "string",
-            "null"
-          ]
-        },
-        "imageRules": {
-          "description": "ImagesRules is a list of Glob and CELExpressions to match images.\nAny image that matches one of the rules is considered for validation\nAny image that does not match a rule is skipped, even when they are passed as arguments to\nimage verification functions",
-          "items": {
-            "description": "ImageRule defines a Glob or a CEL expression for matching images",
-            "properties": {
-              "cel": {
-                "description": "Cel defines CEL Expressions for matching images",
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "glob": {
-                "description": "Glob defines a globbing pattern for matching images",
-                "type": [
-                  "string",
-                  "null"
-                ]
-              }
-            },
-            "type": [
-              "object",
-              "null"
-            ]
-          },
-          "type": [
-            "array",
             "null"
           ]
         },
@@ -1244,19 +1343,45 @@
           ],
           "x-kubernetes-map-type": "atomic"
         },
-        "mutateDigest": {
-          "default": true,
-          "description": "MutateDigest enables replacement of image tags with digests.\nDefaults to true.",
+        "matchImageReferences": {
+          "description": "MatchImageReferences is a list of Glob and CELExpressions to match images.\nAny image that matches one of the rules is considered for validation\nAny image that does not match a rule is skipped, even when they are passed as arguments to\nimage verification functions",
+          "items": {
+            "description": "MatchImageReference defines a Glob or a CEL expression for matching images",
+            "oneOf": [
+              {
+                "required": [
+                  "glob"
+                ]
+              },
+              {
+                "required": [
+                  "expression"
+                ]
+              }
+            ],
+            "properties": {
+              "expression": {
+                "description": "Expression defines CEL Expressions for matching images",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "glob": {
+                "description": "Glob defines a globbing pattern for matching images",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          },
           "type": [
-            "boolean",
-            "null"
-          ]
-        },
-        "required": {
-          "default": true,
-          "description": "Required validates that images are verified i.e. have matched passed a signature or attestation check.",
-          "type": [
-            "boolean",
+            "array",
             "null"
           ]
         },
@@ -1264,6 +1389,11 @@
           "description": "ValidationAction specifies the action to be taken when the matched resource violates the policy.\nRequired.",
           "items": {
             "description": "ValidationAction specifies a policy enforcement action.",
+            "enum": [
+              "Deny",
+              "Audit",
+              "Warn"
+            ],
             "type": [
               "string",
               "null"
@@ -1274,6 +1404,40 @@
             "null"
           ],
           "x-kubernetes-list-type": "set"
+        },
+        "validationConfigurations": {
+          "default": {},
+          "description": "ValidationConfigurations defines settings for mutating and verifying image digests, and enforcing image verification through signatures.",
+          "properties": {
+            "mutateDigest": {
+              "default": true,
+              "description": "MutateDigest enables replacement of image tags with digests.\nDefaults to true.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "required": {
+              "default": true,
+              "description": "Required validates that images are verified, i.e., have passed a signature or attestation check.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "verifyDigest": {
+              "default": true,
+              "description": "VerifyDigest validates that images have a digest.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          },
+          "type": [
+            "object",
+            "null"
+          ]
         },
         "validations": {
           "description": "Validations contain CEL expressions which is used to apply the image validation checks.",
@@ -1346,14 +1510,6 @@
             "null"
           ]
         },
-        "verifyDigest": {
-          "default": true,
-          "description": "VerifyDigest validates that images have a digest.",
-          "type": [
-            "boolean",
-            "null"
-          ]
-        },
         "webhookConfiguration": {
           "description": "WebhookConfiguration defines the configuration for the webhook.",
           "properties": {
@@ -1386,15 +1542,9 @@
       "properties": {
         "autogen": {
           "properties": {
-            "rules": {
-              "items": {
+            "configs": {
+              "additionalProperties": {
                 "properties": {
-                  "name": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
-                  },
                   "spec": {
                     "description": "ImageValidatingPolicySpec is the specification of the desired behavior of the ImageValidatingPolicy.",
                     "properties": {
@@ -1479,15 +1629,71 @@
                                   "properties": {
                                     "cert": {
                                       "description": "Certificate is the to the public certificate for local signature verification.",
+                                      "oneOf": [
+                                        {
+                                          "required": [
+                                            "value"
+                                          ]
+                                        },
+                                        {
+                                          "required": [
+                                            "expression"
+                                          ]
+                                        }
+                                      ],
+                                      "properties": {
+                                        "expression": {
+                                          "description": "Expression defines the a CEL expression input.",
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "value": {
+                                          "description": "Value defines the raw string input.",
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        }
+                                      },
                                       "type": [
-                                        "string",
+                                        "object",
                                         "null"
                                       ]
                                     },
                                     "certChain": {
                                       "description": "CertificateChain is the list of CA certificates in PEM format which will be needed\nwhen building the certificate chain for the signing certificate. Must start with the\nparent intermediate CA certificate of the signing certificate and end with the root certificate",
+                                      "oneOf": [
+                                        {
+                                          "required": [
+                                            "value"
+                                          ]
+                                        },
+                                        {
+                                          "required": [
+                                            "expression"
+                                          ]
+                                        }
+                                      ],
+                                      "properties": {
+                                        "expression": {
+                                          "description": "Expression defines the a CEL expression input.",
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "value": {
+                                          "description": "Value defines the raw string input.",
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        }
+                                      },
                                       "type": [
-                                        "string",
+                                        "object",
                                         "null"
                                       ]
                                     }
@@ -1558,6 +1764,13 @@
                                         "null"
                                       ]
                                     },
+                                    "expression": {
+                                      "description": "Expression is a Expression expression that returns the public key.",
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
                                     "hashAlgorithm": {
                                       "description": "HashAlgorithm specifues signature algorithm for public keys. Supported values are\nsha224, sha256, sha384 and sha512. Defaults to sha256.",
                                       "type": [
@@ -1571,30 +1784,6 @@
                                         "string",
                                         "null"
                                       ]
-                                    },
-                                    "secretRef": {
-                                      "description": "SecretRef sets a reference to a secret with the key.",
-                                      "properties": {
-                                        "name": {
-                                          "description": "name is unique within a namespace to reference a secret resource.",
-                                          "type": [
-                                            "string",
-                                            "null"
-                                          ]
-                                        },
-                                        "namespace": {
-                                          "description": "namespace defines the space within which the secret name must be unique.",
-                                          "type": [
-                                            "string",
-                                            "null"
-                                          ]
-                                        }
-                                      },
-                                      "type": [
-                                        "object",
-                                        "null"
-                                      ],
-                                      "x-kubernetes-map-type": "atomic"
                                     }
                                   },
                                   "type": [
@@ -1764,19 +1953,75 @@
                               "properties": {
                                 "certs": {
                                   "description": "Certs define the cert chain for Notary signature verification",
-                                  "type": "string"
+                                  "oneOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "expression"
+                                      ]
+                                    }
+                                  ],
+                                  "properties": {
+                                    "expression": {
+                                      "description": "Expression defines the a CEL expression input.",
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "value": {
+                                      "description": "Value defines the raw string input.",
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ]
                                 },
                                 "tsaCerts": {
                                   "description": "TSACerts define the cert chain for verifying timestamps of notary signature",
+                                  "oneOf": [
+                                    {
+                                      "required": [
+                                        "value"
+                                      ]
+                                    },
+                                    {
+                                      "required": [
+                                        "expression"
+                                      ]
+                                    }
+                                  ],
+                                  "properties": {
+                                    "expression": {
+                                      "description": "Expression defines the a CEL expression input.",
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "value": {
+                                      "description": "Value defines the raw string input.",
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    }
+                                  },
                                   "type": [
-                                    "string",
+                                    "object",
                                     "null"
                                   ]
                                 }
                               },
-                              "required": [
-                                "certs"
-                              ],
                               "type": [
                                 "object",
                                 "null"
@@ -1792,6 +2037,36 @@
                           ]
                         },
                         "type": "array"
+                      },
+                      "autogen": {
+                        "description": "AutogenConfiguration defines the configuration for the generation controller.",
+                        "properties": {
+                          "podControllers": {
+                            "description": "PodControllers specifies whether to generate a pod controllers rules.",
+                            "properties": {
+                              "controllers": {
+                                "items": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "type": [
+                                  "array",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "type": [
+                              "object",
+                              "null"
+                            ]
+                          }
+                        },
+                        "type": [
+                          "object",
+                          "null"
+                        ]
                       },
                       "credentials": {
                         "description": "Credentials provides credentials that will be used for authentication with registry.",
@@ -1895,38 +2170,12 @@
                       },
                       "failurePolicy": {
                         "description": "FailurePolicy defines how to handle failures for the admission policy. Failures can\noccur from CEL expression parse errors, type check errors, runtime errors and invalid\nor mis-configured policy definitions or bindings.",
+                        "enum": [
+                          "Ignore",
+                          "Fail"
+                        ],
                         "type": [
                           "string",
-                          "null"
-                        ]
-                      },
-                      "imageRules": {
-                        "description": "ImagesRules is a list of Glob and CELExpressions to match images.\nAny image that matches one of the rules is considered for validation\nAny image that does not match a rule is skipped, even when they are passed as arguments to\nimage verification functions",
-                        "items": {
-                          "description": "ImageRule defines a Glob or a CEL expression for matching images",
-                          "properties": {
-                            "cel": {
-                              "description": "Cel defines CEL Expressions for matching images",
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            },
-                            "glob": {
-                              "description": "Glob defines a globbing pattern for matching images",
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            }
-                          },
-                          "type": [
-                            "object",
-                            "null"
-                          ]
-                        },
-                        "type": [
-                          "array",
                           "null"
                         ]
                       },
@@ -2326,19 +2575,45 @@
                         ],
                         "x-kubernetes-map-type": "atomic"
                       },
-                      "mutateDigest": {
-                        "default": true,
-                        "description": "MutateDigest enables replacement of image tags with digests.\nDefaults to true.",
+                      "matchImageReferences": {
+                        "description": "MatchImageReferences is a list of Glob and CELExpressions to match images.\nAny image that matches one of the rules is considered for validation\nAny image that does not match a rule is skipped, even when they are passed as arguments to\nimage verification functions",
+                        "items": {
+                          "description": "MatchImageReference defines a Glob or a CEL expression for matching images",
+                          "oneOf": [
+                            {
+                              "required": [
+                                "glob"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "expression"
+                              ]
+                            }
+                          ],
+                          "properties": {
+                            "expression": {
+                              "description": "Expression defines CEL Expressions for matching images",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "glob": {
+                              "description": "Glob defines a globbing pattern for matching images",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
                         "type": [
-                          "boolean",
-                          "null"
-                        ]
-                      },
-                      "required": {
-                        "default": true,
-                        "description": "Required validates that images are verified i.e. have matched passed a signature or attestation check.",
-                        "type": [
-                          "boolean",
+                          "array",
                           "null"
                         ]
                       },
@@ -2346,6 +2621,11 @@
                         "description": "ValidationAction specifies the action to be taken when the matched resource violates the policy.\nRequired.",
                         "items": {
                           "description": "ValidationAction specifies a policy enforcement action.",
+                          "enum": [
+                            "Deny",
+                            "Audit",
+                            "Warn"
+                          ],
                           "type": [
                             "string",
                             "null"
@@ -2356,6 +2636,40 @@
                           "null"
                         ],
                         "x-kubernetes-list-type": "set"
+                      },
+                      "validationConfigurations": {
+                        "default": {},
+                        "description": "ValidationConfigurations defines settings for mutating and verifying image digests, and enforcing image verification through signatures.",
+                        "properties": {
+                          "mutateDigest": {
+                            "default": true,
+                            "description": "MutateDigest enables replacement of image tags with digests.\nDefaults to true.",
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
+                          },
+                          "required": {
+                            "default": true,
+                            "description": "Required validates that images are verified, i.e., have passed a signature or attestation check.",
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
+                          },
+                          "verifyDigest": {
+                            "default": true,
+                            "description": "VerifyDigest validates that images have a digest.",
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
+                          }
+                        },
+                        "type": [
+                          "object",
+                          "null"
+                        ]
                       },
                       "validations": {
                         "description": "Validations contain CEL expressions which is used to apply the image validation checks.",
@@ -2428,14 +2742,6 @@
                           "null"
                         ]
                       },
-                      "verifyDigest": {
-                        "default": true,
-                        "description": "VerifyDigest validates that images have a digest.",
-                        "type": [
-                          "boolean",
-                          "null"
-                        ]
-                      },
                       "webhookConfiguration": {
                         "description": "WebhookConfiguration defines the configuration for the webhook.",
                         "properties": {
@@ -2470,7 +2776,7 @@
                 ]
               },
               "type": [
-                "array",
+                "object",
                 "null"
               ]
             }

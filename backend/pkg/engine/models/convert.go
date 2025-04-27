@@ -53,7 +53,6 @@ func convertRuleResponse(policy string, in engineapi.RuleResponse) RuleResponse 
 
 func ConvertResponse(in engineapi.EngineResponse) Response {
 	var patchedResource, resource []byte
-
 	var targets []map[string]interface{}
 	for _, r := range in.PolicyResponse.Rules {
 		if t, _, _ := r.PatchedTarget(); t != nil {
@@ -82,8 +81,8 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		out.ValidationPolicy = in.Policy().AsValidatingPolicy()
 	} else if in.Policy().AsValidatingAdmissionPolicy() != nil {
 		out.ValidatingAdmissionPolicy = in.Policy().AsValidatingAdmissionPolicy()
-	} else if in.Policy().AsImageVerificationPolicy() != nil {
-		out.ImageValidatingPolicy = in.Policy().AsImageVerificationPolicy()
+	} else if in.Policy().AsImageValidatingPolicy() != nil {
+		out.ImageValidatingPolicy = in.Policy().AsImageValidatingPolicy()
 	}
 
 	for _, ruleresponse := range in.PolicyResponse.Rules {
