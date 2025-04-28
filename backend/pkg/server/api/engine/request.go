@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"errors"
 	"os"
 	"testing/fstest"
 
@@ -50,7 +51,11 @@ func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.Po
 }
 
 func (r *EngineRequest) LoadResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
-	return resource.LoadResources(resourceLoader, []byte(r.Resources))
+	data, err := resource.LoadJSON(r.Resources)
+	if errors.Is(err, resource.ErrNoJSON) {
+		return resource.LoadResources(resourceLoader, []byte(r.Resources))
+	}
+	return data, err
 }
 
 func (r *EngineRequest) LoadClusterResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
@@ -58,7 +63,12 @@ func (r *EngineRequest) LoadClusterResources(resourceLoader loader.Loader) ([]un
 }
 
 func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
-	return resource.LoadResources(resourceLoader, []byte(r.OldResources))
+	data, err := resource.LoadJSON(r.OldResources)
+	if errors.Is(err, resource.ErrNoJSON) {
+		return resource.LoadResources(resourceLoader, []byte(r.OldResources))
+	}
+
+	return data, err
 }
 
 func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2.PolicyException, error) {

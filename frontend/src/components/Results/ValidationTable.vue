@@ -98,9 +98,10 @@ const items = computed(() => {
         id: 'id',
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
-        resource: [validation.resource.metadata.namespace, validation.resource.metadata.name]
-          .filter((s) => !!s)
-          .join('/'),
+        resource:
+          [validation.resource?.metadata?.namespace, validation.resource?.metadata?.name]
+            .filter((s) => !!s)
+            .join('/') || 'JSON Payload',
         policy: policy.metadata.name,
         rule: 'resource does not match any rule',
         message: 'no validation triggered',
@@ -129,9 +130,10 @@ const items = computed(() => {
         icon,
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
-        resource: [validation.resource.metadata.namespace, validation.resource.metadata.name]
-          .filter((s) => !!s)
-          .join('/'),
+        resource:
+          [validation.resource?.metadata?.namespace, validation.resource?.metadata?.name]
+            .filter((s) => !!s)
+            .join('/') || 'JSON Payload',
         policy: policy.metadata.name,
         rule: ruleName,
         message: rule.message,

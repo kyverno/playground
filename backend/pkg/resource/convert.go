@@ -8,6 +8,10 @@ import (
 func ToObjects(objects []unstructured.Unstructured) []runtime.Object {
 	list := make([]runtime.Object, 0, len(objects))
 	for _, obj := range objects {
+		if obj.GetKind() == "" {
+			continue
+		}
+
 		list = append(list, &obj)
 	}
 
