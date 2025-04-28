@@ -13,8 +13,11 @@ import (
 	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	celengine "github.com/kyverno/kyverno/pkg/cel/engine"
+	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
-	celpolicy "github.com/kyverno/kyverno/pkg/cel/policy"
+	ivpolengine "github.com/kyverno/kyverno/pkg/cel/policies/ivpol/engine"
+	vpolcompiler "github.com/kyverno/kyverno/pkg/cel/policies/vpol/compiler"
+	vpolengine "github.com/kyverno/kyverno/pkg/cel/policies/vpol/engine"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
@@ -24,6 +27,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	gctxstore "github.com/kyverno/kyverno/pkg/globalcontext/store"
+	eval "github.com/kyverno/kyverno/pkg/imageverification/evaluator"
 	"github.com/kyverno/kyverno/pkg/imageverifycache"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
@@ -81,17 +85,7 @@ func (p *Processor) Run(
 
 	oldMaxIndex := len(oldResources) - 1
 
-	celEngine, err := newCELEngine(p.dClient, vpols, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	ivpolEngine, err := newIVPEngine(p.dClient, ivpols, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	contextProvider, err := celpolicy.NewContextProvider(p.dClient, nil, gctxstore.New())
+	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New())
 
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
@@ -162,22 +156,84 @@ func (p *Processor) Run(
 		}
 
 		if len(ivpols) > 0 {
-			resp, _, err := ivpolEngine.HandleMutating(ctx, p.newCELRequest(contextProvider, newResource, oldResource))
-			if err != nil {
-				return nil, err
-			}
+			request := p.newCELRequest(contextProvider, newResource, oldResource)
 
-			for _, result := range resp.Policies {
-				resp := engineapi.NewEngineResponse(newResource, engineapi.NewImageVerificationPolicy(result.Policy), p.params.Context.NamespaceLabels).
-					WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{result.Result}})
+			if request.JsonPayload == nil {
+				engine, err := newIVPEngine(p.dClient, ivpols, nil)
+				if err != nil {
+					return nil, err
+				}
 
-				response.Validation = append(response.Validation, models.ConvertResponse(resp))
+				resp, _, err := engine.HandleMutating(ctx, request)
+				if err != nil {
+					return nil, err
+				}
+
+				for _, result := range resp.Policies {
+					resp := engineapi.NewEngineResponse(newResource, engineapi.NewImageValidatingPolicy(result.Policy), p.params.Context.NamespaceLabels).
+						WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{result.Result}})
+
+					response.Validation = append(response.Validation, models.ConvertResponse(resp))
+				}
+			} else {
+				compiled := make([]*eval.CompiledImageValidatingPolicy, 0)
+				pMap := make(map[string]*v1alpha1.ImageValidatingPolicy)
+				for i := range ivpols {
+					p := ivpols[i]
+					pMap[p.GetName()] = &p
+					compiled = append(compiled, &eval.CompiledImageValidatingPolicy{Policy: &p})
+				}
+
+				results, err := eval.Evaluate(context.TODO(), compiled, newResource.Object, nil, nil, nil)
+				if err != nil {
+					return nil, err
+				}
+
+				resp := engineapi.EngineResponse{
+					Resource:       newResource,
+					PolicyResponse: engineapi.PolicyResponse{},
+				}
+				for p, rslt := range results {
+					if rslt.Error != nil {
+						resp.PolicyResponse.Rules = []engineapi.RuleResponse{
+							*engineapi.RuleError("evaluation", engineapi.ImageVerify, "failed to evaluate policy for JSON", rslt.Error, nil),
+						}
+					} else if rslt.Result {
+						resp.PolicyResponse.Rules = []engineapi.RuleResponse{
+							*engineapi.RulePass(p, engineapi.ImageVerify, "success", nil),
+						}
+					} else {
+						resp.PolicyResponse.Rules = []engineapi.RuleResponse{
+							*engineapi.RuleFail(p, engineapi.ImageVerify, rslt.Message, nil),
+						}
+					}
+					resp = resp.WithPolicy(engineapi.NewImageValidatingPolicy(pMap[p]))
+
+					response.Validation = append(response.Validation, models.ConvertResponse(resp))
+				}
 			}
 		}
 
 		if len(vpols) > 0 {
+			var engine celengine.Engine
+			request := p.newCELRequest(contextProvider, newResource, oldResource)
+
+			if request.JsonPayload == nil {
+				engine, err = newCELEngine(p.dClient, vpols, nil)
+				if err != nil {
+					return nil, err
+				}
+			} else {
+				provider, err := NewVPOLProvider(vpols, nil)
+				if err != nil {
+					return nil, err
+				}
+
+				engine = vpolengine.NewEngine(provider, nil, nil)
+			}
+
 			// validate
-			resp, err := celEngine.Handle(ctx, p.newCELRequest(contextProvider, newResource, oldResource))
+			resp, err := engine.Handle(ctx, p.newCELRequest(contextProvider, newResource, oldResource))
 			if err != nil {
 				return nil, err
 			}
@@ -380,7 +436,8 @@ func (p *Processor) newPolicyContext(policy kyvernov1.PolicyInterface, old, new 
 func validatePolicies(policies []kyvernov1.PolicyInterface) []models.PolicyValidation {
 	var result []models.PolicyValidation
 	for _, policy := range policies {
-		for _, err := range policy.Validate(nil) {
+		_, err := policy.Validate(nil)
+		for _, err := range err {
 			result = append(result, models.PolicyValidation{
 				PolicyName:      policy.GetName(),
 				PolicyNamespace: policy.GetNamespace(),
@@ -416,13 +473,17 @@ func newEngine(
 	), nil
 }
 
+func NewVPOLProvider(policies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.PolicyException) (vpolengine.Provider, error) {
+	return vpolengine.NewProvider(vpolcompiler.NewCompiler(), policies, exceptions)
+}
+
 func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.PolicyException) (celengine.Engine, error) {
-	provider, err := celengine.NewProvider(celpolicy.NewCompiler(), vpolicies, exceptions)
+	provider, err := NewVPOLProvider(vpolicies, exceptions)
 	if err != nil {
 		return nil, err
 	}
-	return celengine.NewEngine(
-		provider.CompiledValidationPolicies,
+	return vpolengine.NewEngine(
+		provider,
 		func(name string) *corev1.Namespace {
 			ns, err := dClient.GetKubeClient().CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
 			if err != nil {
@@ -435,13 +496,13 @@ func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPoli
 	), nil
 }
 
-func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidatingPolicy, exceptions []*v1alpha1.PolicyException) (celengine.ImageVerifyEngine, error) {
-	provider, err := celengine.NewIVPOLProvider(policies)
+func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidatingPolicy, exceptions []*v1alpha1.PolicyException) (ivpolengine.Engine, error) {
+	provider, err := ivpolengine.NewProvider(policies, exceptions)
 	if err != nil {
 		return nil, err
 	}
-	return celengine.NewImageVerifyEngine(
-		provider.ImageVerificationPolicies,
+	return ivpolengine.NewEngine(
+		provider,
 		func(name string) *corev1.Namespace {
 			ns, err := dClient.GetKubeClient().CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
 			if err != nil {
@@ -456,8 +517,12 @@ func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidating
 	), nil
 }
 
-func (p *Processor) newCELRequest(contextProvider celpolicy.ContextInterface, resource, oldResource unstructured.Unstructured) celengine.EngineRequest {
+func (p *Processor) newCELRequest(contextProvider libs.Context, resource, oldResource unstructured.Unstructured) celengine.EngineRequest {
 	gvk := resource.GroupVersionKind()
+	if gvk.Kind == "" {
+		return celengine.RequestFromJSON(contextProvider, &resource)
+	}
+
 	mapping, err := p.restMapper.RESTMapping(gvk.GroupKind(), gvk.Version)
 	if err != nil {
 		return celengine.EngineRequest{}

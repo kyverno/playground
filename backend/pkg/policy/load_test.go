@@ -83,7 +83,7 @@ func Test_Load(t *testing.T) {
 			require.NoError(t, err)
 			loader, err := loader.New(
 				openapiclient.NewComposite(
-					openapiclient.NewGitHubBuiltins("1.31"),
+					openapiclient.NewHardcodedBuiltins("1.31"),
 					openapiclient.NewLocalSchemaFiles(schemas),
 				),
 			)
