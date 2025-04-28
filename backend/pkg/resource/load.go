@@ -1,11 +1,17 @@
 package resource
 
 import (
+	"encoding/json"
+	"errors"
+	"strings"
+
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource"
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	yamlutils "github.com/kyverno/kyverno/ext/yaml"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
+
+var ErrNoJSON = errors.New("no JSON resource found")
 
 func Load[T any](l loader.Loader, content []byte) (*T, error) {
 	return resource.Load[T](l, content)
@@ -25,4 +31,33 @@ func LoadResources(l loader.Loader, content []byte) ([]unstructured.Unstructured
 		resources = append(resources, untyped)
 	}
 	return resources, nil
+}
+
+func LoadJSON(content string) ([]unstructured.Unstructured, error) {
+	if !json.Valid([]byte(content)) {
+		return nil, ErrNoJSON
+	}
+
+	if strings.HasPrefix(strings.TrimSpace(content), "[") {
+		var payload []any
+		if err := json.Unmarshal([]byte(content), &payload); err != nil {
+			return nil, err
+		}
+
+		resources := make([]unstructured.Unstructured, 0, len(payload))
+		for _, item := range payload {
+			if resource, ok := item.(map[string]any); ok {
+				resources = append(resources, unstructured.Unstructured{Object: resource})
+			}
+		}
+
+		return resources, nil
+	}
+
+	var payload map[string]any
+	if err := json.Unmarshal([]byte(content), &payload); err != nil {
+		return nil, err
+	}
+
+	return []unstructured.Unstructured{{Object: payload}}, nil
 }
