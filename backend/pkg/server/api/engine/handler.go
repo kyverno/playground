@@ -147,7 +147,7 @@ func validateParams(params *models.Parameters, cmResolver engineapi.ConfigmapRes
 					}
 				}
 
-				return fmt.Errorf("Variable %s is not defined in the context", variable.Name)
+				return fmt.Errorf("variable %s is not defined in the context", variable.Name)
 			}
 		}
 	}
