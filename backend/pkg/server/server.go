@@ -56,7 +56,7 @@ func (s server) Run(_ context.Context, host string, port int) Shutdown {
 	address := fmt.Sprintf("%v:%v", host, port)
 	srv := &http.Server{
 		Addr:    address,
-		Handler: s.Engine.Handler(),
+		Handler: s.Handler(),
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
