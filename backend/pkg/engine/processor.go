@@ -86,18 +86,23 @@ func (p *Processor) Run(
 	oldMaxIndex := len(oldResources) - 1
 
 	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New())
+	if err != nil {
+		return nil, err
+	}
 
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
 		newResource := unstructured.Unstructured{}
-		if p.params.Context.Operation == kyvernov1.Delete {
+
+		switch p.params.Context.Operation {
+		case kyvernov1.Delete:
 			oldResource = resources[i]
-		} else if p.params.Context.Operation == kyvernov1.Update {
+		case kyvernov1.Update:
 			if oldMaxIndex >= i {
 				oldResource = oldResources[i]
 			}
 			newResource = resources[i]
-		} else {
+		default:
 			newResource = resources[i]
 		}
 

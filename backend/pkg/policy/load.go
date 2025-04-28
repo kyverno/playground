@@ -6,7 +6,6 @@ import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2beta1 "github.com/kyverno/kyverno/api/kyverno/v2beta1"
 	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
-	policiesv1alpha1 "github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
 	"github.com/kyverno/kyverno/ext/resource/convert"
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	v1 "k8s.io/api/admissionregistration/v1"
@@ -25,8 +24,8 @@ var (
 	vapV1beta1      = v1beta1.SchemeGroupVersion.WithKind("ValidatingAdmissionPolicy")
 	vapbV1          = v1.SchemeGroupVersion.WithKind("ValidatingAdmissionPolicyBinding")
 	vapbV1beta1     = v1beta1.SchemeGroupVersion.WithKind("ValidatingAdmissionPolicyBinding")
-	vpolV1alpha1    = policiesv1alpha1.SchemeGroupVersion.WithKind("ValidatingPolicy")
-	ivpolV1alpha1   = policiesv1alpha1.SchemeGroupVersion.WithKind("ImageValidatingPolicy")
+	vpolV1alpha1    = v1alpha1.SchemeGroupVersion.WithKind("ValidatingPolicy")
+	ivpolV1alpha1   = v1alpha1.SchemeGroupVersion.WithKind("ImageValidatingPolicy")
 )
 
 func Load(l loader.Loader, content []byte) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageValidatingPolicy, error) {

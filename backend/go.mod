@@ -8,7 +8,7 @@ require (
 	github.com/gin-contrib/cors v1.7.5
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-logr/logr v1.4.2
-	github.com/knadh/koanf/parsers/yaml v0.1.0
+	github.com/knadh/koanf/parsers/yaml v1.0.0
 	github.com/knadh/koanf/providers/file v1.1.2
 	github.com/knadh/koanf/v2 v2.1.2
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20250427100755-91bf327f44bc
