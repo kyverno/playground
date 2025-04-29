@@ -616,8 +616,8 @@ github.com/kyverno/go-jmespath v0.4.1-0.20231124160150-95e59c162877 h1:XOLJNGX/q
 github.com/kyverno/go-jmespath v0.4.1-0.20231124160150-95e59c162877/go.mod h1:yzDHaKovQy16rjN4kFnjF+IdNoN4p1ndw+va6+B8zUU=
 github.com/kyverno/go-jmespath/internal/testify v1.5.2-0.20230630133209-945021c749d9 h1:lL311dF3a2aeNibJj8v+uhFU3XkvRHZmCtAdSPOrQYY=
 github.com/kyverno/go-jmespath/internal/testify v1.5.2-0.20230630133209-945021c749d9/go.mod h1:XRxUGHIiCy1WYma1CdfdO1WOhIe8dLPTENaZr5D1ex4=
-github.com/kyverno/kyverno v1.5.0-rc1.0.20250427100755-91bf327f44bc h1:LTb3peCthcdNoRQci5wbavM2zZSus+X/gYbjLh0DKjc=
-github.com/kyverno/kyverno v1.5.0-rc1.0.20250427100755-91bf327f44bc/go.mod h1:fQHm5VEppBkGW8TBoa/cAAnB8kIvHhbmxZp3VEksXHY=
+github.com/kyverno/kyverno v1.14.0 h1:uKyWqfgV0pTdpvlTQ8B/DKde+bD+KixNnI2e8+tmPEo=
+github.com/kyverno/kyverno v1.14.0/go.mod h1:Q6pJ+/dXQgdH4yodVA0YOcwCHOFLn5Iwg0NnE+72YR8=
 github.com/kyverno/kyverno-json v0.0.4-0.20240730143747-aade3d42fc0e h1:gh9iMuJS8yloxo3JIzvgLWZWwy5iRjEkA8/U7rK3iu8=
 github.com/kyverno/kyverno-json v0.0.4-0.20240730143747-aade3d42fc0e/go.mod h1:3LgZogzltja+Sx0o5CIa7d7+991v8sWXHskU0fWSOsQ=
 github.com/kyverno/pkg/ext v0.0.0-20240418121121-df8add26c55c h1:lAolpR9H8BwM5lRRvgCQ8JowswyxZRH+fgtIQzHFVCk=
@@ -708,8 +708,8 @@ github.com/onsi/gomega v1.7.1/go.mod h1:XdKZgCCFLUoM/7CFJVPcG8C1xQ1AJ0vpAezJrB7J
 github.com/onsi/gomega v1.10.1/go.mod h1:iN09h71vgCQne3DLsj+A5owkum+a2tYe+TOCB1ybHNo=
 github.com/onsi/gomega v1.17.0/go.mod h1:HnhC7FXeEQY45zxNK3PPoIUhzk/80Xly9PcubAlGdZY=
 github.com/onsi/gomega v1.19.0/go.mod h1:LY+I3pBVzYsTBU1AnDwOSxaYi9WoWiqgwooUqq9yPro=
-github.com/onsi/gomega v1.37.0 h1:CdEG8g0S133B4OswTDC/5XPSzE1OeP29QOioj2PID2Y=
-github.com/onsi/gomega v1.37.0/go.mod h1:8D9+Txp43QWKhM24yyOBEdpkzN8FvJyAwecBgsU4KU0=
+github.com/onsi/gomega v1.36.2 h1:koNYke6TVk6ZmnyHrCXba/T/MoLBXFjeC1PtvYgw0A8=
+github.com/onsi/gomega v1.36.2/go.mod h1:DdwyADRjrc825LhMEkD76cHR5+pUnjhUN8GlHlRPHzY=
 github.com/open-policy-agent/gatekeeper/v3 v3.17.0 h1:8jiY9rgWRofEJeJLm4gyme97fwvqTbv9+QoerMGXCuU=
 github.com/open-policy-agent/gatekeeper/v3 v3.17.0/go.mod h1:LIk/6du1AV47s+aU1ovKNKzOCHIsEmEImUN/72DL3zw=
 github.com/open-policy-agent/opa v1.1.0 h1:HMz2evdEMTyNqtdLjmu3Vyx06BmhNYAx67Yz3Ll9q2s=
