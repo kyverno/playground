@@ -11,7 +11,7 @@ require (
 	github.com/knadh/koanf/parsers/yaml v1.0.0
 	github.com/knadh/koanf/providers/file v1.1.2
 	github.com/knadh/koanf/v2 v2.1.2
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20250427100755-91bf327f44bc
+	github.com/kyverno/kyverno v1.14.1
 	github.com/loopfz/gadgeto v0.11.5
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
