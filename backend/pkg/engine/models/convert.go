@@ -80,7 +80,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 	} else if in.Policy().AsValidatingPolicy() != nil {
 		out.ValidationPolicy = in.Policy().AsValidatingPolicy()
 	} else if in.Policy().AsValidatingAdmissionPolicy() != nil {
-		out.ValidatingAdmissionPolicy = in.Policy().AsValidatingAdmissionPolicy()
+		out.ValidatingAdmissionPolicy = in.Policy().AsValidatingAdmissionPolicy().GetDefinition()
 	} else if in.Policy().AsImageValidatingPolicy() != nil {
 		out.ImageValidatingPolicy = in.Policy().AsImageValidatingPolicy()
 	}
