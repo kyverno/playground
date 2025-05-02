@@ -22,7 +22,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/config"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
 	"github.com/kyverno/kyverno/pkg/engine/adapters"
-	"github.com/kyverno/kyverno/pkg/engine/api"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/kyverno/pkg/engine/jmespath"
 	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
@@ -146,7 +145,7 @@ func (p *Processor) Run(
 		}
 
 		for _, policy := range vaps {
-			pData := api.NewValidatingAdmissionPolicyData(&policy)
+			pData := engineapi.NewValidatingAdmissionPolicyData(&policy)
 			for _, binding := range vapbs {
 				if binding.Spec.PolicyName == policy.Name {
 					pData.AddBinding(binding)
