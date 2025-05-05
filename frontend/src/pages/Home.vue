@@ -107,11 +107,6 @@ const errorText = ref<string>('')
 const handleError = (error: Error) => {
   errorText.value = error.message
   showError.value = true
-
-  setTimeout(() => {
-    errorText.value = ''
-    showError.value = false
-  }, 8000)
 }
 
 const drawer = ref<boolean>(false)
