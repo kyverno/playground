@@ -6,7 +6,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/evanphx/json-patch/v5 v5.9.11
 	github.com/gin-contrib/cors v1.7.5
-	github.com/gin-gonic/gin v1.10.0
+	github.com/gin-gonic/gin v1.10.1
 	github.com/go-logr/logr v1.4.2
 	github.com/knadh/koanf/parsers/yaml v1.0.0
 	github.com/knadh/koanf/providers/file v1.2.0
