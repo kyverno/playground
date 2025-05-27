@@ -5,6 +5,7 @@
     color="error"
     max-width="80%"
     :width="856"
+    :timeout="-1"
   >
     <span v-html="text" class="d-block" />
     <template v-slot:actions>
