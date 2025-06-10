@@ -14,7 +14,8 @@ type Response struct {
 	Resource unstructured.Unstructured `json:"resource"`
 	// Policy is the original policy
 	Policy                kyvernov1.PolicyInterface       `json:"policy"`
-	ValidationPolicy      *v1alpha1.ValidatingPolicy      `json:"validatingPolicy"`
+	ValidatingPolicy      *v1alpha1.ValidatingPolicy      `json:"validatingPolicy"`
+	DeletingPolicy        *v1alpha1.DeletingPolicy        `json:"deletingPolicy"`
 	ImageValidatingPolicy *v1alpha1.ImageValidatingPolicy `json:"imageValidatingPolicy"`
 	// ValidatingAdmissionPolicy is the original policy
 	ValidatingAdmissionPolicy *v1.ValidatingAdmissionPolicy `json:"validatingAdmissionPolicy"`

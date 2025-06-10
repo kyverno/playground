@@ -26,60 +26,68 @@ var (
 	vapbV1beta1     = v1beta1.SchemeGroupVersion.WithKind("ValidatingAdmissionPolicyBinding")
 	vpolV1alpha1    = v1alpha1.SchemeGroupVersion.WithKind("ValidatingPolicy")
 	ivpolV1alpha1   = v1alpha1.SchemeGroupVersion.WithKind("ImageValidatingPolicy")
+	dpolV1alpha1    = v1alpha1.SchemeGroupVersion.WithKind("DeletingPolicy")
 )
 
-func Load(l loader.Loader, content []byte) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageValidatingPolicy, error) {
+func Load(l loader.Loader, content []byte) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageValidatingPolicy, []v1alpha1.DeletingPolicy, error) {
 	untyped, err := resource.LoadResources(l, content)
 	if err != nil {
-		return nil, nil, nil, nil, nil, err
+		return nil, nil, nil, nil, nil, nil, err
 	}
 	var policies []kyvernov1.PolicyInterface
 	var vaps []v1.ValidatingAdmissionPolicy
 	var vapbs []v1.ValidatingAdmissionPolicyBinding
 	var vpols []v1alpha1.ValidatingPolicy
 	var ivpols []v1alpha1.ImageValidatingPolicy
+	var dpols []v1alpha1.DeletingPolicy
 	for _, object := range untyped {
 		gvk := object.GroupVersionKind()
 		switch gvk {
 		case policyV1, policyV2:
 			typed, err := convert.To[kyvernov1.Policy](object)
 			if err != nil {
-				return nil, nil, nil, nil, nil, err
+				return nil, nil, nil, nil, nil, nil, err
 			}
 			policies = append(policies, typed)
 		case clusterPolicyV1, clusterPolicyV2:
 			typed, err := convert.To[kyvernov1.ClusterPolicy](object)
 			if err != nil {
-				return nil, nil, nil, nil, nil, err
+				return nil, nil, nil, nil, nil, nil, err
 			}
 			policies = append(policies, typed)
 		case vapV1, vapV1beta1:
 			typed, err := convert.To[v1.ValidatingAdmissionPolicy](object)
 			if err != nil {
-				return nil, nil, nil, nil, nil, err
+				return nil, nil, nil, nil, nil, nil, err
 			}
 			vaps = append(vaps, *typed)
 		case vapbV1, vapbV1beta1:
 			typed, err := convert.To[v1.ValidatingAdmissionPolicyBinding](object)
 			if err != nil {
-				return nil, nil, nil, nil, nil, err
+				return nil, nil, nil, nil, nil, nil, err
 			}
 			vapbs = append(vapbs, *typed)
 		case vpolV1alpha1:
 			typed, err := convert.To[v1alpha1.ValidatingPolicy](object)
 			if err != nil {
-				return nil, nil, nil, nil, nil, err
+				return nil, nil, nil, nil, nil, nil, err
 			}
 			vpols = append(vpols, *typed)
 		case ivpolV1alpha1:
 			typed, err := convert.To[v1alpha1.ImageValidatingPolicy](object)
 			if err != nil {
-				return nil, nil, nil, nil, nil, err
+				return nil, nil, nil, nil, nil, nil, err
 			}
 			ivpols = append(ivpols, *typed)
+		case dpolV1alpha1:
+			typed, err := convert.To[v1alpha1.DeletingPolicy](object)
+			if err != nil {
+				return nil, nil, nil, nil, nil, nil, err
+			}
+			dpols = append(dpols, *typed)
 		default:
-			return nil, nil, nil, nil, nil, fmt.Errorf("policy type not supported %s", gvk)
+			return nil, nil, nil, nil, nil, nil, fmt.Errorf("policy type not supported %s", gvk)
 		}
 	}
-	return policies, vaps, vapbs, vpols, ivpols, nil
+	return policies, vaps, vapbs, vpols, ivpols, dpols, nil
 }

@@ -40,7 +40,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			return nil, fmt.Errorf("unable to load params: %w", err)
 		}
 		params.ImageData = in.ImageData
-		policies, vaps, vapbs, vpols, ivpols, err := in.LoadPolicies(policyLoader)
+		policies, vaps, vapbs, vpols, ivpols, dpols, err := in.LoadPolicies(policyLoader)
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policies: %w", err)
 		}
@@ -103,7 +103,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		results, err := processor.Run(ctx, policies, vaps, vapbs, vpols, ivpols, resources, oldResources)
+		results, err := processor.Run(ctx, policies, vaps, vapbs, vpols, ivpols, dpols, resources, oldResources)
 		if err != nil {
 			return nil, err
 		}
@@ -117,7 +117,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 
 func parseKubeVersion(kubeVersion string) (string, error) {
 	if kubeVersion == "" {
-		return "1.28", nil
+		return "1.30", nil
 	}
 	version, err := semver.NewVersion(kubeVersion)
 	if err != nil {

@@ -15,6 +15,8 @@ import (
 	celengine "github.com/kyverno/kyverno/pkg/cel/engine"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
+	dpolcompiler "github.com/kyverno/kyverno/pkg/cel/policies/dpol/compiler"
+	dpolengine "github.com/kyverno/kyverno/pkg/cel/policies/dpol/engine"
 	ivpolengine "github.com/kyverno/kyverno/pkg/cel/policies/ivpol/engine"
 	vpolcompiler "github.com/kyverno/kyverno/pkg/cel/policies/vpol/compiler"
 	vpolengine "github.com/kyverno/kyverno/pkg/cel/policies/vpol/engine"
@@ -68,6 +70,7 @@ func (p *Processor) Run(
 	vapbs []v1.ValidatingAdmissionPolicyBinding,
 	vpols []v1alpha1.ValidatingPolicy,
 	ivpols []v1alpha1.ImageValidatingPolicy,
+	dpols []v1alpha1.DeletingPolicy,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -251,6 +254,48 @@ func (p *Processor) Run(
 					WithPolicyResponse(engineapi.PolicyResponse{Rules: result.Rules})
 
 				response.Validation = append(response.Validation, models.ConvertResponse(resp))
+			}
+		}
+
+		if len(dpols) > 0 {
+			provider, err := dpolengine.NewProvider(dpolcompiler.NewCompiler(), dpols, nil)
+
+			engine := dpolengine.NewEngine(nsResolver(p.dClient), p.restMapper, contextProvider, matching.NewMatcher())
+			if err != nil {
+				return nil, err
+			}
+
+			policies, err := provider.Fetch(context.Background())
+			if err != nil {
+				return nil, err
+			}
+
+			for _, policy := range policies {
+				// deleting
+				resp, err := engine.Handle(ctx, policy, newResource)
+				if err != nil {
+					result := engineapi.NewEngineResponse(newResource, engineapi.NewDeletingPolicy(&policy.Policy), nil)
+					result = result.WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{
+						*engineapi.NewRuleResponse("", engineapi.Deletion, err.Error(), engineapi.RuleStatusError, nil),
+					}})
+
+					response.Validation = append(response.Validation, models.ConvertResponse(result))
+					continue
+				}
+
+				status := engineapi.RuleStatusPass
+				message := "resource matched"
+				if !resp.Match {
+					status = engineapi.RuleStatusFail
+					message = "resource did not match"
+				}
+
+				result := engineapi.NewEngineResponse(newResource, engineapi.NewDeletingPolicy(&policy.Policy), nil)
+				result = result.WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{
+					*engineapi.NewRuleResponse("", engineapi.Deletion, message, status, nil),
+				}})
+
+				response.Validation = append(response.Validation, models.ConvertResponse(result))
 			}
 		}
 	}
@@ -511,14 +556,7 @@ func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidating
 	}
 	return ivpolengine.NewEngine(
 		provider,
-		func(name string) *corev1.Namespace {
-			ns, err := dClient.GetKubeClient().CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
-			if err != nil {
-				return nil
-			}
-
-			return ns
-		},
+		nsResolver(dClient),
 		matching.NewMatcher(),
 		dClient.GetKubeClient().CoreV1().Secrets(""),
 		nil,
@@ -559,6 +597,19 @@ func (p *Processor) newCELRequest(contextProvider libs.Context, resource, oldRes
 			},
 		},
 	)
+}
+
+func nsResolver(dClient dclient.Interface) celengine.NamespaceResolver {
+	return func(name string) *corev1.Namespace {
+		if name == "" {
+			return nil
+		}
+		ns, err := dClient.GetKubeClient().CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
+		if err != nil {
+			return nil
+		}
+		return ns
+	}
 }
 
 func NewProcessor(
