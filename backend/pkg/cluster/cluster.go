@@ -60,7 +60,7 @@ func New(restConfig *rest.Config) (Cluster, error) {
 	if err != nil {
 		return nil, err
 	}
-	dClient, err := dclient.NewClient(context.Background(), dynamicClient, kubeClient, 15*time.Minute)
+	dClient, err := dclient.NewClient(context.Background(), dynamicClient, kubeClient, 15*time.Minute, false, nil)
 	if err != nil {
 		return nil, err
 	}

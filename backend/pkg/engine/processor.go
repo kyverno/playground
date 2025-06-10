@@ -172,7 +172,7 @@ func (p *Processor) Run(
 					return nil, err
 				}
 
-				resp, _, err := engine.HandleMutating(ctx, request)
+				resp, _, err := engine.HandleMutating(ctx, request, nil)
 				if err != nil {
 					return nil, err
 				}
@@ -223,7 +223,7 @@ func (p *Processor) Run(
 		}
 
 		if len(vpols) > 0 {
-			var engine celengine.Engine
+			var engine vpolengine.Engine
 			request := p.newCELRequest(contextProvider, newResource, oldResource)
 
 			if request.JsonPayload == nil {
@@ -241,7 +241,7 @@ func (p *Processor) Run(
 			}
 
 			// validate
-			resp, err := engine.Handle(ctx, p.newCELRequest(contextProvider, newResource, oldResource))
+			resp, err := engine.Handle(ctx, p.newCELRequest(contextProvider, newResource, oldResource), nil)
 			if err != nil {
 				return nil, err
 			}
@@ -485,7 +485,7 @@ func NewVPOLProvider(policies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha
 	return vpolengine.NewProvider(vpolcompiler.NewCompiler(), policies, exceptions)
 }
 
-func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.PolicyException) (celengine.Engine, error) {
+func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.PolicyException) (vpolengine.Engine, error) {
 	provider, err := NewVPOLProvider(vpolicies, exceptions)
 	if err != nil {
 		return nil, err

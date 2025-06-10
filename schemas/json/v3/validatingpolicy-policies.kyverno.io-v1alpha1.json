@@ -1583,10 +1583,42 @@
                       }
                     },
                     "type": "object"
+                  },
+                  "targets": {
+                    "items": {
+                      "properties": {
+                        "group": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "kind": {
+                          "type": "string"
+                        },
+                        "resource": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "resource",
+                        "version"
+                      ],
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "type": "array"
                   }
                 },
                 "required": [
-                  "spec"
+                  "spec",
+                  "targets"
                 ],
                 "type": [
                   "object",
