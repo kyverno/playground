@@ -675,7 +675,8 @@
           "description": "Type represents request type for background processing",
           "enum": [
             "mutate",
-            "generate"
+            "generate",
+            "cel-generate"
           ],
           "type": [
             "string",
