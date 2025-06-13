@@ -16,6 +16,7 @@ type Response struct {
 	Policy                kyvernov1.PolicyInterface       `json:"policy"`
 	ValidatingPolicy      *v1alpha1.ValidatingPolicy      `json:"validatingPolicy"`
 	DeletingPolicy        *v1alpha1.DeletingPolicy        `json:"deletingPolicy"`
+	GeneratingPolicy      *v1alpha1.GeneratingPolicy      `json:"generatingPolicy"`
 	ImageValidatingPolicy *v1alpha1.ImageValidatingPolicy `json:"imageValidatingPolicy"`
 	// ValidatingAdmissionPolicy is the original policy
 	ValidatingAdmissionPolicy *v1.ValidatingAdmissionPolicy `json:"validatingAdmissionPolicy"`

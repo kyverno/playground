@@ -19,6 +19,7 @@ import vapbv1 from './schemas/validatingadmissionpolicybinding-admissionregistra
 import vpolv1alpha1 from './schemas/validatingpolicy-policies.kyverno.io-v1alpha1.json'
 import ivpolv1alpha1 from './schemas/imagevalidatingpolicy-policies.kyverno.io-v1alpha1.json'
 import dpolv1alpha1 from './schemas/deletingpolicy-policies.kyverno.io-v1alpha1.json'
+import gpolv1alpha1 from './schemas/generatingpolicy-policies.kyverno.io-v1alpha1.json'
 import context from './schemas/context.json'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
@@ -41,7 +42,8 @@ configureMonacoYaml(monaco, {
           { $ref: '#/definitions/vapb-v1' },
           { $ref: '#/definitions/validatingpolicy-v1alpha1' },
           { $ref: '#/definitions/imagevalidatingpolicy-v1alpha1' },
-          { $ref: '#/definitions/deletingpolicy-v1alpha1' }
+          { $ref: '#/definitions/deletingpolicy-v1alpha1' },
+          { $ref: '#/definitions/generatingpolicy-v1alpha1' }
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema,
@@ -52,7 +54,8 @@ configureMonacoYaml(monaco, {
           'vapb-v1': vapbv1 as JSONSchema,
           'validatingpolicy-v1alpha1': vpolv1alpha1 as JSONSchema,
           'imagevalidatingpolicy-v1alpha1': ivpolv1alpha1 as JSONSchema,
-          'deletingpolicy-v1alpha1': dpolv1alpha1 as JSONSchema
+          'deletingpolicy-v1alpha1': dpolv1alpha1 as JSONSchema,
+          'generatingpolicy-v1alpha1': gpolv1alpha1 as JSONSchema
         }
       },
       uri: `${baseURL}/schemas/policies.json`,
@@ -82,6 +85,11 @@ configureMonacoYaml(monaco, {
       schema: dpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/deletingpolicy-policies.kyverno.io-v1alpha1.json`,
       fileMatch: ['deletingpolicy.yaml']
+    },
+    {
+      schema: gpolv1alpha1 as JSONSchema,
+      uri: `${baseURL}/schemas/generatingpolicy-policies.kyverno.io-v1alpha1.json`,
+      fileMatch: ['generatingpolicy.yaml']
     },
     {
       schema: context as JSONSchema,

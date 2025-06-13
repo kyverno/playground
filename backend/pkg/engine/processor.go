@@ -40,6 +40,7 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/dpol"
+	"github.com/kyverno/playground/backend/pkg/engine/gpol"
 	"github.com/kyverno/playground/backend/pkg/engine/ivpol"
 	"github.com/kyverno/playground/backend/pkg/engine/mocks"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
@@ -65,6 +66,7 @@ func (p *Processor) Run(
 	vpols []v1alpha1.ValidatingPolicy,
 	ivpols []v1alpha1.ImageValidatingPolicy,
 	dpols []v1alpha1.DeletingPolicy,
+	gpols []v1alpha1.GeneratingPolicy,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -132,15 +134,6 @@ func (p *Processor) Run(
 			response.Validation = append(response.Validation, result)
 		}
 
-		// generation
-		for _, policy := range policies {
-			result, err := p.generate(ctx, policy, oldResource, newResource)
-			if err != nil {
-				return nil, err
-			}
-			response.Generation = append(response.Generation, result)
-		}
-
 		for _, policy := range vaps {
 			pData := engineapi.NewValidatingAdmissionPolicyData(&policy)
 			for _, binding := range vapbs {
@@ -186,6 +179,25 @@ func (p *Processor) Run(
 
 			response.Deletion = results
 		}
+
+		if len(gpols) > 0 {
+			results, err := gpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, gpols)
+			if err != nil {
+				return nil, err
+			}
+
+			response.Generation = append(response.Generation, results...)
+		}
+
+		// generation
+		for _, policy := range policies {
+			result, err := p.generate(ctx, policy, oldResource, newResource)
+			if err != nil {
+				return nil, err
+			}
+			response.Generation = append(response.Generation, result)
+		}
+
 	}
 
 	return response, nil
