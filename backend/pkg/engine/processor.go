@@ -177,7 +177,7 @@ func (p *Processor) Run(
 				return nil, err
 			}
 
-			response.Deletion = results
+			response.Deletion = append(response.Deletion, results...)
 		}
 
 		if len(gpols) > 0 {
