@@ -70,9 +70,9 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 					if meta, ok := g.Object["metadata"]; ok {
 						delete(meta.(map[string]any), "managedFields")
 					}
-
-					newRuleResponse = append(newRuleResponse, *rule.WithGeneratedResources(rule.GeneratedResources()))
 				}
+
+				newRuleResponse = append(newRuleResponse, *rule.WithGeneratedResources(rule.GeneratedResources()))
 			}
 
 			response.PolicyResponse.Rules = newRuleResponse
