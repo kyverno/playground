@@ -28,7 +28,7 @@
       </div>
     </template>
 
-    <v-toolbar-actions>
+    <v-toolbar-items>
       <v-menu v-if="config.versions.length" open-on-hover>
         <template v-slot:activator="{ props }">
           <v-btn variant="outlined" class="text-none" rounded="xl" v-bind="props">
@@ -45,7 +45,7 @@
           </template>
         </v-list>
       </v-menu>
-    </v-toolbar-actions>
+    </v-toolbar-items>
 
     <template v-slot:append>
       <v-btn

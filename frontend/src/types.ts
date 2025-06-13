@@ -88,6 +88,7 @@ export type EngineResponse = {
   policies: Policy[]
   resources: Resource[]
   validation?: Validation[]
+  deletion?: Validation[]
   mutation?: Mutation[]
   imageVerification?: Mutation[]
   generation?: Generation[]

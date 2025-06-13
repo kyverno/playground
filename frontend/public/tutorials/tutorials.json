@@ -5,6 +5,28 @@
         "color": "orange-darken-3",
         "subgroups": [
             {
+                "name": "New Policy Types",
+                "url": "tutorials/new-policy-types",
+                "policies": [
+                    {
+                        "path": "vpol",
+                        "title": "ValidatingPolicy"
+                    },
+                    {
+                        "path": "ivpol",
+                        "title": "ImageValidatingPolicy"
+                    },
+                    {
+                        "path": "gpol",
+                        "title": "GeneratingPolicy"
+                    },
+                    {
+                        "path": "dpol",
+                        "title": "DeletingPolicy"
+                    }
+                ]
+            },
+            {
                 "name": "RuleTypes",
                 "url": "tutorials/policies",
                 "policies": [

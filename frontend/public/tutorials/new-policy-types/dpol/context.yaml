@@ -1,0 +1,37 @@
+kubernetes:
+  version: '1.31'
+
+context:
+  username: ''
+  groups: []
+  roles: []
+  clusterRoles: []
+  namespaceLabels: {}
+  operation: CREATE
+  dryRun: false
+
+flags:
+  cosign:
+    imageSignatureRepository: ''
+  exceptions:
+    enabled: true
+    namespace: ''
+  forceFailurePolicyIgnore:
+    enabled: false
+  protectManagedResources:
+    enabled: false
+  enableDeferredLoading:
+    enabled: false
+  generateValidatingAdmissionPolicy:
+    enabled: false
+  registry:
+    allowInsecure: false
+    pullSecrets: []
+    credentialHelpers:
+      - default
+      - amazon
+      - azure
+      - github
+      - google
+
+variables: {}
