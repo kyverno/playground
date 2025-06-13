@@ -12,14 +12,7 @@ import (
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/data"
 	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
-	celengine "github.com/kyverno/kyverno/pkg/cel/engine"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
-	"github.com/kyverno/kyverno/pkg/cel/matching"
-	dpolcompiler "github.com/kyverno/kyverno/pkg/cel/policies/dpol/compiler"
-	dpolengine "github.com/kyverno/kyverno/pkg/cel/policies/dpol/engine"
-	ivpolengine "github.com/kyverno/kyverno/pkg/cel/policies/ivpol/engine"
-	vpolcompiler "github.com/kyverno/kyverno/pkg/cel/policies/vpol/compiler"
-	vpolengine "github.com/kyverno/kyverno/pkg/cel/policies/vpol/engine"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/config"
 	kyvernoengine "github.com/kyverno/kyverno/pkg/engine"
@@ -29,7 +22,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	gctxstore "github.com/kyverno/kyverno/pkg/globalcontext/store"
-	eval "github.com/kyverno/kyverno/pkg/imageverification/evaluator"
 	"github.com/kyverno/kyverno/pkg/imageverifycache"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
@@ -45,11 +37,13 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/restmapper"
-	"k8s.io/utils/ptr"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/engine/dpol"
+	"github.com/kyverno/playground/backend/pkg/engine/ivpol"
 	"github.com/kyverno/playground/backend/pkg/engine/mocks"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
+	"github.com/kyverno/playground/backend/pkg/engine/vpol"
 )
 
 type Processor struct {
@@ -167,136 +161,30 @@ func (p *Processor) Run(
 		}
 
 		if len(ivpols) > 0 {
-			request := p.newCELRequest(contextProvider, newResource, oldResource)
-
-			if request.JsonPayload == nil {
-				engine, err := newIVPEngine(p.dClient, ivpols, nil)
-				if err != nil {
-					return nil, err
-				}
-
-				resp, _, err := engine.HandleMutating(ctx, request, nil)
-				if err != nil {
-					return nil, err
-				}
-
-				for _, result := range resp.Policies {
-					resp := engineapi.NewEngineResponse(newResource, engineapi.NewImageValidatingPolicy(result.Policy), p.params.Context.NamespaceLabels).
-						WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{result.Result}})
-
-					response.Validation = append(response.Validation, models.ConvertResponse(resp))
-				}
-			} else {
-				compiled := make([]*eval.CompiledImageValidatingPolicy, 0)
-				pMap := make(map[string]*v1alpha1.ImageValidatingPolicy)
-				for i := range ivpols {
-					p := ivpols[i]
-					pMap[p.GetName()] = &p
-					compiled = append(compiled, &eval.CompiledImageValidatingPolicy{Policy: &p})
-				}
-
-				results, err := eval.Evaluate(context.TODO(), compiled, newResource.Object, nil, nil, nil)
-				if err != nil {
-					return nil, err
-				}
-
-				resp := engineapi.EngineResponse{
-					Resource:       newResource,
-					PolicyResponse: engineapi.PolicyResponse{},
-				}
-				for p, rslt := range results {
-					if rslt.Error != nil {
-						resp.PolicyResponse.Rules = []engineapi.RuleResponse{
-							*engineapi.RuleError("evaluation", engineapi.ImageVerify, "failed to evaluate policy for JSON", rslt.Error, nil),
-						}
-					} else if rslt.Result {
-						resp.PolicyResponse.Rules = []engineapi.RuleResponse{
-							*engineapi.RulePass(p, engineapi.ImageVerify, "success", nil),
-						}
-					} else {
-						resp.PolicyResponse.Rules = []engineapi.RuleResponse{
-							*engineapi.RuleFail(p, engineapi.ImageVerify, rslt.Message, nil),
-						}
-					}
-					resp = resp.WithPolicy(engineapi.NewImageValidatingPolicy(pMap[p]))
-
-					response.Validation = append(response.Validation, models.ConvertResponse(resp))
-				}
+			results, err := ivpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, ivpols)
+			if err != nil {
+				return nil, err
 			}
+
+			response.Validation = append(response.Validation, results...)
 		}
 
 		if len(vpols) > 0 {
-			var engine vpolengine.Engine
-			request := p.newCELRequest(contextProvider, newResource, oldResource)
-
-			if request.JsonPayload == nil {
-				engine, err = newCELEngine(p.dClient, vpols, nil)
-				if err != nil {
-					return nil, err
-				}
-			} else {
-				provider, err := NewVPOLProvider(vpols, nil)
-				if err != nil {
-					return nil, err
-				}
-
-				engine = vpolengine.NewEngine(provider, nil, nil)
-			}
-
-			// validate
-			resp, err := engine.Handle(ctx, p.newCELRequest(contextProvider, newResource, oldResource), nil)
+			results, err := vpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, vpols)
 			if err != nil {
 				return nil, err
 			}
 
-			for _, result := range resp.Policies {
-				resp := engineapi.NewEngineResponse(newResource, engineapi.NewValidatingPolicy(&result.Policy), p.params.Context.NamespaceLabels).
-					WithPolicyResponse(engineapi.PolicyResponse{Rules: result.Rules})
-
-				response.Validation = append(response.Validation, models.ConvertResponse(resp))
-			}
+			response.Validation = append(response.Validation, results...)
 		}
 
 		if len(dpols) > 0 {
-			provider, err := dpolengine.NewProvider(dpolcompiler.NewCompiler(), dpols, nil)
-
-			engine := dpolengine.NewEngine(nsResolver(p.dClient), p.restMapper, contextProvider, matching.NewMatcher())
+			results, err := dpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, newResource, dpols)
 			if err != nil {
 				return nil, err
 			}
 
-			policies, err := provider.Fetch(context.Background())
-			if err != nil {
-				return nil, err
-			}
-
-			for _, policy := range policies {
-				// deleting
-				resp, err := engine.Handle(ctx, policy, newResource)
-				if err != nil {
-					result := engineapi.NewEngineResponse(newResource, engineapi.NewDeletingPolicy(&policy.Policy), nil)
-					result = result.WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{
-						*engineapi.NewRuleResponse("", engineapi.Deletion, err.Error(), engineapi.RuleStatusError, nil),
-					}})
-
-					response.Validation = append(response.Validation, models.ConvertResponse(result))
-					continue
-				}
-
-				status := engineapi.RuleStatusPass
-				message := "resource matched"
-				if !resp.Match {
-					status = engineapi.RuleStatusFail
-					message = "resource did not match"
-				}
-
-				result := engineapi.NewEngineResponse(newResource, engineapi.NewDeletingPolicy(&policy.Policy), nil)
-				result = result.WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{
-					*engineapi.NewRuleResponse("", engineapi.Deletion, message, status, nil),
-				}})
-
-				response.Validation = append(response.Validation, models.ConvertResponse(result))
-			}
+			response.Deletion = results
 		}
 	}
 
@@ -524,92 +412,6 @@ func newEngine(
 		exceptionSelector,
 		isCluster,
 	), nil
-}
-
-func NewVPOLProvider(policies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.PolicyException) (vpolengine.Provider, error) {
-	return vpolengine.NewProvider(vpolcompiler.NewCompiler(), policies, exceptions)
-}
-
-func newCELEngine(dClient dclient.Interface, vpolicies []v1alpha1.ValidatingPolicy, exceptions []*v1alpha1.PolicyException) (vpolengine.Engine, error) {
-	provider, err := NewVPOLProvider(vpolicies, exceptions)
-	if err != nil {
-		return nil, err
-	}
-	return vpolengine.NewEngine(
-		provider,
-		func(name string) *corev1.Namespace {
-			ns, err := dClient.GetKubeClient().CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
-			if err != nil {
-				return nil
-			}
-
-			return ns
-		},
-		matching.NewMatcher(),
-	), nil
-}
-
-func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidatingPolicy, exceptions []*v1alpha1.PolicyException) (ivpolengine.Engine, error) {
-	provider, err := ivpolengine.NewProvider(policies, exceptions)
-	if err != nil {
-		return nil, err
-	}
-	return ivpolengine.NewEngine(
-		provider,
-		nsResolver(dClient),
-		matching.NewMatcher(),
-		dClient.GetKubeClient().CoreV1().Secrets(""),
-		nil,
-	), nil
-}
-
-func (p *Processor) newCELRequest(contextProvider libs.Context, resource, oldResource unstructured.Unstructured) celengine.EngineRequest {
-	gvk := resource.GroupVersionKind()
-	if gvk.Kind == "" {
-		return celengine.RequestFromJSON(contextProvider, &resource)
-	}
-
-	mapping, err := p.restMapper.RESTMapping(gvk.GroupKind(), gvk.Version)
-	if err != nil {
-		return celengine.EngineRequest{}
-	}
-
-	return celengine.RequestFromAdmission(
-		contextProvider,
-		admissionv1.AdmissionRequest{
-			UID:                "abc-123",
-			Kind:               metav1.GroupVersionKind(gvk),
-			Resource:           metav1.GroupVersionResource(mapping.Resource),
-			SubResource:        "",
-			RequestKind:        ptr.To(metav1.GroupVersionKind(gvk)),
-			RequestResource:    ptr.To(metav1.GroupVersionResource(mapping.Resource)),
-			RequestSubResource: "",
-			Name:               resource.GetName(),
-			Namespace:          resource.GetNamespace(),
-			Operation:          admissionv1.Operation(p.params.Context.Operation),
-			Object:             runtime.RawExtension{Object: &resource},
-			OldObject:          runtime.RawExtension{Object: &oldResource},
-			UserInfo: authenticationv1.UserInfo{
-				UID:      "user-123",
-				Username: p.params.Context.Username,
-				Groups:   p.params.Context.Groups,
-				Extra:    nil,
-			},
-		},
-	)
-}
-
-func nsResolver(dClient dclient.Interface) celengine.NamespaceResolver {
-	return func(name string) *corev1.Namespace {
-		if name == "" {
-			return nil
-		}
-		ns, err := dClient.GetKubeClient().CoreV1().Namespaces().Get(context.TODO(), name, metav1.GetOptions{})
-		if err != nil {
-			return nil
-		}
-		return ns
-	}
 }
 
 func NewProcessor(
