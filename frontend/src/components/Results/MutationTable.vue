@@ -86,7 +86,8 @@ const items = computed(() => {
       mutation.validatingAdmissionPolicy ||
       mutation.validatingPolicy ||
       mutation.imageValidatingPolicy ||
-      mutation.deletingPolicy
+      mutation.deletingPolicy ||
+      mutation.generatingPolicy
 
     const rules = mutation.policyResponse.rules || []
     rules.forEach((rule) => {
