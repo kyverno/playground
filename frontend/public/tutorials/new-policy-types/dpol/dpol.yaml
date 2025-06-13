@@ -1,0 +1,16 @@
+apiVersion: policies.kyverno.io/v1alpha1
+kind: DeletingPolicy
+metadata:
+  name: deleting-pod
+spec:
+  conditions:
+  - expression: object.metadata.namespace == "default"
+    name: check-pod-ns
+  - expression: object.metadata.name == "example"
+    name: pod-name
+  matchConstraints:
+    resourceRules:
+    - apiGroups: [""]
+      apiVersions: ["v1"]
+      resources: ["pods"]
+  schedule: '*/1 * * * *'

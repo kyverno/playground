@@ -31,6 +31,7 @@
         v-if="hasResults && verifications.length"
         title="ImageVerification Results"
       />
+      <DeletionTable :results="deletions" v-if="hasResults && deletions.length" />
       <ValidationTable :results="validations" v-if="hasResults && validations.length" />
       <GenerationTable :results="generations" v-if="hasResults && generations.length" />
       <v-card-actions>
@@ -58,6 +59,7 @@ import { computed, type PropType } from 'vue'
 import type { EngineResponse } from '@/types'
 import { useClipboard } from '@vueuse/core'
 import { useConfig, btnColor } from '@/config'
+import DeletionTable from './DeletionTable.vue'
 import ValidationTable from './ValidationTable.vue'
 import MutationTable from './MutationTable.vue'
 import GenerationTable from './GenerationTable.vue'
@@ -81,6 +83,9 @@ const hasResults = computed(() => {
     ) ||
     (props.results.generation || []).some(
       (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+    ) ||
+    (props.results.deletion || []).some(
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
     )
   )
 })
@@ -91,6 +96,14 @@ const validations = computed(() => {
   }
 
   return props.results.validation || []
+})
+
+const deletions = computed(() => {
+  if (hasResults.value) {
+    return (props.results.deletion || []).filter((v) => v.policyResponse.rules)
+  }
+
+  return props.results.deletion || []
 })
 
 const mutations = computed(() => {
