@@ -85,6 +85,8 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		out.ImageValidatingPolicy = in.Policy().AsImageValidatingPolicy()
 	} else if in.Policy().AsDeletingPolicy() != nil {
 		out.DeletingPolicy = in.Policy().AsDeletingPolicy()
+	} else if in.Policy().AsMutatingPolicy() != nil {
+		out.MutatingPolicy = in.Policy().AsMutatingPolicy()
 	} else if in.Policy().AsGeneratingPolicy() != nil {
 		out.GeneratingPolicy = in.Policy().AsGeneratingPolicy()
 	}

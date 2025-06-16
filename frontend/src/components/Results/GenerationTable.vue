@@ -86,7 +86,8 @@ const items = computed(() => {
       generation.validatingPolicy ||
       generation.imageValidatingPolicy ||
       generation.deletingPolicy ||
-      generation.generatingPolicy
+      generation.generatingPolicy ||
+      generation.mutatingPolicy
 
     const rules = generation.policyResponse.rules || []
 

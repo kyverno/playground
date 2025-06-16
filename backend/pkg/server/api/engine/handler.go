@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/gin-gonic/gin"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	"github.com/kyverno/kyverno/ext/resource/loader"
@@ -40,7 +39,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			return nil, fmt.Errorf("unable to load params: %w", err)
 		}
 		params.ImageData = in.ImageData
-		policies, vaps, vapbs, vpols, ivpols, dpols, gpols, err := in.LoadPolicies(policyLoader)
+		policies, vaps, vapbs, vpols, ivpols, dpols, gpols, mpols, err := in.LoadPolicies(policyLoader)
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policies: %w", err)
 		}
@@ -103,7 +102,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		if err != nil {
 			return nil, err
 		}
-		results, err := processor.Run(ctx, policies, vaps, vapbs, vpols, ivpols, dpols, gpols, resources, oldResources)
+		results, err := processor.Run(ctx, policies, vaps, vapbs, vpols, ivpols, dpols, gpols, mpols, resources, oldResources)
 		if err != nil {
 			return nil, err
 		}
@@ -113,17 +112,6 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			Results:   results,
 		}, nil
 	}, http.StatusOK), nil
-}
-
-func parseKubeVersion(kubeVersion string) (string, error) {
-	if kubeVersion == "" {
-		return "1.30", nil
-	}
-	version, err := semver.NewVersion(kubeVersion)
-	if err != nil {
-		return "", err
-	}
-	return fmt.Sprint(version.Major(), ".", version.Minor()), nil
 }
 
 func validateParams(params *models.Parameters, cmResolver engineapi.ConfigmapResolver, policies []kyvernov1.PolicyInterface) error {

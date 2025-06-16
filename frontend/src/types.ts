@@ -58,6 +58,7 @@ export type Result = RequireOnlyOne<
     imageValidatingPolicy?: Policy
     deletingPolicy?: Policy
     generatingPolicy?: Policy
+    mutatingPolicy?: Policy
   },
   | 'policy'
   | 'validatingAdmissionPolicy'
@@ -65,6 +66,7 @@ export type Result = RequireOnlyOne<
   | 'imageValidatingPolicy'
   | 'deletingPolicy'
   | 'generatingPolicy'
+  | 'mutatingPolicy'
 >
 
 export type Validation = Result & {

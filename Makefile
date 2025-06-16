@@ -132,6 +132,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_imagevalidatingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_deletingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_generatingpolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_mutatingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_clusterpolicyreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_policyreports.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/reports/reports.kyverno.io_clusterephemeralreports.yaml
@@ -205,6 +206,8 @@ build-frontend: ## Build frontend
 	@cp schemas/json/v3/imagevalidatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/deletingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/deletingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/mutatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/mutatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/generatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/generatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas

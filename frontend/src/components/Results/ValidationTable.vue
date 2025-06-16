@@ -93,7 +93,8 @@ const items = computed(() => {
       validation.validatingPolicy ||
       validation.imageValidatingPolicy ||
       validation.deletingPolicy ||
-      validation.generatingPolicy
+      validation.generatingPolicy ||
+      validation.mutatingPolicy
 
     if (!validation.policyResponse.rules && !hideNoMatch.value) {
       results.push({

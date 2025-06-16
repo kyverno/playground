@@ -17,7 +17,11 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/openapi"
 	"k8s.io/client-go/rest"
+	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
+
+	"github.com/kyverno/playground/backend/data"
 )
 
 type SearchResult struct {
@@ -38,6 +42,7 @@ type Cluster interface {
 	Get(context.Context, string, string, string, string) (*unstructured.Unstructured, error)
 	DClient([]runtime.Object, ...runtime.Object) (dclient.Interface, error)
 	PolicyExceptionSelector(namespace string, exceptions ...*v2.PolicyException) engineapi.PolicyExceptionSelector
+	OpenAPIClient(version string) (openapi.Client, error)
 	IsFake() bool
 }
 
@@ -142,6 +147,22 @@ func (c cluster) Get(ctx context.Context, apiVersion string, kind string, namesp
 
 func (c cluster) PolicyExceptionSelector(namespace string, exceptions ...*v2.PolicyException) engineapi.PolicyExceptionSelector {
 	return NewPolicyExceptionSelector(namespace, c.kyvernoClient, exceptions...)
+}
+
+func (c cluster) OpenAPIClient(version string) (openapi.Client, error) {
+	dclient, err := c.DClient(nil)
+	if err != nil {
+		return nil, err
+	}
+	schemas, err := data.Schemas()
+	if err != nil {
+		return nil, err
+	}
+
+	return openapiclient.NewComposite(
+		dclient.GetKubeClient().Discovery().OpenAPIV3(),
+		openapiclient.NewLocalSchemaFiles(schemas),
+	), nil
 }
 
 func (c cluster) DClient(resources []runtime.Object, _ ...runtime.Object) (dclient.Interface, error) {
