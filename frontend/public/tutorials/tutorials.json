@@ -17,6 +17,10 @@
                         "title": "ImageValidatingPolicy"
                     },
                     {
+                        "path": "mpol",
+                        "title": "MutatingPolicy"
+                    },
+                    {
                         "path": "gpol",
                         "title": "GeneratingPolicy"
                     },
