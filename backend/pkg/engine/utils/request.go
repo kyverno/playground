@@ -25,6 +25,10 @@ func NewCELRequest(restMapper meta.RESTMapper, contextProvider libs.Context, par
 		return engine.EngineRequest{}
 	}
 
+	if oldResource.GetName() == "" || oldResource.GetKind() == "" {
+		oldResource = resource
+	}
+
 	return engine.RequestFromAdmission(
 		contextProvider,
 		admissionv1.AdmissionRequest{

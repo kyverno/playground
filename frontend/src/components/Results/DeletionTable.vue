@@ -93,7 +93,8 @@ const items = computed(() => {
       deletion.validatingPolicy ||
       deletion.imageValidatingPolicy ||
       deletion.deletingPolicy ||
-      deletion.generatingPolicy
+      deletion.generatingPolicy ||
+      deletion.mutatingPolicy
 
     if (!deletion.policyResponse.rules && !hideNoMatch.value) {
       results.push({

@@ -17,6 +17,7 @@ type Response struct {
 	ValidatingPolicy      *v1alpha1.ValidatingPolicy      `json:"validatingPolicy"`
 	DeletingPolicy        *v1alpha1.DeletingPolicy        `json:"deletingPolicy"`
 	GeneratingPolicy      *v1alpha1.GeneratingPolicy      `json:"generatingPolicy"`
+	MutatingPolicy        *v1alpha1.MutatingPolicy        `json:"mutatingPolicy"`
 	ImageValidatingPolicy *v1alpha1.ImageValidatingPolicy `json:"imageValidatingPolicy"`
 	// ValidatingAdmissionPolicy is the original policy
 	ValidatingAdmissionPolicy *v1.ValidatingAdmissionPolicy `json:"validatingAdmissionPolicy"`

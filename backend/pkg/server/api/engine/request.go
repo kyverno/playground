@@ -46,7 +46,7 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	return &params, nil
 }
 
-func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageValidatingPolicy, []v1alpha1.DeletingPolicy, []v1alpha1.GeneratingPolicy, error) {
+func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageValidatingPolicy, []v1alpha1.DeletingPolicy, []v1alpha1.GeneratingPolicy, []v1alpha1.MutatingPolicy, error) {
 	return policy.Load(policyLoader, []byte(r.Policies))
 }
 
@@ -95,11 +95,11 @@ func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion stri
 		}
 		clients = append(clients, dclient.GetKubeClient().Discovery().OpenAPIV3())
 	} else {
-		kubeVersion, err := parseKubeVersion(kubeVersion)
+		client, err := cluster.OpenAPIClient(kubeVersion)
 		if err != nil {
 			return nil, err
 		}
-		clients = append(clients, openapiclient.NewHardcodedBuiltins(kubeVersion))
+		clients = append(clients, client)
 	}
 
 	schemas, err := data.Schemas()

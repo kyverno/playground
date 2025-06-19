@@ -44,6 +44,7 @@ import (
 	"github.com/kyverno/playground/backend/pkg/engine/ivpol"
 	"github.com/kyverno/playground/backend/pkg/engine/mocks"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
+	"github.com/kyverno/playground/backend/pkg/engine/mpol"
 	"github.com/kyverno/playground/backend/pkg/engine/vpol"
 )
 
@@ -67,6 +68,7 @@ func (p *Processor) Run(
 	ivpols []v1alpha1.ImageValidatingPolicy,
 	dpols []v1alpha1.DeletingPolicy,
 	gpols []v1alpha1.GeneratingPolicy,
+	mpols []v1alpha1.MutatingPolicy,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -85,6 +87,11 @@ func (p *Processor) Run(
 	oldMaxIndex := len(oldResources) - 1
 
 	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New())
+	if err != nil {
+		return nil, err
+	}
+
+	openAPI, err := p.cluster.OpenAPIClient(p.params.Kubernetes.Version)
 	if err != nil {
 		return nil, err
 	}
@@ -113,6 +120,15 @@ func (p *Processor) Run(
 			}
 			newResource = res
 			response.Mutation = append(response.Mutation, result)
+		}
+
+		if len(mpols) > 0 {
+			results, err := mpol.Process(context.TODO(), p.dClient, openAPI, p.restMapper, contextProvider, p.params, newResource, oldResource, mpols)
+			if err != nil {
+				return nil, err
+			}
+
+			response.Mutation = append(response.Mutation, results...)
 		}
 
 		// verify images

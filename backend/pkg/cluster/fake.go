@@ -14,8 +14,12 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic/fake"
 	kubefake "k8s.io/client-go/kubernetes/fake"
+	"k8s.io/client-go/openapi"
+	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
+	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/resource"
+	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
 type fakeCluster struct{}
@@ -42,6 +46,22 @@ func (c fakeCluster) Get(ctx context.Context, apiVersion string, kind string, na
 
 func (c fakeCluster) PolicyExceptionSelector(namespace string, exceptions ...*v2.PolicyException) engineapi.PolicyExceptionSelector {
 	return NewPolicyExceptionSelector(namespace, nil, exceptions...)
+}
+
+func (c fakeCluster) OpenAPIClient(version string) (openapi.Client, error) {
+	kubeVersion, err := utils.ParseKubeVersion(version)
+	if err != nil {
+		return nil, err
+	}
+	schemas, err := data.Schemas()
+	if err != nil {
+		return nil, err
+	}
+
+	return openapiclient.NewComposite(
+		openapiclient.NewHardcodedBuiltins(kubeVersion),
+		openapiclient.NewLocalSchemaFiles(schemas),
+	), nil
 }
 
 func (c fakeCluster) DClient(resources []runtime.Object, objects ...runtime.Object) (dclient.Interface, error) {
