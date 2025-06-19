@@ -11,13 +11,14 @@ require (
 	github.com/knadh/koanf/parsers/yaml v1.0.0
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/v2 v2.2.0
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20250618203424-677c7f62721f
+	github.com/kyverno/kyverno v1.5.0-rc1.0.20250619135234-b355300b6710
 	github.com/loopfz/gadgeto v0.11.5
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	gomodules.xyz/jsonpatch/v2 v2.5.0
 	k8s.io/api v0.33.1
 	k8s.io/apimachinery v0.33.1
+	k8s.io/apiserver v0.33.1
 	k8s.io/client-go v0.33.1
 	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
 	sigs.k8s.io/controller-runtime v0.21.0
@@ -354,7 +355,6 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/apiextensions-apiserver v0.33.1 // indirect
-	k8s.io/apiserver v0.33.1 // indirect
 	k8s.io/cli-runtime v0.33.1 // indirect
 	k8s.io/component-base v0.33.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect

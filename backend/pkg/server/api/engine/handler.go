@@ -10,9 +10,8 @@ import (
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/loopfz/gadgeto/tonic"
-	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
+	"k8s.io/apiserver/pkg/admission/plugin/policy/mutating/patch"
 
-	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
@@ -20,19 +19,19 @@ import (
 )
 
 func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
-	schemas, err := data.Schemas()
+	openAPI, err := cl.OpenAPIClient("1.32")
 	if err != nil {
 		return nil, err
 	}
 
-	policyClient := openapiclient.NewComposite(
-		openapiclient.NewLocalSchemaFiles(schemas),
-		openapiclient.NewHardcodedBuiltins("1.31"),
-	)
-	policyLoader, err := loader.New(policyClient)
+	policyLoader, err := loader.New(openAPI)
 	if err != nil {
 		return nil, err
 	}
+
+	tcm := patch.NewTypeConverterManager(nil, openAPI)
+	go tcm.Run(context.Background())
+
 	return tonic.Handler(func(ctx *gin.Context, in *EngineRequest) (*EngineResponse, error) {
 		params, err := in.LoadParameters()
 		if err != nil {
@@ -98,7 +97,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			}
 		}
 
-		processor, err := engine.NewProcessor(params, cl, config, dClient, cmResolver, exceptionSelector)
+		processor, err := engine.NewProcessor(params, cl, config, dClient, cmResolver, exceptionSelector, tcm)
 		if err != nil {
 			return nil, err
 		}
