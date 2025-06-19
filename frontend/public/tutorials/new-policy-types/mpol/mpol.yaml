@@ -5,10 +5,10 @@ metadata:
 spec:
   matchConstraints:
     resourceRules:
-    - apiGroups: [ "apps" ]
-      apiVersions: [ "v1" ]
-      operations: [ "CREATE" ]
-      resources: [ "deployments" ]
+    - apiGroups: ["apps"]
+      apiVersions: ["v1"]
+      operations: ["CREATE"]
+      resources: ["deployments"]
   matchConditions:
   - name: is-dev-namespace
     expression: request.namespace == 'dev'
