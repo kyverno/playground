@@ -36,6 +36,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+	mpatch "k8s.io/apiserver/pkg/admission/plugin/policy/mutating/patch"
 	"k8s.io/client-go/restmapper"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
@@ -57,6 +58,7 @@ type Processor struct {
 	cluster       cluster.Cluster
 	dClient       dclient.Interface
 	restMapper    meta.RESTMapper
+	tcm           mpatch.TypeConverterManager
 }
 
 func (p *Processor) Run(
@@ -91,11 +93,6 @@ func (p *Processor) Run(
 		return nil, err
 	}
 
-	openAPI, err := p.cluster.OpenAPIClient(p.params.Kubernetes.Version)
-	if err != nil {
-		return nil, err
-	}
-
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
 		newResource := unstructured.Unstructured{}
@@ -123,7 +120,7 @@ func (p *Processor) Run(
 		}
 
 		if len(mpols) > 0 {
-			results, err := mpol.Process(context.TODO(), p.dClient, openAPI, p.restMapper, contextProvider, p.params, newResource, oldResource, mpols)
+			results, err := mpol.Process(context.TODO(), p.dClient, p.tcm, p.restMapper, contextProvider, p.params, newResource, oldResource, mpols)
 			if err != nil {
 				return nil, err
 			}
@@ -449,6 +446,7 @@ func NewProcessor(
 	dClient dclient.Interface,
 	cmResolver engineapi.ConfigmapResolver,
 	exceptionSelector engineapi.PolicyExceptionSelector,
+	tcm mpatch.TypeConverterManager,
 ) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	if kyvernoConfig != nil {
@@ -526,5 +524,6 @@ func NewProcessor(
 		cluster:       cl,
 		dClient:       dClient,
 		restMapper:    restmapper.NewDiscoveryRESTMapper(apiGroupResources),
+		tcm:           tcm,
 	}, nil
 }
