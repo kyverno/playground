@@ -13,18 +13,19 @@ import (
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/client-go/openapi"
 
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/playground/backend/pkg/engine/utils"
 )
 
-func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource, oldResource unstructured.Unstructured, mpols []v1alpha1.MutatingPolicy) ([]models.Response, error) {
+func Process(ctx context.Context, dClient dclient.Interface, client openapi.Client, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource, oldResource unstructured.Unstructured, mpols []v1alpha1.MutatingPolicy) ([]models.Response, error) {
 	provider, err := NewProvider(compiler.NewCompiler(), mpols, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	eng := engine.NewEngine(provider, utils.NSResolver(dClient), dClient.GetKubeClient(), matching.NewMatcher())
+	eng := engine.NewEngine(provider, utils.NSResolver(dClient), client, matching.NewMatcher())
 
 	request := utils.NewCELRequest(restMapper, contextProvider, params, resource, oldResource)
 	results := make([]models.Response, 0)
@@ -35,8 +36,14 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	}
 
 	for _, res := range engineResponse.Policies {
+		var patched unstructured.Unstructured
+		if engineResponse.PatchedResource != nil {
+			patched = *engineResponse.PatchedResource
+		}
+
 		response := engineapi.EngineResponse{
-			Resource: *engineResponse.Resource,
+			Resource:        *engineResponse.Resource,
+			PatchedResource: patched,
 			PolicyResponse: engineapi.PolicyResponse{
 				Rules: res.Rules,
 			},

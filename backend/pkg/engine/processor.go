@@ -91,6 +91,11 @@ func (p *Processor) Run(
 		return nil, err
 	}
 
+	openAPI, err := p.cluster.OpenAPIClient(p.params.Kubernetes.Version)
+	if err != nil {
+		return nil, err
+	}
+
 	for i := range resources {
 		oldResource := unstructured.Unstructured{}
 		newResource := unstructured.Unstructured{}
@@ -118,7 +123,7 @@ func (p *Processor) Run(
 		}
 
 		if len(mpols) > 0 {
-			results, err := mpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, mpols)
+			results, err := mpol.Process(context.TODO(), p.dClient, openAPI, p.restMapper, contextProvider, p.params, newResource, oldResource, mpols)
 			if err != nil {
 				return nil, err
 			}
