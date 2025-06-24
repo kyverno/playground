@@ -2026,6 +2026,5 @@
       "kind": "MutatingPolicy",
       "version": "v1alpha1"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }

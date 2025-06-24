@@ -14199,6 +14199,5 @@
       "kind": "ClusterPolicy",
       "version": "v1"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }

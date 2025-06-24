@@ -984,8 +984,7 @@
             "kind": "GeneratingPolicy",
             "version": "v1alpha1"
           }
-        ],
-        "x-kubernetes-selectable-fields": []
+        ]
       },
       "type": [
         "array",
@@ -1056,6 +1055,5 @@
       "kind": "GeneratingPolicyList",
       "version": "v1alpha1"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }

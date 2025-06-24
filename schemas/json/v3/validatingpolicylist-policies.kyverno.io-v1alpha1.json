@@ -1761,8 +1761,7 @@
             "kind": "ValidatingPolicy",
             "version": "v1alpha1"
           }
-        ],
-        "x-kubernetes-selectable-fields": []
+        ]
       },
       "type": [
         "array",
@@ -1833,6 +1832,5 @@
       "kind": "ValidatingPolicyList",
       "version": "v1alpha1"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }
