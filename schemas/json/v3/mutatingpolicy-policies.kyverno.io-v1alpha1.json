@@ -361,10 +361,19 @@
               ]
             },
             "mutateExisting": {
-              "default": false,
-              "description": "MutateExisting enables mutation of existing resources. Default is `false`.\nWhen `spec.targetMatchConstraints` is not defined, Kyverno mutates existing resources matched in `spec.matchConstraints`.",
+              "description": "MutateExisting controls whether existing resources are mutated.",
+              "properties": {
+                "enabled": {
+                  "default": false,
+                  "description": "Enabled enables mutation of existing resources. Default is `false`.\nWhen `spec.targetMatchConstraints` is not defined, Kyverno mutates existing resources matched in `spec.matchConstraints`.",
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
               "type": [
-                "boolean",
+                "object",
                 "null"
               ]
             }
