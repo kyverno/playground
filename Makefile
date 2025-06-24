@@ -2,7 +2,7 @@
 # DEFAULTS #
 ############
 
-KIND_IMAGE           ?= kindest/node:v1.31.0
+KIND_IMAGE           ?= kindest/node:v1.33.1
 KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= main
 KOCACHE              ?= /tmp/ko-cache
@@ -41,21 +41,21 @@ endif
 # TOOLS #
 #########
 
-TOOLS_DIR                          := $(PWD)/.tools
-CURRENT_DIR                        := $(PWD)
-HELM                               := $(TOOLS_DIR)/helm
-HELM_VERSION                       := v3.14.0
-KIND                               := $(TOOLS_DIR)/kind
-KIND_VERSION                       := v0.22.0
-KO                                 := $(TOOLS_DIR)/ko
-KO_VERSION                         := v0.15.2
-HELM_DOCS                          := $(TOOLS_DIR)/helm-docs
-HELM_DOCS_VERSION                  := v1.13.2
-GCI                                := $(TOOLS_DIR)/gci
-GCI_VERSION                        := v0.13.4
-GOFUMPT                            := $(TOOLS_DIR)/gofumpt
-GOFUMPT_VERSION                    := v0.6.0
-TOOLS                              := $(KIND) $(HELM) $(KO) $(HELM_DOCS) $(GCI) $(GOFUMPT)
+TOOLS_DIR                     := $(PWD)/.tools
+CURRENT_DIR                   := $(PWD)
+HELM                          := $(TOOLS_DIR)/helm
+HELM_VERSION                  := v3.14.0
+KIND                          := $(TOOLS_DIR)/kind
+KIND_VERSION                  := v0.29.0
+KO                            := $(TOOLS_DIR)/ko
+KO_VERSION     				  := v0.17.1
+HELM_DOCS                     := $(TOOLS_DIR)/helm-docs
+HELM_DOCS_VERSION             := v1.14.2
+GCI                           := $(TOOLS_DIR)/gci
+GCI_VERSION                   := v0.13.4
+GOFUMPT                       := $(TOOLS_DIR)/gofumpt
+GOFUMPT_VERSION               := v0.6.0
+TOOLS                         := $(KIND) $(HELM) $(KO) $(HELM_DOCS) $(GCI) $(GOFUMPT)
 
 $(HELM):
 	@echo Install helm... >&2

@@ -1,10 +1,5 @@
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
-featureGates:
-  ValidatingAdmissionPolicy: true
-runtimeConfig:
-  admissionregistration.k8s.io/v1: true
-  admissionregistration.k8s.io/v1beta1: true
 kubeadmConfigPatches:
   - |-
     kind: ClusterConfiguration
@@ -39,3 +34,6 @@ nodes:
   - role: worker
   - role: worker
   - role: worker
+featureGates:
+  "PodDisruptionConditions": true
+  "ProcMountType": true

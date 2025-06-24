@@ -3018,8 +3018,7 @@
             "kind": "ImageValidatingPolicy",
             "version": "v1alpha1"
           }
-        ],
-        "x-kubernetes-selectable-fields": []
+        ]
       },
       "type": [
         "array",
@@ -3090,6 +3089,5 @@
       "kind": "ImageValidatingPolicyList",
       "version": "v1alpha1"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }

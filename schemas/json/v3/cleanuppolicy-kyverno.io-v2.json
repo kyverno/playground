@@ -2129,6 +2129,5 @@
       "kind": "CleanupPolicy",
       "version": "v2"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }

@@ -1213,8 +1213,7 @@
             "kind": "PolicyException",
             "version": "v2"
           }
-        ],
-        "x-kubernetes-selectable-fields": []
+        ]
       },
       "type": [
         "array",
@@ -1285,6 +1284,5 @@
       "kind": "PolicyExceptionList",
       "version": "v2"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }

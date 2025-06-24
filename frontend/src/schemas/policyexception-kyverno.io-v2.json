@@ -1198,6 +1198,5 @@
       "kind": "PolicyException",
       "version": "v2"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }

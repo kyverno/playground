@@ -171,7 +171,7 @@
     {
       "group": "coordination.k8s.io",
       "kind": "WatchEvent",
-      "version": "v1alpha1"
+      "version": "v1alpha2"
     },
     {
       "group": "coordination.k8s.io",
@@ -292,6 +292,16 @@
       "group": "resource.k8s.io",
       "kind": "WatchEvent",
       "version": "v1alpha3"
+    },
+    {
+      "group": "resource.k8s.io",
+      "kind": "WatchEvent",
+      "version": "v1beta1"
+    },
+    {
+      "group": "resource.k8s.io",
+      "kind": "WatchEvent",
+      "version": "v1beta2"
     },
     {
       "group": "scheduling.k8s.io",

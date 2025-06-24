@@ -13757,8 +13757,7 @@
             "kind": "ClusterPolicy",
             "version": "v2beta1"
           }
-        ],
-        "x-kubernetes-selectable-fields": []
+        ]
       },
       "type": [
         "array",
@@ -13829,6 +13828,5 @@
       "kind": "ClusterPolicyList",
       "version": "v2beta1"
     }
-  ],
-  "x-kubernetes-selectable-fields": []
+  ]
 }
