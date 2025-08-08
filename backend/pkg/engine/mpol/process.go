@@ -24,7 +24,7 @@ func Process(ctx context.Context, dClient dclient.Interface, tcm patch.TypeConve
 		return nil, err
 	}
 
-	eng := engine.NewEngine(provider, utils.NSResolver(dClient), matching.NewMatcher(), tcm)
+	eng := engine.NewEngine(provider, utils.NSResolver(dClient), matching.NewMatcher(), tcm, contextProvider)
 	request := utils.NewCELRequest(restMapper, contextProvider, params, resource, oldResource)
 	results := make([]models.Response, 0)
 
