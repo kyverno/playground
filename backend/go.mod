@@ -10,7 +10,7 @@ require (
 	github.com/go-logr/logr v1.4.3
 	github.com/knadh/koanf/parsers/yaml v1.1.0
 	github.com/knadh/koanf/providers/file v1.2.0
-	github.com/knadh/koanf/v2 v2.2.1
+	github.com/knadh/koanf/v2 v2.2.2
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20250808095317-411b593deb11
 	github.com/loopfz/gadgeto v0.11.5
 	github.com/spf13/cobra v1.9.1
