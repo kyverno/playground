@@ -23,7 +23,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	policies := make([]engine.Policy, 0, len(gpols))
 
 	for _, pol := range gpols {
-		compiled, errs := comp.Compile(&pol)
+		compiled, errs := comp.Compile(&pol, nil)
 		if len(errs) > 0 {
 			return nil, fmt.Errorf("failed to compile policy %s (%w)", pol.GetName(), errs.ToAggregate())
 		}
@@ -40,7 +40,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	results := make([]models.Response, 0)
 
 	for _, policy := range policies {
-		engineResponse, err := eng.Handle(request, policy)
+		engineResponse, err := eng.Handle(request, policy, false)
 		if err != nil {
 			return nil, err
 		}

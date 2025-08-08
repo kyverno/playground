@@ -332,7 +332,7 @@
             "description": "DeletingPolicySpec is the specification of the desired behavior of the DeletingPolicy.",
             "properties": {
               "conditions": {
-                "description": "Conditions is a list of conditions that must be met for a resource to be deleted.\nConditions filter resources that have already been matched by the match constraints,\nnamespaceSelector, and objectSelector. An empty list of conditions matches all resources.\nThere are a maximum of 64 conditions allowed.\n\nIf a parameter object is provided, it can be accessed via the `params` handle in the same\nmanner as validation expressions.\n\nThe exact matching logic is (in order):\n  1. If ANY condition evaluates to FALSE, the policy is skipped.\n  2. If ALL conditions evaluate to TRUE, the policy is executed.",
+                "description": "Conditions is a list of conditions that must be met for a resource to be deleted.\nConditions filter resources that have already been matched by the match constraints,\nnamespaceSelector, and objectSelector. An empty list of conditions matches all resources.\nThere are a maximum of 64 conditions allowed.\n\nThe exact matching logic is (in order):\n  1. If ANY condition evaluates to FALSE, the policy is skipped.\n  2. If ALL conditions evaluate to TRUE, the policy is executed.",
                 "items": {
                   "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
                   "properties": {
