@@ -2,7 +2,7 @@
 
 Kyverno Playground Web Application
 
-![Version: 0.5.3](https://img.shields.io/badge/Version-0.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.5.3](https://img.shields.io/badge/AppVersion-v0.5.3-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.6.0](https://img.shields.io/badge/AppVersion-v0.6.0-informational?style=flat-square)
 
 ## About
 
@@ -62,6 +62,8 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | serviceAccount.annotations | object | `{}` | Service account annotations |
 | serviceAccount.name | string | `""` | Service account name (required if `serviceAccount.create` is `false`) |
 | podAnnotations | object | `{}` | Pod annotations |
+| podLabels | object | `{}` | Additional labels to add to each pod |
+| global.labels | object | `{}` | additional labels added on each resource |
 | podSecurityContext | object | `{"fsGroup":2000}` | Pod security context |
 | securityContext | object | See [values.yaml](values.yaml) | Container security context |
 | service.type | string | `"ClusterIP"` | Service type |
