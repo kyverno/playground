@@ -19,7 +19,7 @@ import (
 )
 
 func Process(ctx context.Context, dClient dclient.Interface, tcm patch.TypeConverterManager, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource, oldResource unstructured.Unstructured, mpols []v1alpha1.MutatingPolicy) ([]models.Response, error) {
-	provider, err := engine.NewProvider(compiler.NewCompiler(), mpols, nil)
+	provider, err := NewProvider(compiler.NewCompiler(), mpols, nil)
 	if err != nil {
 		return nil, err
 	}
