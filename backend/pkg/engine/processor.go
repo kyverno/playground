@@ -159,7 +159,12 @@ func (p *Processor) Run(
 			gvk := newResource.GroupVersionKind()
 			gvr := gvk.GroupVersion().WithResource(strings.ToLower(gvk.Kind + "s"))
 
-			result, err := admissionpolicy.Validate(pData, newResource, gvk, gvr, make(map[string]map[string]string), p.dClient, true)
+			result, err := admissionpolicy.Validate(pData, newResource, gvk, gvr, make(map[string]map[string]string), p.dClient, &authenticationv1.UserInfo{
+				UID:      "user-123",
+				Username: p.params.Context.Username,
+				Groups:   p.params.Context.Groups,
+				Extra:    nil,
+			}, true)
 			if err != nil {
 				return nil, err
 			}
@@ -429,7 +434,6 @@ func newEngine(
 ) (engineapi.Engine, error) {
 	return kyvernoengine.NewEngine(
 		cfg,
-		config.NewDefaultMetricsConfiguration(),
 		jp,
 		client,
 		rclient,
