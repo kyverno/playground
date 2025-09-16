@@ -12,7 +12,7 @@
             size="small"
             style="position: absolute; bottom: 20px; right: -90px"
           >
-            v1.15.2
+            v1.16.0-dev
           </v-chip>
         </template>
         <template v-if="display.smAndDown.value">
@@ -22,7 +22,7 @@
             size="small"
             style="position: absolute; bottom: 16px; left: 90px"
           >
-            Kyverno v1.15.2
+            Kyverno v1.16.0-dev
           </v-chip>
         </template>
       </div>
@@ -31,7 +31,9 @@
     <div>
       <v-menu v-if="config.versions.length" open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn variant="outlined" class="text-none" rounded="xl" v-bind="props">v1.15.2 </v-btn>
+          <v-btn variant="outlined" class="text-none" rounded="xl" v-bind="props"
+            >v1.16.0-dev
+          </v-btn>
         </template>
 
         <v-list variant="flat" class="my-0 py-0 border">
