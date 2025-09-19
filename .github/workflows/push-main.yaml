@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - release-1.13
+      - release-1.15
 
 permissions:
   id-token: write
