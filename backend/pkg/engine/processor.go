@@ -9,7 +9,6 @@ import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/data"
 	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
@@ -37,7 +36,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	mpatch "k8s.io/apiserver/pkg/admission/plugin/policy/mutating/patch"
-	"k8s.io/client-go/restmapper"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/dpol"
@@ -452,6 +450,7 @@ func NewProcessor(
 	cmResolver engineapi.ConfigmapResolver,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 	tcm mpatch.TypeConverterManager,
+	restMapper meta.RESTMapper,
 ) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	if kyvernoConfig != nil {
@@ -476,11 +475,6 @@ func NewProcessor(
 	}
 
 	rclient, err := registryclient.New(registryOptions...)
-	if err != nil {
-		return nil, err
-	}
-
-	apiGroupResources, err := data.APIGroupResources()
 	if err != nil {
 		return nil, err
 	}
@@ -527,7 +521,7 @@ func NewProcessor(
 		jmesPath:      jp,
 		cluster:       cl,
 		dClient:       dClient,
-		restMapper:    restmapper.NewDiscoveryRESTMapper(apiGroupResources),
+		restMapper:    restMapper,
 		tcm:           tcm,
 	}, nil
 }
