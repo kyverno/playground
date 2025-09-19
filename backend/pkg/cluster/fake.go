@@ -6,15 +6,19 @@ import (
 	"time"
 
 	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
+	kdata "github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/data"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/api/meta"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic/fake"
 	kubefake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/openapi"
+	"k8s.io/client-go/restmapper"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
 	"github.com/kyverno/playground/backend/data"
@@ -22,7 +26,8 @@ import (
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
-type fakeCluster struct{}
+type fakeCluster struct {
+}
 
 func NewFake() Cluster {
 	return fakeCluster{}
@@ -104,6 +109,49 @@ func (c fakeCluster) DClient(resources []runtime.Object, objects ...runtime.Obje
 	return dClient, nil
 }
 
+func (c fakeCluster) RESTMapper(crds []*apiextensionsv1.CustomResourceDefinition) meta.RESTMapper {
+	apiGroupResources, _ := kdata.APIGroupResources()
+	for _, crd := range crds {
+		apiGroupResources = append(apiGroupResources, convertCRDToAPIGroupResources(crd))
+	}
+
+	return restmapper.NewDiscoveryRESTMapper(apiGroupResources)
+}
+
 func (c fakeCluster) IsFake() bool {
 	return true
+}
+
+func convertCRDToAPIGroupResources(crd *apiextensionsv1.CustomResourceDefinition) *restmapper.APIGroupResources {
+	groupResources := &restmapper.APIGroupResources{
+		Group: metav1.APIGroup{
+			Name:             crd.Spec.Group,
+			Versions:         []metav1.GroupVersionForDiscovery{},
+			PreferredVersion: metav1.GroupVersionForDiscovery{},
+		},
+		VersionedResources: make(map[string][]metav1.APIResource),
+	}
+
+	for _, v := range crd.Spec.Versions {
+		groupResources.Group.Versions = append(groupResources.Group.Versions, metav1.GroupVersionForDiscovery{
+			GroupVersion: crd.Spec.Group + "/" + v.Name,
+			Version:      v.Name,
+		})
+		if v.Storage {
+			groupResources.Group.PreferredVersion.GroupVersion = crd.Spec.Group + "/" + v.Name
+			groupResources.Group.PreferredVersion.Version = v.Name
+		}
+
+		groupResources.VersionedResources[v.Name] = []metav1.APIResource{
+			{
+				Name:         crd.Spec.Names.Plural,
+				SingularName: crd.Spec.Names.Singular,
+				Namespaced:   crd.Spec.Scope == apiextensionsv1.NamespaceScoped,
+				Kind:         crd.Spec.Names.Kind,
+				Verbs:        metav1.Verbs{"get", "list", "watch", "create", "update", "patch", "delete"},
+				ShortNames:   crd.Spec.Names.ShortNames,
+			},
+		}
+	}
+	return groupResources
 }
