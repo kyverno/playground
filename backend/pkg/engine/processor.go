@@ -87,7 +87,7 @@ func (p *Processor) Run(
 
 	oldMaxIndex := len(oldResources) - 1
 
-	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(), false)
+	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(), p.restMapper, false)
 	if err != nil {
 		return nil, err
 	}
