@@ -29,15 +29,18 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		return nil, err
 	}
 
-	tcm := patch.NewTypeConverterManager(nil, openAPI)
-	go tcm.Run(context.Background())
-
 	return tonic.Handler(func(ctx *gin.Context, in *EngineRequest) (*EngineResponse, error) {
 		params, err := in.LoadParameters()
 		if err != nil {
 			return nil, fmt.Errorf("unable to load params: %w", err)
 		}
 		params.ImageData = in.ImageData
+
+		client, err := in.OpenAPIClient(cl, params.Kubernetes.Version, config)
+
+		tcm := patch.NewTypeConverterManager(nil, client)
+		go tcm.Run(context.Background())
+
 		policies, vaps, vapbs, vpols, ivpols, dpols, gpols, mpols, err := in.LoadPolicies(policyLoader)
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policies: %w", err)
@@ -48,7 +51,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		}
 		vapbs = append(vapbs, vapbsWindow...)
 
-		resourceLoader, err := in.ResourceLoader(cl, params.Kubernetes.Version, config)
+		resourceLoader, err := in.ResourceLoader(client)
 		if err != nil {
 			return nil, err
 		}
@@ -71,6 +74,10 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		exceptions, err := in.LoadPolicyExceptions()
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policy exceptions: %w", err)
+		}
+		crds, err := in.LoadCRDs()
+		if err != nil {
+			return nil, fmt.Errorf("unable to load resources: %w", err)
 		}
 
 		clusterResources = append(oldResources, clusterResources...)
@@ -97,7 +104,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			}
 		}
 
-		processor, err := engine.NewProcessor(params, cl, config, dClient, cmResolver, exceptionSelector, tcm)
+		processor, err := engine.NewProcessor(params, cl, config, dClient, cmResolver, exceptionSelector, tcm, cl.RESTMapper(crds))
 		if err != nil {
 			return nil, err
 		}

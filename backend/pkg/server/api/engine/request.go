@@ -9,9 +9,12 @@ import (
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
 	"github.com/kyverno/kyverno/ext/resource/loader"
+	yamlutils "github.com/kyverno/kyverno/ext/yaml"
 	v1 "k8s.io/api/admissionregistration/v1"
 	corev1 "k8s.io/api/core/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/openapi"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 	"sigs.k8s.io/yaml"
@@ -58,6 +61,28 @@ func (r *EngineRequest) LoadResources(resourceLoader loader.Loader) ([]unstructu
 	return data, err
 }
 
+func (r *EngineRequest) LoadCRDs() ([]*apiextensionsv1.CustomResourceDefinition, error) {
+	scheme := runtime.NewScheme()
+	if err := apiextensionsv1.AddToScheme(scheme); err != nil {
+		return nil, err
+	}
+
+	documents, err := yamlutils.SplitDocuments([]byte(r.CustomResourceDefinitions))
+	if err != nil {
+		return nil, err
+	}
+
+	crds := []*apiextensionsv1.CustomResourceDefinition{}
+	for _, document := range documents {
+		crd := &apiextensionsv1.CustomResourceDefinition{}
+		if err := yaml.Unmarshal(document, crd); err != nil {
+			return nil, err
+		}
+		crds = append(crds, crd)
+	}
+	return crds, nil
+}
+
 func (r *EngineRequest) LoadClusterResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
 	return resource.LoadResources(resourceLoader, []byte(r.ClusterResources))
 }
@@ -86,7 +111,7 @@ func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.Config
 	return resource.Load[corev1.ConfigMap](resourceLoader, []byte(r.Config))
 }
 
-func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion string, config APIConfiguration) (loader.Loader, error) {
+func (r *EngineRequest) OpenAPIClient(cluster cluster.Cluster, kubeVersion string, config APIConfiguration) (openapi.Client, error) {
 	var clients []openapi.Client
 	if cluster != nil && !cluster.IsFake() {
 		dclient, err := cluster.DClient(nil)
@@ -127,5 +152,10 @@ func (r *EngineRequest) ResourceLoader(cluster cluster.Cluster, kubeVersion stri
 
 		clients = append(clients, openapiclient.NewLocalCRDFiles(fs))
 	}
-	return loader.New(openapiclient.NewComposite(clients...))
+
+	return openapiclient.NewComposite(clients...), nil
+}
+
+func (r *EngineRequest) ResourceLoader(client openapi.Client) (loader.Loader, error) {
+	return loader.New(client)
 }

@@ -9,7 +9,6 @@ import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
-	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/data"
 	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
@@ -37,7 +36,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	mpatch "k8s.io/apiserver/pkg/admission/plugin/policy/mutating/patch"
-	"k8s.io/client-go/restmapper"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/dpol"
@@ -89,7 +87,7 @@ func (p *Processor) Run(
 
 	oldMaxIndex := len(oldResources) - 1
 
-	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(), false)
+	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(), p.restMapper, false)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +157,12 @@ func (p *Processor) Run(
 			gvk := newResource.GroupVersionKind()
 			gvr := gvk.GroupVersion().WithResource(strings.ToLower(gvk.Kind + "s"))
 
-			result, err := admissionpolicy.Validate(pData, newResource, gvk, gvr, make(map[string]map[string]string), p.dClient, true)
+			result, err := admissionpolicy.Validate(pData, newResource, gvk, gvr, make(map[string]map[string]string), p.dClient, &authenticationv1.UserInfo{
+				UID:      "user-123",
+				Username: p.params.Context.Username,
+				Groups:   p.params.Context.Groups,
+				Extra:    nil,
+			}, true)
 			if err != nil {
 				return nil, err
 			}
@@ -429,7 +432,6 @@ func newEngine(
 ) (engineapi.Engine, error) {
 	return kyvernoengine.NewEngine(
 		cfg,
-		config.NewDefaultMetricsConfiguration(),
 		jp,
 		client,
 		rclient,
@@ -448,6 +450,7 @@ func NewProcessor(
 	cmResolver engineapi.ConfigmapResolver,
 	exceptionSelector engineapi.PolicyExceptionSelector,
 	tcm mpatch.TypeConverterManager,
+	restMapper meta.RESTMapper,
 ) (*Processor, error) {
 	cfg := config.NewDefaultConfiguration(false)
 	if kyvernoConfig != nil {
@@ -472,11 +475,6 @@ func NewProcessor(
 	}
 
 	rclient, err := registryclient.New(registryOptions...)
-	if err != nil {
-		return nil, err
-	}
-
-	apiGroupResources, err := data.APIGroupResources()
 	if err != nil {
 		return nil, err
 	}
@@ -523,7 +521,7 @@ func NewProcessor(
 		jmesPath:      jp,
 		cluster:       cl,
 		dClient:       dClient,
-		restMapper:    restmapper.NewDiscoveryRESTMapper(apiGroupResources),
+		restMapper:    restMapper,
 		tcm:           tcm,
 	}, nil
 }

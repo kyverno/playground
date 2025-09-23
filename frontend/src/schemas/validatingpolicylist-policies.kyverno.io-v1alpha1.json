@@ -1761,6 +1761,11 @@
             "kind": "ValidatingPolicy",
             "version": "v1alpha1"
           }
+        ],
+        "x-kubernetes-selectable-fields": [
+          {
+            "fieldPath": "spec.evaluation.mode"
+          }
         ]
       },
       "type": [
@@ -1831,6 +1836,11 @@
       "group": "policies.kyverno.io",
       "kind": "ValidatingPolicyList",
       "version": "v1alpha1"
+    }
+  ],
+  "x-kubernetes-selectable-fields": [
+    {
+      "fieldPath": "spec.evaluation.mode"
     }
   ]
 }

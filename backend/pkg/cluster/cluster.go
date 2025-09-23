@@ -10,15 +10,19 @@ import (
 	"github.com/kyverno/kyverno/pkg/client/clientset/versioned"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	"k8s.io/apimachinery/pkg/api/meta"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/client-go/discovery/cached/memory"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/openapi"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/restmapper"
 	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 
 	"github.com/kyverno/playground/backend/data"
@@ -44,6 +48,7 @@ type Cluster interface {
 	PolicyExceptionSelector(namespace string, exceptions ...*v2.PolicyException) engineapi.PolicyExceptionSelector
 	OpenAPIClient(version string) (openapi.Client, error)
 	IsFake() bool
+	RESTMapper(crds []*apiextensionsv1.CustomResourceDefinition) meta.RESTMapper
 }
 
 type cluster struct {
@@ -167,6 +172,13 @@ func (c cluster) OpenAPIClient(version string) (openapi.Client, error) {
 
 func (c cluster) DClient(resources []runtime.Object, _ ...runtime.Object) (dclient.Interface, error) {
 	return c.dClient, nil
+}
+
+func (c cluster) RESTMapper(_ []*apiextensionsv1.CustomResourceDefinition) meta.RESTMapper {
+	dc := c.kubeClient.Discovery()
+	cachedDiscovery := memory.NewMemCacheClient(dc)
+
+	return restmapper.NewDeferredDiscoveryRESTMapper(cachedDiscovery)
 }
 
 func (c cluster) IsFake() bool {
