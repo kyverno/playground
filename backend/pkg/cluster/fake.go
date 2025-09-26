@@ -26,8 +26,7 @@ import (
 	"github.com/kyverno/playground/backend/pkg/utils"
 )
 
-type fakeCluster struct {
-}
+type fakeCluster struct{}
 
 func NewFake() Cluster {
 	return fakeCluster{}
