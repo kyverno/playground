@@ -37,6 +37,9 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		params.ImageData = in.ImageData
 
 		client, err := in.OpenAPIClient(cl, params.Kubernetes.Version, config)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load OpenAPI client: %w", err)
+		}
 
 		tcm := patch.NewTypeConverterManager(nil, client)
 		go tcm.Run(context.Background())
