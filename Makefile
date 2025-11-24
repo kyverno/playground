@@ -44,11 +44,11 @@ endif
 TOOLS_DIR                     := $(PWD)/.tools
 CURRENT_DIR                   := $(PWD)
 HELM                          := $(TOOLS_DIR)/helm
-HELM_VERSION                  := v3.14.0
+HELM_VERSION                  := v3.19.0
 KIND                          := $(TOOLS_DIR)/kind
-KIND_VERSION                  := v0.29.0
+KIND_VERSION                  := v0.30.0
 KO                            := $(TOOLS_DIR)/ko
-KO_VERSION     				  := v0.17.1
+KO_VERSION     				  := v0.18.0
 HELM_DOCS                     := $(TOOLS_DIR)/helm-docs
 HELM_DOCS_VERSION             := v1.14.2
 GCI                           := $(TOOLS_DIR)/gci
@@ -128,9 +128,12 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_policyexceptions.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/kyverno/kyverno.io_updaterequests.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_validatingpolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_namespacedvalidatingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_policyexceptions.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_imagevalidatingpolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_namespacedimagevalidatingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_deletingpolicies.yaml
+	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_namespaceddeletingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_generatingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policies.kyverno.io/policies.kyverno.io_mutatingpolicies.yaml
 	@kubectl create -f https://raw.githubusercontent.com/kyverno/kyverno/$(KYVERNO_VERSION)/config/crds/policyreport/wgpolicyk8s.io_clusterpolicyreports.yaml
@@ -142,6 +145,7 @@ codegen-schema-openapi: $(KIND) $(HELM) ## Generate openapi schemas (v2 and v3)
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2 > ./schemas/openapi/v3/apis/kyverno.io/v2.json
 	@kubectl get --raw /openapi/v3/apis/kyverno.io/v2beta1 > ./schemas/openapi/v3/apis/kyverno.io/v2beta1.json
 	@kubectl get --raw /openapi/v3/apis/policies.kyverno.io/v1alpha1 > ./schemas/openapi/v3/apis/policies.kyverno.io/v1alpha1.json
+	@kubectl get --raw /openapi/v3/apis/policies.kyverno.io/v1beta1 > ./schemas/openapi/v3/apis/policies.kyverno.io/v1beta1.json
 	@kubectl get --raw /openapi/v3/apis/admissionregistration.k8s.io/v1 > ./schemas/openapi/v3/apis/admissionregistration.k8s.io/v1.json
 	@$(KIND) delete cluster --name schema
 
@@ -154,6 +158,7 @@ codegen-schema-json: codegen-schema-openapi ## Generate json schemas
 	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/kyverno.io/v2beta1.json --kubernetes --stand-alone --expanded -o /json/v3
 	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/kyverno.io/v2.json --kubernetes --stand-alone --expanded -o /json/v3
 	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/policies.kyverno.io/v1alpha1.json --kubernetes --stand-alone --expanded -o /json/v3
+	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/policies.kyverno.io/v1beta1.json --kubernetes --stand-alone --expanded -o /json/v3
 	@docker run --rm --name openapi2jsonschema --mount type=bind,source="$(PWD)"/schemas/openapi/v3,target=/v3 --mount type=bind,source="$(PWD)"/schemas/json,target=/json ghcr.io/fjogeleit/openapi2jsonschema:master /v3/apis/admissionregistration.k8s.io/v1.json --kubernetes --stand-alone --expanded -o /json/v3
 
 .PHONY: codegen-all
@@ -203,15 +208,31 @@ build-frontend: ## Build frontend
 	@cp schemas/json/v3/policyexception-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexceptionlist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/namespacedimagevalidatingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/imagevalidatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/imagevalidatingpolicylist-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/namespacedimagevalidatingpolicylist-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/deletingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/deletingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/namespaceddeletingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/deletingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/deletingpolicylist-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/namespaceddeletingpolicylist-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/mutatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/mutatingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/mutatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/mutatingpolicylist-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/generatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/generatingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/generatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/generatingpolicylist-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/validatingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/namespacedvalidatingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingpolicylist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
+	@cp schemas/json/v3/validatingpolicylist-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/namespacedvalidatingpolicylist-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/validatingadmissionpolicybinding-admissionregistration-v1.json frontend/src/schemas
 	@cd frontend && npm install && APP_VERSION=$(APP_VERSION) npm run build
 

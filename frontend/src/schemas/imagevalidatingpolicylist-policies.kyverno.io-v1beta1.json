@@ -1,0 +1,3093 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "ImageValidatingPolicyList is a list of ImageValidatingPolicy",
+  "properties": {
+    "apiVersion": {
+      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "enum": [
+        "policies.kyverno.io/v1beta1"
+      ],
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "items": {
+      "description": "List of imagevalidatingpolicies. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md",
+      "items": {
+        "properties": {
+          "apiVersion": {
+            "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+            "enum": [
+              "policies.kyverno.io/v1beta1"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kind": {
+            "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+            "enum": [
+              "ImageValidatingPolicy"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "metadata": {
+            "allOf": [
+              {
+                "description": "ObjectMeta is metadata that all persisted resources must have, which includes all objects users must create.",
+                "properties": {
+                  "annotations": {
+                    "additionalProperties": {
+                      "default": "",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "description": "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations",
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "creationTimestamp": {
+                    "allOf": [
+                      {
+                        "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                        "format": "date-time",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    ],
+                    "description": "CreationTimestamp is a timestamp representing the server time when this object was created. It is not guaranteed to be set in happens-before order across separate operations. Clients may not set this value. It is represented in RFC3339 form and is in UTC.\n\nPopulated by the system. Read-only. Null for lists. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata"
+                  },
+                  "deletionGracePeriodSeconds": {
+                    "description": "Number of seconds allowed for this object to gracefully terminate before it will be removed from the system. Only set when deletionTimestamp is also set. May only be shortened. Read-only.",
+                    "format": "int64",
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "deletionTimestamp": {
+                    "allOf": [
+                      {
+                        "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                        "format": "date-time",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    ],
+                    "description": "DeletionTimestamp is RFC 3339 date and time at which this resource will be deleted. This field is set by the server when a graceful deletion is requested by the user, and is not directly settable by a client. The resource is expected to be deleted (no longer visible from resource lists, and not reachable by name) after the time in this field, once the finalizers list is empty. As long as the finalizers list contains items, deletion is blocked. Once the deletionTimestamp is set, this value may not be unset or be set further into the future, although it may be shortened or the resource may be deleted prior to this time. For example, a user may request that a pod is deleted in 30 seconds. The Kubelet will react by sending a graceful termination signal to the containers in the pod. After that 30 seconds, the Kubelet will send a hard termination signal (SIGKILL) to the container and after cleanup, remove the pod from the API. In the presence of network partitions, this object may still exist after this timestamp, until an administrator or automated process can determine the resource is fully terminated. If not set, graceful deletion of the object has not been requested.\n\nPopulated by the system when a graceful deletion is requested. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata"
+                  },
+                  "finalizers": {
+                    "description": "Must be empty before the object is deleted from the registry. Each entry is an identifier for the responsible component that will remove the entry from the list. If the deletionTimestamp of the object is non-nil, entries in this list can only be removed. Finalizers may be processed and removed in any order.  Order is NOT enforced because it introduces significant risk of stuck finalizers. finalizers is a shared field, any actor with permission can reorder it. If the finalizer list is processed in order, then this can lead to a situation in which the component responsible for the first finalizer in the list is waiting for a signal (field value, external system, or other) produced by a component responsible for a finalizer later in the list, resulting in a deadlock. Without enforced ordering finalizers are free to order amongst themselves and are not vulnerable to ordering changes in the list.",
+                    "items": {
+                      "default": "",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "x-kubernetes-list-type": "set",
+                    "x-kubernetes-patch-strategy": "merge"
+                  },
+                  "generateName": {
+                    "description": "GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.\n\nIf this field is specified and the generated name exists, the server will return a 409.\n\nApplied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "generation": {
+                    "description": "A sequence number representing a specific generation of the desired state. Populated by the system. Read-only.",
+                    "format": "int64",
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "labels": {
+                    "additionalProperties": {
+                      "default": "",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "description": "Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "managedFields": {
+                    "description": "ManagedFields maps workflow-id and version to the set of fields that are managed by that workflow. This is mostly for internal housekeeping, and users typically shouldn't need to set or understand this field. A workflow can be the user's name, a controller's name, or the name of a specific apply path like \"ci-cd\". The set of fields is always in the version that the workflow used when modifying the object.",
+                    "items": {
+                      "allOf": [
+                        {
+                          "description": "ManagedFieldsEntry is a workflow-id, a FieldSet and the group version of the resource that the fieldset applies to.",
+                          "properties": {
+                            "apiVersion": {
+                              "description": "APIVersion defines the version of this resource that this field set applies to. The format is \"group/version\" just like the top-level APIVersion field. It is necessary to track the version of a field set because it cannot be automatically converted.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "fieldsType": {
+                              "description": "FieldsType is the discriminator for the different fields format and version. There is currently only one possible value: \"FieldsV1\"",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "fieldsV1": {
+                              "allOf": [
+                                {
+                                  "description": "FieldsV1 stores a set of fields in a data structure like a Trie, in JSON format.\n\nEach key is either a '.' representing the field itself, and will always map to an empty set, or a string representing a sub-field or item. The string will follow one of these four formats: 'f:<name>', where <name> is the name of a field in a struct, or key in a map 'v:<value>', where <value> is the exact json formatted value of a list item 'i:<index>', where <index> is position of a item in a list 'k:<keys>', where <keys> is a map of  a list item's key fields to their unique values If a key maps to an empty Fields value, the field that key represents is part of the set.\n\nThe exact format is defined in sigs.k8s.io/structured-merge-diff",
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ]
+                                }
+                              ],
+                              "description": "FieldsV1 holds the first JSON version format as described in the \"FieldsV1\" type."
+                            },
+                            "manager": {
+                              "description": "Manager is an identifier of the workflow managing these fields.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "operation": {
+                              "description": "Operation is the type of operation which lead to this ManagedFieldsEntry being created. The only valid values for this field are 'Apply' and 'Update'.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "subresource": {
+                              "description": "Subresource is the name of the subresource used to update that object, or empty string if the object was updated through the main resource. The value of this field is used to distinguish between managers, even if they share the same name. For example, a status update will be distinct from a regular update using the same manager name. Note that the APIVersion field is not related to the Subresource field and it always corresponds to the version of the main resource.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "time": {
+                              "allOf": [
+                                {
+                                  "description": "Time is a wrapper around time.Time which supports correct marshaling to YAML and JSON.  Wrappers are provided for many of the factory methods that the time package offers.",
+                                  "format": "date-time",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              ],
+                              "description": "Time is the timestamp of when the ManagedFields entry was added. The timestamp will also be updated if a field is added, the manager changes any of the owned fields value or removes a field. The timestamp does not update when a field is removed from the entry because another manager took it over."
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        }
+                      ],
+                      "default": {}
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "x-kubernetes-list-type": "atomic"
+                  },
+                  "name": {
+                    "description": "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "namespace": {
+                    "description": "Namespace defines the space within which each name must be unique. An empty namespace is equivalent to the \"default\" namespace, but \"default\" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.\n\nMust be a DNS_LABEL. Cannot be updated. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "ownerReferences": {
+                    "description": "List of objects depended by this object. If ALL objects in the list have been deleted, this object will be garbage collected. If this object is managed by a controller, then an entry in this list will point to this controller, with the controller field set to true. There cannot be more than one managing controller.",
+                    "items": {
+                      "allOf": [
+                        {
+                          "description": "OwnerReference contains enough information to let you identify an owning object. An owning object must be in the same namespace as the dependent, or be cluster-scoped, so there is no namespace field.",
+                          "properties": {
+                            "apiVersion": {
+                              "default": "",
+                              "description": "API version of the referent.",
+                              "type": "string"
+                            },
+                            "blockOwnerDeletion": {
+                              "description": "If true, AND if the owner has the \"foregroundDeletion\" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed. See https://kubernetes.io/docs/concepts/architecture/garbage-collection/#foreground-deletion for how the garbage collector interacts with this field and enforces the foreground deletion. Defaults to false. To set this field, a user needs \"delete\" permission of the owner, otherwise 422 (Unprocessable Entity) will be returned.",
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "controller": {
+                              "description": "If true, this reference points to the managing controller.",
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "kind": {
+                              "default": "",
+                              "description": "Kind of the referent. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+                              "type": "string"
+                            },
+                            "name": {
+                              "default": "",
+                              "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names",
+                              "type": "string"
+                            },
+                            "uid": {
+                              "default": "",
+                              "description": "UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "apiVersion",
+                            "kind",
+                            "name",
+                            "uid"
+                          ],
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "x-kubernetes-map-type": "atomic"
+                        }
+                      ],
+                      "default": {}
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "x-kubernetes-list-map-keys": [
+                      "uid"
+                    ],
+                    "x-kubernetes-list-type": "map",
+                    "x-kubernetes-patch-merge-key": "uid",
+                    "x-kubernetes-patch-strategy": "merge"
+                  },
+                  "resourceVersion": {
+                    "description": "An opaque value that represents the internal version of this object that can be used by clients to determine when objects have changed. May be used for optimistic concurrency, change detection, and the watch operation on a resource or set of resources. Clients must treat these values as opaque and passed unmodified back to the server. They may only be valid for a particular resource or set of resources.\n\nPopulated by the system. Read-only. Value must be treated as opaque by clients and . More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "selfLink": {
+                    "description": "Deprecated: selfLink is a legacy read-only field that is no longer populated by the system.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "uid": {
+                    "description": "UID is the unique in time and space value for this object. It is typically generated by the server on successful creation of a resource and is not allowed to change on PUT operations.\n\nPopulated by the system. Read-only. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ],
+            "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata"
+          },
+          "spec": {
+            "description": "ImageValidatingPolicySpec is the specification of the desired behavior of the ImageValidatingPolicy.",
+            "properties": {
+              "attestations": {
+                "description": "Attestations provides a list of image metadata to verify",
+                "items": {
+                  "description": "Attestation defines the identification details of the  metadata that has to be verified",
+                  "properties": {
+                    "intoto": {
+                      "description": "InToto defines the details of attestation attached using intoto format",
+                      "properties": {
+                        "type": {
+                          "description": "Type defines the type of attestation contained within the statement.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ],
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "description": "Name is the name for this attestation. It is used to refer to the attestation in verification",
+                      "type": "string"
+                    },
+                    "referrer": {
+                      "description": "Referrer defines the details of attestation attached using OCI 1.1 format",
+                      "properties": {
+                        "type": {
+                          "description": "Type defines the type of attestation attached to the image.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ],
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "attestors": {
+                "description": "Attestors provides a list of trusted authorities.",
+                "items": {
+                  "description": "Attestor is an identity that confirms or verifies the authenticity of an image or an attestation",
+                  "oneOf": [
+                    {
+                      "required": [
+                        "cosign"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "notary"
+                      ]
+                    }
+                  ],
+                  "properties": {
+                    "cosign": {
+                      "description": "Cosign defines attestor configuration for Cosign based signatures",
+                      "properties": {
+                        "annotations": {
+                          "additionalProperties": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "description": "Annotations are used for image verification.\nEvery specified key-value pair must exist and match in the verified payload.\nThe payload may contain other key-value pairs.",
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "certificate": {
+                          "description": "Certificate defines the configuration for local signature verification",
+                          "properties": {
+                            "cert": {
+                              "description": "Certificate is the to the public certificate for local signature verification.",
+                              "oneOf": [
+                                {
+                                  "required": [
+                                    "value"
+                                  ]
+                                },
+                                {
+                                  "required": [
+                                    "expression"
+                                  ]
+                                }
+                              ],
+                              "properties": {
+                                "expression": {
+                                  "description": "Expression defines the a CEL expression input.",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "value": {
+                                  "description": "Value defines the raw string input.",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            },
+                            "certChain": {
+                              "description": "CertificateChain is the list of CA certificates in PEM format which will be needed\nwhen building the certificate chain for the signing certificate. Must start with the\nparent intermediate CA certificate of the signing certificate and end with the root certificate",
+                              "oneOf": [
+                                {
+                                  "required": [
+                                    "value"
+                                  ]
+                                },
+                                {
+                                  "required": [
+                                    "expression"
+                                  ]
+                                }
+                              ],
+                              "properties": {
+                                "expression": {
+                                  "description": "Expression defines the a CEL expression input.",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "value": {
+                                  "description": "Value defines the raw string input.",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "ctlog": {
+                          "description": "CTLog sets the configuration to verify the authority against a Rekor instance.",
+                          "properties": {
+                            "ctLogPubKey": {
+                              "description": "CTLogPubKey, if set, is used to validate SCTs against a custom source.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "insecureIgnoreSCT": {
+                              "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate\ntimestamp. Default is false. Set to true if this was opted out during signing.",
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "insecureIgnoreTlog": {
+                              "description": "InsecureIgnoreTlog skips transparency log verification.",
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "rekorPubKey": {
+                              "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor.\nIf set, this will be used to validate transparency log signatures from a custom Rekor.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "tsaCertChain": {
+                              "description": "TSACertChain, if set, is the PEM-encoded certificate chain file for the RFC3161 timestamp authority. Must\ncontain the root CA certificate. Optionally may contain intermediate CA certificates, and\nmay contain the leaf TSA certificate if not present in the timestamurce.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "url": {
+                              "description": "URL sets the url to the rekor instance (by default the public rekor.sigstore.dev)",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "key": {
+                          "description": "Key defines the type of key to validate the image.",
+                          "properties": {
+                            "data": {
+                              "description": "Data contains the inline public key",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "expression": {
+                              "description": "Expression is a Expression expression that returns the public key.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "hashAlgorithm": {
+                              "description": "HashAlgorithm specifues signature algorithm for public keys. Supported values are\nsha224, sha256, sha384 and sha512. Defaults to sha256.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "kms": {
+                              "description": "KMS contains the KMS url of the public key\nSupported formats differ based on the KMS system used.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "keyless": {
+                          "description": "Keyless sets the configuration to verify the authority against a Fulcio instance.",
+                          "properties": {
+                            "identities": {
+                              "description": "Identities sets a list of identities.",
+                              "items": {
+                                "description": "Identity may contain the issuer and/or the subject found in the transparency\nlog.\nIssuer/Subject uses a strict match, while IssuerRegExp and SubjectRegExp\napply a regexp for matching.",
+                                "properties": {
+                                  "issuer": {
+                                    "description": "Issuer defines the issuer for this identity.",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "issuerRegExp": {
+                                    "description": "IssuerRegExp specifies a regular expression to match the issuer for this identity.",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "subject": {
+                                    "description": "Subject defines the subject for this identity.",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "subjectRegExp": {
+                                    "description": "SubjectRegExp specifies a regular expression to match the subject for this identity.",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": "array"
+                            },
+                            "roots": {
+                              "description": "Roots is an optional set of PEM encoded trusted root certificates.\nIf not provided, the system roots are used.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "identities"
+                          ],
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "source": {
+                          "description": "Sources sets the configuration to specify the sources from where to consume the signature and attestations.",
+                          "properties": {
+                            "PullSecrets": {
+                              "description": "SignaturePullSecrets is an optional list of references to secrets in the\nsame namespace as the deploying resource for pulling any of the signatures\nused by this Source.",
+                              "items": {
+                                "description": "LocalObjectReference contains enough information to let you locate the\nreferenced object inside the same namespace.",
+                                "properties": {
+                                  "name": {
+                                    "default": "",
+                                    "description": "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "x-kubernetes-map-type": "atomic"
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
+                            },
+                            "repository": {
+                              "description": "Repository defines the location from where to pull the signature / attestations.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "tagPrefix": {
+                              "description": "TagPrefix is an optional prefix that signature and attestations have.\nThis is the 'tag based discovery' and in the future once references are\nfully supported that should likely be the preferred way to handle these.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "tuf": {
+                          "description": "TUF defines the configuration to fetch sigstore root",
+                          "properties": {
+                            "mirror": {
+                              "description": "Mirror is the base URL of Sigstore TUF repository",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "root": {
+                              "description": "Root defines the path or data of the trusted root",
+                              "properties": {
+                                "data": {
+                                  "description": "Data is the base64 encoded TUF root",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "path": {
+                                  "description": "Path is the URL or File location of the TUF root",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "description": "Name is the name for this attestor. It is used to refer to the attestor in verification",
+                      "type": "string"
+                    },
+                    "notary": {
+                      "description": "Notary defines attestor configuration for Notary based signatures",
+                      "properties": {
+                        "certs": {
+                          "description": "Certs define the cert chain for Notary signature verification",
+                          "oneOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "expression"
+                              ]
+                            }
+                          ],
+                          "properties": {
+                            "expression": {
+                              "description": "Expression defines the a CEL expression input.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "value": {
+                              "description": "Value defines the raw string input.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "tsaCerts": {
+                          "description": "TSACerts define the cert chain for verifying timestamps of notary signature",
+                          "oneOf": [
+                            {
+                              "required": [
+                                "value"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "expression"
+                              ]
+                            }
+                          ],
+                          "properties": {
+                            "expression": {
+                              "description": "Expression defines the a CEL expression input.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "value": {
+                              "description": "Value defines the raw string input.",
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": "array"
+              },
+              "auditAnnotations": {
+                "description": "auditAnnotations contains CEL expressions which are used to produce audit\nannotations for the audit event of the API request.\nvalidations and auditAnnotations may not both be empty; a least one of validations or auditAnnotations is\nrequired.",
+                "items": {
+                  "description": "AuditAnnotation describes how to produce an audit annotation for an API request.",
+                  "properties": {
+                    "key": {
+                      "description": "key specifies the audit annotation key. The audit annotation keys of\na ValidatingAdmissionPolicy must be unique. The key must be a qualified\nname ([A-Za-z0-9][-A-Za-z0-9_.]*) no more than 63 bytes in length.\n\nThe key is combined with the resource name of the\nValidatingAdmissionPolicy to construct an audit annotation key:\n\"{ValidatingAdmissionPolicy name}/{key}\".\n\nIf an admission webhook uses the same resource name as this ValidatingAdmissionPolicy\nand the same audit annotation key, the annotation key will be identical.\nIn this case, the first annotation written with the key will be included\nin the audit event and all subsequent annotations with the same key\nwill be discarded.\n\nRequired.",
+                      "type": "string"
+                    },
+                    "valueExpression": {
+                      "description": "valueExpression represents the expression which is evaluated by CEL to\nproduce an audit annotation value. The expression must evaluate to either\na string or null value. If the expression evaluates to a string, the\naudit annotation is included with the string value. If the expression\nevaluates to null or empty string the audit annotation will be omitted.\nThe valueExpression may be no longer than 5kb in length.\nIf the result of the valueExpression is more than 10kb in length, it\nwill be truncated to 10kb.\n\nIf multiple ValidatingAdmissionPolicyBinding resources match an\nAPI request, then the valueExpression will be evaluated for\neach binding. All unique values produced by the valueExpressions\nwill be joined together in a comma-separated list.\n\nRequired.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "valueExpression"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "x-kubernetes-list-type": "atomic"
+              },
+              "autogen": {
+                "description": "AutogenConfiguration defines the configuration for the generation controller.",
+                "properties": {
+                  "podControllers": {
+                    "description": "PodControllers specifies whether to generate a pod controllers rules.",
+                    "properties": {
+                      "controllers": {
+                        "items": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "credentials": {
+                "description": "Credentials provides credentials that will be used for authentication with registry.",
+                "properties": {
+                  "allowInsecureRegistry": {
+                    "description": "AllowInsecureRegistry allows insecure access to a registry.",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "providers": {
+                    "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided.\nIt can be of one of these values: default,google,azure,amazon,github.",
+                    "items": {
+                      "description": "CredentialsProvidersType provides the list of credential providers required.",
+                      "enum": [
+                        "default",
+                        "amazon",
+                        "azure",
+                        "google",
+                        "github"
+                      ],
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ]
+                  },
+                  "secrets": {
+                    "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                    "items": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "evaluation": {
+                "description": "EvaluationConfiguration defines the configuration for the policy evaluation.",
+                "properties": {
+                  "admission": {
+                    "description": "Admission controls policy evaluation during admission.",
+                    "properties": {
+                      "enabled": {
+                        "default": true,
+                        "description": "Enabled controls if rules are applied during admission.\nOptional. Default value is \"true\".",
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "background": {
+                    "description": "Background  controls policy evaluation during background scan.",
+                    "properties": {
+                      "enabled": {
+                        "default": true,
+                        "description": "Enabled controls if rules are applied to existing resources during a background scan.\nOptional. Default value is \"true\". The value must be set to \"false\" if the policy rule\nuses variables that are only available in the admission review request (e.g. user name).",
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "mode": {
+                    "description": "Mode is the mode of policy evaluation.\nAllowed values are \"Kubernetes\" or \"JSON\".\nOptional. Default value is \"Kubernetes\".",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "failurePolicy": {
+                "description": "FailurePolicy defines how to handle failures for the admission policy. Failures can\noccur from CEL expression parse errors, type check errors, runtime errors and invalid\nor mis-configured policy definitions or bindings.",
+                "enum": [
+                  "Ignore",
+                  "Fail"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "images": {
+                "description": "ImageExtractors is a list of CEL expression to extract images from the resource",
+                "items": {
+                  "properties": {
+                    "expression": {
+                      "description": "Expression defines CEL expression to extract images from the resource.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name is the name for this imageList. It is used to refer to the images in verification block as images.<name>",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "name"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "matchConditions": {
+                "description": "MatchConditions is a list of conditions that must be met for a request to be validated.\nMatch conditions filter requests that have already been matched by the rules,\nnamespaceSelector, and objectSelector. An empty list of matchConditions matches all requests.\nThere are a maximum of 64 match conditions allowed.",
+                "items": {
+                  "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
+                  "properties": {
+                    "expression": {
+                      "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "name"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "matchConstraints": {
+                "description": "MatchConstraints specifies what resources this policy is designed to validate.",
+                "properties": {
+                  "excludeResourceRules": {
+                    "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
+                    "items": {
+                      "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
+                      "properties": {
+                        "apiGroups": {
+                          "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "apiVersions": {
+                          "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "operations": {
+                          "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "items": {
+                            "description": "OperationType specifies an operation for a request.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "resourceNames": {
+                          "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "resources": {
+                          "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "scope": {
+                          "description": "scope specifies the scope of this rule.\nValid values are \"Cluster\", \"Namespaced\", and \"*\"\n\"Cluster\" means that only cluster-scoped resources will match this rule.\nNamespace API objects are cluster-scoped.\n\"Namespaced\" means that only namespaced resources will match this rule.\n\"*\" means that there are no scope restrictions.\nSubresources match the scope of their parent resource.\nDefault is \"*\".",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "x-kubernetes-map-type": "atomic"
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "x-kubernetes-list-type": "atomic"
+                  },
+                  "matchPolicy": {
+                    "description": "matchPolicy defines how the \"MatchResources\" list is used to match incoming requests.\nAllowed values are \"Exact\" or \"Equivalent\".\n\n- Exact: match a request only if it exactly matches a specified rule.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nbut \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\na request to apps/v1beta1 or extensions/v1beta1 would not be sent to the ValidatingAdmissionPolicy.\n\n- Equivalent: match a request if modifies a resource listed in rules, even via another API group or version.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nand \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\na request to apps/v1beta1 or extensions/v1beta1 would be converted to apps/v1 and sent to the ValidatingAdmissionPolicy.\n\nDefaults to \"Equivalent\"",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "namespaceSelector": {
+                    "description": "NamespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
+                    "properties": {
+                      "matchExpressions": {
+                        "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
+                        "items": {
+                          "description": "A label selector requirement is a selector that contains values, a key, and an operator that\nrelates the key and values.",
+                          "properties": {
+                            "key": {
+                              "description": "key is the label key that the selector applies to.",
+                              "type": "string"
+                            },
+                            "operator": {
+                              "description": "operator represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists and DoesNotExist.",
+                              "type": "string"
+                            },
+                            "values": {
+                              "description": "values is an array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. This array is replaced during a strategic\nmerge patch.",
+                              "items": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ],
+                              "x-kubernetes-list-type": "atomic"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "operator"
+                          ],
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "x-kubernetes-list-type": "atomic"
+                      },
+                      "matchLabels": {
+                        "additionalProperties": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels\nmap is equivalent to an element of matchExpressions, whose key field is \"key\", the\noperator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "x-kubernetes-map-type": "atomic"
+                  },
+                  "objectSelector": {
+                    "description": "ObjectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
+                    "properties": {
+                      "matchExpressions": {
+                        "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
+                        "items": {
+                          "description": "A label selector requirement is a selector that contains values, a key, and an operator that\nrelates the key and values.",
+                          "properties": {
+                            "key": {
+                              "description": "key is the label key that the selector applies to.",
+                              "type": "string"
+                            },
+                            "operator": {
+                              "description": "operator represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists and DoesNotExist.",
+                              "type": "string"
+                            },
+                            "values": {
+                              "description": "values is an array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. This array is replaced during a strategic\nmerge patch.",
+                              "items": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ],
+                              "x-kubernetes-list-type": "atomic"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "operator"
+                          ],
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "x-kubernetes-list-type": "atomic"
+                      },
+                      "matchLabels": {
+                        "additionalProperties": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels\nmap is equivalent to an element of matchExpressions, whose key field is \"key\", the\noperator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "x-kubernetes-map-type": "atomic"
+                  },
+                  "resourceRules": {
+                    "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
+                    "items": {
+                      "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
+                      "properties": {
+                        "apiGroups": {
+                          "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "apiVersions": {
+                          "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "operations": {
+                          "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "items": {
+                            "description": "OperationType specifies an operation for a request.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "resourceNames": {
+                          "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "resources": {
+                          "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                          "items": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "x-kubernetes-list-type": "atomic"
+                        },
+                        "scope": {
+                          "description": "scope specifies the scope of this rule.\nValid values are \"Cluster\", \"Namespaced\", and \"*\"\n\"Cluster\" means that only cluster-scoped resources will match this rule.\nNamespace API objects are cluster-scoped.\n\"Namespaced\" means that only namespaced resources will match this rule.\n\"*\" means that there are no scope restrictions.\nSubresources match the scope of their parent resource.\nDefault is \"*\".",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "x-kubernetes-map-type": "atomic"
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "x-kubernetes-list-type": "atomic"
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "x-kubernetes-map-type": "atomic"
+              },
+              "matchImageReferences": {
+                "description": "MatchImageReferences is a list of Glob and CELExpressions to match images.\nAny image that matches one of the rules is considered for validation\nAny image that does not match a rule is skipped, even when they are passed as arguments to\nimage verification functions",
+                "items": {
+                  "description": "MatchImageReference defines a Glob or a CEL expression for matching images",
+                  "oneOf": [
+                    {
+                      "required": [
+                        "glob"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "expression"
+                      ]
+                    }
+                  ],
+                  "properties": {
+                    "expression": {
+                      "description": "Expression defines CEL Expressions for matching images",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "glob": {
+                      "description": "Glob defines a globbing pattern for matching images",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "validationActions": {
+                "description": "ValidationAction specifies the action to be taken when the matched resource violates the policy.\nIf a validation evaluates to false it is always enforced according to these actions.\n\nFailures defined by the ValidatingAdmissionPolicy's FailurePolicy are enforced according\nto these actions only if the FailurePolicy is set to Fail, otherwise the failures are\nignored. This includes compilation errors, runtime errors and misconfigurations of the policy.\n\nvalidationActions is declared as a set of action values. Order does\nnot matter. validationActions may not contain duplicates of the same action.\n\nThe supported actions values are:\n\n\"Deny\" specifies that a validation failure results in a denied request.\n\n\"Warn\" specifies that a validation failure is reported to the request client\nin HTTP Warning headers, with a warning code of 299. Warnings can be sent\nboth for allowed or denied admission responses.\n\n\"Audit\" specifies that a validation failure is recorded in the created reports.\n\nClients should expect to handle additional values by ignoring\nany values not recognized.\n\n\"Deny\" and \"Warn\" may not be used together since this combination\nneedlessly duplicates the validation failure both in the\nAPI response body and the HTTP warning headers.\n\nRequired.",
+                "items": {
+                  "description": "ValidationAction specifies a policy enforcement action.",
+                  "enum": [
+                    "Deny",
+                    "Audit",
+                    "Warn"
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "x-kubernetes-list-type": "set"
+              },
+              "validationConfigurations": {
+                "default": {},
+                "description": "ValidationConfigurations defines settings for mutating and verifying image digests, and enforcing image verification through signatures.",
+                "properties": {
+                  "mutateDigest": {
+                    "default": true,
+                    "description": "MutateDigest enables replacement of image tags with digests.\nDefaults to true.",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "required": {
+                    "default": true,
+                    "description": "Required validates that images are verified, i.e., have passed a signature or attestation check.",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "verifyDigest": {
+                    "default": true,
+                    "description": "VerifyDigest validates that images have a digest.",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "validations": {
+                "description": "Validations contain CEL expressions which is used to apply the image validation checks.",
+                "items": {
+                  "description": "Validation specifies the CEL expression which is used to apply the validation.",
+                  "properties": {
+                    "expression": {
+                      "description": "Expression represents the expression which will be evaluated by CEL.\nref: https://github.com/google/cel-spec\nCEL expressions have access to the contents of the API request/response, organized into CEL variables as well as some other useful variables:\n\n- 'object' - The object from the incoming request. The value is null for DELETE requests.\n- 'oldObject' - The existing object. The value is null for CREATE requests.\n- 'request' - Attributes of the API request([ref](/pkg/apis/admission/types.go#AdmissionRequest)).\n- 'params' - Parameter resource referred to by the policy binding being evaluated. Only populated if the policy has a ParamKind.\n- 'namespaceObject' - The namespace object that the incoming object belongs to. The value is null for cluster-scoped resources.\n- 'variables' - Map of composited variables, from its name to its lazily evaluated value.\n  For example, a variable named 'foo' can be accessed as 'variables.foo'.\n- 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n- 'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\n\nThe `apiVersion`, `kind`, `metadata.name` and `metadata.generateName` are always accessible from the root of the\nobject. No other metadata properties are accessible.\n\nOnly property names of the form `[a-zA-Z_.-/][a-zA-Z0-9_.-/]*` are accessible.\nAccessible property names are escaped according to the following rules when accessed in the expression:\n- '__' escapes to '__underscores__'\n- '.' escapes to '__dot__'\n- '-' escapes to '__dash__'\n- '/' escapes to '__slash__'\n- Property names that exactly match a CEL RESERVED keyword escape to '__{keyword}__'. The keywords are:\n\t  \"true\", \"false\", \"null\", \"in\", \"as\", \"break\", \"const\", \"continue\", \"else\", \"for\", \"function\", \"if\",\n\t  \"import\", \"let\", \"loop\", \"package\", \"namespace\", \"return\".\nExamples:\n  - Expression accessing a property named \"namespace\": {\"Expression\": \"object.__namespace__ > 0\"}\n  - Expression accessing a property named \"x-prop\": {\"Expression\": \"object.x__dash__prop > 0\"}\n  - Expression accessing a property named \"redact__d\": {\"Expression\": \"object.redact__underscores__d > 0\"}\n\nEquality on arrays with list type of 'set' or 'map' ignores element order, i.e. [1, 2] == [2, 1].\nConcatenation on arrays with x-kubernetes-list-type use the semantics of the list type:\n  - 'set': `X + Y` performs a union where the array positions of all elements in `X` are preserved and\n    non-intersecting elements in `Y` are appended, retaining their partial order.\n  - 'map': `X + Y` performs a merge where the array positions of all keys in `X` are preserved but the values\n    are overwritten by values in `Y` when the key sets of `X` and `Y` intersect. Elements in `Y` with\n    non-intersecting keys are appended, retaining their partial order.\nRequired.",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Message represents the message displayed when validation fails. The message is required if the Expression contains\nline breaks. The message must not contain line breaks.\nIf unset, the message is \"failed rule: {Rule}\".\ne.g. \"must be a URL with the host matching spec.host\"\nIf the Expression contains line breaks. Message is required.\nThe message must not contain line breaks.\nIf unset, the message is \"failed Expression: {Expression}\".",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "messageExpression": {
+                      "description": "messageExpression declares a CEL expression that evaluates to the validation failure message that is returned when this rule fails.\nSince messageExpression is used as a failure message, it must evaluate to a string.\nIf both message and messageExpression are present on a validation, then messageExpression will be used if validation fails.\nIf messageExpression results in a runtime error, the runtime error is logged, and the validation failure message is produced\nas if the messageExpression field were unset. If messageExpression evaluates to an empty string, a string with only spaces, or a string\nthat contains line breaks, then the validation failure message will also be produced as if the messageExpression field were unset, and\nthe fact that messageExpression produced an empty string/string with only spaces/string with line breaks will be logged.\nmessageExpression has access to all the same variables as the `expression` except for 'authorizer' and 'authorizer.requestResource'.\nExample:\n\"object.x must be less than max (\"+string(params.max)+\")\"",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "reason": {
+                      "description": "Reason represents a machine-readable description of why this validation failed.\nIf this is the first validation in the list to fail, this reason, as well as the\ncorresponding HTTP response code, are used in the\nHTTP response to the client.\nThe currently supported reasons are: \"Unauthorized\", \"Forbidden\", \"Invalid\", \"RequestEntityTooLarge\".\nIf not set, StatusReasonInvalid is used in the response to the client.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "expression"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": "array",
+                "x-kubernetes-list-type": "atomic"
+              },
+              "variables": {
+                "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.",
+                "items": {
+                  "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
+                  "properties": {
+                    "expression": {
+                      "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "expression",
+                    "name"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "x-kubernetes-map-type": "atomic"
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "webhookConfiguration": {
+                "description": "WebhookConfiguration defines the configuration for the webhook.",
+                "properties": {
+                  "timeoutSeconds": {
+                    "description": "TimeoutSeconds specifies the maximum time in seconds allowed to apply this policy.\nAfter the configured time expires, the admission request may fail, or may simply ignore the policy results,\nbased on the failure policy. The default timeout is 10s, the value must be between 1 and 30 seconds.",
+                    "format": "int32",
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "attestors",
+              "validations"
+            ],
+            "type": "object"
+          },
+          "status": {
+            "description": "Status contains policy runtime data.",
+            "properties": {
+              "autogen": {
+                "properties": {
+                  "configs": {
+                    "additionalProperties": {
+                      "properties": {
+                        "spec": {
+                          "description": "ImageValidatingPolicySpec is the specification of the desired behavior of the ImageValidatingPolicy.",
+                          "properties": {
+                            "attestations": {
+                              "description": "Attestations provides a list of image metadata to verify",
+                              "items": {
+                                "description": "Attestation defines the identification details of the  metadata that has to be verified",
+                                "properties": {
+                                  "intoto": {
+                                    "description": "InToto defines the details of attestation attached using intoto format",
+                                    "properties": {
+                                      "type": {
+                                        "description": "Type defines the type of attestation contained within the statement.",
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "type"
+                                    ],
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ]
+                                  },
+                                  "name": {
+                                    "description": "Name is the name for this attestation. It is used to refer to the attestation in verification",
+                                    "type": "string"
+                                  },
+                                  "referrer": {
+                                    "description": "Referrer defines the details of attestation attached using OCI 1.1 format",
+                                    "properties": {
+                                      "type": {
+                                        "description": "Type defines the type of attestation attached to the image.",
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "type"
+                                    ],
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "name"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
+                            },
+                            "attestors": {
+                              "description": "Attestors provides a list of trusted authorities.",
+                              "items": {
+                                "description": "Attestor is an identity that confirms or verifies the authenticity of an image or an attestation",
+                                "oneOf": [
+                                  {
+                                    "required": [
+                                      "cosign"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "notary"
+                                    ]
+                                  }
+                                ],
+                                "properties": {
+                                  "cosign": {
+                                    "description": "Cosign defines attestor configuration for Cosign based signatures",
+                                    "properties": {
+                                      "annotations": {
+                                        "additionalProperties": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "description": "Annotations are used for image verification.\nEvery specified key-value pair must exist and match in the verified payload.\nThe payload may contain other key-value pairs.",
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "certificate": {
+                                        "description": "Certificate defines the configuration for local signature verification",
+                                        "properties": {
+                                          "cert": {
+                                            "description": "Certificate is the to the public certificate for local signature verification.",
+                                            "oneOf": [
+                                              {
+                                                "required": [
+                                                  "value"
+                                                ]
+                                              },
+                                              {
+                                                "required": [
+                                                  "expression"
+                                                ]
+                                              }
+                                            ],
+                                            "properties": {
+                                              "expression": {
+                                                "description": "Expression defines the a CEL expression input.",
+                                                "type": [
+                                                  "string",
+                                                  "null"
+                                                ]
+                                              },
+                                              "value": {
+                                                "description": "Value defines the raw string input.",
+                                                "type": [
+                                                  "string",
+                                                  "null"
+                                                ]
+                                              }
+                                            },
+                                            "type": [
+                                              "object",
+                                              "null"
+                                            ]
+                                          },
+                                          "certChain": {
+                                            "description": "CertificateChain is the list of CA certificates in PEM format which will be needed\nwhen building the certificate chain for the signing certificate. Must start with the\nparent intermediate CA certificate of the signing certificate and end with the root certificate",
+                                            "oneOf": [
+                                              {
+                                                "required": [
+                                                  "value"
+                                                ]
+                                              },
+                                              {
+                                                "required": [
+                                                  "expression"
+                                                ]
+                                              }
+                                            ],
+                                            "properties": {
+                                              "expression": {
+                                                "description": "Expression defines the a CEL expression input.",
+                                                "type": [
+                                                  "string",
+                                                  "null"
+                                                ]
+                                              },
+                                              "value": {
+                                                "description": "Value defines the raw string input.",
+                                                "type": [
+                                                  "string",
+                                                  "null"
+                                                ]
+                                              }
+                                            },
+                                            "type": [
+                                              "object",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "ctlog": {
+                                        "description": "CTLog sets the configuration to verify the authority against a Rekor instance.",
+                                        "properties": {
+                                          "ctLogPubKey": {
+                                            "description": "CTLogPubKey, if set, is used to validate SCTs against a custom source.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "insecureIgnoreSCT": {
+                                            "description": "IgnoreSCT defines whether to use the Signed Certificate Timestamp (SCT) log to check for a certificate\ntimestamp. Default is false. Set to true if this was opted out during signing.",
+                                            "type": [
+                                              "boolean",
+                                              "null"
+                                            ]
+                                          },
+                                          "insecureIgnoreTlog": {
+                                            "description": "InsecureIgnoreTlog skips transparency log verification.",
+                                            "type": [
+                                              "boolean",
+                                              "null"
+                                            ]
+                                          },
+                                          "rekorPubKey": {
+                                            "description": "RekorPubKey is an optional PEM-encoded public key to use for a custom Rekor.\nIf set, this will be used to validate transparency log signatures from a custom Rekor.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "tsaCertChain": {
+                                            "description": "TSACertChain, if set, is the PEM-encoded certificate chain file for the RFC3161 timestamp authority. Must\ncontain the root CA certificate. Optionally may contain intermediate CA certificates, and\nmay contain the leaf TSA certificate if not present in the timestamurce.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "url": {
+                                            "description": "URL sets the url to the rekor instance (by default the public rekor.sigstore.dev)",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "key": {
+                                        "description": "Key defines the type of key to validate the image.",
+                                        "properties": {
+                                          "data": {
+                                            "description": "Data contains the inline public key",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "expression": {
+                                            "description": "Expression is a Expression expression that returns the public key.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "hashAlgorithm": {
+                                            "description": "HashAlgorithm specifues signature algorithm for public keys. Supported values are\nsha224, sha256, sha384 and sha512. Defaults to sha256.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "kms": {
+                                            "description": "KMS contains the KMS url of the public key\nSupported formats differ based on the KMS system used.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "keyless": {
+                                        "description": "Keyless sets the configuration to verify the authority against a Fulcio instance.",
+                                        "properties": {
+                                          "identities": {
+                                            "description": "Identities sets a list of identities.",
+                                            "items": {
+                                              "description": "Identity may contain the issuer and/or the subject found in the transparency\nlog.\nIssuer/Subject uses a strict match, while IssuerRegExp and SubjectRegExp\napply a regexp for matching.",
+                                              "properties": {
+                                                "issuer": {
+                                                  "description": "Issuer defines the issuer for this identity.",
+                                                  "type": [
+                                                    "string",
+                                                    "null"
+                                                  ]
+                                                },
+                                                "issuerRegExp": {
+                                                  "description": "IssuerRegExp specifies a regular expression to match the issuer for this identity.",
+                                                  "type": [
+                                                    "string",
+                                                    "null"
+                                                  ]
+                                                },
+                                                "subject": {
+                                                  "description": "Subject defines the subject for this identity.",
+                                                  "type": [
+                                                    "string",
+                                                    "null"
+                                                  ]
+                                                },
+                                                "subjectRegExp": {
+                                                  "description": "SubjectRegExp specifies a regular expression to match the subject for this identity.",
+                                                  "type": [
+                                                    "string",
+                                                    "null"
+                                                  ]
+                                                }
+                                              },
+                                              "type": [
+                                                "object",
+                                                "null"
+                                              ]
+                                            },
+                                            "type": "array"
+                                          },
+                                          "roots": {
+                                            "description": "Roots is an optional set of PEM encoded trusted root certificates.\nIf not provided, the system roots are used.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "identities"
+                                        ],
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "source": {
+                                        "description": "Sources sets the configuration to specify the sources from where to consume the signature and attestations.",
+                                        "properties": {
+                                          "PullSecrets": {
+                                            "description": "SignaturePullSecrets is an optional list of references to secrets in the\nsame namespace as the deploying resource for pulling any of the signatures\nused by this Source.",
+                                            "items": {
+                                              "description": "LocalObjectReference contains enough information to let you locate the\nreferenced object inside the same namespace.",
+                                              "properties": {
+                                                "name": {
+                                                  "default": "",
+                                                  "description": "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+                                                  "type": [
+                                                    "string",
+                                                    "null"
+                                                  ]
+                                                }
+                                              },
+                                              "type": [
+                                                "object",
+                                                "null"
+                                              ],
+                                              "x-kubernetes-map-type": "atomic"
+                                            },
+                                            "type": [
+                                              "array",
+                                              "null"
+                                            ]
+                                          },
+                                          "repository": {
+                                            "description": "Repository defines the location from where to pull the signature / attestations.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "tagPrefix": {
+                                            "description": "TagPrefix is an optional prefix that signature and attestations have.\nThis is the 'tag based discovery' and in the future once references are\nfully supported that should likely be the preferred way to handle these.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "tuf": {
+                                        "description": "TUF defines the configuration to fetch sigstore root",
+                                        "properties": {
+                                          "mirror": {
+                                            "description": "Mirror is the base URL of Sigstore TUF repository",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "root": {
+                                            "description": "Root defines the path or data of the trusted root",
+                                            "properties": {
+                                              "data": {
+                                                "description": "Data is the base64 encoded TUF root",
+                                                "type": [
+                                                  "string",
+                                                  "null"
+                                                ]
+                                              },
+                                              "path": {
+                                                "description": "Path is the URL or File location of the TUF root",
+                                                "type": [
+                                                  "string",
+                                                  "null"
+                                                ]
+                                              }
+                                            },
+                                            "type": [
+                                              "object",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ]
+                                  },
+                                  "name": {
+                                    "description": "Name is the name for this attestor. It is used to refer to the attestor in verification",
+                                    "type": "string"
+                                  },
+                                  "notary": {
+                                    "description": "Notary defines attestor configuration for Notary based signatures",
+                                    "properties": {
+                                      "certs": {
+                                        "description": "Certs define the cert chain for Notary signature verification",
+                                        "oneOf": [
+                                          {
+                                            "required": [
+                                              "value"
+                                            ]
+                                          },
+                                          {
+                                            "required": [
+                                              "expression"
+                                            ]
+                                          }
+                                        ],
+                                        "properties": {
+                                          "expression": {
+                                            "description": "Expression defines the a CEL expression input.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "value": {
+                                            "description": "Value defines the raw string input.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "tsaCerts": {
+                                        "description": "TSACerts define the cert chain for verifying timestamps of notary signature",
+                                        "oneOf": [
+                                          {
+                                            "required": [
+                                              "value"
+                                            ]
+                                          },
+                                          {
+                                            "required": [
+                                              "expression"
+                                            ]
+                                          }
+                                        ],
+                                        "properties": {
+                                          "expression": {
+                                            "description": "Expression defines the a CEL expression input.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          },
+                                          "value": {
+                                            "description": "Value defines the raw string input.",
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "name"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": "array"
+                            },
+                            "auditAnnotations": {
+                              "description": "auditAnnotations contains CEL expressions which are used to produce audit\nannotations for the audit event of the API request.\nvalidations and auditAnnotations may not both be empty; a least one of validations or auditAnnotations is\nrequired.",
+                              "items": {
+                                "description": "AuditAnnotation describes how to produce an audit annotation for an API request.",
+                                "properties": {
+                                  "key": {
+                                    "description": "key specifies the audit annotation key. The audit annotation keys of\na ValidatingAdmissionPolicy must be unique. The key must be a qualified\nname ([A-Za-z0-9][-A-Za-z0-9_.]*) no more than 63 bytes in length.\n\nThe key is combined with the resource name of the\nValidatingAdmissionPolicy to construct an audit annotation key:\n\"{ValidatingAdmissionPolicy name}/{key}\".\n\nIf an admission webhook uses the same resource name as this ValidatingAdmissionPolicy\nand the same audit annotation key, the annotation key will be identical.\nIn this case, the first annotation written with the key will be included\nin the audit event and all subsequent annotations with the same key\nwill be discarded.\n\nRequired.",
+                                    "type": "string"
+                                  },
+                                  "valueExpression": {
+                                    "description": "valueExpression represents the expression which is evaluated by CEL to\nproduce an audit annotation value. The expression must evaluate to either\na string or null value. If the expression evaluates to a string, the\naudit annotation is included with the string value. If the expression\nevaluates to null or empty string the audit annotation will be omitted.\nThe valueExpression may be no longer than 5kb in length.\nIf the result of the valueExpression is more than 10kb in length, it\nwill be truncated to 10kb.\n\nIf multiple ValidatingAdmissionPolicyBinding resources match an\nAPI request, then the valueExpression will be evaluated for\neach binding. All unique values produced by the valueExpressions\nwill be joined together in a comma-separated list.\n\nRequired.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "valueExpression"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ],
+                              "x-kubernetes-list-type": "atomic"
+                            },
+                            "autogen": {
+                              "description": "AutogenConfiguration defines the configuration for the generation controller.",
+                              "properties": {
+                                "podControllers": {
+                                  "description": "PodControllers specifies whether to generate a pod controllers rules.",
+                                  "properties": {
+                                    "controllers": {
+                                      "items": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "type": [
+                                        "array",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            },
+                            "credentials": {
+                              "description": "Credentials provides credentials that will be used for authentication with registry.",
+                              "properties": {
+                                "allowInsecureRegistry": {
+                                  "description": "AllowInsecureRegistry allows insecure access to a registry.",
+                                  "type": [
+                                    "boolean",
+                                    "null"
+                                  ]
+                                },
+                                "providers": {
+                                  "description": "Providers specifies a list of OCI Registry names, whose authentication providers are provided.\nIt can be of one of these values: default,google,azure,amazon,github.",
+                                  "items": {
+                                    "description": "CredentialsProvidersType provides the list of credential providers required.",
+                                    "enum": [
+                                      "default",
+                                      "amazon",
+                                      "azure",
+                                      "google",
+                                      "github"
+                                    ],
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "type": [
+                                    "array",
+                                    "null"
+                                  ]
+                                },
+                                "secrets": {
+                                  "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                  "items": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "type": [
+                                    "array",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            },
+                            "evaluation": {
+                              "description": "EvaluationConfiguration defines the configuration for the policy evaluation.",
+                              "properties": {
+                                "admission": {
+                                  "description": "Admission controls policy evaluation during admission.",
+                                  "properties": {
+                                    "enabled": {
+                                      "default": true,
+                                      "description": "Enabled controls if rules are applied during admission.\nOptional. Default value is \"true\".",
+                                      "type": [
+                                        "boolean",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ]
+                                },
+                                "background": {
+                                  "description": "Background  controls policy evaluation during background scan.",
+                                  "properties": {
+                                    "enabled": {
+                                      "default": true,
+                                      "description": "Enabled controls if rules are applied to existing resources during a background scan.\nOptional. Default value is \"true\". The value must be set to \"false\" if the policy rule\nuses variables that are only available in the admission review request (e.g. user name).",
+                                      "type": [
+                                        "boolean",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ]
+                                },
+                                "mode": {
+                                  "description": "Mode is the mode of policy evaluation.\nAllowed values are \"Kubernetes\" or \"JSON\".\nOptional. Default value is \"Kubernetes\".",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            },
+                            "failurePolicy": {
+                              "description": "FailurePolicy defines how to handle failures for the admission policy. Failures can\noccur from CEL expression parse errors, type check errors, runtime errors and invalid\nor mis-configured policy definitions or bindings.",
+                              "enum": [
+                                "Ignore",
+                                "Fail"
+                              ],
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "images": {
+                              "description": "ImageExtractors is a list of CEL expression to extract images from the resource",
+                              "items": {
+                                "properties": {
+                                  "expression": {
+                                    "description": "Expression defines CEL expression to extract images from the resource.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name is the name for this imageList. It is used to refer to the images in verification block as images.<name>",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "expression",
+                                  "name"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
+                            },
+                            "matchConditions": {
+                              "description": "MatchConditions is a list of conditions that must be met for a request to be validated.\nMatch conditions filter requests that have already been matched by the rules,\nnamespaceSelector, and objectSelector. An empty list of matchConditions matches all requests.\nThere are a maximum of 64 match conditions allowed.",
+                              "items": {
+                                "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
+                                "properties": {
+                                  "expression": {
+                                    "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "expression",
+                                  "name"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
+                            },
+                            "matchConstraints": {
+                              "description": "MatchConstraints specifies what resources this policy is designed to validate.",
+                              "properties": {
+                                "excludeResourceRules": {
+                                  "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
+                                  "items": {
+                                    "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
+                                    "properties": {
+                                      "apiGroups": {
+                                        "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "items": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "apiVersions": {
+                                        "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "items": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "operations": {
+                                        "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "items": {
+                                          "description": "OperationType specifies an operation for a request.",
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "resourceNames": {
+                                        "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                                        "items": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "resources": {
+                                        "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                                        "items": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "scope": {
+                                        "description": "scope specifies the scope of this rule.\nValid values are \"Cluster\", \"Namespaced\", and \"*\"\n\"Cluster\" means that only cluster-scoped resources will match this rule.\nNamespace API objects are cluster-scoped.\n\"Namespaced\" means that only namespaced resources will match this rule.\n\"*\" means that there are no scope restrictions.\nSubresources match the scope of their parent resource.\nDefault is \"*\".",
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "x-kubernetes-map-type": "atomic"
+                                  },
+                                  "type": [
+                                    "array",
+                                    "null"
+                                  ],
+                                  "x-kubernetes-list-type": "atomic"
+                                },
+                                "matchPolicy": {
+                                  "description": "matchPolicy defines how the \"MatchResources\" list is used to match incoming requests.\nAllowed values are \"Exact\" or \"Equivalent\".\n\n- Exact: match a request only if it exactly matches a specified rule.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nbut \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\na request to apps/v1beta1 or extensions/v1beta1 would not be sent to the ValidatingAdmissionPolicy.\n\n- Equivalent: match a request if modifies a resource listed in rules, even via another API group or version.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nand \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\na request to apps/v1beta1 or extensions/v1beta1 would be converted to apps/v1 and sent to the ValidatingAdmissionPolicy.\n\nDefaults to \"Equivalent\"",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "namespaceSelector": {
+                                  "description": "NamespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
+                                  "properties": {
+                                    "matchExpressions": {
+                                      "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
+                                      "items": {
+                                        "description": "A label selector requirement is a selector that contains values, a key, and an operator that\nrelates the key and values.",
+                                        "properties": {
+                                          "key": {
+                                            "description": "key is the label key that the selector applies to.",
+                                            "type": "string"
+                                          },
+                                          "operator": {
+                                            "description": "operator represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists and DoesNotExist.",
+                                            "type": "string"
+                                          },
+                                          "values": {
+                                            "description": "values is an array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. This array is replaced during a strategic\nmerge patch.",
+                                            "items": {
+                                              "type": [
+                                                "string",
+                                                "null"
+                                              ]
+                                            },
+                                            "type": [
+                                              "array",
+                                              "null"
+                                            ],
+                                            "x-kubernetes-list-type": "atomic"
+                                          }
+                                        },
+                                        "required": [
+                                          "key",
+                                          "operator"
+                                        ],
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "type": [
+                                        "array",
+                                        "null"
+                                      ],
+                                      "x-kubernetes-list-type": "atomic"
+                                    },
+                                    "matchLabels": {
+                                      "additionalProperties": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels\nmap is equivalent to an element of matchExpressions, whose key field is \"key\", the\noperator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "x-kubernetes-map-type": "atomic"
+                                },
+                                "objectSelector": {
+                                  "description": "ObjectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
+                                  "properties": {
+                                    "matchExpressions": {
+                                      "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
+                                      "items": {
+                                        "description": "A label selector requirement is a selector that contains values, a key, and an operator that\nrelates the key and values.",
+                                        "properties": {
+                                          "key": {
+                                            "description": "key is the label key that the selector applies to.",
+                                            "type": "string"
+                                          },
+                                          "operator": {
+                                            "description": "operator represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists and DoesNotExist.",
+                                            "type": "string"
+                                          },
+                                          "values": {
+                                            "description": "values is an array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. This array is replaced during a strategic\nmerge patch.",
+                                            "items": {
+                                              "type": [
+                                                "string",
+                                                "null"
+                                              ]
+                                            },
+                                            "type": [
+                                              "array",
+                                              "null"
+                                            ],
+                                            "x-kubernetes-list-type": "atomic"
+                                          }
+                                        },
+                                        "required": [
+                                          "key",
+                                          "operator"
+                                        ],
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ]
+                                      },
+                                      "type": [
+                                        "array",
+                                        "null"
+                                      ],
+                                      "x-kubernetes-list-type": "atomic"
+                                    },
+                                    "matchLabels": {
+                                      "additionalProperties": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "description": "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels\nmap is equivalent to an element of matchExpressions, whose key field is \"key\", the\noperator is \"In\", and the values array contains only \"value\". The requirements are ANDed.",
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "x-kubernetes-map-type": "atomic"
+                                },
+                                "resourceRules": {
+                                  "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
+                                  "items": {
+                                    "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
+                                    "properties": {
+                                      "apiGroups": {
+                                        "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "items": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "apiVersions": {
+                                        "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "items": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "operations": {
+                                        "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "items": {
+                                          "description": "OperationType specifies an operation for a request.",
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "resourceNames": {
+                                        "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                                        "items": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "resources": {
+                                        "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                                        "items": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "type": [
+                                          "array",
+                                          "null"
+                                        ],
+                                        "x-kubernetes-list-type": "atomic"
+                                      },
+                                      "scope": {
+                                        "description": "scope specifies the scope of this rule.\nValid values are \"Cluster\", \"Namespaced\", and \"*\"\n\"Cluster\" means that only cluster-scoped resources will match this rule.\nNamespace API objects are cluster-scoped.\n\"Namespaced\" means that only namespaced resources will match this rule.\n\"*\" means that there are no scope restrictions.\nSubresources match the scope of their parent resource.\nDefault is \"*\".",
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "x-kubernetes-map-type": "atomic"
+                                  },
+                                  "type": [
+                                    "array",
+                                    "null"
+                                  ],
+                                  "x-kubernetes-list-type": "atomic"
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "x-kubernetes-map-type": "atomic"
+                            },
+                            "matchImageReferences": {
+                              "description": "MatchImageReferences is a list of Glob and CELExpressions to match images.\nAny image that matches one of the rules is considered for validation\nAny image that does not match a rule is skipped, even when they are passed as arguments to\nimage verification functions",
+                              "items": {
+                                "description": "MatchImageReference defines a Glob or a CEL expression for matching images",
+                                "oneOf": [
+                                  {
+                                    "required": [
+                                      "glob"
+                                    ]
+                                  },
+                                  {
+                                    "required": [
+                                      "expression"
+                                    ]
+                                  }
+                                ],
+                                "properties": {
+                                  "expression": {
+                                    "description": "Expression defines CEL Expressions for matching images",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "glob": {
+                                    "description": "Glob defines a globbing pattern for matching images",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
+                            },
+                            "validationActions": {
+                              "description": "ValidationAction specifies the action to be taken when the matched resource violates the policy.\nIf a validation evaluates to false it is always enforced according to these actions.\n\nFailures defined by the ValidatingAdmissionPolicy's FailurePolicy are enforced according\nto these actions only if the FailurePolicy is set to Fail, otherwise the failures are\nignored. This includes compilation errors, runtime errors and misconfigurations of the policy.\n\nvalidationActions is declared as a set of action values. Order does\nnot matter. validationActions may not contain duplicates of the same action.\n\nThe supported actions values are:\n\n\"Deny\" specifies that a validation failure results in a denied request.\n\n\"Warn\" specifies that a validation failure is reported to the request client\nin HTTP Warning headers, with a warning code of 299. Warnings can be sent\nboth for allowed or denied admission responses.\n\n\"Audit\" specifies that a validation failure is recorded in the created reports.\n\nClients should expect to handle additional values by ignoring\nany values not recognized.\n\n\"Deny\" and \"Warn\" may not be used together since this combination\nneedlessly duplicates the validation failure both in the\nAPI response body and the HTTP warning headers.\n\nRequired.",
+                              "items": {
+                                "description": "ValidationAction specifies a policy enforcement action.",
+                                "enum": [
+                                  "Deny",
+                                  "Audit",
+                                  "Warn"
+                                ],
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ],
+                              "x-kubernetes-list-type": "set"
+                            },
+                            "validationConfigurations": {
+                              "default": {},
+                              "description": "ValidationConfigurations defines settings for mutating and verifying image digests, and enforcing image verification through signatures.",
+                              "properties": {
+                                "mutateDigest": {
+                                  "default": true,
+                                  "description": "MutateDigest enables replacement of image tags with digests.\nDefaults to true.",
+                                  "type": [
+                                    "boolean",
+                                    "null"
+                                  ]
+                                },
+                                "required": {
+                                  "default": true,
+                                  "description": "Required validates that images are verified, i.e., have passed a signature or attestation check.",
+                                  "type": [
+                                    "boolean",
+                                    "null"
+                                  ]
+                                },
+                                "verifyDigest": {
+                                  "default": true,
+                                  "description": "VerifyDigest validates that images have a digest.",
+                                  "type": [
+                                    "boolean",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            },
+                            "validations": {
+                              "description": "Validations contain CEL expressions which is used to apply the image validation checks.",
+                              "items": {
+                                "description": "Validation specifies the CEL expression which is used to apply the validation.",
+                                "properties": {
+                                  "expression": {
+                                    "description": "Expression represents the expression which will be evaluated by CEL.\nref: https://github.com/google/cel-spec\nCEL expressions have access to the contents of the API request/response, organized into CEL variables as well as some other useful variables:\n\n- 'object' - The object from the incoming request. The value is null for DELETE requests.\n- 'oldObject' - The existing object. The value is null for CREATE requests.\n- 'request' - Attributes of the API request([ref](/pkg/apis/admission/types.go#AdmissionRequest)).\n- 'params' - Parameter resource referred to by the policy binding being evaluated. Only populated if the policy has a ParamKind.\n- 'namespaceObject' - The namespace object that the incoming object belongs to. The value is null for cluster-scoped resources.\n- 'variables' - Map of composited variables, from its name to its lazily evaluated value.\n  For example, a variable named 'foo' can be accessed as 'variables.foo'.\n- 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n- 'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\n\nThe `apiVersion`, `kind`, `metadata.name` and `metadata.generateName` are always accessible from the root of the\nobject. No other metadata properties are accessible.\n\nOnly property names of the form `[a-zA-Z_.-/][a-zA-Z0-9_.-/]*` are accessible.\nAccessible property names are escaped according to the following rules when accessed in the expression:\n- '__' escapes to '__underscores__'\n- '.' escapes to '__dot__'\n- '-' escapes to '__dash__'\n- '/' escapes to '__slash__'\n- Property names that exactly match a CEL RESERVED keyword escape to '__{keyword}__'. The keywords are:\n\t  \"true\", \"false\", \"null\", \"in\", \"as\", \"break\", \"const\", \"continue\", \"else\", \"for\", \"function\", \"if\",\n\t  \"import\", \"let\", \"loop\", \"package\", \"namespace\", \"return\".\nExamples:\n  - Expression accessing a property named \"namespace\": {\"Expression\": \"object.__namespace__ > 0\"}\n  - Expression accessing a property named \"x-prop\": {\"Expression\": \"object.x__dash__prop > 0\"}\n  - Expression accessing a property named \"redact__d\": {\"Expression\": \"object.redact__underscores__d > 0\"}\n\nEquality on arrays with list type of 'set' or 'map' ignores element order, i.e. [1, 2] == [2, 1].\nConcatenation on arrays with x-kubernetes-list-type use the semantics of the list type:\n  - 'set': `X + Y` performs a union where the array positions of all elements in `X` are preserved and\n    non-intersecting elements in `Y` are appended, retaining their partial order.\n  - 'map': `X + Y` performs a merge where the array positions of all keys in `X` are preserved but the values\n    are overwritten by values in `Y` when the key sets of `X` and `Y` intersect. Elements in `Y` with\n    non-intersecting keys are appended, retaining their partial order.\nRequired.",
+                                    "type": "string"
+                                  },
+                                  "message": {
+                                    "description": "Message represents the message displayed when validation fails. The message is required if the Expression contains\nline breaks. The message must not contain line breaks.\nIf unset, the message is \"failed rule: {Rule}\".\ne.g. \"must be a URL with the host matching spec.host\"\nIf the Expression contains line breaks. Message is required.\nThe message must not contain line breaks.\nIf unset, the message is \"failed Expression: {Expression}\".",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "messageExpression": {
+                                    "description": "messageExpression declares a CEL expression that evaluates to the validation failure message that is returned when this rule fails.\nSince messageExpression is used as a failure message, it must evaluate to a string.\nIf both message and messageExpression are present on a validation, then messageExpression will be used if validation fails.\nIf messageExpression results in a runtime error, the runtime error is logged, and the validation failure message is produced\nas if the messageExpression field were unset. If messageExpression evaluates to an empty string, a string with only spaces, or a string\nthat contains line breaks, then the validation failure message will also be produced as if the messageExpression field were unset, and\nthe fact that messageExpression produced an empty string/string with only spaces/string with line breaks will be logged.\nmessageExpression has access to all the same variables as the `expression` except for 'authorizer' and 'authorizer.requestResource'.\nExample:\n\"object.x must be less than max (\"+string(params.max)+\")\"",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "reason": {
+                                    "description": "Reason represents a machine-readable description of why this validation failed.\nIf this is the first validation in the list to fail, this reason, as well as the\ncorresponding HTTP response code, are used in the\nHTTP response to the client.\nThe currently supported reasons are: \"Unauthorized\", \"Forbidden\", \"Invalid\", \"RequestEntityTooLarge\".\nIf not set, StatusReasonInvalid is used in the response to the client.",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "expression"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": "array",
+                              "x-kubernetes-list-type": "atomic"
+                            },
+                            "variables": {
+                              "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.",
+                              "items": {
+                                "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
+                                "properties": {
+                                  "expression": {
+                                    "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "expression",
+                                  "name"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "x-kubernetes-map-type": "atomic"
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
+                            },
+                            "webhookConfiguration": {
+                              "description": "WebhookConfiguration defines the configuration for the webhook.",
+                              "properties": {
+                                "timeoutSeconds": {
+                                  "description": "TimeoutSeconds specifies the maximum time in seconds allowed to apply this policy.\nAfter the configured time expires, the admission request may fail, or may simply ignore the policy results,\nbased on the failure policy. The default timeout is 10s, the value must be between 1 and 30 seconds.",
+                                  "format": "int32",
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "type": [
+                                "object",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "attestors",
+                            "validations"
+                          ],
+                          "type": "object"
+                        },
+                        "targets": {
+                          "items": {
+                            "properties": {
+                              "group": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "kind": {
+                                "type": "string"
+                              },
+                              "resource": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "resource",
+                              "version"
+                            ],
+                            "type": [
+                              "object",
+                              "null"
+                            ]
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "spec",
+                        "targets"
+                      ],
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "conditionStatus": {
+                "description": "ConditionStatus is the shared status across all policy types",
+                "properties": {
+                  "conditions": {
+                    "items": {
+                      "description": "Condition contains details for one aspect of the current state of this API Resource.",
+                      "properties": {
+                        "lastTransitionTime": {
+                          "description": "lastTransitionTime is the last time the condition transitioned from one status to another.\nThis should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
+                          "format": "date-time",
+                          "type": "string"
+                        },
+                        "message": {
+                          "description": "message is a human readable message indicating details about the transition.\nThis may be an empty string.",
+                          "maxLength": 32768,
+                          "type": "string"
+                        },
+                        "observedGeneration": {
+                          "description": "observedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.",
+                          "format": "int64",
+                          "minimum": 0,
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "reason": {
+                          "description": "reason contains a programmatic identifier indicating the reason for the condition's last transition.\nProducers of specific condition types may define expected values and meanings for this field,\nand whether the values are considered a guaranteed API.\nThe value should be a CamelCase string.\nThis field may not be empty.",
+                          "maxLength": 1024,
+                          "minLength": 1,
+                          "pattern": "^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$",
+                          "type": "string"
+                        },
+                        "status": {
+                          "description": "status of the condition, one of True, False, Unknown.",
+                          "enum": [
+                            "True",
+                            "False",
+                            "Unknown"
+                          ],
+                          "type": "string"
+                        },
+                        "type": {
+                          "description": "type of condition in CamelCase or in foo.example.com/CamelCase.",
+                          "maxLength": 316,
+                          "pattern": "^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "lastTransitionTime",
+                        "message",
+                        "reason",
+                        "status",
+                        "type"
+                      ],
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "type": [
+                      "array",
+                      "null"
+                    ]
+                  },
+                  "message": {
+                    "description": "Message is a human readable message indicating details about the generation of ValidatingAdmissionPolicy/MutatingAdmissionPolicy\nIt is an empty string when ValidatingAdmissionPolicy/MutatingAdmissionPolicy is successfully generated.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "ready": {
+                    "description": "The ready of a policy is a high-level summary of where the policy is in its lifecycle.\nThe conditions array, the reason and message fields contain more detail about the policy's status.",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "spec"
+        ],
+        "type": [
+          "object",
+          "null"
+        ],
+        "x-kubernetes-group-version-kind": [
+          {
+            "group": "policies.kyverno.io",
+            "kind": "ImageValidatingPolicy",
+            "version": "v1beta1"
+          }
+        ]
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "kind": {
+      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "enum": [
+        "ImageValidatingPolicyList"
+      ],
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metadata": {
+      "allOf": [
+        {
+          "description": "ListMeta describes metadata that synthetic resources must have, including lists and various status objects. A resource may have only one of {ObjectMeta, ListMeta}.",
+          "properties": {
+            "continue": {
+              "description": "continue may be set if the user set a limit on the number of items returned, and indicates that the server has more data available. The value is opaque and may be used to issue another request to the endpoint that served this list to retrieve the next set of available objects. Continuing a consistent list may not be possible if the server configuration has changed or more than a few minutes have passed. The resourceVersion field returned when using this continue value will be identical to the value in the first response, unless you have received this token from an error message.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "remainingItemCount": {
+              "description": "remainingItemCount is the number of subsequent items in the list which are not included in this list response. If the list request contained label or field selectors, then the number of remaining items is unknown and the field will be left unset and omitted during serialization. If the list is complete (either because it is not chunking or because this is the last chunk), then there are no more remaining items and this field will be left unset and omitted during serialization. Servers older than v1.15 do not set this field. The intended use of the remainingItemCount is *estimating* the size of a collection. Clients should not rely on the remainingItemCount to be set or to be exact.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "resourceVersion": {
+              "description": "String that identifies the server's internal version of this object that can be used by clients to determine when objects have changed. Value must be treated as opaque by clients and passed unmodified back to the server. Populated by the system. Read-only. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "selfLink": {
+              "description": "Deprecated: selfLink is a legacy read-only field that is no longer populated by the system.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      ],
+      "description": "Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+    }
+  },
+  "required": [
+    "items"
+  ],
+  "type": "object",
+  "x-kubernetes-group-version-kind": [
+    {
+      "group": "policies.kyverno.io",
+      "kind": "ImageValidatingPolicyList",
+      "version": "v1beta1"
+    }
+  ]
+}

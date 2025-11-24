@@ -16,11 +16,23 @@ import clusterpolicyv2beta1 from './schemas/clusterpolicy-kyverno.io-v2beta1.jso
 import policyv2beta1 from './schemas/policy-kyverno.io-v2beta1.json'
 import vapv1 from './schemas/validatingadmissionpolicy-admissionregistration-v1.json'
 import vapbv1 from './schemas/validatingadmissionpolicybinding-admissionregistration-v1.json'
+
 import vpolv1alpha1 from './schemas/validatingpolicy-policies.kyverno.io-v1alpha1.json'
+import vpolv1beta1 from './schemas/validatingpolicy-policies.kyverno.io-v1beta1.json'
+import nvpolv1beta1 from './schemas/namespacedvalidatingpolicy-policies.kyverno.io-v1beta1.json'
+
 import ivpolv1alpha1 from './schemas/imagevalidatingpolicy-policies.kyverno.io-v1alpha1.json'
+import ivpolv1beta1 from './schemas/imagevalidatingpolicy-policies.kyverno.io-v1beta1.json'
+import nivpolv1beta1 from './schemas/namespacedimagevalidatingpolicy-policies.kyverno.io-v1beta1.json'
+
 import dpolv1alpha1 from './schemas/deletingpolicy-policies.kyverno.io-v1alpha1.json'
+import dpolv1beta1 from './schemas/deletingpolicy-policies.kyverno.io-v1beta1.json'
+import ndpolv1beta1 from './schemas/namespaceddeletingpolicy-policies.kyverno.io-v1beta1.json'
+
 import gpolv1alpha1 from './schemas/generatingpolicy-policies.kyverno.io-v1alpha1.json'
+import gpolv1beta1 from './schemas/generatingpolicy-policies.kyverno.io-v1beta1.json'
 import mpolv1alpha1 from './schemas/mutatingpolicy-policies.kyverno.io-v1alpha1.json'
+import mpolv1beta1 from './schemas/mutatingpolicy-policies.kyverno.io-v1beta1.json'
 import context from './schemas/context.json'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
@@ -42,10 +54,18 @@ configureMonacoYaml(monaco, {
           { $ref: '#/definitions/vap-v1' },
           { $ref: '#/definitions/vapb-v1' },
           { $ref: '#/definitions/validatingpolicy-v1alpha1' },
+          { $ref: '#/definitions/validatingpolicy-v1beta1' },
+          { $ref: '#/definitions/namespacedvalidatingpolicy-v1beta1' },
           { $ref: '#/definitions/imagevalidatingpolicy-v1alpha1' },
+          { $ref: '#/definitions/imagevalidatingpolicy-v1beta1' },
+          { $ref: '#/definitions/namespacedimagevalidatingpolicy-v1beta1' },
           { $ref: '#/definitions/deletingpolicy-v1alpha1' },
+          { $ref: '#/definitions/ddeletingpolicy-v1beta1' },
+          { $ref: '#/definitions/namespaceddeletingpolicy-v1beta1' },
           { $ref: '#/definitions/generatingpolicy-v1alpha1' },
-          { $ref: '#/definitions/mutatingpolicy-v1alpha1' }
+          { $ref: '#/definitions/generatingpolicy-v1beta1' },
+          { $ref: '#/definitions/mutatingpolicy-v1alpha1' },
+          { $ref: '#/definitions/mutatingpolicy-v1beta1' }
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema,
@@ -55,10 +75,18 @@ configureMonacoYaml(monaco, {
           'vap-v1': vapv1 as JSONSchema,
           'vapb-v1': vapbv1 as JSONSchema,
           'validatingpolicy-v1alpha1': vpolv1alpha1 as JSONSchema,
+          'validatingpolicy-v1beta1': vpolv1beta1 as JSONSchema,
+          'namespacedvalidatingpolicy-v1beta1': nvpolv1beta1 as JSONSchema,
           'imagevalidatingpolicy-v1alpha1': ivpolv1alpha1 as JSONSchema,
+          'imagevalidatingpolicy-v1beta1': ivpolv1beta1 as JSONSchema,
+          'namespacedimagevalidatingpolicy-v1beta1': nivpolv1beta1 as JSONSchema,
           'deletingpolicy-v1alpha1': dpolv1alpha1 as JSONSchema,
+          'deletingpolicy-v1beta1': dpolv1beta1 as JSONSchema,
+          'namespaceddeletingpolicy-v1beta1': ndpolv1beta1 as JSONSchema,
           'generatingpolicy-v1alpha1': gpolv1alpha1 as JSONSchema,
-          'mutatingpolicy-v1alpha1': mpolv1alpha1 as JSONSchema
+          'generatingpolicy-v1beta1': gpolv1beta1 as JSONSchema,
+          'mutatingpolicy-v1alpha1': mpolv1alpha1 as JSONSchema,
+          'mutatingpolicy-v1beta1': mpolv1beta1 as JSONSchema
         }
       },
       uri: `${baseURL}/schemas/policies.json`,
@@ -80,8 +108,28 @@ configureMonacoYaml(monaco, {
       fileMatch: ['validatingpolicy.yaml']
     },
     {
+      schema: vpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/validatingpolicy-policies.kyverno.io-v1beta1.json`,
+      fileMatch: ['validatingpolicy.yaml']
+    },
+    {
+      schema: nvpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/namespacedvalidatingpolicy-policies.kyverno.io-v1beta1.json`,
+      fileMatch: ['validatingpolicy.yaml']
+    },
+    {
       schema: ivpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/imagevalidatingpolicy-policies.kyverno.io-v1alpha1.json`,
+      fileMatch: ['validatingpolicy.yaml']
+    },
+    {
+      schema: ivpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/imagevalidatingpolicy-policies.kyverno.io-v1beta1.json`,
+      fileMatch: ['validatingpolicy.yaml']
+    },
+    {
+      schema: nivpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/namespacedimagevalidatingpolicy-policies.kyverno.io-v1beta1.json`,
       fileMatch: ['validatingpolicy.yaml']
     },
     {
@@ -90,13 +138,33 @@ configureMonacoYaml(monaco, {
       fileMatch: ['deletingpolicy.yaml']
     },
     {
+      schema: dpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/deletingpolicy-policies.kyverno.io-v1beta1.json`,
+      fileMatch: ['deletingpolicy.yaml']
+    },
+    {
+      schema: ndpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/namespaceddeletingpolicy-policies.kyverno.io-v1beta1.json`,
+      fileMatch: ['deletingpolicy.yaml']
+    },
+    {
       schema: mpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/mutatingpolicy-policies.kyverno.io-v1alpha1.json`,
       fileMatch: ['mutatingpolicy.yaml']
     },
     {
+      schema: mpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/mutatingpolicy-policies.kyverno.io-v1beta1.json`,
+      fileMatch: ['mutatingpolicy.yaml']
+    },
+    {
       schema: gpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/generatingpolicy-policies.kyverno.io-v1alpha1.json`,
+      fileMatch: ['generatingpolicy.yaml']
+    },
+    {
+      schema: gpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/generatingpolicy-policies.kyverno.io-v1beta1.json`,
       fileMatch: ['generatingpolicy.yaml']
     },
     {
