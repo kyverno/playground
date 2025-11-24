@@ -9,6 +9,7 @@ import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
+	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
@@ -64,9 +65,9 @@ func (p *Processor) Run(
 	policies []kyvernov1.PolicyInterface,
 	vaps []v1.ValidatingAdmissionPolicy,
 	vapbs []v1.ValidatingAdmissionPolicyBinding,
-	vpols []v1alpha1.ValidatingPolicy,
-	ivpols []v1alpha1.ImageValidatingPolicy,
-	dpols []v1alpha1.DeletingPolicy,
+	vpols []v1beta1.ValidatingPolicyLike,
+	ivpols []v1beta1.ImageValidatingPolicyLike,
+	dpols []v1beta1.DeletingPolicyLike,
 	gpols []v1alpha1.GeneratingPolicy,
 	mpols []v1alpha1.MutatingPolicy,
 	resources []unstructured.Unstructured,

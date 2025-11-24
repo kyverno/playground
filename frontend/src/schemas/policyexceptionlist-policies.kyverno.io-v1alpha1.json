@@ -409,6 +409,18 @@
                   ]
                 },
                 "type": "array"
+              },
+              "reportResult": {
+                "default": "skip",
+                "description": "ReportResult indicates whether the policy exception should be reported in the policy report\nas a skip result or pass result. Defaults to \"skip\".",
+                "enum": [
+                  "skip",
+                  "pass"
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
               }
             },
             "required": [
