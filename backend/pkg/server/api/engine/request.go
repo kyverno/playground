@@ -8,6 +8,7 @@ import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
+	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	yamlutils "github.com/kyverno/kyverno/ext/yaml"
 	v1 "k8s.io/api/admissionregistration/v1"
@@ -49,7 +50,7 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	return &params, nil
 }
 
-func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1alpha1.ValidatingPolicy, []v1alpha1.ImageValidatingPolicy, []v1alpha1.DeletingPolicy, []v1alpha1.GeneratingPolicy, []v1alpha1.MutatingPolicy, error) {
+func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1beta1.ValidatingPolicyLike, []v1beta1.ImageValidatingPolicyLike, []v1beta1.DeletingPolicyLike, []v1alpha1.GeneratingPolicy, []v1alpha1.MutatingPolicy, error) {
 	return policy.Load(policyLoader, []byte(r.Policies))
 }
 

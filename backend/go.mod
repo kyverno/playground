@@ -159,6 +159,17 @@ require (
 	github.com/go-openapi/spec v0.21.0 // indirect
 	github.com/go-openapi/strfmt v0.23.0 // indirect
 	github.com/go-openapi/swag v0.24.1 // indirect
+	github.com/go-openapi/swag/cmdutils v0.24.0 // indirect
+	github.com/go-openapi/swag/conv v0.24.0 // indirect
+	github.com/go-openapi/swag/fileutils v0.24.0 // indirect
+	github.com/go-openapi/swag/jsonname v0.24.0 // indirect
+	github.com/go-openapi/swag/jsonutils v0.24.0 // indirect
+	github.com/go-openapi/swag/loading v0.24.0 // indirect
+	github.com/go-openapi/swag/mangling v0.24.0 // indirect
+	github.com/go-openapi/swag/netutils v0.24.0 // indirect
+	github.com/go-openapi/swag/stringutils v0.24.0 // indirect
+	github.com/go-openapi/swag/typeutils v0.24.0 // indirect
+	github.com/go-openapi/swag/yamlutils v0.24.0 // indirect
 	github.com/go-openapi/validate v0.24.0 // indirect
 	github.com/go-piv/piv-go v1.11.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -317,7 +328,6 @@ require (
 	github.com/xlab/treeprint v1.2.0 // indirect
 	github.com/yashtewari/glob-intersection v0.2.0 // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
-	github.com/zeebo/errs v1.4.0 // indirect
 	go.etcd.io/etcd/api/v3 v3.6.5 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.6.5 // indirect
 	go.etcd.io/etcd/client/v3 v3.6.5 // indirect
@@ -377,7 +387,7 @@ require (
 	sigs.k8s.io/kustomize/kyaml v0.21.0 // indirect
 	sigs.k8s.io/randfill v1.0.0 // indirect
 	sigs.k8s.io/release-utils v0.12.2 // indirect
-	sigs.k8s.io/structured-merge-diff/v4 v4.7.0 // indirect
+	sigs.k8s.io/structured-merge-diff/v6 v6.3.0 // indirect
 )
 
-replace k8s.io/pod-security-admission v0.33.1 => github.com/kyverno/pod-security-admission v0.0.0-20250314164903-c9a58987cebb
+replace k8s.io/pod-security-admission v0.34.1 => github.com/kyverno/pod-security-admission v0.0.0-20251031094455-46f20778634f

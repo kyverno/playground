@@ -60,7 +60,7 @@ configureMonacoYaml(monaco, {
           { $ref: '#/definitions/imagevalidatingpolicy-v1beta1' },
           { $ref: '#/definitions/namespacedimagevalidatingpolicy-v1beta1' },
           { $ref: '#/definitions/deletingpolicy-v1alpha1' },
-          { $ref: '#/definitions/ddeletingpolicy-v1beta1' },
+          { $ref: '#/definitions/deletingpolicy-v1beta1' },
           { $ref: '#/definitions/namespaceddeletingpolicy-v1beta1' },
           { $ref: '#/definitions/generatingpolicy-v1alpha1' },
           { $ref: '#/definitions/generatingpolicy-v1beta1' },

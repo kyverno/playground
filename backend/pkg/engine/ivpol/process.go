@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
+	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	"github.com/kyverno/kyverno/pkg/cel/policies/ivpol/engine"
@@ -15,14 +16,19 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/playground/backend/pkg/engine/utils"
+	helper "github.com/kyverno/playground/backend/pkg/utils"
 )
 
-func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, ivpols []v1alpha1.ImageValidatingPolicy) ([]models.Response, error) {
+func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, ivpols []v1beta1.ImageValidatingPolicyLike) ([]models.Response, error) {
 	request := utils.NewCELRequest(restMapper, contextProvider, params, newResource, oldResource)
 	validations := make([]models.Response, 0)
 
+	filtered := helper.Filter(ivpols, func(p v1beta1.ImageValidatingPolicyLike) bool {
+		return p.GetNamespace() == "" || p.GetNamespace() == newResource.GetNamespace()
+	})
+
 	if request.JsonPayload == nil {
-		engine, err := newIVPEngine(dClient, ivpols, nil)
+		engine, err := newIVPEngine(dClient, filtered, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -33,7 +39,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 		}
 
 		for _, result := range resp.Policies {
-			resp := engineapi.NewEngineResponse(newResource, engineapi.NewImageValidatingPolicy(result.Policy), params.Context.NamespaceLabels).
+			resp := engineapi.NewEngineResponse(newResource, engineapi.NewImageValidatingPolicyFromLike(result.Policy), params.Context.NamespaceLabels).
 				WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{result.Result}})
 
 			validations = append(validations, models.ConvertResponse(resp))
@@ -43,11 +49,11 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	}
 
 	compiled := make([]*eval.CompiledImageValidatingPolicy, 0)
-	pMap := make(map[string]*v1alpha1.ImageValidatingPolicy)
+	pMap := make(map[string]v1beta1.ImageValidatingPolicyLike)
 	for i := range ivpols {
 		p := ivpols[i]
-		pMap[p.GetName()] = &p
-		compiled = append(compiled, &eval.CompiledImageValidatingPolicy{Policy: &p})
+		pMap[p.GetName()] = p
+		compiled = append(compiled, &eval.CompiledImageValidatingPolicy{Policy: p})
 	}
 
 	results, err := eval.Evaluate(ctx, compiled, newResource.Object, nil, nil, nil)
@@ -73,7 +79,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 				*engineapi.RuleFail(p, engineapi.ImageVerify, rslt.Message, nil),
 			}
 		}
-		resp = resp.WithPolicy(engineapi.NewImageValidatingPolicy(pMap[p]))
+		resp = resp.WithPolicy(engineapi.NewImageValidatingPolicyFromLike(pMap[p]))
 
 		validations = append(validations, models.ConvertResponse(resp))
 	}
@@ -81,7 +87,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	return validations, nil
 }
 
-func newIVPEngine(dClient dclient.Interface, policies []v1alpha1.ImageValidatingPolicy, exceptions []*v1alpha1.PolicyException) (engine.Engine, error) {
+func newIVPEngine(dClient dclient.Interface, policies []v1beta1.ImageValidatingPolicyLike, exceptions []*v1alpha1.PolicyException) (engine.Engine, error) {
 	provider, err := engine.NewProvider(policies, exceptions)
 	if err != nil {
 		return nil, err
