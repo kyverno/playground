@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
@@ -79,12 +80,18 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		out.Policy = in.Policy().AsKyvernoPolicy()
 	} else if in.Policy().AsValidatingPolicy() != nil {
 		out.ValidatingPolicy = in.Policy().AsValidatingPolicy()
+	} else if in.Policy().AsNamespacedValidatingPolicy() != nil {
+		out.ValidatingPolicy = in.Policy().AsNamespacedValidatingPolicy()
 	} else if in.Policy().AsValidatingAdmissionPolicy() != nil {
 		out.ValidatingAdmissionPolicy = in.Policy().AsValidatingAdmissionPolicy().GetDefinition()
 	} else if in.Policy().AsImageValidatingPolicy() != nil {
 		out.ImageValidatingPolicy = in.Policy().AsImageValidatingPolicy()
+	} else if in.Policy().AsNamespacedImageValidatingPolicy() != nil {
+		out.ImageValidatingPolicy = in.Policy().AsNamespacedImageValidatingPolicy()
 	} else if in.Policy().AsDeletingPolicy() != nil {
 		out.DeletingPolicy = in.Policy().AsDeletingPolicy()
+	} else if p, ok := in.Policy().AsObject().(*v1beta1.NamespacedDeletingPolicy); ok {
+		out.DeletingPolicy = p
 	} else if in.Policy().AsMutatingPolicy() != nil {
 		out.MutatingPolicy = in.Policy().AsMutatingPolicy()
 	} else if in.Policy().AsGeneratingPolicy() != nil {

@@ -8,3 +8,13 @@ func Map[T any, R any](source []T, cb func(T) R) []R {
 
 	return list
 }
+
+func Filter[T any](s []T, keep func(T) bool) []T {
+	d := make([]T, 0, len(s))
+	for _, n := range s {
+		if keep(n) {
+			d = append(d, n)
+		}
+	}
+	return d
+}
