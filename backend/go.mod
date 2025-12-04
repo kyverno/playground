@@ -13,7 +13,7 @@ require (
 	github.com/knadh/koanf/v2 v2.3.0
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20251122201840-abf7a6de2491
 	github.com/loopfz/gadgeto v0.11.5
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	gomodules.xyz/jsonpatch/v2 v2.5.0
 	k8s.io/api v0.34.2
