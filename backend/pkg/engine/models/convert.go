@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
+	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
@@ -96,6 +96,10 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		out.MutatingPolicy = in.Policy().AsMutatingPolicy()
 	} else if in.Policy().AsGeneratingPolicy() != nil {
 		out.GeneratingPolicy = in.Policy().AsGeneratingPolicy()
+	} else if in.Policy().AsNamespacedMutatingPolicy() != nil {
+		out.MutatingPolicy = in.Policy().AsNamespacedMutatingPolicy()
+	} else if in.Policy().AsNamespacedGeneratingPolicy() != nil {
+		out.GeneratingPolicy = in.Policy().AsNamespacedGeneratingPolicy()
 	}
 
 	for _, ruleresponse := range in.PolicyResponse.Rules {

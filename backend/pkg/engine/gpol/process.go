@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
+	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	"github.com/kyverno/kyverno/pkg/cel/policies/gpol/compiler"
@@ -18,12 +18,12 @@ import (
 	"github.com/kyverno/playground/backend/pkg/engine/utils"
 )
 
-func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource unstructured.Unstructured, gpols []v1alpha1.GeneratingPolicy) ([]models.Response, error) {
+func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource unstructured.Unstructured, gpols []v1beta1.GeneratingPolicyLike) ([]models.Response, error) {
 	comp := compiler.NewCompiler()
 	policies := make([]engine.Policy, 0, len(gpols))
 
 	for _, pol := range gpols {
-		compiled, errs := comp.Compile(&pol, nil)
+		compiled, errs := comp.Compile(pol, nil)
 		if len(errs) > 0 {
 			return nil, fmt.Errorf("failed to compile policy %s (%w)", pol.GetName(), errs.ToAggregate())
 		}
@@ -40,6 +40,10 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	results := make([]models.Response, 0)
 
 	for _, policy := range policies {
+		if policy.Policy.GetNamespace() != "" && policy.Policy.GetNamespace() != resource.GetNamespace() {
+			continue
+		}
+
 		engineResponse, err := eng.Handle(request, policy, false)
 		if err != nil {
 			return nil, err
@@ -57,7 +61,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 				},
 			}
 
-			response := generateResponse.WithPolicy(engineapi.NewGeneratingPolicy(&res.Policy))
+			response := generateResponse.WithPolicy(engineapi.NewGeneratingPolicyFromLike(res.Policy))
 
 			var newRuleResponse []engineapi.RuleResponse
 			for _, rule := range response.PolicyResponse.Rules {

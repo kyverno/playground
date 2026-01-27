@@ -3,8 +3,7 @@ package vpol
 import (
 	"context"
 
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
+	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	"github.com/kyverno/kyverno/pkg/cel/policies/vpol/compiler"
@@ -60,7 +59,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	return results, nil
 }
 
-func newCELEngine(dClient dclient.Interface, vpolicies []v1beta1.ValidatingPolicyLike, exceptions []*v1alpha1.PolicyException) (engine.Engine, error) {
+func newCELEngine(dClient dclient.Interface, vpolicies []v1beta1.ValidatingPolicyLike, exceptions []*v1beta1.PolicyException) (engine.Engine, error) {
 	provider, err := newVPOLProvider(vpolicies, exceptions)
 	if err != nil {
 		return nil, err
@@ -68,6 +67,6 @@ func newCELEngine(dClient dclient.Interface, vpolicies []v1beta1.ValidatingPolic
 	return engine.NewEngine(provider, utils.NSResolver(dClient), matching.NewMatcher()), nil
 }
 
-func newVPOLProvider(policies []v1beta1.ValidatingPolicyLike, exceptions []*v1alpha1.PolicyException) (engine.Provider, error) {
+func newVPOLProvider(policies []v1beta1.ValidatingPolicyLike, exceptions []*v1beta1.PolicyException) (engine.Provider, error) {
 	return engine.NewProvider(compiler.NewCompiler(), policies, exceptions)
 }

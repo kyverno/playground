@@ -3,8 +3,7 @@ package ivpol
 import (
 	"context"
 
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
+	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	"github.com/kyverno/kyverno/pkg/cel/policies/ivpol/engine"
@@ -87,7 +86,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	return validations, nil
 }
 
-func newIVPEngine(dClient dclient.Interface, policies []v1beta1.ImageValidatingPolicyLike, exceptions []*v1alpha1.PolicyException) (engine.Engine, error) {
+func newIVPEngine(dClient dclient.Interface, policies []v1beta1.ImageValidatingPolicyLike, exceptions []*v1beta1.PolicyException) (engine.Engine, error) {
 	provider, err := engine.NewProvider(policies, exceptions)
 	if err != nil {
 		return nil, err
