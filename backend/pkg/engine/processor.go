@@ -6,10 +6,9 @@ import (
 
 	json_patch "github.com/evanphx/json-patch/v5"
 	"github.com/go-logr/logr"
+	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	v2 "github.com/kyverno/kyverno/api/kyverno/v2"
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1alpha1"
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/pkg/admissionpolicy"
 	"github.com/kyverno/kyverno/pkg/background/generate"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
@@ -26,7 +25,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
-	"github.com/kyverno/kyverno/pkg/utils/report"
 	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
 	v1 "k8s.io/api/admissionregistration/v1"
@@ -68,8 +66,8 @@ func (p *Processor) Run(
 	vpols []v1beta1.ValidatingPolicyLike,
 	ivpols []v1beta1.ImageValidatingPolicyLike,
 	dpols []v1beta1.DeletingPolicyLike,
-	gpols []v1alpha1.GeneratingPolicy,
-	mpols []v1alpha1.MutatingPolicy,
+	gpols []v1beta1.GeneratingPolicyLike,
+	mpols []v1beta1.MutatingPolicyLike,
 	resources []unstructured.Unstructured,
 	oldResources []unstructured.Unstructured,
 ) (*models.Results, error) {
@@ -511,7 +509,6 @@ func NewProcessor(
 		nil,
 		logr.Discard(),
 		jp,
-		report.NewReportingConfig(),
 	)
 
 	return &Processor{

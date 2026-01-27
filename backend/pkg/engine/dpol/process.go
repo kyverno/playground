@@ -3,7 +3,7 @@ package dpol
 import (
 	"context"
 
-	"github.com/kyverno/kyverno/api/policies.kyverno.io/v1beta1"
+	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	"github.com/kyverno/kyverno/pkg/cel/policies/dpol/compiler"
