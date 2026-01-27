@@ -16,4 +16,4 @@ sources:
 maintainers:
   - name: Nirmata
     url: https://kyverno.io/
-kubeVersion: ">=1.16.0-0"
+kubeVersion: ">=1.17.0-rc.1-0"
