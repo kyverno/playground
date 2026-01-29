@@ -106,7 +106,7 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 
 ## Requirements
 
-Kubernetes: `>=1.16.0-0`
+Kubernetes: `>=1.17.0-rc.1-0`
 
 ## Maintainers
 

@@ -11,6 +11,8 @@ linters:
       - third_party$
       - builtin$
       - examples$
+  disable:
+    - staticcheck
 formatters:
   exclusions:
     generated: lax

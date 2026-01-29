@@ -5,10 +5,6 @@ on:
     branches:
       - '*'
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   security-events: write
 
@@ -124,6 +120,7 @@ jobs:
         uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20 # v9.2.0
         with:
           working-directory: backend
+          args: --config=../.golangci.yml
 
   helm-install:
     runs-on: ubuntu-latest
