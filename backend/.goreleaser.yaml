@@ -21,7 +21,8 @@ builds:
       - -s -w
 
 kos:
-  - repository: ghcr.io/kyverno/playground
+  - repositories:
+      - ghcr.io/kyverno/playground
     tags:
       - '{{.Tag}}'
       - '{{ if not .Prerelease }}latest{{ end }}' 
@@ -37,11 +38,10 @@ kos:
 
 signs:
   - cmd: cosign
-    certificate: '${artifact}.pem'
+    signature: "${artifact}.sigstore.json"
     args:
       - sign-blob
-      - --output-certificate=${certificate}
-      - --output-signature=${signature}
+      - --bundle=${signature}
       - ${artifact}
       - --yes
     artifacts: all
