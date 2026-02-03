@@ -397,6 +397,30 @@
                       "null"
                     ]
                   },
+                  "background": {
+                    "description": "Background controls policy evaluation during background scan.",
+                    "properties": {
+                      "enabled": {
+                        "default": true,
+                        "description": "Enabled controls if rules are applied to existing resources during a background scan.\nOptional. Default value is \"true\". The value must be set to \"false\" if the policy rule\nuses variables that are only available in the admission review request (e.g. user name).",
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "mode": {
+                    "description": "Mode is the mode of policy evaluation.\nAllowed values are \"Kubernetes\" or \"JSON\".\nOptional. Default value is \"Kubernetes\".",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
                   "mutateExisting": {
                     "description": "MutateExisting controls whether existing resources are mutated.",
                     "properties": {
@@ -467,7 +491,7 @@
                 "description": "MatchConstraints specifies what resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nRequired.",
                 "properties": {
                   "excludeResourceRules": {
-                    "description": "ExcludeResourceRules describes what operations on what resources/subresources the policy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
+                    "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
                     "items": {
                       "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                       "properties": {
@@ -563,7 +587,7 @@
                     "x-kubernetes-list-type": "atomic"
                   },
                   "matchPolicy": {
-                    "description": "matchPolicy defines how the \"MatchResources\" list is used to match incoming requests.\nAllowed values are \"Exact\" or \"Equivalent\".\n\n- Exact: match a request only if it exactly matches a specified rule.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nbut \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\nthe admission policy does not consider requests to apps/v1beta1 or extensions/v1beta1 API groups.\n\n- Equivalent: match a request if modifies a resource listed in rules, even via another API group or version.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nand \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\nthe admission policy **does** consider requests made to apps/v1beta1 or extensions/v1beta1\nAPI groups. The API server translates the request to a matched resource API if necessary.\n\nDefaults to \"Equivalent\"",
+                    "description": "matchPolicy defines how the \"MatchResources\" list is used to match incoming requests.\nAllowed values are \"Exact\" or \"Equivalent\".\n\n- Exact: match a request only if it exactly matches a specified rule.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nbut \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\na request to apps/v1beta1 or extensions/v1beta1 would not be sent to the ValidatingAdmissionPolicy.\n\n- Equivalent: match a request if modifies a resource listed in rules, even via another API group or version.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nand \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\na request to apps/v1beta1 or extensions/v1beta1 would be converted to apps/v1 and sent to the ValidatingAdmissionPolicy.\n\nDefaults to \"Equivalent\"",
                     "type": [
                       "string",
                       "null"
@@ -636,7 +660,7 @@
                     "x-kubernetes-map-type": "atomic"
                   },
                   "objectSelector": {
-                    "description": "ObjectSelector decides whether to run the policy based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the policy's expression (CEL), and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
+                    "description": "ObjectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
                     "properties": {
                       "matchExpressions": {
                         "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -702,7 +726,7 @@
                     "x-kubernetes-map-type": "atomic"
                   },
                   "resourceRules": {
-                    "description": "ResourceRules describes what operations on what resources/subresources the admission policy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
+                    "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
                     "items": {
                       "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                       "properties": {
@@ -1217,7 +1241,7 @@
               "variables": {
                 "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.\nThe variables defined here will be available under `variables` in other expressions of the policy\nexcept MatchConditions because MatchConditions are evaluated before the rest of the policy.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after.\nThus, Variables must be sorted by the order of first appearance and acyclic.",
                 "items": {
-                  "description": "Variable is the definition of a variable that is used for composition.",
+                  "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
                   "properties": {
                     "expression": {
                       "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
@@ -1235,7 +1259,8 @@
                   "type": [
                     "object",
                     "null"
-                  ]
+                  ],
+                  "x-kubernetes-map-type": "atomic"
                 },
                 "type": [
                   "array",
@@ -1343,6 +1368,30 @@
                                     "null"
                                   ]
                                 },
+                                "background": {
+                                  "description": "Background controls policy evaluation during background scan.",
+                                  "properties": {
+                                    "enabled": {
+                                      "default": true,
+                                      "description": "Enabled controls if rules are applied to existing resources during a background scan.\nOptional. Default value is \"true\". The value must be set to \"false\" if the policy rule\nuses variables that are only available in the admission review request (e.g. user name).",
+                                      "type": [
+                                        "boolean",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ]
+                                },
+                                "mode": {
+                                  "description": "Mode is the mode of policy evaluation.\nAllowed values are \"Kubernetes\" or \"JSON\".\nOptional. Default value is \"Kubernetes\".",
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
                                 "mutateExisting": {
                                   "description": "MutateExisting controls whether existing resources are mutated.",
                                   "properties": {
@@ -1413,7 +1462,7 @@
                               "description": "MatchConstraints specifies what resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nRequired.",
                               "properties": {
                                 "excludeResourceRules": {
-                                  "description": "ExcludeResourceRules describes what operations on what resources/subresources the policy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
+                                  "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
                                   "items": {
                                     "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                                     "properties": {
@@ -1509,7 +1558,7 @@
                                   "x-kubernetes-list-type": "atomic"
                                 },
                                 "matchPolicy": {
-                                  "description": "matchPolicy defines how the \"MatchResources\" list is used to match incoming requests.\nAllowed values are \"Exact\" or \"Equivalent\".\n\n- Exact: match a request only if it exactly matches a specified rule.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nbut \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\nthe admission policy does not consider requests to apps/v1beta1 or extensions/v1beta1 API groups.\n\n- Equivalent: match a request if modifies a resource listed in rules, even via another API group or version.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nand \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\nthe admission policy **does** consider requests made to apps/v1beta1 or extensions/v1beta1\nAPI groups. The API server translates the request to a matched resource API if necessary.\n\nDefaults to \"Equivalent\"",
+                                  "description": "matchPolicy defines how the \"MatchResources\" list is used to match incoming requests.\nAllowed values are \"Exact\" or \"Equivalent\".\n\n- Exact: match a request only if it exactly matches a specified rule.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nbut \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\na request to apps/v1beta1 or extensions/v1beta1 would not be sent to the ValidatingAdmissionPolicy.\n\n- Equivalent: match a request if modifies a resource listed in rules, even via another API group or version.\nFor example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1,\nand \"rules\" only included `apiGroups:[\"apps\"], apiVersions:[\"v1\"], resources: [\"deployments\"]`,\na request to apps/v1beta1 or extensions/v1beta1 would be converted to apps/v1 and sent to the ValidatingAdmissionPolicy.\n\nDefaults to \"Equivalent\"",
                                   "type": [
                                     "string",
                                     "null"
@@ -1582,7 +1631,7 @@
                                   "x-kubernetes-map-type": "atomic"
                                 },
                                 "objectSelector": {
-                                  "description": "ObjectSelector decides whether to run the policy based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the policy's expression (CEL), and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
+                                  "description": "ObjectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
                                   "properties": {
                                     "matchExpressions": {
                                       "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -1648,7 +1697,7 @@
                                   "x-kubernetes-map-type": "atomic"
                                 },
                                 "resourceRules": {
-                                  "description": "ResourceRules describes what operations on what resources/subresources the admission policy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
+                                  "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
                                   "items": {
                                     "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                                     "properties": {
@@ -2163,7 +2212,7 @@
                             "variables": {
                               "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.\nThe variables defined here will be available under `variables` in other expressions of the policy\nexcept MatchConditions because MatchConditions are evaluated before the rest of the policy.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after.\nThus, Variables must be sorted by the order of first appearance and acyclic.",
                               "items": {
-                                "description": "Variable is the definition of a variable that is used for composition.",
+                                "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
                                 "properties": {
                                   "expression": {
                                     "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
@@ -2181,7 +2230,8 @@
                                 "type": [
                                   "object",
                                   "null"
-                                ]
+                                ],
+                                "x-kubernetes-map-type": "atomic"
                               },
                               "type": [
                                 "array",
@@ -2377,6 +2427,11 @@
             "kind": "MutatingPolicy",
             "version": "v1alpha1"
           }
+        ],
+        "x-kubernetes-selectable-fields": [
+          {
+            "fieldPath": "spec.evaluation.mode"
+          }
         ]
       },
       "type": [
@@ -2447,6 +2502,11 @@
       "group": "policies.kyverno.io",
       "kind": "MutatingPolicyList",
       "version": "v1alpha1"
+    }
+  ],
+  "x-kubernetes-selectable-fields": [
+    {
+      "fieldPath": "spec.evaluation.mode"
     }
   ]
 }
