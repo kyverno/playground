@@ -2,7 +2,7 @@
 
 Kyverno Playground Web Application
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.7.0](https://img.shields.io/badge/AppVersion-v0.7.0-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.8.0](https://img.shields.io/badge/AppVersion-v0.8.0-informational?style=flat-square)
 
 ## About
 
@@ -106,7 +106,7 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 
 ## Requirements
 
-Kubernetes: `>=1.17.0-rc.1-0`
+Kubernetes: `>=1.30.0`
 
 ## Maintainers
 
