@@ -1,6 +1,6 @@
 # Define the kubernetes cluster infos
 kubernetes:
-  version: '1.28'
+  version: '1.34'
 
 # Define the executed operation and user context
 context:
