@@ -27,7 +27,7 @@ type ResourceRequest struct {
 
 func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster) error {
 	group.GET("/kinds", func(c *gin.Context) {
-		kinds, err := cluster.Kinds(c, "kyverno.io", "wgpolicyk8s.io")
+		kinds, err := cluster.Kinds(c, "kyverno.io", "wgpolicyk8s.io", "policies.kyverno.io")
 		if err != nil {
 			c.String(http.StatusInternalServerError, "failed to fetch kinds")
 			return
