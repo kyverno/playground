@@ -19,16 +19,6 @@ import (
 )
 
 func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerFunc, error) {
-	openAPI, err := cl.OpenAPIClient("1.32")
-	if err != nil {
-		return nil, err
-	}
-
-	policyLoader, err := loader.New(openAPI)
-	if err != nil {
-		return nil, err
-	}
-
 	return tonic.Handler(func(ctx *gin.Context, in *EngineRequest) (*EngineResponse, error) {
 		params, err := in.LoadParameters()
 		if err != nil {
@@ -36,13 +26,26 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		}
 		params.ImageData = in.ImageData
 
+		openAPI, err := cl.OpenAPIClient(params.Kubernetes.Version)
+		if err != nil {
+			return nil, err
+		}
+
+		policyLoader, err := loader.New(openAPI)
+		if err != nil {
+			return nil, err
+		}
+
 		client, err := in.OpenAPIClient(cl, params.Kubernetes.Version, config)
 		if err != nil {
 			return nil, fmt.Errorf("failed to load OpenAPI client: %w", err)
 		}
 
+		c, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
 		tcm := patch.NewTypeConverterManager(nil, client)
-		go tcm.Run(context.Background())
+		go tcm.Run(c)
 
 		policies, vaps, vapbs, vpols, ivpols, dpols, gpols, mpols, err := in.LoadPolicies(policyLoader)
 		if err != nil {
