@@ -49,6 +49,7 @@ func (p *AuthzProcessor) RunHTTP(ctx context.Context, policies policy.AuthzPolic
 
 	return response, nil
 }
+
 func NewAuthz(dClient dclient.Interface) *AuthzProcessor {
 	if dClient == nil {
 		dClient = dclient.NewEmptyFakeClient()
