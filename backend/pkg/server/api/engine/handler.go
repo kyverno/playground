@@ -10,10 +10,12 @@ import (
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/loopfz/gadgeto/tonic"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apiserver/pkg/admission/plugin/policy/mutating/patch"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
+	"github.com/kyverno/playground/backend/pkg/engine/json"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/playground/backend/pkg/resource"
 )
@@ -47,81 +49,122 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 		tcm := patch.NewTypeConverterManager(nil, client)
 		go tcm.Run(c)
 
-		policies, vaps, vapbs, vpols, ivpols, dpols, gpols, mpols, err := in.LoadPolicies(policyLoader)
-		if err != nil {
-			return nil, fmt.Errorf("unable to load policies: %w", err)
-		}
-		vapbsWindow, err := in.LoadVAPBindings(policyLoader)
-		if err != nil {
-			return nil, fmt.Errorf("unable to load policies: %w", err)
-		}
-		vapbs = append(vapbs, vapbsWindow...)
-
 		resourceLoader, err := in.ResourceLoader(client)
 		if err != nil {
 			return nil, err
 		}
-		resources, err := in.LoadResources(resourceLoader)
+
+		k8s, jsonPolicies, _, err := in.LoadPolicies(policyLoader)
 		if err != nil {
-			return nil, fmt.Errorf("unable to load resources: %w", err)
-		}
-		oldResources, err := in.LoadOldResources(resourceLoader)
-		if err != nil {
-			return nil, fmt.Errorf("unable to load old resources: %w", err)
-		}
-		clusterResources, err := in.LoadClusterResources(resourceLoader)
-		if err != nil {
-			return nil, err
-		}
-		config, err := in.LoadConfig(resourceLoader)
-		if err != nil {
-			return nil, fmt.Errorf("unable to load config resources: %w", err)
-		}
-		exceptions, err := in.LoadPolicyExceptions()
-		if err != nil {
-			return nil, fmt.Errorf("unable to load policy exceptions: %w", err)
-		}
-		crds, err := in.LoadCRDs()
-		if err != nil {
-			return nil, fmt.Errorf("unable to load resources: %w", err)
+			return nil, fmt.Errorf("unable to load policies: %w", err)
 		}
 
-		clusterResources = append(oldResources, clusterResources...)
-		clusterObjects := resource.AppendNamespaces(resources, clusterResources)
+		var results *models.Results
+		var resources []unstructured.Unstructured
 
-		dClient, err := cl.DClient(resource.ToObjects(resources), clusterObjects...)
-		if err != nil {
-			return nil, err
-		}
-		cmResolver, err := cluster.NewConfigMapResolver(dClient)
-		if err != nil {
-			return nil, err
-		}
-		// TODO: move in engine ?
-		var exceptionSelector engineapi.PolicyExceptionSelector
-		if params.Flags.Exceptions.Enabled {
-			exceptionSelector = cl.PolicyExceptionSelector(params.Flags.Exceptions.Namespace, exceptions...)
-		}
+		if k8s.Length() > 0 {
+			vapbsWindow, err := in.LoadVAPBindings(policyLoader)
+			if err != nil {
+				return nil, fmt.Errorf("unable to load policies: %w", err)
+			}
+			k8s.ValidatingAdmissionPolicyBindings = append(k8s.ValidatingAdmissionPolicyBindings, vapbsWindow...)
 
-		if cl.IsFake() {
-			if err := validateParams(params, cmResolver, policies); err != nil {
-				fmt.Println(err)
+			resources, err = resource.LoadResources(resourceLoader, []byte(in.Resources))
+			if err != nil {
+				return nil, fmt.Errorf("unable to load resources: %w", err)
+			}
+			oldResources, err := resource.LoadResources(resourceLoader, []byte(in.OldResources))
+			if err != nil {
+				return nil, fmt.Errorf("unable to load old resources: %w", err)
+			}
+			clusterResources, err := in.LoadClusterResources(resourceLoader)
+			if err != nil {
 				return nil, err
 			}
+			config, err := in.LoadConfig(resourceLoader)
+			if err != nil {
+				return nil, fmt.Errorf("unable to load config resources: %w", err)
+			}
+			exceptions, err := in.LoadPolicyExceptions()
+			if err != nil {
+				return nil, fmt.Errorf("unable to load policy exceptions: %w", err)
+			}
+			crds, err := in.LoadCRDs()
+			if err != nil {
+				return nil, fmt.Errorf("unable to load resources: %w", err)
+			}
+
+			clusterResources = append(oldResources, clusterResources...)
+			clusterObjects := resource.AppendNamespaces(resources, clusterResources)
+
+			dClient, err := cl.DClient(append(resource.ToObjects(resources), clusterObjects...))
+			if err != nil {
+				return nil, err
+			}
+			cmResolver, err := cluster.NewConfigMapResolver(dClient)
+			if err != nil {
+				return nil, err
+			}
+
+			var exceptionSelector engineapi.PolicyExceptionSelector
+			if params.Flags.Exceptions.Enabled {
+				exceptionSelector = cl.PolicyExceptionSelector(params.Flags.Exceptions.Namespace, exceptions...)
+			}
+
+			if cl.IsFake() {
+				if err := validateParams(params, cmResolver, k8s.Policies); err != nil {
+					fmt.Println(err)
+					return nil, err
+				}
+			}
+
+			processor, err := engine.NewProcessor(params, cl, config, dClient, cmResolver, exceptionSelector, tcm, cl.RESTMapper(crds))
+			if err != nil {
+				return nil, err
+			}
+			results, err = processor.Run(ctx, k8s, resources, oldResources)
+			if err != nil {
+				return nil, err
+			}
+
+			return &EngineResponse{
+				Resources: resources,
+				Results:   results,
+			}, nil
 		}
 
-		processor, err := engine.NewProcessor(params, cl, config, dClient, cmResolver, exceptionSelector, tcm, cl.RESTMapper(crds))
-		if err != nil {
-			return nil, err
+		if jsonPolicies.Length() > 0 {
+			resources, err = resource.LoadJSON(in.Resources)
+			if err != nil {
+				return nil, fmt.Errorf("unable to load resources: %w", err)
+			}
+
+			clusterResources, err := in.LoadClusterResources(resourceLoader)
+			if err != nil {
+				return nil, err
+			}
+
+			clusterObjects := resource.AppendNamespaces(nil, clusterResources)
+			dClient, err := cl.DClient(clusterObjects)
+			if err != nil {
+				return nil, err
+			}
+
+			processor := json.NewProcessor(dClient, tcm)
+			results, err = processor.Run(ctx, jsonPolicies, resources)
+			if err != nil {
+				return nil, err
+			}
+
+			return &EngineResponse{
+				Resources: resources,
+				Results:   results,
+			}, nil
 		}
-		results, err := processor.Run(ctx, policies, vaps, vapbs, vpols, ivpols, dpols, gpols, mpols, resources, oldResources)
-		if err != nil {
-			return nil, err
-		}
+
 		return &EngineResponse{
-			Policies:  policies,
-			Resources: resources,
-			Results:   results,
+			Resources: nil,
+			Results:   nil,
 		}, nil
 	}, http.StatusOK), nil
 }

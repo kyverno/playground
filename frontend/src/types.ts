@@ -2,11 +2,6 @@ export type RuleType = 'Vaidation'
 export type RuleStatus = 'fail' | 'pass' | 'warn' | 'error' | 'skip' | 'no match'
 export type ErrorReason = 'POLICY_VALIDATION' | 'ERROR'
 
-type RequireOnlyOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyof T, Keys>> &
-  {
-    [K in Keys]-?: Required<Pick<T, K>> & Partial<Record<Exclude<Keys, K>, undefined>>
-  }[Keys]
-
 export type ErrorResponse = {
   reason: ErrorReason
   error: string
@@ -29,7 +24,10 @@ export type Metadata = {
 export type Policy = {
   apiVersion: string
   kind: string
-  metadata: Metadata
+  name: string
+  namespace?: string
+  labels?: { [key: string]: string }
+  annotations?: { [key: string]: string }
 }
 
 export type Resource = {
@@ -50,44 +48,28 @@ export type PolicyResponse = {
   rules: Rule[] | null
 }
 
-export type Result = RequireOnlyOne<
-  {
-    policy?: Policy
-    validatingAdmissionPolicy?: Policy
-    validatingPolicy?: Policy
-    imageValidatingPolicy?: Policy
-    deletingPolicy?: Policy
-    generatingPolicy?: Policy
-    mutatingPolicy?: Policy
-  },
-  | 'policy'
-  | 'validatingAdmissionPolicy'
-  | 'validatingPolicy'
-  | 'imageValidatingPolicy'
-  | 'deletingPolicy'
-  | 'generatingPolicy'
-  | 'mutatingPolicy'
->
-
-export type Validation = Result & {
+export type Validation = {
   resource: Resource
   policyResponse: PolicyResponse
+  policy: Policy
 }
 
-export type Mutation = Result & {
+export type Mutation = {
   resource: Resource
   policyResponse: PolicyResponse
   originalResource: string
   patchedResource: string
+  policy: Policy
 }
 
-export type Generation = Result & {
+export type Generation = {
   resource: Resource
   policyResponse: PolicyResponse
+  policy: Policy
 }
 
 export type EngineResponse = {
-  policies: Policy[]
+  policies?: Policy[]
   resources: Resource[]
   validation?: Validation[]
   deletion?: Validation[]

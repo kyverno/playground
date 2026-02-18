@@ -87,15 +87,6 @@ const { hideNoMatch } = useConfig()
 
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, deletion) => {
-    const policy =
-      deletion.policy ||
-      deletion.validatingAdmissionPolicy ||
-      deletion.validatingPolicy ||
-      deletion.imageValidatingPolicy ||
-      deletion.deletingPolicy ||
-      deletion.generatingPolicy ||
-      deletion.mutatingPolicy
-
     if (!deletion.policyResponse.rules && !hideNoMatch.value) {
       results.push({
         id: 'id',
@@ -105,7 +96,7 @@ const items = computed(() => {
           [deletion.resource?.metadata?.namespace, deletion.resource?.metadata?.name]
             .filter((s) => !!s)
             .join('/') || 'JSON Payload',
-        policy: policy.metadata.name,
+        policy: deletion.policy.name,
         rule: 'resource does not match any rule',
         message: 'no validation triggered',
         status: 'no match'
@@ -116,17 +107,7 @@ const items = computed(() => {
     const rules = deletion.policyResponse.rules || []
 
     rules.forEach((rule) => {
-      let ruleName = rule.name
       let icon = 'kyverno'
-
-      if (deletion.validatingAdmissionPolicy) {
-        ruleName = 'N/A'
-        icon = 'k8s'
-      }
-
-      if (deletion.validatingPolicy) {
-        ruleName = 'N/A'
-      }
 
       results.push({
         id: hash({ rule, resource: deletion.resource }),
@@ -137,8 +118,8 @@ const items = computed(() => {
           [deletion.resource?.metadata?.namespace, deletion.resource?.metadata?.name]
             .filter((s) => !!s)
             .join('/') || 'JSON Payload',
-        policy: policy.metadata.name,
-        rule: ruleName,
+        policy: deletion.policy.name,
+        rule: 'N/A',
         message: rule.message,
         status: rule.status
       })

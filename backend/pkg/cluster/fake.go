@@ -68,23 +68,10 @@ func (c fakeCluster) OpenAPIClient(version string) (openapi.Client, error) {
 	), nil
 }
 
-func (c fakeCluster) DClient(resources []runtime.Object, objects ...runtime.Object) (dclient.Interface, error) {
+func (c fakeCluster) DClient(objects []runtime.Object) (dclient.Interface, error) {
 	s := runtime.NewScheme()
 	gvr := make(map[schema.GroupVersionResource]string)
 	list := []schema.GroupVersionResource{}
-
-	for _, o := range resources {
-		plural, _ := meta.UnsafeGuessKindToResource(o.GetObjectKind().GroupVersionKind())
-		if _, ok := gvr[plural]; ok {
-			continue
-		}
-
-		s.AddKnownTypeWithName(o.GetObjectKind().GroupVersionKind(), o)
-
-		gvr[plural] = o.GetObjectKind().GroupVersionKind().Kind + "List"
-
-		list = append(list, plural)
-	}
 
 	for _, o := range objects {
 		plural, _ := meta.UnsafeGuessKindToResource(o.GetObjectKind().GroupVersionKind())

@@ -91,24 +91,24 @@ func Test_Load(t *testing.T) {
 				),
 			)
 			require.NoError(t, err)
-			if policies, vaps, vapbs, vpols, ivpols, dpols, gpols, mpols, err := Load(loader, bytes); (err != nil) != tt.wantErr {
+			if k8s, _, _, err := Load(loader, bytes); (err != nil) != tt.wantErr {
 				t.Errorf("Load() error = %v, wantErr %v", err, tt.wantErr)
-			} else if len(policies) != tt.wantPolicies {
-				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(policies), tt.wantPolicies)
-			} else if len(vaps) != tt.wantVaps {
-				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(vaps), tt.wantVaps)
-			} else if len(vapbs) != tt.wantVapbs {
-				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(vaps), tt.wantVaps)
-			} else if len(vpols) != tt.wantVpols {
-				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(vpols), tt.wantVpols)
-			} else if len(ivpols) != tt.wantIVpols {
-				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(ivpols), tt.wantIVpols)
-			} else if len(dpols) != tt.wantDpols {
-				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(dpols), tt.wantDpols)
-			} else if len(gpols) != tt.wantGpols {
-				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(gpols), tt.wantGpols)
-			} else if len(mpols) != tt.wantMpols {
-				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(mpols), tt.wantMpols)
+			} else if len(k8s.Policies) != tt.wantPolicies {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(k8s.Policies), tt.wantPolicies)
+			} else if len(k8s.ValidatingAdmissionPolicies) != tt.wantVaps {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(k8s.ValidatingAdmissionPolicies), tt.wantVaps)
+			} else if len(k8s.ValidatingAdmissionPolicyBindings) != tt.wantVapbs {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(k8s.ValidatingAdmissionPolicyBindings), tt.wantVapbs)
+			} else if len(k8s.ValidatingPolicies) != tt.wantVpols {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(k8s.ValidatingPolicies), tt.wantVpols)
+			} else if len(k8s.ImageValidatingPolicies) != tt.wantIVpols {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(k8s.ImageValidatingPolicies), tt.wantIVpols)
+			} else if len(k8s.DeletingPolicies) != tt.wantDpols {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(k8s.DeletingPolicies), tt.wantDpols)
+			} else if len(k8s.GeneratingPolicies) != tt.wantGpols {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(k8s.GeneratingPolicies), tt.wantGpols)
+			} else if len(k8s.MutatingPolicies) != tt.wantMpols {
+				t.Errorf("Load() loaded amount = %v, wantLoaded %v", len(k8s.MutatingPolicies), tt.wantMpols)
 			}
 		})
 	}

@@ -1,5 +1,7 @@
 package utils
 
+import "golang.org/x/exp/maps"
+
 func Map[T any, R any](source []T, cb func(T) R) []R {
 	list := make([]R, 0, len(source))
 	for _, i := range source {
@@ -17,4 +19,15 @@ func Filter[T any](s []T, keep func(T) bool) []T {
 		}
 	}
 	return d
+}
+
+func Unique[T comparable](s []T) []T {
+	seen := make(map[T]struct{})
+	for _, n := range s {
+		if _, ok := seen[n]; !ok {
+			seen[n] = struct{}{}
+		}
+	}
+
+	return maps.Keys(seen)
 }

@@ -1,12 +1,9 @@
 package engine
 
 import (
-	"errors"
 	"os"
 	"testing/fstest"
 
-	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
-	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	yamlutils "github.com/kyverno/kyverno/ext/yaml"
@@ -49,16 +46,8 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	return &params, nil
 }
 
-func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) ([]kyvernov1.PolicyInterface, []v1.ValidatingAdmissionPolicy, []v1.ValidatingAdmissionPolicyBinding, []v1beta1.ValidatingPolicyLike, []v1beta1.ImageValidatingPolicyLike, []v1beta1.DeletingPolicyLike, []v1beta1.GeneratingPolicyLike, []v1beta1.MutatingPolicyLike, error) {
+func (r *EngineRequest) LoadPolicies(policyLoader loader.Loader) (policy.K8sPolicies, policy.JSONPolicies, policy.AuthzPolicies, error) {
 	return policy.Load(policyLoader, []byte(r.Policies))
-}
-
-func (r *EngineRequest) LoadResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
-	data, err := resource.LoadJSON(r.Resources)
-	if errors.Is(err, resource.ErrNoJSON) {
-		return resource.LoadResources(resourceLoader, []byte(r.Resources))
-	}
-	return data, err
 }
 
 func (r *EngineRequest) LoadCRDs() ([]*apiextensionsv1.CustomResourceDefinition, error) {
@@ -88,12 +77,7 @@ func (r *EngineRequest) LoadClusterResources(resourceLoader loader.Loader) ([]un
 }
 
 func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstructured.Unstructured, error) {
-	data, err := resource.LoadJSON(r.OldResources)
-	if errors.Is(err, resource.ErrNoJSON) {
-		return resource.LoadResources(resourceLoader, []byte(r.OldResources))
-	}
-
-	return data, err
+	return resource.LoadResources(resourceLoader, []byte(r.OldResources))
 }
 
 func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2.PolicyException, error) {
