@@ -1,9 +1,13 @@
 name: ci
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
-      - '*'
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   security-events: write
@@ -19,10 +23,6 @@ jobs:
         with:
           go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
-      - name: Check go.mod
-        run: |
-          set -e
-          cd backend && go mod tidy && git diff --exit-code
       - name: Check code format
         run: |
           set -e

@@ -10,7 +10,6 @@ import (
 	"github.com/kyverno/kyverno-authz/pkg/engine"
 	vpolcompiler "github.com/kyverno/kyverno-authz/pkg/engine/compiler"
 	"github.com/kyverno/kyverno/pkg/engine/api"
-	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/sdk/core"
 	"github.com/kyverno/sdk/core/dispatchers"
 	"github.com/kyverno/sdk/core/handlers"
@@ -18,6 +17,8 @@ import (
 	"github.com/kyverno/sdk/extensions/policy"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
+
+	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
 
 func HTTPProcess(ctx context.Context, resource *http.CheckRequest, vpols []*v1beta1.ValidatingPolicy) ([]models.Response, error) {
@@ -47,7 +48,7 @@ func HTTPProcess(ctx context.Context, resource *http.CheckRequest, vpols []*v1be
 
 		var status api.RuleStatus
 		var message string
-		var resource = unstructured.Unstructured{Object: make(map[string]any)}
+		resource := unstructured.Unstructured{Object: make(map[string]any)}
 
 		if evaluation.Result == nil && evaluation.Error == nil {
 			message = "request does not match"

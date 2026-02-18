@@ -5,8 +5,9 @@ import (
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	"github.com/kyverno/kyverno/pkg/cel/policies/ivpol/engine"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
-	"github.com/kyverno/playground/backend/pkg/engine/utils"
 	k8scorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
+
+	"github.com/kyverno/playground/backend/pkg/engine/utils"
 )
 
 func newIVPEngine(dClient dclient.Interface, policies []v1beta1.ImageValidatingPolicyLike, exceptions []*v1beta1.PolicyException) (engine.Engine, error) {

@@ -7,8 +7,9 @@ import (
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	eval "github.com/kyverno/kyverno/pkg/imageverification/evaluator"
-	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+
+	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
 
 func JSONProcess(ctx context.Context, contextProvider libs.Context, resource unstructured.Unstructured, ivpols []v1beta1.ImageValidatingPolicyLike) ([]models.Response, error) {

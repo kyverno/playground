@@ -10,7 +10,6 @@ import (
 	"github.com/kyverno/kyverno-authz/pkg/engine"
 	vpolcompiler "github.com/kyverno/kyverno-authz/pkg/engine/compiler"
 	"github.com/kyverno/kyverno/pkg/engine/api"
-	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/sdk/core"
 	"github.com/kyverno/sdk/core/dispatchers"
 	"github.com/kyverno/sdk/core/handlers"
@@ -19,6 +18,8 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
+
+	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
 
 func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v1beta1.ValidatingPolicy) ([]models.Response, error) {
