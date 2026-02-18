@@ -1,11 +1,17 @@
 package models
 
 import (
-	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
-	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	v1 "k8s.io/api/admissionregistration/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
+
+type Policy struct {
+	APIVersion  string            `json:"apiVersion"`
+	Kind        string            `json:"kind"`
+	Name        string            `json:"name"`
+	Namespace   string            `json:"namespace,omitempty"`
+	Labels      map[string]string `json:"labels,omitempty"`
+	Annotations map[string]string `json:"annotations,omitempty"`
+}
 
 type Response struct {
 	// OriginalResource is the original resource as YAML string
@@ -13,14 +19,7 @@ type Response struct {
 	// Resource is the original resource
 	Resource unstructured.Unstructured `json:"resource"`
 	// Policy is the original policy
-	Policy                kyvernov1.PolicyInterface         `json:"policy"`
-	ValidatingPolicy      v1beta1.ValidatingPolicyLike      `json:"validatingPolicy"`
-	DeletingPolicy        v1beta1.DeletingPolicyLike        `json:"deletingPolicy"`
-	GeneratingPolicy      v1beta1.GeneratingPolicyLike      `json:"generatingPolicy"`
-	MutatingPolicy        v1beta1.MutatingPolicyLike        `json:"mutatingPolicy"`
-	ImageValidatingPolicy v1beta1.ImageValidatingPolicyLike `json:"imageValidatingPolicy"`
-	// ValidatingAdmissionPolicy is the original policy
-	ValidatingAdmissionPolicy *v1.ValidatingAdmissionPolicy `json:"validatingAdmissionPolicy"`
+	Policy Policy `json:"policy"`
 	// namespaceLabels given by policy context
 	NamespaceLabels map[string]string `json:"namespaceLabels"`
 	// PatchedResource is the resource patched with the engine action changes

@@ -87,15 +87,6 @@ const { hideNoMatch } = useConfig()
 
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, validation) => {
-    const policy =
-      validation.policy ||
-      validation.validatingAdmissionPolicy ||
-      validation.validatingPolicy ||
-      validation.imageValidatingPolicy ||
-      validation.deletingPolicy ||
-      validation.generatingPolicy ||
-      validation.mutatingPolicy
-
     if (!validation.policyResponse.rules && !hideNoMatch.value) {
       results.push({
         id: 'id',
@@ -105,7 +96,7 @@ const items = computed(() => {
           [validation.resource?.metadata?.namespace, validation.resource?.metadata?.name]
             .filter((s) => !!s)
             .join('/') || 'JSON Payload',
-        policy: policy.metadata.name,
+        policy: validation.policy.name,
         rule: 'resource does not match any rule',
         message: 'no validation triggered',
         status: 'no match'
@@ -119,12 +110,12 @@ const items = computed(() => {
       let ruleName = rule.name
       let icon = 'kyverno'
 
-      if (validation.validatingAdmissionPolicy) {
+      if (validation.policy.kind === 'ValidatingAdmissionPolicy') {
         ruleName = 'N/A'
         icon = 'k8s'
       }
 
-      if (validation.validatingPolicy) {
+      if (validation.policy.kind.endsWith('ValidatingPolicy')) {
         ruleName = 'N/A'
       }
 
@@ -137,7 +128,7 @@ const items = computed(() => {
           [validation.resource?.metadata?.namespace, validation.resource?.metadata?.name]
             .filter((s) => !!s)
             .join('/') || 'JSON Payload',
-        policy: policy.metadata.name,
+        policy: validation.policy.name,
         rule: ruleName,
         message: rule.message,
         status: rule.status
