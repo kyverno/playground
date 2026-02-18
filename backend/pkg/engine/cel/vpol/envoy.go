@@ -48,14 +48,16 @@ func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v
 
 		evaluation := eng.Handle(ctx, nil, resource)
 
-		if evaluation.Result == nil && evaluation.Error == nil {
-			continue
-		}
-
 		var status api.RuleStatus
 		var message string
 
-		var resource unstructured.Unstructured
+		resource := unstructured.Unstructured{Object: make(map[string]any)}
+
+		if evaluation.Result == nil && evaluation.Error == nil {
+			message = "request does not match"
+			status = api.RuleStatusSkip
+		}
+
 		if evaluation.Result != nil {
 			var content []byte
 			var err error

@@ -1,4 +1,4 @@
-package json
+package processor
 
 import (
 	"context"
@@ -61,7 +61,7 @@ func (p *JSONProcessor) Run(ctx context.Context, policies policy.JSONPolicies, r
 	return response, nil
 }
 
-func NewProcessor(dClient dclient.Interface, tcm mpatch.TypeConverterManager) *JSONProcessor {
+func NewJSON(dClient dclient.Interface, tcm mpatch.TypeConverterManager) *JSONProcessor {
 	if dClient == nil {
 		dClient = dclient.NewEmptyFakeClient()
 	}

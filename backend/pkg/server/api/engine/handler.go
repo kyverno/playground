@@ -16,9 +16,7 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
-	"github.com/kyverno/playground/backend/pkg/engine/authz"
-	authzhttp "github.com/kyverno/playground/backend/pkg/engine/http"
-	"github.com/kyverno/playground/backend/pkg/engine/json"
+	"github.com/kyverno/playground/backend/pkg/engine/cel/processor"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/playground/backend/pkg/resource"
 )
@@ -146,7 +144,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 				return nil, err
 			}
 
-			processor := json.NewProcessor(dClient, tcm)
+			processor := processor.NewJSON(dClient, tcm)
 			results, err = processor.Run(ctx, jsonPolicies, resources)
 			if err != nil {
 				return nil, err
@@ -169,8 +167,8 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 				return nil, err
 			}
 
-			processor := authz.NewProcessor(dClient)
-			results, err = processor.Run(ctx, authzPolicies, resources)
+			processor := processor.NewAuthz(dClient)
+			results, err = processor.RunEnvoy(ctx, authzPolicies, resources)
 			if err != nil {
 				return nil, err
 			}
@@ -191,8 +189,8 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 				return nil, err
 			}
 
-			processor := authzhttp.NewProcessor(dClient)
-			results, err = processor.Run(ctx, authzPolicies, resources)
+			processor := processor.NewAuthz(dClient)
+			results, err = processor.RunHTTP(ctx, authzPolicies, resources)
 			if err != nil {
 				return nil, err
 			}
