@@ -8,6 +8,7 @@ type Policy struct {
 	APIVersion  string            `json:"apiVersion"`
 	Kind        string            `json:"kind"`
 	Name        string            `json:"name"`
+	Mode        string            `json:"mode"`
 	Namespace   string            `json:"namespace,omitempty"`
 	Labels      map[string]string `json:"labels,omitempty"`
 	Annotations map[string]string `json:"annotations,omitempty"`

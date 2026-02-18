@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "method": "POST",
+    "header": {},
+    "host": "api.example.com",
+    "protocol": "HTTP/2.0",
+    "contentLength": 42,
+    "body": "eyJrZXkiOiJ2YWx1ZSJ9",
+    "scheme": "https",
+    "path": "/v1/users",
+    "query": {},
+    "fragment": "section1"
+  }
+}
