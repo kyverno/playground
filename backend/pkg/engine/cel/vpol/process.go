@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
+	celengine "github.com/kyverno/kyverno/pkg/cel/engine"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	"github.com/kyverno/kyverno/pkg/cel/policies/vpol/compiler"
@@ -18,7 +19,7 @@ import (
 	helper "github.com/kyverno/playground/backend/pkg/utils"
 )
 
-func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, vpols []v1beta1.ValidatingPolicyLike) ([]models.Response, error) {
+func K8sProcess(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, vpols []v1beta1.ValidatingPolicyLike) ([]models.Response, error) {
 	var eng engine.Engine
 	var err error
 
@@ -28,18 +29,9 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 		return p.GetNamespace() == "" || p.GetNamespace() == newResource.GetNamespace()
 	})
 
-	if request.JsonPayload == nil {
-		eng, err = newCELEngine(dClient, filtered, nil)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		provider, err := newVPOLProvider(filtered, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		eng = engine.NewEngine(provider, nil, nil)
+	eng, err = newCELEngine(dClient, filtered, nil)
+	if err != nil {
+		return nil, err
 	}
 
 	// validate
@@ -51,6 +43,36 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 	results := make([]models.Response, 0)
 	for _, result := range resp.Policies {
 		resp := engineapi.NewEngineResponse(newResource, engineapi.NewValidatingPolicyFromLike(result.Policy), params.Context.NamespaceLabels).
+			WithPolicyResponse(engineapi.PolicyResponse{Rules: result.Rules})
+
+		results = append(results, models.ConvertResponse(resp))
+	}
+
+	return results, nil
+}
+
+func JSONProcess(ctx context.Context, contextProvider libs.Context, resource unstructured.Unstructured, vpols []v1beta1.ValidatingPolicyLike) ([]models.Response, error) {
+	var eng engine.Engine
+	var err error
+
+	request := celengine.RequestFromJSON(contextProvider, &resource)
+
+	provider, err := newVPOLProvider(vpols, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	eng = engine.NewEngine(provider, nil, nil)
+
+	// validate
+	resp, err := eng.Handle(ctx, request, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make([]models.Response, 0)
+	for _, result := range resp.Policies {
+		resp := engineapi.NewEngineResponse(resource, engineapi.NewValidatingPolicyFromLike(result.Policy), nil).
 			WithPolicyResponse(engineapi.PolicyResponse{Rules: result.Rules})
 
 		results = append(results, models.ConvertResponse(resp))
