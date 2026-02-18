@@ -76,30 +76,114 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 		NamespaceLabels:  in.NamespaceLabels(),
 		PatchedResource:  string(patchedResource),
 	}
-	if in.Policy().AsKyvernoPolicy() != nil {
-		out.Policy = in.Policy().AsKyvernoPolicy()
-	} else if in.Policy().AsValidatingPolicy() != nil {
-		out.ValidatingPolicy = in.Policy().AsValidatingPolicy()
-	} else if in.Policy().AsNamespacedValidatingPolicy() != nil {
-		out.ValidatingPolicy = in.Policy().AsNamespacedValidatingPolicy()
-	} else if in.Policy().AsValidatingAdmissionPolicy() != nil {
-		out.ValidatingAdmissionPolicy = in.Policy().AsValidatingAdmissionPolicy().GetDefinition()
-	} else if in.Policy().AsImageValidatingPolicy() != nil {
-		out.ImageValidatingPolicy = in.Policy().AsImageValidatingPolicy()
-	} else if in.Policy().AsNamespacedImageValidatingPolicy() != nil {
-		out.ImageValidatingPolicy = in.Policy().AsNamespacedImageValidatingPolicy()
-	} else if in.Policy().AsDeletingPolicy() != nil {
-		out.DeletingPolicy = in.Policy().AsDeletingPolicy()
+	if p := in.Policy().AsKyvernoPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  "kyverno.io/v1",
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsValidatingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.APIVersion,
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsNamespacedValidatingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.APIVersion,
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsValidatingAdmissionPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.GetDefinition().APIVersion,
+			Kind:        p.GetDefinition().Kind,
+			Name:        p.GetDefinition().Name,
+			Namespace:   p.GetDefinition().Namespace,
+			Labels:      p.GetDefinition().Labels,
+			Annotations: p.GetDefinition().Annotations,
+		}
+	} else if p := in.Policy().AsImageValidatingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.APIVersion,
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsNamespacedImageValidatingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.APIVersion,
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsDeletingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  "policies.kyverno.io/v1",
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
 	} else if p, ok := in.Policy().AsObject().(*v1beta1.NamespacedDeletingPolicy); ok {
-		out.DeletingPolicy = p
-	} else if in.Policy().AsMutatingPolicy() != nil {
-		out.MutatingPolicy = in.Policy().AsMutatingPolicy()
-	} else if in.Policy().AsGeneratingPolicy() != nil {
-		out.GeneratingPolicy = in.Policy().AsGeneratingPolicy()
-	} else if in.Policy().AsNamespacedMutatingPolicy() != nil {
-		out.MutatingPolicy = in.Policy().AsNamespacedMutatingPolicy()
-	} else if in.Policy().AsNamespacedGeneratingPolicy() != nil {
-		out.GeneratingPolicy = in.Policy().AsNamespacedGeneratingPolicy()
+		out.Policy = Policy{
+			APIVersion:  "policies.kyverno.io/v1",
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsMutatingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.APIVersion,
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsGeneratingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.APIVersion,
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsNamespacedMutatingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.APIVersion,
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
+	} else if p := in.Policy().AsNamespacedGeneratingPolicy(); p != nil {
+		out.Policy = Policy{
+			APIVersion:  p.APIVersion,
+			Kind:        p.GetKind(),
+			Name:        p.GetName(),
+			Namespace:   p.GetNamespace(),
+			Labels:      p.GetLabels(),
+			Annotations: p.GetAnnotations(),
+		}
 	}
 
 	for _, ruleresponse := range in.PolicyResponse.Rules {
