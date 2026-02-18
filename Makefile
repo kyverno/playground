@@ -2,7 +2,7 @@
 # DEFAULTS #
 ############
 
-KIND_IMAGE           ?= kindest/node:v1.33.1
+KIND_IMAGE           ?= kindest/node:v1.35.1
 KIND_NAME            ?= kind
 KYVERNO_VERSION      ?= v1.17.0
 KOCACHE              ?= /tmp/ko-cache
