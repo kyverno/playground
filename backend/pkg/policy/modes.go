@@ -43,10 +43,6 @@ func (p JSONPolicies) Length() int {
 }
 
 type AuthzPolicies struct {
-	EnvoyPolicies []v1beta1.ValidatingPolicyLike
-	HTTPPolicies  []v1beta1.ValidatingPolicyLike
-}
-
-func (p AuthzPolicies) Length() int {
-	return len(p.EnvoyPolicies) + len(p.HTTPPolicies)
+	EnvoyPolicies []*v1beta1.ValidatingPolicy
+	HTTPPolicies  []*v1beta1.ValidatingPolicy
 }

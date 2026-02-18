@@ -83,6 +83,12 @@ const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, mutation) => {
     const rules = mutation.policyResponse.rules || []
     rules.forEach((rule) => {
+      let ruleName = rule.name
+
+      if (mutation.policy.kind.endsWith('MutatingPolicy')) {
+        ruleName = 'N/A'
+      }
+
       const item = {
         id: '',
         apiVersion: mutation.resource.apiVersion,
@@ -91,7 +97,7 @@ const items = computed(() => {
           .filter((s) => !!s)
           .join('/'),
         policy: mutation.policy.name,
-        rule: rule.name,
+        rule: ruleName,
         message: rule.message,
         patchedResource: mutation.patchedResource,
         originalReosurce: mutation.originalResource,

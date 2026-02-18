@@ -63,7 +63,9 @@ const list = [
   'ServiceAccount',
   'PodDisruptionBudget',
   'PriorityClass',
-  'ResourceQuota'
+  'ResourceQuota',
+  'EnvoyCheckRequest',
+  'HTTPCheckRequest'
 ]
 
 const templates = computed(() => {

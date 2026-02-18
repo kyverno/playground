@@ -93,6 +93,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 			Namespace:   p.GetNamespace(),
 			Labels:      p.GetLabels(),
 			Annotations: p.GetAnnotations(),
+			Mode:        p.Spec.EvaluationMode(),
 		}
 	} else if p := in.Policy().AsNamespacedValidatingPolicy(); p != nil {
 		out.Policy = Policy{
@@ -102,6 +103,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 			Namespace:   p.GetNamespace(),
 			Labels:      p.GetLabels(),
 			Annotations: p.GetAnnotations(),
+			Mode:        p.Spec.EvaluationMode(),
 		}
 	} else if p := in.Policy().AsValidatingAdmissionPolicy(); p != nil {
 		out.Policy = Policy{
@@ -120,6 +122,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 			Namespace:   p.GetNamespace(),
 			Labels:      p.GetLabels(),
 			Annotations: p.GetAnnotations(),
+			Mode:        p.Spec.EvaluationMode(),
 		}
 	} else if p := in.Policy().AsNamespacedImageValidatingPolicy(); p != nil {
 		out.Policy = Policy{
@@ -129,6 +132,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 			Namespace:   p.GetNamespace(),
 			Labels:      p.GetLabels(),
 			Annotations: p.GetAnnotations(),
+			Mode:        p.Spec.EvaluationMode(),
 		}
 	} else if p := in.Policy().AsDeletingPolicy(); p != nil {
 		out.Policy = Policy{
@@ -156,6 +160,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 			Namespace:   p.GetNamespace(),
 			Labels:      p.GetLabels(),
 			Annotations: p.GetAnnotations(),
+			Mode:        p.Spec.EvaluationMode(),
 		}
 	} else if p := in.Policy().AsGeneratingPolicy(); p != nil {
 		out.Policy = Policy{
@@ -174,6 +179,7 @@ func ConvertResponse(in engineapi.EngineResponse) Response {
 			Namespace:   p.GetNamespace(),
 			Labels:      p.GetLabels(),
 			Annotations: p.GetAnnotations(),
+			Mode:        p.Spec.EvaluationMode(),
 		}
 	} else if p := in.Policy().AsNamespacedGeneratingPolicy(); p != nil {
 		out.Policy = Policy{

@@ -39,7 +39,7 @@ import { type PropType, computed, ref } from 'vue'
 import hash from 'object-hash'
 import { useDisplay } from 'vuetify'
 import { useConfig } from '@/config'
-import type { Validation, RuleStatus } from '@/types'
+import type { Validation, RuleStatus, Resource } from '@/types'
 import StatusChip from './StatusChip.vue'
 
 type Item = {
@@ -85,6 +85,18 @@ const headers = computed(() => {
 
 const { hideNoMatch } = useConfig()
 
+const resource = (mode: string, resource: Resource): string => {
+  if (mode === 'Envoy') {
+    return 'authv3.CheckRequest'
+  } else if (mode === 'JSON') {
+    return 'JSON Payload'
+  } else if (mode === 'HTTP') {
+    return 'HTTP Request'
+  }
+
+  return [resource?.metadata?.namespace, resource?.metadata?.name].filter((s) => !!s).join('/')
+}
+
 const items = computed(() => {
   return (props.results || []).reduce<Item[]>((results, validation) => {
     if (!validation.policyResponse.rules && !hideNoMatch.value) {
@@ -92,10 +104,7 @@ const items = computed(() => {
         id: 'id',
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
-        resource:
-          [validation.resource?.metadata?.namespace, validation.resource?.metadata?.name]
-            .filter((s) => !!s)
-            .join('/') || 'JSON Payload',
+        resource: resource(validation.policy.mode, validation.resource),
         policy: validation.policy.name,
         rule: 'resource does not match any rule',
         message: 'no validation triggered',
@@ -124,10 +133,7 @@ const items = computed(() => {
         icon,
         apiVersion: validation.resource.apiVersion,
         kind: validation.resource.kind,
-        resource:
-          [validation.resource?.metadata?.namespace, validation.resource?.metadata?.name]
-            .filter((s) => !!s)
-            .join('/') || 'JSON Payload',
+        resource: resource(validation.policy.mode, validation.resource),
         policy: validation.policy.name,
         rule: ruleName,
         message: rule.message,

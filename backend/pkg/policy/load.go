@@ -122,10 +122,6 @@ func Load(l loader.Loader, content []byte) (K8sPolicies, JSONPolicies, AuthzPoli
 				k8sPolicies.ValidatingPolicies = append(k8sPolicies.ValidatingPolicies, typed)
 			case JSON:
 				jsonPolicies.ValidatingPolicies = append(jsonPolicies.ValidatingPolicies, typed)
-			case Envoy:
-				authzPolicies.EnvoyPolicies = append(authzPolicies.EnvoyPolicies, typed)
-			case HTTP:
-				authzPolicies.HTTPPolicies = append(authzPolicies.HTTPPolicies, typed)
 			}
 		case ivpolV1alpha1, ivpolV1beta1, ivpolV1:
 			typed, err := convert.To[policiesv1beta1.ImageValidatingPolicy](object)

@@ -28,6 +28,7 @@ export type Policy = {
   namespace?: string
   labels?: { [key: string]: string }
   annotations?: { [key: string]: string }
+  mode: string
 }
 
 export type Resource = {

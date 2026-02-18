@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	"github.com/kyverno/kyverno/ext/resource/loader"
+	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/loopfz/gadgeto/tonic"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -15,7 +16,7 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine"
-	"github.com/kyverno/playground/backend/pkg/engine/json"
+	"github.com/kyverno/playground/backend/pkg/engine/cel/processor"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/playground/backend/pkg/resource"
 )
@@ -54,7 +55,7 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			return nil, err
 		}
 
-		k8s, jsonPolicies, _, err := in.LoadPolicies(policyLoader)
+		k8s, jsonPolicies, authzPolicies, err := in.LoadPolicies(policyLoader)
 		if err != nil {
 			return nil, fmt.Errorf("unable to load policies: %w", err)
 		}
@@ -113,7 +114,6 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 
 			if cl.IsFake() {
 				if err := validateParams(params, cmResolver, k8s.Policies); err != nil {
-					fmt.Println(err)
 					return nil, err
 				}
 			}
@@ -139,18 +139,12 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 				return nil, fmt.Errorf("unable to load resources: %w", err)
 			}
 
-			clusterResources, err := in.LoadClusterResources(resourceLoader)
+			dClient, err := CreateDClient(cl, in, resourceLoader, nil)
 			if err != nil {
 				return nil, err
 			}
 
-			clusterObjects := resource.AppendNamespaces(nil, clusterResources)
-			dClient, err := cl.DClient(clusterObjects)
-			if err != nil {
-				return nil, err
-			}
-
-			processor := json.NewProcessor(dClient, tcm)
+			processor := processor.NewJSON(dClient, tcm)
 			results, err = processor.Run(ctx, jsonPolicies, resources)
 			if err != nil {
 				return nil, err
@@ -162,11 +156,66 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			}, nil
 		}
 
+		if len(authzPolicies.EnvoyPolicies) > 0 {
+			resources, err := resource.LoadEnvyRequests(in.Resources)
+			if err != nil {
+				return nil, fmt.Errorf("unable to load resources: %w", err)
+			}
+
+			dClient, err := CreateDClient(cl, in, resourceLoader, nil)
+			if err != nil {
+				return nil, err
+			}
+
+			processor := processor.NewAuthz(dClient)
+			results, err = processor.RunEnvoy(ctx, authzPolicies, resources)
+			if err != nil {
+				return nil, err
+			}
+
+			return &EngineResponse{
+				Results: results,
+			}, nil
+		}
+
+		if len(authzPolicies.HTTPPolicies) > 0 {
+			resources, err := resource.LoadHTTPRequests(in.Resources)
+			if err != nil {
+				return nil, fmt.Errorf("unable to load resources: %w", err)
+			}
+
+			dClient, err := CreateDClient(cl, in, resourceLoader, nil)
+			if err != nil {
+				return nil, err
+			}
+
+			processor := processor.NewAuthz(dClient)
+			results, err = processor.RunHTTP(ctx, authzPolicies, resources)
+			if err != nil {
+				return nil, err
+			}
+
+			return &EngineResponse{
+				Results: results,
+			}, nil
+		}
+
 		return &EngineResponse{
 			Resources: nil,
 			Results:   nil,
 		}, nil
 	}, http.StatusOK), nil
+}
+
+func CreateDClient(cl cluster.Cluster, in *EngineRequest, loader loader.Loader, resources []unstructured.Unstructured) (dclient.Interface, error) {
+	clusterResources, err := in.LoadClusterResources(loader)
+	if err != nil {
+		return nil, err
+	}
+
+	clusterObjects := resource.AppendNamespaces(resources, clusterResources)
+
+	return cl.DClient(clusterObjects)
 }
 
 func validateParams(params *models.Parameters, cmResolver engineapi.ConfigmapResolver, policies []kyvernov1.PolicyInterface) error {

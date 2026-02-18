@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"strings"
 
+	authv3 "github.com/envoyproxy/go-control-plane/envoy/service/auth/v3"
+	"github.com/kyverno/kyverno-authz/pkg/cel/libs/authz/http"
 	"github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno/resource"
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	yamlutils "github.com/kyverno/kyverno/ext/yaml"
+	"google.golang.org/protobuf/encoding/protojson"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
@@ -53,4 +56,58 @@ func LoadJSON(content string) ([]unstructured.Unstructured, error) {
 	}
 
 	return []unstructured.Unstructured{{Object: payload}}, nil
+}
+
+func LoadEnvyRequests(content string) ([]*authv3.CheckRequest, error) {
+	if strings.HasPrefix(strings.TrimSpace(content), "[") {
+		var raw []json.RawMessage
+		if err := json.Unmarshal([]byte(content), &raw); err != nil {
+			return nil, err
+		}
+
+		payload := make([]*authv3.CheckRequest, len(raw))
+		for i, r := range raw {
+			p := authv3.CheckRequest{}
+			if err := protojson.Unmarshal(r, &p); err != nil {
+				return nil, err
+			}
+			payload[i] = &p
+		}
+
+		return payload, nil
+	}
+
+	var payload authv3.CheckRequest
+	if err := protojson.Unmarshal([]byte(content), &payload); err != nil {
+		return nil, err
+	}
+
+	return []*authv3.CheckRequest{&payload}, nil
+}
+
+func LoadHTTPRequests(content string) ([]*http.CheckRequest, error) {
+	if strings.HasPrefix(strings.TrimSpace(content), "[") {
+		var raw []json.RawMessage
+		if err := json.Unmarshal([]byte(content), &raw); err != nil {
+			return nil, err
+		}
+
+		payload := make([]*http.CheckRequest, len(raw))
+		for i, r := range raw {
+			p := CheckRequest{}
+			if err := json.Unmarshal(r, &p); err != nil {
+				return nil, err
+			}
+			payload[i] = p.ToAuthz()
+		}
+
+		return payload, nil
+	}
+
+	var payload CheckRequest
+	if err := json.Unmarshal([]byte(content), &payload); err != nil {
+		return nil, err
+	}
+
+	return []*http.CheckRequest{payload.ToAuthz()}, nil
 }
