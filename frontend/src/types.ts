@@ -87,7 +87,7 @@ export type Generation = Result & {
 }
 
 export type EngineResponse = {
-  policies: Policy[]
+  policies?: Policy[]
   resources: Resource[]
   validation?: Validation[]
   deletion?: Validation[]

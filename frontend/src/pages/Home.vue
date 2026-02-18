@@ -94,7 +94,7 @@ const state = useState()
 const { config } = fetch()
 
 const showResults = ref<boolean>(false)
-const results = ref<EngineResponse>({ policies: [], resources: [] })
+const results = ref<EngineResponse>({ resources: [] })
 
 const handleResponse = (response: EngineResponse) => {
   results.value = response

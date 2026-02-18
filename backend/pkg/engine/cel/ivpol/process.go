@@ -18,7 +18,7 @@ import (
 	helper "github.com/kyverno/playground/backend/pkg/utils"
 )
 
-func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, ivpols []v1beta1.ImageValidatingPolicyLike) ([]models.Response, error) {
+func K8sProcess(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, ivpols []v1beta1.ImageValidatingPolicyLike) ([]models.Response, error) {
 	request := utils.NewCELRequest(restMapper, contextProvider, params, newResource, oldResource)
 	validations := make([]models.Response, 0)
 
@@ -26,27 +26,27 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 		return p.GetNamespace() == "" || p.GetNamespace() == newResource.GetNamespace()
 	})
 
-	if request.JsonPayload == nil {
-		engine, err := newIVPEngine(dClient, filtered, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		resp, _, err := engine.HandleMutating(ctx, request, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		for _, result := range resp.Policies {
-			resp := engineapi.NewEngineResponse(newResource, engineapi.NewImageValidatingPolicyFromLike(result.Policy), params.Context.NamespaceLabels).
-				WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{result.Result}})
-
-			validations = append(validations, models.ConvertResponse(resp))
-		}
-
-		return validations, nil
+	engine, err := newIVPEngine(dClient, filtered, nil)
+	if err != nil {
+		return nil, err
 	}
 
+	resp, _, err := engine.HandleMutating(ctx, request, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, result := range resp.Policies {
+		resp := engineapi.NewEngineResponse(newResource, engineapi.NewImageValidatingPolicyFromLike(result.Policy), params.Context.NamespaceLabels).
+			WithPolicyResponse(engineapi.PolicyResponse{Rules: []engineapi.RuleResponse{result.Result}})
+
+		validations = append(validations, models.ConvertResponse(resp))
+	}
+
+	return validations, nil
+}
+
+func JSONProcess(ctx context.Context, contextProvider libs.Context, resource unstructured.Unstructured, ivpols []v1beta1.ImageValidatingPolicyLike) ([]models.Response, error) {
 	compiled := make([]*eval.CompiledImageValidatingPolicy, 0)
 	pMap := make(map[string]v1beta1.ImageValidatingPolicyLike)
 	for i := range ivpols {
@@ -55,15 +55,17 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 		compiled = append(compiled, &eval.CompiledImageValidatingPolicy{Policy: p})
 	}
 
-	results, err := eval.Evaluate(ctx, compiled, newResource.Object, nil, nil, nil)
+	results, err := eval.Evaluate(ctx, compiled, resource.Object, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	resp := engineapi.EngineResponse{
-		Resource:       newResource,
+		Resource:       resource,
 		PolicyResponse: engineapi.PolicyResponse{},
 	}
+
+	validations := make([]models.Response, 0)
 	for p, rslt := range results {
 		if rslt.Error != nil {
 			resp.PolicyResponse.Rules = []engineapi.RuleResponse{
