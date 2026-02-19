@@ -4,7 +4,7 @@
 
 KIND_IMAGE           ?= kindest/node:v1.35.1
 KIND_NAME            ?= kind
-KYVERNO_VERSION      ?= v1.17.0
+KYVERNO_VERSION      ?= v1.17.1
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,no-ingress,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
@@ -46,7 +46,7 @@ CURRENT_DIR                   := $(PWD)
 HELM                          := $(TOOLS_DIR)/helm
 HELM_VERSION                  := v3.19.0
 KIND                          := $(TOOLS_DIR)/kind
-KIND_VERSION                  := v0.30.0
+KIND_VERSION                  := v0.31.0
 KO                            := $(TOOLS_DIR)/ko
 KO_VERSION     				  := v0.18.0
 HELM_DOCS                     := $(TOOLS_DIR)/helm-docs
