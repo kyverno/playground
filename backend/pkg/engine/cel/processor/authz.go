@@ -21,7 +21,7 @@ func (p *AuthzProcessor) RunEnvoy(ctx context.Context, policies policy.AuthzPoli
 
 	for _, resource := range resources {
 		if len(policies.EnvoyPolicies) > 0 {
-			results, err := vpol.EnvoyProcess(context.TODO(), resource, policies.EnvoyPolicies)
+			results, err := vpol.EnvoyProcess(context.TODO(), p.dClient, resource, policies.EnvoyPolicies)
 			if err != nil {
 				return nil, err
 			}
@@ -38,7 +38,7 @@ func (p *AuthzProcessor) RunHTTP(ctx context.Context, policies policy.AuthzPolic
 
 	for _, resource := range resources {
 		if len(policies.HTTPPolicies) > 0 {
-			results, err := vpol.HTTPProcess(context.TODO(), resource, policies.HTTPPolicies)
+			results, err := vpol.HTTPProcess(context.TODO(), p.dClient, resource, policies.HTTPPolicies)
 			if err != nil {
 				return nil, err
 			}
