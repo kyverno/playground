@@ -50,8 +50,9 @@ func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v
 
 		var status api.RuleStatus
 		var message string
+		var responseStatus *models.ResponseStatus
 
-		resource := unstructured.Unstructured{Object: make(map[string]any)}
+		res := unstructured.Unstructured{Object: make(map[string]any)}
 
 		if evaluation.Result == nil && evaluation.Error == nil {
 			message = "request does not match"
@@ -69,6 +70,10 @@ func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v
 				}
 				status = api.RuleStatusPass
 				message = "request allowed"
+				responseStatus = &models.ResponseStatus{
+					Code:    200,
+					Message: "OK",
+				}
 			} else if denied := evaluation.Result.GetDeniedResponse(); denied != nil {
 				content, err = protojson.Marshal(denied)
 				if err != nil {
@@ -76,6 +81,10 @@ func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v
 				}
 				status = api.RuleStatusFail
 				message = fmt.Sprintf("request denied with status code %d (\"%s\")", denied.Status.Code, denied.Status.Code.String())
+				responseStatus = &models.ResponseStatus{
+					Code:    int(denied.Status.Code),
+					Message: denied.Status.Code.String(),
+				}
 			}
 
 			var payload map[string]any
@@ -83,7 +92,7 @@ func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v
 				return nil, err
 			}
 
-			resource = unstructured.Unstructured{
+			res = unstructured.Unstructured{
 				Object: payload,
 			}
 		}
@@ -106,14 +115,15 @@ func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v
 			PolicyResponse: models.PolicyResponse{
 				Rules: []models.RuleResponse{
 					{
-						Name:     vpol.Name,
-						RuleType: api.Validation,
-						Message:  message,
-						Status:   status,
+						Name:           vpol.Name,
+						RuleType:       api.Validation,
+						Message:        message,
+						Status:         status,
+						ResponseStatus: responseStatus,
 					},
 				},
 			},
-			Resource: resource,
+			Resource: res,
 		})
 	}
 
