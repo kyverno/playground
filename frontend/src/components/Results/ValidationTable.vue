@@ -52,6 +52,8 @@ type Item = {
   rule: string
   message: string
   status: RuleStatus
+  authzStatus?: number
+  authzMessage?: string
 }
 
 const props = defineProps({
@@ -59,29 +61,6 @@ const props = defineProps({
 })
 
 const expanded = ref<string[]>([])
-
-const display = useDisplay()
-
-const headers = computed(() => {
-  if (display.mdAndUp.value) {
-    return [
-      { title: 'APIVersion', key: 'apiVersion', width: '15%' },
-      { title: 'Kind', key: 'kind', width: '10%' },
-      { title: 'Resource', key: 'resource', width: '20%' },
-      { title: 'Policy', key: 'policy', width: '25%' },
-      { title: 'Rule', key: 'rule', width: '25%' },
-      { title: 'Status', key: 'status', width: '5%', align: 'end' }
-    ]
-  }
-
-  return [
-    { title: 'Kind', key: 'kind', width: '10%' },
-    { title: 'Resource', key: 'resource', width: '20%' },
-    { title: 'Policy', key: 'policy', width: '30%' },
-    { title: 'Rule', key: 'rule', width: '30%' },
-    { title: 'Status', key: 'status', width: '10%', align: 'end' }
-  ]
-})
 
 const { hideNoMatch } = useConfig()
 
@@ -137,12 +116,70 @@ const items = computed(() => {
         policy: validation.policy.name,
         rule: ruleName,
         message: rule.message,
-        status: rule.status
+        status: rule.status,
+        authzStatus: rule.responseStatus?.code,
+        authzMessage: rule.responseStatus?.message
       })
     })
 
     return results
   }, [])
+})
+
+const display = useDisplay()
+
+const headers = computed(() => {
+  const mode = props.results?.[0]?.policy.mode
+
+  if ('Envoy' === mode) {
+    if (display.mdAndUp.value) {
+      return [
+        { title: 'Resource', key: 'resource', width: '20%' },
+        { title: 'Policy', key: 'policy', width: '30%' },
+        { title: 'Response Code', key: 'authzStatus', width: '20%' },
+        { title: 'Response Message', key: 'authzMessage', width: '20%' },
+        { title: 'Status', key: 'status', width: '10%', align: 'end' }
+      ]
+    }
+
+    return [
+      { title: 'Policy', key: 'policy', width: '70%' },
+      { title: 'Status', key: 'status', width: '30%', align: 'end' }
+    ]
+  }
+
+  if (['HTTP', 'JSON'].includes(mode)) {
+    if (display.mdAndUp.value) {
+      return [
+        { title: 'Resource', key: 'resource', width: '20%' },
+        { title: 'Policy', key: 'policy', width: '60%' },
+        { title: 'Status', key: 'status', width: '20%', align: 'end' }
+      ]
+    }
+    return [
+      { title: 'Policy', key: 'policy', width: '70%' },
+      { title: 'Status', key: 'status', width: '30%', align: 'end' }
+    ]
+  }
+
+  if (display.mdAndUp.value) {
+    return [
+      { title: 'APIVersion', key: 'apiVersion', width: '15%' },
+      { title: 'Kind', key: 'kind', width: '10%' },
+      { title: 'Resource', key: 'resource', width: '20%' },
+      { title: 'Policy', key: 'policy', width: '25%' },
+      { title: 'Rule', key: 'rule', width: '25%' },
+      { title: 'Status', key: 'status', width: '5%', align: 'end' }
+    ]
+  }
+
+  return [
+    { title: 'Kind', key: 'kind', width: '10%' },
+    { title: 'Resource', key: 'resource', width: '20%' },
+    { title: 'Policy', key: 'policy', width: '30%' },
+    { title: 'Rule', key: 'rule', width: '30%' },
+    { title: 'Status', key: 'status', width: '10%', align: 'end' }
+  ]
 })
 </script>
 

@@ -48,6 +48,7 @@ func HTTPProcess(ctx context.Context, resource *http.CheckRequest, vpols []*v1be
 
 		var status api.RuleStatus
 		var message string
+
 		resource := unstructured.Unstructured{Object: make(map[string]any)}
 
 		if evaluation.Result == nil && evaluation.Error == nil {

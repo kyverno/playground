@@ -43,6 +43,10 @@ export type Rule = {
   message: string
   status: RuleStatus
   generatedResource: string
+  responseStatus?: {
+    code: number
+    message: string
+  }
 }
 
 export type PolicyResponse = {
