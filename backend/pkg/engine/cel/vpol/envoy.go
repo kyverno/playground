@@ -9,6 +9,7 @@ import (
 	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno-authz/pkg/engine"
 	vpolcompiler "github.com/kyverno/kyverno-authz/pkg/engine/compiler"
+	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/sdk/core"
 	"github.com/kyverno/sdk/core/dispatchers"
@@ -22,7 +23,7 @@ import (
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
 
-func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v1beta1.ValidatingPolicy) ([]models.Response, error) {
+func EnvoyProcess(ctx context.Context, dclient dclient.Interface, resource *authv3.CheckRequest, vpols []*v1beta1.ValidatingPolicy) ([]models.Response, error) {
 	compiler := vpolcompiler.NewCompiler[dynamic.Interface, *authv3.CheckRequest, *authv3.CheckResponse]()
 	results := make([]models.Response, 0)
 
@@ -46,7 +47,7 @@ func EnvoyProcess(ctx context.Context, resource *authv3.CheckRequest, vpols []*v
 			),
 		)
 
-		evaluation := eng.Handle(ctx, nil, resource)
+		evaluation := eng.Handle(ctx, dclient.GetDynamicInterface(), resource)
 
 		var status api.RuleStatus
 		var message string

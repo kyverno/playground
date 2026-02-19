@@ -9,6 +9,7 @@ import (
 	"github.com/kyverno/kyverno-authz/pkg/cel/libs/authz/http"
 	"github.com/kyverno/kyverno-authz/pkg/engine"
 	vpolcompiler "github.com/kyverno/kyverno-authz/pkg/engine/compiler"
+	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	"github.com/kyverno/kyverno/pkg/engine/api"
 	"github.com/kyverno/sdk/core"
 	"github.com/kyverno/sdk/core/dispatchers"
@@ -21,7 +22,7 @@ import (
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 )
 
-func HTTPProcess(ctx context.Context, resource *http.CheckRequest, vpols []*v1beta1.ValidatingPolicy) ([]models.Response, error) {
+func HTTPProcess(ctx context.Context, dclient dclient.Interface, resource *http.CheckRequest, vpols []*v1beta1.ValidatingPolicy) ([]models.Response, error) {
 	compiler := vpolcompiler.NewCompiler[dynamic.Interface, *http.CheckRequest, *http.CheckResponse]()
 	results := make([]models.Response, 0)
 
@@ -44,7 +45,7 @@ func HTTPProcess(ctx context.Context, resource *http.CheckRequest, vpols []*v1be
 				},
 			),
 		)
-		evaluation := eng.Handle(ctx, nil, resource)
+		evaluation := eng.Handle(ctx, dclient.GetDynamicInterface(), resource)
 
 		var status api.RuleStatus
 		var message string
