@@ -1,6 +1,6 @@
 module github.com/kyverno/playground/backend
 
-go 1.25.6
+go 1.25.7
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
@@ -13,7 +13,7 @@ require (
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/v2 v2.3.2
 	github.com/kyverno/api v0.0.1-alpha.2.0.20260129144402-7b64bcf2b1f7
-	github.com/kyverno/kyverno v1.17.0
+	github.com/kyverno/kyverno v1.17.1
 	github.com/kyverno/kyverno-authz v0.4.1-0.20260218134631-d30a5ba6932c
 	github.com/kyverno/sdk v0.0.0-20260130102315-1f20923ce30b
 	github.com/loopfz/gadgeto v0.11.5
@@ -22,9 +22,9 @@ require (
 	golang.org/x/exp v0.0.0-20260212183809-81e46e3db34a
 	google.golang.org/protobuf v1.36.11
 	k8s.io/api v0.35.1
-	k8s.io/apiextensions-apiserver v0.35.0
+	k8s.io/apiextensions-apiserver v0.35.1
 	k8s.io/apimachinery v0.35.1
-	k8s.io/apiserver v0.35.0
+	k8s.io/apiserver v0.35.1
 	k8s.io/client-go v0.35.1
 	k8s.io/utils v0.0.0-20251222233032-718f0e51e6d2
 	sigs.k8s.io/controller-runtime v0.23.1
@@ -393,7 +393,7 @@ require (
 	gopkg.in/ini.v1 v1.67.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/cli-runtime v0.35.0 // indirect
+	k8s.io/cli-runtime v0.35.1 // indirect
 	k8s.io/component-base v0.35.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20251125145642-4e65d59e963e // indirect
