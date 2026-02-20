@@ -32,7 +32,7 @@ import { loadedPolicy } from '@/composables'
 import MonacoEditor from './MonacoEditor.vue'
 
 const props = defineProps({
-  modelValue: { type: String, default: '' }
+  modelValue: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -46,7 +46,7 @@ const options: editor.IStandaloneEditorConstructionOptions = {
   wordWrap: 'off',
   colorDecorators: true,
   lineHeight: 24,
-  tabSize: 2
+  tabSize: 2,
 }
 
 let timeout: any = undefined

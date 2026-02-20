@@ -26,6 +26,6 @@ watch(
   () => inputs.config,
   (config?: string) => {
     loadedConfig.value = config || ''
-  }
+  },
 )
 </script>

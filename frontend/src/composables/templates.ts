@@ -10,7 +10,7 @@ const normalizeName = (name: string) => name.replaceAll(';;', ';').trim()
 const convertNames = (names: string) => names.split(';;').filter((l) => !!l)
 
 export const getTemplates = (
-  panel: string
+  panel: string,
 ): { list: Ref<string[]>; add: (template: string) => void; remove: (template: string) => void } => {
   const persisted = useLocalStorage<string>(`${panel}:templates:list`, '')
 

@@ -57,7 +57,7 @@ type Item = {
 }
 
 const props = defineProps({
-  results: { type: Array as PropType<Validation[]>, default: () => [] }
+  results: { type: Array as PropType<Validation[]>, default: () => [] },
 })
 
 const expanded = ref<string[]>([])
@@ -87,7 +87,7 @@ const items = computed(() => {
         policy: validation.policy.name,
         rule: 'resource does not match any rule',
         message: 'no validation triggered',
-        status: 'no match'
+        status: 'no match',
       })
       return results
     }
@@ -118,7 +118,7 @@ const items = computed(() => {
         message: rule.message,
         status: rule.status,
         authzStatus: rule.responseStatus?.code,
-        authzMessage: rule.responseStatus?.message
+        authzMessage: rule.responseStatus?.message,
       })
     })
 
@@ -129,7 +129,7 @@ const items = computed(() => {
 const display = useDisplay()
 
 const headers = computed(() => {
-  const mode = props.results?.[0]?.policy.mode
+  const mode = props.results?.[0]?.policy.mode || 'Kubernetes'
 
   if ('Envoy' === mode) {
     if (display.mdAndUp.value) {
@@ -138,13 +138,13 @@ const headers = computed(() => {
         { title: 'Policy', key: 'policy', width: '30%' },
         { title: 'Response Code', key: 'authzStatus', width: '20%' },
         { title: 'Response Message', key: 'authzMessage', width: '20%' },
-        { title: 'Status', key: 'status', width: '10%', align: 'end' }
+        { title: 'Status', key: 'status', width: '10%', align: 'end' },
       ]
     }
 
     return [
       { title: 'Policy', key: 'policy', width: '70%' },
-      { title: 'Status', key: 'status', width: '30%', align: 'end' }
+      { title: 'Status', key: 'status', width: '30%', align: 'end' },
     ]
   }
 
@@ -153,12 +153,12 @@ const headers = computed(() => {
       return [
         { title: 'Resource', key: 'resource', width: '20%' },
         { title: 'Policy', key: 'policy', width: '60%' },
-        { title: 'Status', key: 'status', width: '20%', align: 'end' }
+        { title: 'Status', key: 'status', width: '20%', align: 'end' },
       ]
     }
     return [
       { title: 'Policy', key: 'policy', width: '70%' },
-      { title: 'Status', key: 'status', width: '30%', align: 'end' }
+      { title: 'Status', key: 'status', width: '30%', align: 'end' },
     ]
   }
 
@@ -169,7 +169,7 @@ const headers = computed(() => {
       { title: 'Resource', key: 'resource', width: '20%' },
       { title: 'Policy', key: 'policy', width: '25%' },
       { title: 'Rule', key: 'rule', width: '25%' },
-      { title: 'Status', key: 'status', width: '5%', align: 'end' }
+      { title: 'Status', key: 'status', width: '5%', align: 'end' },
     ]
   }
 
@@ -178,7 +178,7 @@ const headers = computed(() => {
     { title: 'Resource', key: 'resource', width: '20%' },
     { title: 'Policy', key: 'policy', width: '30%' },
     { title: 'Rule', key: 'rule', width: '30%' },
-    { title: 'Status', key: 'status', width: '10%', align: 'end' }
+    { title: 'Status', key: 'status', width: '10%', align: 'end' },
   ]
 })
 </script>

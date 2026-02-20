@@ -21,8 +21,8 @@ export const generateContent = (config: Config): string => {
       ...(config.crds ? { customResourceDefinitions: inputs.customResourceDefinitions } : {}),
       ...(config.clusterResources ? { clusterResources: inputs.clusterResources } : {}),
       ...(config.exceptions ? { exceptions: inputs.exceptions } : {}),
-      ...(config.vapBindings ? { vapBindings: inputs.vapBindings } : {})
-    })
+      ...(config.vapBindings ? { vapBindings: inputs.vapBindings } : {}),
+    }),
   )
 }
 

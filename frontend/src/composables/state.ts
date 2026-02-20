@@ -2,7 +2,7 @@ import {
   ContextTemplate,
   PolicyTemplate,
   ResourceTemplate,
-  ConfigTemplate
+  ConfigTemplate,
 } from '@/assets/templates'
 import { useLocalStorage } from '@vueuse/core'
 
@@ -88,5 +88,5 @@ export const useState = () => ({
   customResourceDefinitions: loadedCustomResourceDefinitions,
   imageData: loadedImageData,
   name: loadedState,
-  update
+  update,
 })

@@ -65,7 +65,7 @@ import { convertProfiles } from '@/functions/export'
 defineProps({
   variant: { type: String as PropType<'outlined' | 'text'> },
   block: { type: Boolean },
-  btnClass: { type: String }
+  btnClass: { type: String },
 })
 
 const profiles = ref<string[]>([])

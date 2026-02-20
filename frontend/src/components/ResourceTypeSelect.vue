@@ -35,7 +35,7 @@ kinds()
   })
 
 const props = defineProps({
-  modelValue: { type: Object as PropType<Resource>, required: true }
+  modelValue: { type: Object as PropType<Resource>, required: true },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -46,6 +46,6 @@ const resource = computed({
   },
   set(val: Resource) {
     emit('update:modelValue', { ...val })
-  }
+  },
 })
 </script>

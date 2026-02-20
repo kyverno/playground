@@ -34,7 +34,7 @@ export type SearchResult = { namespace: string; name: string }
 export const config = reactive<Config>({
   sponsor: '',
   cluster: false,
-  versions: []
+  versions: [],
 })
 
 const fetchConfig = (api: string, loading: Ref<boolean>, error: Ref<Error | undefined>) => () => {
@@ -46,8 +46,8 @@ const fetchConfig = (api: string, loading: Ref<boolean>, error: Ref<Error | unde
     mode: 'cors',
     cache: 'no-cache',
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   })
     .then(async (resp) => {
       if (resp.status > 200) {
@@ -78,7 +78,7 @@ export const useAPIConfig = () => {
   const error = ref()
   return {
     fetch: fetchConfig(api, loading, error),
-    config
+    config,
   }
 }
 
@@ -88,9 +88,9 @@ const fetchWrapper = <T, R = undefined>(method: string, api: string, request?: R
     mode: 'cors',
     cache: 'no-cache',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    ...(request ? { body: JSON.stringify(request) } : {})
+    ...(request ? { body: JSON.stringify(request) } : {}),
   }).then<T>(async (resp) => {
     if (resp.status > 200) {
       throw new Error(await resp.text())
@@ -106,14 +106,14 @@ const fetchNamespaces = (api: string) => () =>
 const fetchResources = (api: string) => (request: ListRequest) => {
   return fetchWrapper<SearchResult[]>(
     'GET',
-    `${api}/cluster/search?` + new URLSearchParams(request).toString()
+    `${api}/cluster/search?` + new URLSearchParams(request).toString(),
   )
 }
 
 const fetchResource = (api: string) => (request: ResourceRequest) => {
   return fetchWrapper<object>(
     'GET',
-    `${api}/cluster/resource?` + new URLSearchParams(request).toString()
+    `${api}/cluster/resource?` + new URLSearchParams(request).toString(),
   )
 }
 
@@ -130,7 +130,7 @@ export const useAPI = <T>() => {
     namespaces: fetchNamespaces(api),
     resources: fetchResources(api),
     resource: fetchResource(api),
-    kinds: fetchKinds(api)
+    kinds: fetchKinds(api),
   }
 }
 

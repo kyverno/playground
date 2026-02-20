@@ -30,7 +30,7 @@ import { watch, ref, type PropType } from 'vue'
 
 defineProps({
   close: { type: Function },
-  steps: { type: Array as PropType<StepEntity[]>, default: () => [] }
+  steps: { type: Array as PropType<StepEntity[]>, default: () => [] },
 })
 
 const wrapper = ref(null)

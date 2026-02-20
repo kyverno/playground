@@ -116,7 +116,7 @@ import { ContextTemplate, PolicyExceptionTemplate, VAPBindingTemplate } from '@/
 import { config } from '@/composables/api'
 
 const props = defineProps({
-  modelValue: { type: Boolean, default: false }
+  modelValue: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue'])

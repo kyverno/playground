@@ -65,7 +65,7 @@ const list = [
   'PriorityClass',
   'ResourceQuota',
   'EnvoyCheckRequest',
-  'HTTPCheckRequest'
+  'HTTPCheckRequest',
 ]
 
 const templates = computed(() => {

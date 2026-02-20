@@ -68,6 +68,6 @@ const switchEditor = () => {
 
 defineProps({
   modelValue: { type: String, default: '' },
-  height: { type: Number, default: 441 }
+  height: { type: Number, default: 441 },
 })
 </script>

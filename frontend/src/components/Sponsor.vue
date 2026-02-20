@@ -22,7 +22,7 @@
 import { layoutTheme } from '@/config'
 
 defineProps({
-  sponsor: { type: String }
+  sponsor: { type: String },
 })
 </script>
 

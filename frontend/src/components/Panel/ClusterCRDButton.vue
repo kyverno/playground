@@ -14,11 +14,11 @@ const defaultResource = ref({
   title: 'apiextensions.k8s.io/v1 CustomResourceDefinition',
   apiVersion: 'apiextensions.k8s.io/v1',
   kind: 'CustomResourceDefinition',
-  clusterScoped: true
+  clusterScoped: true,
 })
 
 defineProps({
-  modelValue: { type: String }
+  modelValue: { type: String },
 })
 
 const emit = defineEmits(['update:modelValue'])

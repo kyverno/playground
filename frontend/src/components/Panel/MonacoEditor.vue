@@ -20,15 +20,15 @@ const props = defineProps({
   id: { type: String, required: true },
   options: {
     type: Object as PropType<monaco.editor.IStandaloneEditorConstructionOptions>,
-    default: () => ({})
-  }
+    default: () => ({}),
+  },
 })
 
 const emit = defineEmits([
   'editorWillMount',
   'editorDidMount',
   'update:modelValue',
-  'switchWordWrap'
+  'switchWordWrap',
 ])
 
 const { width, height } = toRefs(props)
@@ -62,7 +62,7 @@ onMounted(() => {
     theme: props.theme,
     automaticLayout: true,
     ...props.options,
-    model
+    model,
   })
 
   const dispose = useEditorFix(editor, props.id)
@@ -83,7 +83,7 @@ onMounted(() => {
       if (currentLines + 10 < oldLines) {
         editor?.setScrollPosition({ scrollTop: 0 })
       }
-    }
+    },
   )
 
   editor.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.KeyZ, () => {
@@ -102,7 +102,7 @@ watch(
   (o) => {
     editor?.updateOptions({ ...o })
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -113,7 +113,7 @@ watch(
       options[config] = o[config]
     }
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -122,7 +122,7 @@ watch(
     if (value === editor?.getValue()) return
 
     editor?.setValue(value)
-  }
+  },
 )
 
 watch(
@@ -133,13 +133,13 @@ watch(
     if (!model) return
 
     monaco.editor.setModelLanguage(model, language)
-  }
+  },
 )
 
 watch(
   () => props.theme,
   (theme) => {
     monaco.editor.setTheme(theme)
-  }
+  },
 )
 </script>

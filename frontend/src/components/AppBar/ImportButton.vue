@@ -24,7 +24,7 @@ const props = defineProps({
   variant: { type: String as PropType<'outlined' | 'text'> },
   block: { type: Boolean },
   btnClass: { type: String },
-  accept: { type: String, default: '.yaml,.yml,text/yaml,application/yaml,application/x-yaml' }
+  accept: { type: String, default: '.yaml,.yml,text/yaml,application/yaml,application/x-yaml' },
 })
 
 const input = ref<HTMLInputElement | null>(null)

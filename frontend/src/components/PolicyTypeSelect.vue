@@ -20,26 +20,26 @@ const list = [
     title: 'kyverno.io/v1 ClusterPolicy',
     apiVersion: 'kyverno.io/v1',
     kind: 'ClusterPolicy',
-    clusterScoped: true
+    clusterScoped: true,
   },
   {
     title: 'kyverno.io/v1 Policy',
     apiVersion: 'kyverno.io/v1',
     kind: 'Policy',
-    clusterScoped: false
+    clusterScoped: false,
   },
   {
     title: 'kyverno.io/v2beta1 ClusterPolicy',
     apiVersion: 'kyverno.io/v2beta1',
     kind: 'ClusterPolicy',
-    clusterScoped: true
+    clusterScoped: true,
   },
   {
     title: 'kyverno.io/v2beta1 Policy',
     apiVersion: 'kyverno.io/v2beta1',
     kind: 'Policy',
-    clusterScoped: false
-  }
+    clusterScoped: false,
+  },
 ]
 
 const props = defineProps({
@@ -49,8 +49,8 @@ const props = defineProps({
       apiVersion: string
       kind: string
       clusterScoped: boolean
-    }>
-  }
+    }>,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -59,6 +59,6 @@ watch(
   () => props.modelValue,
   (v) => {
     if (!v) emit('update:modelValue', list[0])
-  }
+  },
 )
 </script>

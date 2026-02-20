@@ -73,7 +73,7 @@ import { inputs } from '@/store'
 defineProps({
   variant: { type: String as PropType<'outlined' | 'text'> },
   block: { type: Boolean },
-  btnClass: { type: String }
+  btnClass: { type: String },
 })
 
 const persisted = ref<boolean>(false)
@@ -101,7 +101,7 @@ const persist = (name: string) => {
     config: inputs.config,
     clusterResources: inputs.clusterResources,
     exceptions: inputs.exceptions,
-    name: persistedInput.name
+    name: persistedInput.name,
   })
 
   menu.value = false

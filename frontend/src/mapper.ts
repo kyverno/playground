@@ -7,7 +7,7 @@ const statusToColor: { [status in RuleStatus]: string } = {
   warn: '#FB8C00',
   fail: '#EF5350',
   error: '#F44336',
-  'no match': '#000000'
+  'no match': '#000000',
 }
 
 const statusToDarkColor: { [status in RuleStatus]: string } = {
@@ -16,7 +16,7 @@ const statusToDarkColor: { [status in RuleStatus]: string } = {
   warn: '#FF6F00',
   fail: '#D32F2F',
   error: '#B71C1C',
-  'no match': '#000000'
+  'no match': '#000000',
 }
 
 export const mapStatus = (status: RuleStatus): string => {

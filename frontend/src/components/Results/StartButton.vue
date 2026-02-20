@@ -21,7 +21,7 @@ import { inputs } from '@/store'
 import { parse } from 'yaml'
 
 const props = defineProps({
-  errorState: { type: Boolean, default: false }
+  errorState: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['on-response', 'on-error'])
@@ -83,14 +83,14 @@ const submit = (): void => {
       context: inputs.context,
       config: inputs.config,
       customResourceDefinitions: inputs.customResourceDefinitions,
-      imageData: parse(inputs.imageData || '')
+      imageData: parse(inputs.imageData || ''),
     }),
     method: 'POST',
     mode: 'cors',
     cache: 'no-cache',
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   })
     .then((resp) => {
       if (resp.status === 400) {
@@ -106,8 +106,8 @@ const submit = (): void => {
                     error +
                     `<h2 class="text-subtitle-2 mb-1">${policy}</h2><p class="mb-0 pb-0">${e.field}: ${e.detail}</p>`
                   )
-                }, `<h1 class="text-subtitle-1 mb-2">Invalid Policy:</h1>`)
-              )
+                }, `<h1 class="text-subtitle-1 mb-2">Invalid Policy:</h1>`),
+              ),
             )
             return
           }

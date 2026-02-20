@@ -45,7 +45,7 @@ const props = defineProps({
   variant: { type: String as PropType<'flat' | 'text'> },
   color: { type: String },
   tooltip: { type: Boolean, default: true },
-  btnClass: { type: String }
+  btnClass: { type: String },
 })
 
 const input = ref<HTMLInputElement | null>(null)

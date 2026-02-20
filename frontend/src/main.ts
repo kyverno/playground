@@ -90,7 +90,7 @@ configureMonacoYaml(monaco, {
           { $ref: '#/definitions/mutatingpolicy-v1beta1' },
           { $ref: '#/definitions/mutatingpolicy-v1' },
           { $ref: '#/definitions/namespacedmutatingpolicy-v1beta1' },
-          { $ref: '#/definitions/namespacedmutatingpolicy-v1' }
+          { $ref: '#/definitions/namespacedmutatingpolicy-v1' },
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema,
@@ -123,153 +123,153 @@ configureMonacoYaml(monaco, {
           'mutatingpolicy-v1beta1': mpolv1beta1 as JSONSchema,
           'mutatingpolicy-v1': mpolv1 as JSONSchema,
           'namespacedmutatingpolicy-v1beta1': nmpolv1beta1 as JSONSchema,
-          'namespacedmutatingpolicy-v1': nmpolv1 as JSONSchema
-        }
+          'namespacedmutatingpolicy-v1': nmpolv1 as JSONSchema,
+        },
       },
       uri: `${baseURL}/schemas/policies.json`,
-      fileMatch: ['policy.yaml']
+      fileMatch: ['policy.yaml'],
     },
     {
       schema: policyexception as JSONSchema,
       uri: `${baseURL}/schemas/policyexception-kyverno.io-v2beta1.json`,
-      fileMatch: ['policyexception.yaml']
+      fileMatch: ['policyexception.yaml'],
     },
     {
       schema: policyexceptionv2 as JSONSchema,
       uri: `${baseURL}/schemas/policyexception-kyverno.io-v2.json`,
-      fileMatch: ['policyexception.yaml']
+      fileMatch: ['policyexception.yaml'],
     },
     {
       schema: vpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/validatingpolicy-policies.kyverno.io-v1alpha1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: vpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/validatingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: vpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/validatingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: nvpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/namespacedvalidatingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: nvpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/namespacedvalidatingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: ivpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/imagevalidatingpolicy-policies.kyverno.io-v1alpha1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: ivpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/imagevalidatingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: ivpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/imagevalidatingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: nivpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/namespacedimagevalidatingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: nivpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/namespacedimagevalidatingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['validatingpolicy.yaml']
+      fileMatch: ['validatingpolicy.yaml'],
     },
     {
       schema: dpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/deletingpolicy-policies.kyverno.io-v1alpha1.json`,
-      fileMatch: ['deletingpolicy.yaml']
+      fileMatch: ['deletingpolicy.yaml'],
     },
     {
       schema: dpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/deletingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['deletingpolicy.yaml']
+      fileMatch: ['deletingpolicy.yaml'],
     },
     {
       schema: dpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/deletingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['deletingpolicy.yaml']
+      fileMatch: ['deletingpolicy.yaml'],
     },
     {
       schema: ndpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/namespaceddeletingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['deletingpolicy.yaml']
+      fileMatch: ['deletingpolicy.yaml'],
     },
     {
       schema: ndpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/namespaceddeletingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['deletingpolicy.yaml']
+      fileMatch: ['deletingpolicy.yaml'],
     },
     {
       schema: mpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/mutatingpolicy-policies.kyverno.io-v1alpha1.json`,
-      fileMatch: ['mutatingpolicy.yaml']
+      fileMatch: ['mutatingpolicy.yaml'],
     },
     {
       schema: mpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/mutatingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['mutatingpolicy.yaml']
+      fileMatch: ['mutatingpolicy.yaml'],
     },
     {
       schema: mpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/mutatingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['mutatingpolicy.yaml']
+      fileMatch: ['mutatingpolicy.yaml'],
     },
     {
       schema: nmpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/namespacedmutatingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['mutatingpolicy.yaml']
+      fileMatch: ['mutatingpolicy.yaml'],
     },
     {
       schema: nmpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/namespacedmutatingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['mutatingpolicy.yaml']
+      fileMatch: ['mutatingpolicy.yaml'],
     },
     {
       schema: gpolv1alpha1 as JSONSchema,
       uri: `${baseURL}/schemas/generatingpolicy-policies.kyverno.io-v1alpha1.json`,
-      fileMatch: ['generatingpolicy.yaml']
+      fileMatch: ['generatingpolicy.yaml'],
     },
     {
       schema: gpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/generatingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['generatingpolicy.yaml']
+      fileMatch: ['generatingpolicy.yaml'],
     },
     {
       schema: gpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/generatingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['generatingpolicy.yaml']
+      fileMatch: ['generatingpolicy.yaml'],
     },
     {
       schema: ngpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/namespacedgeneratingpolicy-policies.kyverno.io-v1beta1.json`,
-      fileMatch: ['generatingpolicy.yaml']
+      fileMatch: ['generatingpolicy.yaml'],
     },
     {
       schema: ngpolv1 as JSONSchema,
       uri: `${baseURL}/schemas/namespacedgeneratingpolicy-policies.kyverno.io-v1.json`,
-      fileMatch: ['generatingpolicy.yaml']
+      fileMatch: ['generatingpolicy.yaml'],
     },
     {
       schema: context as JSONSchema,
       uri: `${baseURL}/schemas/context.json`,
-      fileMatch: ['context.yaml']
-    }
-  ]
+      fileMatch: ['context.yaml'],
+    },
+  ],
 })
 
 // @ts-ignore
@@ -282,7 +282,7 @@ self.MonacoEnvironment = {
       return new jsonWorker()
     }
     return new editorWorker()
-  }
+  },
 }
 
 const app = createApp(App)

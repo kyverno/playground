@@ -63,7 +63,7 @@ import { init } from '@/store'
 const { options } = useConfig()
 
 const props = defineProps({
-  modelValue: { type: Boolean, default: false }
+  modelValue: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -81,7 +81,7 @@ const loadExample = async (url: string, policy: Policy) => {
       customResourceDefinitions,
       exceptions,
       clusterResources,
-      oldResource
+      oldResource,
     ]) => {
       init({
         policy,
@@ -90,14 +90,14 @@ const loadExample = async (url: string, policy: Policy) => {
         customResourceDefinitions,
         exceptions,
         clusterResources,
-        oldResource
+        oldResource,
       })
       emit('update:modelValue', false)
     },
     error: (err) => console.error(err),
     finished: () => {
       overlay.value = false
-    }
+    },
   })
 }
 </script>

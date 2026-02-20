@@ -106,7 +106,7 @@ import { btnColor } from '@/config'
 const props = defineProps({
   baseTemplate: { type: String, required: false },
   panel: { type: String, required: true },
-  content: { type: String, required: true }
+  content: { type: String, required: true },
 })
 
 const emit = defineEmits(['select'])
@@ -184,6 +184,6 @@ watch(
     setTimeout(() => {
       selected.value = ''
     }, 500)
-  }
+  },
 )
 </script>

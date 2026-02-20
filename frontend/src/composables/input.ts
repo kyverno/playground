@@ -26,7 +26,7 @@ export const getPersisted = (): Ref<string[]> => {
     (content: string) => {
       list.value = (content || '').split(';;').filter((l) => !!l)
     },
-    { immediate: true }
+    { immediate: true },
   )
 
   return list
@@ -36,43 +36,43 @@ export const createInput = (name: string, defaults?: Inputs) => {
   name = name.replaceAll(';;', ';').trim()
   const policy = useLocalStorage<string | undefined>(
     `persist:policy:${name}`,
-    defaults?.policy || undefined
+    defaults?.policy || undefined,
   )
   const resource = useLocalStorage<string | undefined>(
     `persist:resource:${name}`,
-    defaults?.resource || undefined
+    defaults?.resource || undefined,
   )
   const oldResource = useLocalStorage<string | undefined>(
     `persist:resource:old:${name}`,
-    defaults?.oldResource || undefined
+    defaults?.oldResource || undefined,
   )
   const context = useLocalStorage<string | undefined>(
     `persist:context:${name}`,
-    defaults?.context || undefined
+    defaults?.context || undefined,
   )
   const config = useLocalStorage<string | undefined>(
     `persist:config:${name}`,
-    defaults?.config || undefined
+    defaults?.config || undefined,
   )
   const exceptions = useLocalStorage<string | undefined>(
     `persist:exceptions:${name}`,
-    defaults?.exceptions || undefined
+    defaults?.exceptions || undefined,
   )
   const vapBindings = useLocalStorage<string | undefined>(
     `persist:vapBindings:${name}`,
-    defaults?.vapBindings || undefined
+    defaults?.vapBindings || undefined,
   )
   const clusterResources = useLocalStorage<string | undefined>(
     `persist:clusterResources:${name}`,
-    defaults?.clusterResources || undefined
+    defaults?.clusterResources || undefined,
   )
   const customResourceDefinitions = useLocalStorage<string | undefined>(
     `persist:crds:${name}`,
-    defaults?.customResourceDefinitions || undefined
+    defaults?.customResourceDefinitions || undefined,
   )
   const imageData = useLocalStorage<string | undefined>(
     `persist:imageData:${name}`,
-    defaults?.imageData || undefined
+    defaults?.imageData || undefined,
   )
 
   persisted.value = [...new Set([...getPersisted().value, name])].join(';;')
@@ -88,7 +88,7 @@ export const createInput = (name: string, defaults?: Inputs) => {
     clusterResources,
     customResourceDefinitions,
     imageData,
-    name
+    name,
   }
 }
 
