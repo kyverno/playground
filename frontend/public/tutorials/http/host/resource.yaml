@@ -1,0 +1,14 @@
+[
+  {
+    "attributes": {
+      "method": "POST",
+      "host": "http-srv.app"
+    }
+  },
+  {
+    "attributes": {
+      "method": "POST",
+      "host": "different.app"
+    }
+  }
+]

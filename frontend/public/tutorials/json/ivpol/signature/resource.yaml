@@ -1,0 +1,12 @@
+[
+  {
+    "foo": {
+      "bar": "ghcr.io/kyverno/test-verify-image:unsigned"
+    }
+  },
+  {
+    "foo": {
+      "bar": "ghcr.io/kyverno/test-verify-image:signed"
+    }
+  }
+]
