@@ -1,7 +1,7 @@
 [
     {
         "name": "Tutorials",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.17/",
         "color": "orange-darken-3",
         "subgroups": [
             {
@@ -145,8 +145,58 @@
         ]
     },
     {
+        "name": "Authz Policies",
+        "subgroups": [
+            {
+                "name": "Envoy Policies",
+                "url": "tutorials/envoy",
+                "policies": [
+                    {
+                        "path": "jwt",
+                        "title": "JWT Validation"
+                    }
+                ]
+            },
+            {
+                "name": "HTTP Policies",
+                "url": "tutorials/http",
+                "policies": [
+                    {
+                        "path": "host",
+                        "title": "Host Validation"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "JSON Policies",
+        "subgroups": [
+            {
+                "name": "Validating Policies",
+                "url": "tutorials/json/vpol",
+                "policies": [
+                    {
+                        "path": "docker",
+                        "title": "Dockerfile CMD"
+                    }
+                ]
+            },
+            {
+                "name": "ImageValidating Policies",
+                "url": "tutorials/json/ivpol",
+                "policies": [
+                    {
+                        "path": "signature",
+                        "title": "Image Signature Validation"
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "name": "Best Practices",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/best-practices",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.17/best-practices",
         "policies": [
             {
                 "path": "disallow-cri-sock-mount",
@@ -210,7 +260,7 @@
         "subgroups": [
             {
                 "name": "Baseline",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/pod-security/baseline",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.17/pod-security/baseline",
                 "policies": [
                     {
                         "path": "disallow-capabilities",
@@ -276,7 +326,7 @@
             },
             {
                 "name": "Restricted",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/pod-security/restricted",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.17/pod-security/restricted",
                 "policies": [
                     {
                         "path": "disallow-capabilities-strict",
@@ -312,7 +362,7 @@
             },
             {
                 "name": "Subrule",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/pod-security/subrule",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.17/pod-security/subrule",
                 "policies": [
                     {
                         "path": "podsecurity-subrule-baseline",
@@ -323,7 +373,7 @@
             },
             {
                 "name": "Subrule Restricted",
-                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/pod-security/subrule/restricted",
+                "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.17/pod-security/subrule/restricted",
                 "policies": [
                     {
                         "path": "restricted-exclude-capabilities",
@@ -346,7 +396,7 @@
     },
     {
         "name": "Custom Resources",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.17",
         "subgroups": [
             {
                 "name": "Cert Manager",
@@ -400,7 +450,7 @@
     },
     {
         "name": "Other",
-        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.13/other",
+        "url": "https://raw.githubusercontent.com/kyverno/policies/release-1.17/other",
         "policies": [
             {
                 "path": "add-certificates-volume",

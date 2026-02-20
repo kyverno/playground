@@ -1,0 +1,14 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: http-host-policy
+spec:
+  evaluation:
+    mode: HTTP
+  matchConditions:
+  - name: match-host
+    expression: |
+      object.attributes.host == "http-srv.app"
+  validations:
+  - expression: >
+      http.Denied("not allowed").Response()
