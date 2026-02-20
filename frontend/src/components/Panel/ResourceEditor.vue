@@ -16,7 +16,7 @@ import { editorTheme } from '@/config'
 import MonacoEditor from './MonacoEditor.vue'
 
 const props = defineProps({
-  modelValue: { type: String, default: '' }
+  modelValue: { type: String, default: '' },
 })
 
 const uri = Uri.parse('resource.yaml')
@@ -25,6 +25,6 @@ const emit = defineEmits(['update:modelValue'])
 const options = {
   colorDecorators: true,
   lineHeight: 24,
-  tabSize: 2
+  tabSize: 2,
 }
 </script>

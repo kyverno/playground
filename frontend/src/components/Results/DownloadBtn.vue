@@ -7,7 +7,7 @@ const props = defineProps({
   label: { type: String, required: true },
   content: { type: String, required: true },
   filename: { type: String, required: true },
-  contentType: { type: String, default: 'text/yaml' }
+  contentType: { type: String, default: 'text/yaml' },
 })
 
 const download = () => {

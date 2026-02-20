@@ -47,6 +47,6 @@ type Details = {
 }
 
 defineProps({
-  details: { type: Object as PropType<Details>, required: true }
+  details: { type: Object as PropType<Details>, required: true },
 })
 </script>

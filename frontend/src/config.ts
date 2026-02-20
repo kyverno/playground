@@ -20,7 +20,7 @@ type Example = {
 const isDark = usePreferredDark()
 export const layoutTheme = useLocalStorage<'light' | 'dark'>(
   'config:layoutTheme',
-  isDark.value ? 'dark' : 'light'
+  isDark.value ? 'dark' : 'light',
 )
 watch(isDark, (dark: boolean) => {
   layoutTheme.value = dark ? 'dark' : 'light'
@@ -47,19 +47,19 @@ export const options = {
     configInfo: 'Configure the Kyverno Engine',
     clusterResourcesInfo:
       'Already existing resources to simulate clone operations or context substitution',
-    imageDataInfo: 'Simulate loading of not accessable ImageData'
+    imageDataInfo: 'Simulate loading of not accessable ImageData',
   },
   onboarding: {
-    text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.'
+    text: 'Notice: This tool only works with public image registries. No data is gathered, stored, or shared.',
   },
   layoutThemes: ['light', 'dark'],
   editorThemes: [
     { name: 'VS Dark', theme: 'vs-dark' },
     { name: 'VS Light', theme: 'vs' },
     { name: 'HC Black', theme: 'hc-black' },
-    { name: 'HC Light', theme: 'hc-light' }
+    { name: 'HC Light', theme: 'hc-light' },
   ],
-  examples: examples as Example[]
+  examples: examples as Example[],
 }
 
 export const useConfig = () => ({
@@ -67,5 +67,5 @@ export const useConfig = () => ({
   layoutTheme,
   showOnboarding,
   options,
-  hideNoMatch
+  hideNoMatch,
 })

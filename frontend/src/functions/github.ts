@@ -22,7 +22,7 @@ export type ExampleResponse = [
   string | undefined,
   string | undefined,
   string | undefined,
-  string | undefined
+  string | undefined,
 ]
 
 export type LoadConfig = {
@@ -76,7 +76,7 @@ export const loadPolicy = async (url: string, policy: Policy, config?: LoadConfi
         : Promise.resolve(),
       policy.oldResourceFile
         ? fetch(`${url}/${folder}/${policy.oldResourceFile}`).then((resp) => resp.text())
-        : Promise.resolve()
+        : Promise.resolve(),
     ]
 
     config?.start?.()
@@ -96,7 +96,7 @@ export const loadFromRepo = (path: string, resource?: string, config?: LoadConfi
     {
       path: path.replace(/^\/+/, '').replace(/\/+$/, '').trim(),
       resourceFile: resource,
-      title: ''
+      title: '',
     },
     {
       success([policy, resource, context]) {
@@ -105,7 +105,7 @@ export const loadFromRepo = (path: string, resource?: string, config?: LoadConfi
       error(err) {
         console.error(err)
       },
-      ...(config || {})
-    }
+      ...config,
+    },
   )
 }

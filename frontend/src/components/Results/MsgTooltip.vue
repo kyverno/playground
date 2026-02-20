@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 defineProps({
-  msg: { type: String, required: true }
+  msg: { type: String, required: true },
 })
 </script>
 

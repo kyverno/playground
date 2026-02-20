@@ -7,23 +7,23 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/mutation/:id',
     component: MutationDetails,
-    name: 'mutation-details'
+    name: 'mutation-details',
   },
   {
     path: '/generation/:id',
     component: GenerationDetails,
-    name: 'generation-details'
+    name: 'generation-details',
   },
   {
     path: '/',
     component: Home,
-    name: 'home'
-  }
+    name: 'home',
+  },
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
 })
 
 export default router

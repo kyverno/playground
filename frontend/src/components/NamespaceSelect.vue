@@ -19,7 +19,7 @@
 import { useAPI } from '@/composables/api'
 
 const prop = defineProps({
-  modelValue: { type: String }
+  modelValue: { type: String },
 })
 
 const emit = defineEmits(['update:modelValue'])

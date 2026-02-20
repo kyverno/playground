@@ -59,7 +59,7 @@ const load = () => {
     apiVersion: 'v1',
     kind: 'ConfigMap',
     namespace: namespace.value,
-    name: name.value
+    name: name.value,
   })
     .then((response) => {
       const results = resourceToYAML(response)

@@ -64,7 +64,7 @@ import { type PropType } from 'vue'
 defineProps({
   btnClass: { type: String, default: '' },
   variant: { type: String as PropType<'text' | 'flat' | 'outlined'> },
-  block: { type: Boolean, default: false }
+  block: { type: Boolean, default: false },
 })
 
 const menu = ref<boolean>(false)
@@ -93,7 +93,7 @@ const load = (name: string) => {
     clusterResources: input.clusterResources.value,
     name: input.name,
     vapBindings: input.vapBindings.value,
-    imageData: input.imageData.value
+    imageData: input.imageData.value,
   })
 
   menu.value = false

@@ -67,25 +67,25 @@ import GenerationTable from './GenerationTable.vue'
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
   results: { type: Object as PropType<EngineResponse>, required: true },
-  policy: { type: String, default: '' }
+  policy: { type: String, default: '' },
 })
 
 const hasResults = computed(() => {
   return (
     (props.results.validation || []).some(
-      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0,
     ) ||
     (props.results.mutation || []).some(
-      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0,
     ) ||
     (props.results.imageVerification || []).some(
-      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0,
     ) ||
     (props.results.generation || []).some(
-      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0,
     ) ||
     (props.results.deletion || []).some(
-      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0
+      (v) => v.policyResponse.rules !== null && v.policyResponse.rules.length > 0,
     )
   )
 })

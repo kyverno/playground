@@ -17,5 +17,5 @@ export {
   MobileMenu,
   ShareButton,
   OnboardingButton,
-  SaveButton
+  SaveButton,
 }

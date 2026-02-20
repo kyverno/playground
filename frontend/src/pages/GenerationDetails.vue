@@ -77,7 +77,7 @@ watch(
     if (!n) return
     details.value = JSON.parse(n) as Item
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const close = () => {
@@ -89,6 +89,6 @@ const options = {
   readOnly: true,
   colorDecorators: true,
   lineHeight: 24,
-  tabSize: 2
+  tabSize: 2,
 }
 </script>

@@ -37,7 +37,7 @@ defineProps({
   restoreValue: { type: String, default: '' },
   modelValue: { type: String, default: '' },
   title: { type: String, required: true },
-  info: { type: String }
+  info: { type: String },
 })
 
 const emit = defineEmits(['update:modelValue'])

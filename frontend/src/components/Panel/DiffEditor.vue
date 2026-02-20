@@ -21,8 +21,8 @@ const props = defineProps({
   id: { type: String, required: true },
   options: {
     type: Object as PropType<monaco.editor.IStandaloneDiffEditorConstructionOptions>,
-    default: () => ({})
-  }
+    default: () => ({}),
+  },
 })
 
 const emit = defineEmits([
@@ -30,7 +30,7 @@ const emit = defineEmits([
   'editorDidMount',
   'update:modelValue',
   'update:original',
-  'switchWordWrap'
+  'switchWordWrap',
 ])
 
 const { width, height } = toRefs(props)
@@ -63,12 +63,12 @@ onMounted(() => {
     automaticLayout: true,
     renderSideBySide: true,
     useInlineViewWhenSpaceIsLimited: false,
-    ...props.options
+    ...props.options,
   })
 
   editor.setModel({
     original: monaco.editor.createModel(props.original, props.language),
-    modified: monaco.editor.createModel(props.modelValue, props.language)
+    modified: monaco.editor.createModel(props.modelValue, props.language),
   })
 
   const modifiedEditor = editor.getModifiedEditor()
@@ -104,7 +104,7 @@ onMounted(() => {
       if (current !== modifiedEditor.getValue()) {
         modifiedEditor.setValue(current)
       }
-    }
+    },
   )
 
   watch(
@@ -120,7 +120,7 @@ onMounted(() => {
       if (current !== originalEditor.getValue()) {
         originalEditor.setValue(current)
       }
-    }
+    },
   )
 
   modifiedEditor.addCommand(monaco.KeyMod.Alt | monaco.KeyCode.KeyZ, () => {
@@ -145,7 +145,7 @@ watch(
   (o) => {
     editor?.updateOptions({ ...o })
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
@@ -156,13 +156,13 @@ watch(
       options[config] = o[config]
     }
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(
   () => props.theme,
   (theme) => {
     monaco.editor.setTheme(theme)
-  }
+  },
 )
 </script>

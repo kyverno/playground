@@ -62,7 +62,7 @@ import { generateContent, type Config } from '@/functions/share'
 defineProps({
   btnClass: { type: String, default: '' },
   variant: { type: String as PropType<'outlined' | 'text'> },
-  block: { type: Boolean }
+  block: { type: Boolean },
 })
 
 const dialog = ref<boolean>(false)
@@ -75,7 +75,7 @@ const values = reactive<Config>({
   crds: true,
   clusterResources: true,
   exceptions: true,
-  vapBindings: true
+  vapBindings: true,
 })
 
 const router = useRouter()

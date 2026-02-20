@@ -71,7 +71,7 @@ const props = defineProps({
   template: { type: String, default: '' },
   language: { type: String, default: 'yaml' },
   modelValue: { type: String, default: '' },
-  uri: { type: String }
+  uri: { type: String },
 })
 
 const uriParsed = props.uri ? Uri.parse(props.uri) : undefined
@@ -123,6 +123,6 @@ const options: editor.IStandaloneEditorConstructionOptions = {
   colorDecorators: true,
   lineHeight: 24,
   tabSize: 2,
-  minimap: { enabled: false }
+  minimap: { enabled: false },
 }
 </script>

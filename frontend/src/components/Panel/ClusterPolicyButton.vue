@@ -18,6 +18,6 @@ const defaultResource = ref({
   title: 'kyverno.io/v1 ClusterPolicy',
   apiVersion: 'kyverno.io/v1',
   kind: 'ClusterPolicy',
-  clusterScoped: true
+  clusterScoped: true,
 })
 </script>

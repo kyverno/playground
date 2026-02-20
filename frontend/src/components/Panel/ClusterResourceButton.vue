@@ -21,11 +21,11 @@ const defaultResource = ref({
   apiVersion: 'v1',
   kind: 'Pod',
   title: 'v1 Pod',
-  clusterScoped: false
+  clusterScoped: false,
 })
 
 defineProps({
-  modelValue: { type: String }
+  modelValue: { type: String },
 })
 
 const emit = defineEmits(['update:modelValue'])

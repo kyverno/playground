@@ -14,11 +14,11 @@ const defaultResource = ref({
   title: 'kyverno.io/v2alpha1 PolicyException',
   apiVersion: 'kyverno.io/v2alpha1',
   kind: 'PolicyException',
-  clusterScoped: false
+  clusterScoped: false,
 })
 
 defineProps({
-  modelValue: { type: String }
+  modelValue: { type: String },
 })
 
 const emit = defineEmits(['update:modelValue'])

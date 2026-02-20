@@ -17,7 +17,7 @@ import { editorTheme } from '@/config'
 import MonacoEditor from './MonacoEditor.vue'
 
 const props = defineProps({
-  modelValue: { type: String, default: '' }
+  modelValue: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -27,6 +27,6 @@ const options: editor.IStandaloneEditorConstructionOptions = {
   colorDecorators: true,
   lineHeight: 24,
   tabSize: 2,
-  minimap: { enabled: false }
+  minimap: { enabled: false },
 }
 </script>

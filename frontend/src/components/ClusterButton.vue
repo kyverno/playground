@@ -105,7 +105,7 @@ type ResourceAPI = ResourceKind & { title: string }
 const props = defineProps({
   modelValue: { type: String },
   label: { type: String },
-  defaultResource: { type: Object as PropType<ResourceAPI>, required: true }
+  defaultResource: { type: Object as PropType<ResourceAPI>, required: true },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -132,7 +132,7 @@ const {
   loading: loadingResources,
   error: errorResources,
   resources: loadResources,
-  data: foundings
+  data: foundings,
 } = useAPI<Resource[]>()
 
 const search = () => {
@@ -161,7 +161,7 @@ const load = (res: Resource[]) => {
   const { apiVersion, kind } = resourceAPI.value
 
   const promises = res.map(({ namespace, name }) =>
-    loadResource({ apiVersion, kind, namespace: namespace || '', name })
+    loadResource({ apiVersion, kind, namespace: namespace || '', name }),
   )
 
   loading.value = true

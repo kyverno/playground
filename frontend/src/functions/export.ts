@@ -35,7 +35,7 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       clusterResources: inputs.clusterResources,
       exceptions: inputs.exceptions,
       imageData: inputs.imageData,
-      vapBindings: inputs.vapBindings
+      vapBindings: inputs.vapBindings,
     })
   }
 
@@ -49,7 +49,7 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       customResourceDefinitions,
       clusterResources,
       exceptions,
-      imageData
+      imageData,
     } = createInput(p)
 
     exports.push({
@@ -63,14 +63,14 @@ export const convertProfiles = (current: boolean, profiles: string[]): string =>
       clusterResources: clusterResources.value,
       exceptions: exceptions.value,
       imageData: imageData.value,
-      vapBindings: inputs.vapBindings
+      vapBindings: inputs.vapBindings,
     })
   })
 
   const state: ProfileExport = {
     date: new Date().toISOString().slice(0, 10),
     version: APP_VERSION,
-    profiles: exports
+    profiles: exports,
   }
 
   return stringify(state, null, { lineWidth: 0 })
@@ -101,7 +101,7 @@ export const importProfiles = async (content: string) => {
       clusterResources: currentState?.clutserResources,
       exceptions: currentState?.exceptions,
       imageData: currentState?.imageData,
-      vapBindings: currentState?.vapBindings
+      vapBindings: currentState?.vapBindings,
     })
   }
 
@@ -123,7 +123,7 @@ export const importProfiles = async (content: string) => {
         clusterResources: profile?.clutserResources,
         exceptions: profile?.exceptions,
         imageData: profile.imageData,
-        vapBindings: profile?.vapBindings
+        vapBindings: profile?.vapBindings,
       })
     })
 }

@@ -55,7 +55,7 @@ type Item = {
 }
 
 const props = defineProps({
-  results: { type: Array as PropType<Validation[]>, default: () => [] }
+  results: { type: Array as PropType<Validation[]>, default: () => [] },
 })
 
 const expanded = ref<string[]>([])
@@ -70,7 +70,7 @@ const headers = computed(() => {
       { title: 'Resource', key: 'resource', width: '20%' },
       { title: 'Policy', key: 'policy', width: '25%' },
       { title: 'Rule', key: 'rule', width: '25%' },
-      { title: 'Status', key: 'status', width: '5%', align: 'end' }
+      { title: 'Status', key: 'status', width: '5%', align: 'end' },
     ]
   }
 
@@ -79,7 +79,7 @@ const headers = computed(() => {
     { title: 'Resource', key: 'resource', width: '20%' },
     { title: 'Policy', key: 'policy', width: '30%' },
     { title: 'Rule', key: 'rule', width: '30%' },
-    { title: 'Status', key: 'status', width: '10%', align: 'end' }
+    { title: 'Status', key: 'status', width: '10%', align: 'end' },
   ]
 })
 
@@ -99,7 +99,7 @@ const items = computed(() => {
         policy: deletion.policy.name,
         rule: 'resource does not match any rule',
         message: 'no validation triggered',
-        status: 'no match'
+        status: 'no match',
       })
       return results
     }
@@ -121,7 +121,7 @@ const items = computed(() => {
         policy: deletion.policy.name,
         rule: 'N/A',
         message: rule.message,
-        status: rule.status
+        status: rule.status,
       })
     })
 

@@ -4,7 +4,7 @@ import {
   PolicyTemplate,
   ResourceTemplate,
   CustomResourceDefinitionsTemplate,
-  ImageDataTemplate
+  ImageDataTemplate,
 } from '@/assets/templates'
 import { reactive } from 'vue'
 import { useState, type Inputs } from '@/composables'
@@ -24,11 +24,11 @@ export const inputs = reactive<Inputs>({
   exceptions: '',
   clusterResources: '',
   imageData: ImageDataTemplate,
-  customResourceDefinitions: CustomResourceDefinitionsTemplate
+  customResourceDefinitions: CustomResourceDefinitionsTemplate,
 })
 
 export const state = reactive<State>({
-  kinds: []
+  kinds: [],
 })
 
 export const reset = () => {
@@ -55,7 +55,7 @@ export const setDefaults = () => {
     exceptions: '',
     clusterResources: '',
     imageData: ImageDataTemplate,
-    customResourceDefinitions: CustomResourceDefinitionsTemplate
+    customResourceDefinitions: CustomResourceDefinitionsTemplate,
   })
 }
 

@@ -50,7 +50,7 @@ type Item = {
 
 const props = defineProps({
   results: { type: Array as PropType<Generation[]>, default: () => [] },
-  title: { type: String, default: 'Generation Results' }
+  title: { type: String, default: 'Generation Results' },
 })
 
 const display = useDisplay()
@@ -64,7 +64,7 @@ const headers = computed(() => {
       { title: 'Policy', key: 'policy', width: '20%' },
       { title: 'Rule', key: 'rule', width: '25%' },
       { title: 'Status', key: 'status', width: '5%', align: 'end' },
-      { title: 'Details', key: 'details', width: '5%', align: 'end' }
+      { title: 'Details', key: 'details', width: '5%', align: 'end' },
     ]
   }
 
@@ -74,7 +74,7 @@ const headers = computed(() => {
     { title: 'Policy', key: 'policy', width: '30%' },
     { title: 'Rule', key: 'rule', width: '30%' },
     { title: 'Status', key: 'status', width: '10%', align: 'end' },
-    { title: 'Details', key: 'details', width: '5%', align: 'end' }
+    { title: 'Details', key: 'details', width: '5%', align: 'end' },
   ]
 })
 
@@ -94,7 +94,7 @@ const items = computed(() => {
         rule: rule.name,
         message: rule.message,
         generatedResource: rule.generatedResource,
-        status: rule.status
+        status: rule.status,
       }
       item.id = hash(item)
 

@@ -9,6 +9,6 @@
 <script setup lang="ts">
 defineProps({
   rowClass: { type: String },
-  colClass: { type: String }
+  colClass: { type: String },
 })
 </script>

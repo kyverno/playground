@@ -37,7 +37,7 @@ type Resource = { namespace?: string; name: string }
 
 const props = defineProps({
   modelValue: { type: Array as PropType<Resource[]>, default: () => [] },
-  foundings: { type: Array as PropType<Resource[]>, default: () => [] }
+  foundings: { type: Array as PropType<Resource[]>, default: () => [] },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -48,12 +48,12 @@ const selections = computed({
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
 
 const select = (res: Resource) => {
   const index = selections.value.findIndex(
-    (i) => `${i.namespace}/${i.name}` === `${res.namespace}/${res.name}`
+    (i) => `${i.namespace}/${i.name}` === `${res.namespace}/${res.name}`,
   )
   if (index === -1) {
     selections.value.push(res)

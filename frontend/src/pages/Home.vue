@@ -156,7 +156,7 @@ watch(
     }
 
     inputs.oldResource = inputs.resource
-  }
+  },
 )
 </script>
 

@@ -14,7 +14,7 @@
 import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
-  value: { type: String }
+  value: { type: String },
 })
 
 const { copy, copied, isSupported } = useClipboard({ source: props.value })
