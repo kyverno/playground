@@ -9,8 +9,6 @@ spec:
   variables: 
   - name: authorization
     expression: object.attributes.request.http.headers[?"authorization"].orValue("").split(" ")
-  - name: role
-    expression: resource.Get("v1", "configmaps", "default", "app-config").data["role"]
   - name: token
     expression: >
       size(variables.authorization) == 2 && variables.authorization[0].lowerAscii() == "bearer"
