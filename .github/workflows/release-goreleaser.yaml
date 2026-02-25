@@ -65,14 +65,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KOCACHE: /tmp/ko-cache
       - name: Upload artifacts.json
-        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # 2.11.3
+        uses: svenstaro/upload-release-action@b98a3b12e86552593f3e4e577ca8a62aa2f3f22b # 2.11.4
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: backend/dist/artifacts.json
           asset_name: artifacts.json
           tag: ${{ github.ref }}
       - name: Upload metadata.json
-        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # 2.11.3
+        uses: svenstaro/upload-release-action@b98a3b12e86552593f3e4e577ca8a62aa2f3f22b # 2.11.4
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: backend/dist/metadata.json
