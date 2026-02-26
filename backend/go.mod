@@ -16,7 +16,7 @@ require (
 	github.com/kyverno/kyverno v1.17.1
 	github.com/kyverno/kyverno-authz v0.4.1-0.20260218134631-d30a5ba6932c
 	github.com/kyverno/sdk v0.0.0-20260130102315-1f20923ce30b
-	github.com/loopfz/gadgeto v0.11.5
+	github.com/loopfz/gadgeto v0.11.6
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/exp v0.0.0-20260212183809-81e46e3db34a
