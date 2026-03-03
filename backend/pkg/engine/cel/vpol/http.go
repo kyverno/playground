@@ -23,7 +23,7 @@ import (
 )
 
 func HTTPProcess(ctx context.Context, dclient dclient.Interface, resource *http.CheckRequest, vpols []*v1beta1.ValidatingPolicy) ([]models.Response, error) {
-	compiler := vpolcompiler.NewCompiler[dynamic.Interface, *http.CheckRequest, *http.CheckResponse]()
+	compiler := vpolcompiler.NewCompiler[dynamic.Interface, *http.CheckRequest, *http.CheckResponse](dclient.GetDynamicInterface())
 	results := make([]models.Response, 0)
 
 	for _, vpol := range vpols {

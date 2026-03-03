@@ -24,7 +24,7 @@ import (
 )
 
 func EnvoyProcess(ctx context.Context, dclient dclient.Interface, resource *authv3.CheckRequest, vpols []*v1beta1.ValidatingPolicy) ([]models.Response, error) {
-	compiler := vpolcompiler.NewCompiler[dynamic.Interface, *authv3.CheckRequest, *authv3.CheckResponse]()
+	compiler := vpolcompiler.NewCompiler[dynamic.Interface, *authv3.CheckRequest, *authv3.CheckResponse](dclient.GetDynamicInterface())
 	results := make([]models.Response, 0)
 
 	for _, vpol := range vpols {
