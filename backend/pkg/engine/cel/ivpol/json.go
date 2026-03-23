@@ -6,7 +6,7 @@ import (
 	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
-	eval "github.com/kyverno/kyverno/pkg/imageverification/evaluator"
+	eval "github.com/kyverno/kyverno/pkg/image/verification/evaluator"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	"github.com/kyverno/playground/backend/pkg/engine/models"

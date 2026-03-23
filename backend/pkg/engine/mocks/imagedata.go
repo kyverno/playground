@@ -62,7 +62,7 @@ type registryClientFactory struct {
 	client engineapi.RegistryClient
 }
 
-func (f *registryClientFactory) GetClient(_ context.Context, _ *kyvernov1.ImageRegistryCredentials) (engineapi.RegistryClient, error) {
+func (f *registryClientFactory) GetClient(_ context.Context, _ *kyvernov1.ImageRegistryCredentials, _ string, _ []string) (engineapi.RegistryClient, error) {
 	return f.client, nil
 }
 

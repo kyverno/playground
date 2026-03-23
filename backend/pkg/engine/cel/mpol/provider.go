@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
+	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/policies/mpol/compiler"
 	"github.com/kyverno/kyverno/pkg/cel/policies/mpol/engine"
 	corev1 "k8s.io/api/core/v1"
@@ -25,8 +26,8 @@ func (r *staticProvider) MatchesMutateExisting(ctx context.Context, attr admissi
 	return r.inner.MatchesMutateExisting(ctx, attr, namespace)
 }
 
-func NewProvider(compiler compiler.Compiler, policies []v1beta1.MutatingPolicyLike, exceptions []*v1beta1.PolicyException) (engine.Provider, error) {
-	inner, err := engine.NewProvider(compiler, policies, exceptions)
+func NewProvider(compiler compiler.Compiler, policies []v1beta1.MutatingPolicyLike, exceptions []*v1beta1.PolicyException, libCtx libs.Context) (engine.Provider, error) {
+	inner, err := engine.NewProvider(compiler, policies, exceptions, libCtx)
 	if err != nil {
 		return nil, err
 	}

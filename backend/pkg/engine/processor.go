@@ -20,7 +20,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/mutate/patch"
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	gctxstore "github.com/kyverno/kyverno/pkg/globalcontext/store"
-	"github.com/kyverno/kyverno/pkg/imageverifycache"
+	imageverifycache "github.com/kyverno/kyverno/pkg/image/verification/cache"
 	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
@@ -466,7 +466,7 @@ func NewProcessor(
 	registryOptions := []registryclient.Option{}
 
 	if len(params.Flags.Registry.PullSecrets) > 0 {
-		registryOptions = append(registryOptions, registryclient.WithKeychainPullSecrets(cluster.NewSecretLister(dClient, kyvernoConfig.Namespace), params.Flags.Registry.PullSecrets...))
+		registryOptions = append(registryOptions, registryclient.WithKeychainPullSecrets(cluster.NewSecretLister(dClient, ""), kyvernoConfig.Namespace, params.Flags.Registry.PullSecrets...))
 	} else {
 		registryOptions = append(registryOptions, registryclient.WithLocalKeychain())
 	}

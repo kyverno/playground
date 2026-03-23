@@ -17,7 +17,7 @@ import (
 )
 
 func JSONProcess(ctx context.Context, tcm patch.TypeConverterManager, contextProvider libs.Context, resource unstructured.Unstructured, mpols []v1beta1.MutatingPolicyLike) ([]models.Response, error) {
-	provider, err := NewProvider(compiler.NewCompiler(), mpols, nil)
+	provider, err := NewProvider(compiler.NewCompiler(), mpols, nil, contextProvider)
 	if err != nil {
 		return nil, err
 	}
