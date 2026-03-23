@@ -31,7 +31,7 @@
     <div>
       <v-menu v-if="config.versions.length" open-on-hover>
         <template v-slot:activator="{ props }">
-          <v-btn variant="outlined" class="text-none" rounded="xl" v-bind="props">v1.17.1</v-btn>
+          <v-btn variant="outlined" class="text-none" rounded="xl" v-bind="props">v1.18.x</v-btn>
         </template>
 
         <v-list variant="flat" class="my-0 py-0 border">
