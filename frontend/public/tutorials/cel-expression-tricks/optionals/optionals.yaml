@@ -1,0 +1,33 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: check-deployment-labels
+  annotations:
+    policies.kyverno.io/title: Check Deployment Labels
+    policies.kyverno.io/category: Other
+    policies.kyverno.io/severity: medium
+spec:
+  evaluation:
+    background:
+      enabled: true
+    admission:
+      enabled: false
+  matchConstraints:
+    resourceRules:
+    - apiGroups:   [apps]
+      apiVersions: [v1]
+      operations:  [CREATE, UPDATE]
+      resources:   [deployments]
+  variables:
+    - name: environment
+      expression: >-
+        object.metadata.?labels.orValue({})[?'env'].orValue('')
+  validations:
+    - expression: >-
+        variables.environment == 'prod'
+      message: >-
+        Deployment labels must be env=prod
+  auditAnnotations:
+  - key: env
+    valueExpression: >-
+      'env:' + variables.environment

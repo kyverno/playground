@@ -31,6 +31,16 @@
                 ]
             },
             {
+              "name": "CEL Expressions Tricks",
+              "url": "tutorials/cel-expression-tricks",
+              "policies": [
+                {
+                  "path": "optionals",
+                  "title": "ValidatingPolicy (with optional syntax)"
+                }
+              ]
+            },
+            {
                 "name": "RuleTypes",
                 "url": "tutorials/policies",
                 "policies": [
