@@ -68,7 +68,8 @@ func (p *K8sProcessor) Run(
 		p.params.Flags.ForceFailurePolicyIgnore.Enabled,
 		p.params.Flags.EnableDeferredLoading.Enabled,
 		p.params.Flags.GenerateValidatingAdmissionPolicy.Enabled,
-		p.params.Flags.GenerateValidatingAdmissionPolicy.Enabled,
+		p.params.Flags.GenerateMutatingAdmissionPolicy.Enabled,
+		p.params.Flags.AllowHTTPInNamespacedPolicies.Enabled,
 	))
 	if violations := validatePolicies(k8s.Policies); len(violations) > 0 {
 		return nil, PolicyViolationError{Violations: violations}
