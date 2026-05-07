@@ -9,4 +9,5 @@ type Flags struct {
 	EnableDeferredLoading             EnableDeferredLoading             `json:"enableDeferredLoading"`
 	GenerateValidatingAdmissionPolicy GenerateValidatingAdmissionPolicy `json:"generateValidatingAdmissionPolicy"`
 	GenerateMutatingAdmissionPolicy   GenerateMutatingAdmissionPolicy   `json:"generateMutatingAdmissionPolicy"`
+	AllowHTTPInNamespacedPolicies     AllowHTTPInNamespacedPolicies     `json:"allowHTTPInNamespacedPolicies"`
 }

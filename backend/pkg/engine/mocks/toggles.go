@@ -10,15 +10,17 @@ type toggles struct {
 	generateMutatingAdmissionPolicy   bool
 	dumpMutatePatches                 bool
 	autogenV2                         bool
+	allowHTTPInNamespacedPolicies     bool
 }
 
-func Toggles(protectManagedResources, forceFailurePolicyIgnore, enableDeferredLoading, generateValidatingAdmissionPolicy, generateMutatingAdmissionPolicy bool) toggle.Toggles {
+func Toggles(protectManagedResources, forceFailurePolicyIgnore, enableDeferredLoading, generateValidatingAdmissionPolicy, generateMutatingAdmissionPolicy, allowHTTPInNamespacedPolicies bool) toggle.Toggles {
 	return toggles{
 		protectManagedResources:           protectManagedResources,
 		forceFailurePolicyIgnore:          forceFailurePolicyIgnore,
 		enableDeferredLoading:             enableDeferredLoading,
 		generateValidatingAdmissionPolicy: generateValidatingAdmissionPolicy,
 		generateMutatingAdmissionPolicy:   generateMutatingAdmissionPolicy,
+		allowHTTPInNamespacedPolicies:     allowHTTPInNamespacedPolicies,
 	}
 }
 
@@ -48,4 +50,8 @@ func (t toggles) DumpMutatePatches() bool {
 
 func (t toggles) AutogenV2() bool {
 	return t.autogenV2
+}
+
+func (t toggles) AllowHTTPInNamespacedPolicies() bool {
+	return t.allowHTTPInNamespacedPolicies
 }
