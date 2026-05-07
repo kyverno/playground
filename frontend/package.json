@@ -24,7 +24,7 @@
     "vue-router": "^5.0.2",
     "vuetify": "^3.6.0",
     "webfontloader": "^1.0.0",
-    "yaml": "^2.2.2"
+    "yaml": "^2.8.3"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
