@@ -24,6 +24,8 @@ flags:
     enabled: false
   generateValidatingAdmissionPolicy:
     enabled: false
+  allowHTTPInNamespacedPolicies:
+    enabled: false
   registry:
     allowInsecure: false
     pullSecrets: []
