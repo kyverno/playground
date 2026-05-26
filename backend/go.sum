@@ -312,6 +312,7 @@ github.com/evanphx/json-patch v5.9.11+incompatible h1:ixHHqfcGvxhWkniF1tWxBHA0yb
 github.com/evanphx/json-patch v5.9.11+incompatible/go.mod h1:50XU6AFN0ol/bzJsmQLiYLvXMP4fmwYFNcr97nuDLSk=
 github.com/evanphx/json-patch/v5 v5.9.11 h1:/8HVnzMq13/3x9TPvjG08wUGqBTmZBsCWzjTM0wiaDU=
 github.com/evanphx/json-patch/v5 v5.9.11/go.mod h1:3j+LviiESTElxA4p3EMKAB9HXj3/XEtnUf6OZxqIQTM=
+github.com/fatih/color v1.18.0 h1:S8gINlzdQ840/4pfAwic/ZE0djQEH3wM94VfqLTZcOM=
 github.com/fatih/color v1.19.0 h1:Zp3PiM21/9Ld6FzSKyL5c/BULoe/ONr9KlbYVOfG8+w=
 github.com/fatih/color v1.19.0/go.mod h1:zNk67I0ZUT1bEGsSGyCZYZNrHuTkJJB+r6Q9VuMi0LE=
 github.com/felixge/httpsnoop v1.0.4 h1:NFTV2Zj1bL4mc9sqWACXbQFVBBg2W3GPvqp8/ESS2Wg=
@@ -648,6 +649,8 @@ github.com/kyverno/go-jmespath/internal/testify v1.5.2-0.20230630133209-945021c7
 github.com/kyverno/go-jmespath/internal/testify v1.5.2-0.20230630133209-945021c749d9/go.mod h1:XRxUGHIiCy1WYma1CdfdO1WOhIe8dLPTENaZr5D1ex4=
 github.com/kyverno/kyverno v1.5.0-rc1.0.20260506125757-0739028b97c7 h1:E9PxXL+lKix5gY/iUkpWka+Jb+ZUZvgkANMPWAx10Vs=
 github.com/kyverno/kyverno v1.5.0-rc1.0.20260506125757-0739028b97c7/go.mod h1:EV8eeBIPV0MXaRG/U6dNt3qIXolDoUGGrVIEkOnj170=
+github.com/kyverno/kyverno v1.17.2 h1:bMbPzBOoD48WTQj4Zswq2PRUpSVKNyGqCD3z/19IyuU=
+github.com/kyverno/kyverno v1.17.2/go.mod h1:bDjXhs+URCcDvKJHFgllQuQmNe6I1NydSFYCB5w6n9M=
 github.com/kyverno/kyverno-authz v0.4.1-0.20260403194244-37d6f8943fa8 h1:33ipLUeULea4JVyplBN5Qn/CqZtVBRFPgZI73gAnlXA=
 github.com/kyverno/kyverno-authz v0.4.1-0.20260403194244-37d6f8943fa8/go.mod h1:YaNYWgfCkJcKnQFcmN/0iCu2I8D9R1tiDYTBNpCus6k=
 github.com/kyverno/kyverno-json v0.0.4-0.20240730143747-aade3d42fc0e h1:gh9iMuJS8yloxo3JIzvgLWZWwy5iRjEkA8/U7rK3iu8=

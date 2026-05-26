@@ -58,6 +58,6 @@ func (s *secretLister) Secrets(namespace string) corev1listers.SecretNamespaceLi
 	return &secretLister{client: s.client, namespace: namespace}
 }
 
-func NewSecretLister(client dclient.Interface, ns string) corev1listers.SecretLister {
+func NewSecretLister(client dclient.Interface, ns string) corev1listers.SecretNamespaceLister {
 	return &secretLister{client, ns}
 }
