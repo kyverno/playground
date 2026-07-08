@@ -15,7 +15,7 @@ import (
 	helper "github.com/kyverno/playground/backend/pkg/utils"
 )
 
-func K8sProcess(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, ivpols []v1beta1.ImageValidatingPolicyLike) ([]models.Response, error) {
+func K8sProcess(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, ivpols []v1beta1.ImageValidatingPolicyLike, exceptions []*v1beta1.PolicyException) ([]models.Response, error) {
 	request := utils.NewCELRequest(restMapper, contextProvider, params, newResource, oldResource)
 	validations := make([]models.Response, 0)
 
@@ -23,7 +23,7 @@ func K8sProcess(ctx context.Context, dClient dclient.Interface, restMapper meta.
 		return p.GetNamespace() == "" || p.GetNamespace() == newResource.GetNamespace()
 	})
 
-	engine, err := newIVPEngine(dClient, filtered, nil)
+	engine, err := newIVPEngine(dClient, filtered, exceptions)
 	if err != nil {
 		return nil, err
 	}

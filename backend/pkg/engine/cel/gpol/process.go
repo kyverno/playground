@@ -18,12 +18,12 @@ import (
 	"github.com/kyverno/playground/backend/pkg/engine/utils"
 )
 
-func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource unstructured.Unstructured, gpols []v1beta1.GeneratingPolicyLike) ([]models.Response, error) {
+func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource unstructured.Unstructured, gpols []v1beta1.GeneratingPolicyLike, exceptions []*v1beta1.PolicyException) ([]models.Response, error) {
 	comp := compiler.NewCompiler()
 	policies := make([]engine.Policy, 0, len(gpols))
 
 	for _, pol := range gpols {
-		compiled, errs := comp.Compile(pol, nil)
+		compiled, errs := comp.Compile(pol, exceptions)
 		if len(errs) > 0 {
 			return nil, fmt.Errorf("failed to compile policy %s (%w)", pol.GetName(), errs.ToAggregate())
 		}
