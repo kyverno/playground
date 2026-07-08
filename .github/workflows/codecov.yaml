@@ -1,7 +1,7 @@
 name: codecov
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
   push:
@@ -32,9 +32,9 @@ jobs:
           set -e
           make test-backend
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v6.0.2
         with:
           file: ./backend/coverage.out
-          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           verbose: true
+          use_oidc: true
