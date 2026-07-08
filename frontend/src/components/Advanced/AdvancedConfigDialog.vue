@@ -59,7 +59,7 @@
 import { ref, watch } from 'vue'
 import { editorTheme } from '@/config'
 import MonacoEditor from '@/components/Panel/MonacoEditor.vue'
-import { KeyCode, KeyMod, Uri, editor } from 'monaco-editor/esm/vs/editor/editor.api'
+import { KeyCode, KeyMod, Uri, editor } from 'monaco-editor'
 import LegendMenu from '../LegendMenu.vue'
 import TemplateButton from './TemplateButton.vue'
 import UploadButton from '../Panel/UploadButton.vue'

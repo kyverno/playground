@@ -13,18 +13,18 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.0",
-    "@vueuse/core": "^10.1.2",
+    "@vueuse/core": "^14.3.0",
     "lz-string": "^1.5.0",
-    "monaco-editor": "^0.52.0",
-    "monaco-yaml": "^5.2.2",
+    "monaco-editor": "^0.55.1",
+    "monaco-yaml": "^5.5.1",
     "object-hash": "^3.0.0",
-    "roboto-fontface": "*",
-    "v-onboarding": "^2.4.0",
+    "roboto-fontface": "0.10.0",
+    "v-onboarding": "^2.12.2",
     "vue": "^3.5.28",
     "vue-router": "^5.0.2",
     "vuetify": "^3.6.0",
     "webfontloader": "^1.0.0",
-    "yaml": "^2.8.3"
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
