@@ -1,6 +1,6 @@
 module github.com/kyverno/playground/backend
 
-go 1.26.2
+go 1.26.4
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
@@ -13,7 +13,7 @@ require (
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/v2 v2.3.4
 	github.com/kyverno/api v0.0.1-alpha.2.0.20260129144402-7b64bcf2b1f7
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20260506125757-0739028b97c7
+	github.com/kyverno/kyverno v1.18.1
 	github.com/kyverno/kyverno-authz v0.4.1-0.20260403194244-37d6f8943fa8
 	github.com/kyverno/sdk v0.0.0-20260403020150-29a100fa834c
 	github.com/loopfz/gadgeto v0.11.6
