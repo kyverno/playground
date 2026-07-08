@@ -31,6 +31,7 @@ var (
 	dpolV1alpha1    = v1alpha1.SchemeGroupVersion.WithKind("DeletingPolicy")
 	gpolV1alpha1    = v1alpha1.SchemeGroupVersion.WithKind("GeneratingPolicy")
 	mpolV1alpha1    = v1alpha1.SchemeGroupVersion.WithKind("MutatingPolicy")
+	polexV1alpha1   = v1alpha1.SchemeGroupVersion.WithKind("PolicyException")
 
 	vpolV1beta1   = policiesv1beta1.SchemeGroupVersion.WithKind("ValidatingPolicy")
 	nvpolV1beta1  = policiesv1beta1.SchemeGroupVersion.WithKind("NamespacedValidatingPolicy")
@@ -42,6 +43,7 @@ var (
 	ngpolV1beta1  = policiesv1beta1.SchemeGroupVersion.WithKind("NamespacedGeneratingPolicy")
 	mpolV1beta1   = policiesv1beta1.SchemeGroupVersion.WithKind("MutatingPolicy")
 	nmpolV1beta1  = policiesv1beta1.SchemeGroupVersion.WithKind("NamespacedMutatingPolicy")
+	polexV1beta1  = policiesv1beta1.SchemeGroupVersion.WithKind("PolicyException")
 
 	vpolV1   = policiesv1.SchemeGroupVersion.WithKind("ValidatingPolicy")
 	nvpolV1  = policiesv1.SchemeGroupVersion.WithKind("NamespacedValidatingPolicy")
@@ -53,6 +55,7 @@ var (
 	ngpolV1  = policiesv1.SchemeGroupVersion.WithKind("NamespacedGeneratingPolicy")
 	mpolV1   = policiesv1.SchemeGroupVersion.WithKind("MutatingPolicy")
 	nmpolV1  = policiesv1.SchemeGroupVersion.WithKind("NamespacedMutatingPolicy")
+	polexV1  = policiesv1.SchemeGroupVersion.WithKind("PolicyException")
 )
 
 func Load(l loader.Loader, content []byte) (K8sPolicies, JSONPolicies, AuthzPolicies, error) {
@@ -199,6 +202,14 @@ func Load(l loader.Loader, content []byte) (K8sPolicies, JSONPolicies, AuthzPoli
 			case JSON:
 				jsonPolicies.MutatingPolicies = append(jsonPolicies.MutatingPolicies, typed)
 			}
+		case polexV1alpha1, polexV1beta1, polexV1:
+			typed, err := convert.To[policiesv1beta1.PolicyException](object)
+			if err != nil {
+				return k8sPolicies, jsonPolicies, authzPolicies, err
+			}
+			k8sPolicies.PolicyExceptions = append(k8sPolicies.PolicyExceptions, typed)
+			jsonPolicies.PolicyExceptions = append(jsonPolicies.PolicyExceptions, typed)
+			authzPolicies.PolicyExceptions = append(authzPolicies.PolicyExceptions, typed)
 		default:
 			return k8sPolicies, jsonPolicies, authzPolicies, fmt.Errorf("policy type not supported %s", gvk)
 		}

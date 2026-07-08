@@ -113,7 +113,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.MutatingPolicies) > 0 {
-			results, err := mpol.K8sProcess(context.TODO(), p.dClient, p.tcm, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.MutatingPolicies)
+			results, err := mpol.K8sProcess(context.TODO(), p.dClient, p.tcm, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.MutatingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -169,7 +169,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.ImageValidatingPolicies) > 0 {
-			results, err := ivpol.K8sProcess(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.ImageValidatingPolicies)
+			results, err := ivpol.K8sProcess(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.ImageValidatingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -178,7 +178,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.ValidatingPolicies) > 0 {
-			results, err := vpol.K8sProcess(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.ValidatingPolicies)
+			results, err := vpol.K8sProcess(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.ValidatingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -187,7 +187,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.DeletingPolicies) > 0 {
-			results, err := dpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, newResource, k8s.DeletingPolicies)
+			results, err := dpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, newResource, k8s.DeletingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -196,7 +196,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.GeneratingPolicies) > 0 {
-			results, err := gpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, k8s.GeneratingPolicies)
+			results, err := gpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, k8s.GeneratingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}

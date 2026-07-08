@@ -48,6 +48,10 @@ import nmpolv1beta1 from './schemas/namespacedmutatingpolicy-policies.kyverno.io
 import nmpolv1 from './schemas/namespacedmutatingpolicy-policies.kyverno.io-v1.json'
 import context from './schemas/context.json'
 
+import polexv1alpha1 from './schemas/policyexception-policies.kyverno.io-v1alpha1.json'
+import polexv1beta1 from './schemas/policyexception-policies.kyverno.io-v1beta1.json'
+import polexv1 from './schemas/policyexception-policies.kyverno.io-v1.json'
+
 const baseURL = `${window.location.protocol}//${window.location.host}`
 
 configureMonacoYaml(monaco, {
@@ -93,6 +97,9 @@ configureMonacoYaml(monaco, {
           { $ref: '#/definitions/mutatingpolicy-v1' },
           { $ref: '#/definitions/namespacedmutatingpolicy-v1beta1' },
           { $ref: '#/definitions/namespacedmutatingpolicy-v1' },
+          { $ref: '#/definitions/policyexception-v1alpha1' },
+          { $ref: '#/definitions/policyexception-v1beta1' },
+          { $ref: '#/definitions/policyexception-v1' },
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema,
@@ -126,6 +133,9 @@ configureMonacoYaml(monaco, {
           'mutatingpolicy-v1': mpolv1 as JSONSchema,
           'namespacedmutatingpolicy-v1beta1': nmpolv1beta1 as JSONSchema,
           'namespacedmutatingpolicy-v1': nmpolv1 as JSONSchema,
+          'policyexception-v1alpha1': polexv1alpha1 as JSONSchema,
+          'policyexception-v1beta1': polexv1beta1 as JSONSchema,
+          'policyexception-v1': polexv1 as JSONSchema,
         },
       },
       uri: `${baseURL}/schemas/policies.json`,
@@ -270,6 +280,21 @@ configureMonacoYaml(monaco, {
       schema: context as JSONSchema,
       uri: `${baseURL}/schemas/context.json`,
       fileMatch: ['context.yaml'],
+    },
+    {
+      schema: vpolv1alpha1 as JSONSchema,
+      uri: `${baseURL}/schemas/policyexception-policies.kyverno.io-v1alpha1.json`,
+      fileMatch: ['policyexception.yaml'],
+    },
+    {
+      schema: vpolv1beta1 as JSONSchema,
+      uri: `${baseURL}/schemas/policyexception-policies.kyverno.io-v1beta1.json`,
+      fileMatch: ['policyexception.yaml'],
+    },
+    {
+      schema: vpolv1 as JSONSchema,
+      uri: `${baseURL}/schemas/policyexception-policies.kyverno.io-v1.json`,
+      fileMatch: ['policyexception.yaml'],
     },
   ],
 })
