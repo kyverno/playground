@@ -211,8 +211,10 @@ build-frontend: ## Build frontend
 	@cp schemas/json/v3/validatingadmissionpolicy-admissionregistration-v1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexception-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexception-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/policyexception-policies.kyverno.io-v1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexceptionlist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexceptionlist-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/policyexceptionlist-policies.kyverno.io-v1.json frontend/src/schemas
 	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1.json frontend/src/schemas

@@ -3,6 +3,7 @@ package exception
 import (
 	"fmt"
 
+	policiesv1 "github.com/kyverno/api/api/policies.kyverno.io/v1"
 	policiesv1alpha1 "github.com/kyverno/api/api/policies.kyverno.io/v1alpha1"
 	policiesv1beta1 "github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
@@ -21,6 +22,7 @@ var (
 
 	polexV1alpha1 = policiesv1alpha1.SchemeGroupVersion.WithKind("PolicyException")
 	polexV1beta1  = policiesv1beta1.SchemeGroupVersion.WithKind("PolicyException")
+	polexV1       = policiesv1.SchemeGroupVersion.WithKind("PolicyException")
 )
 
 func Load(content []byte) ([]*kyvernov2.PolicyException, []*policiesv1beta1.PolicyException, error) {
@@ -52,7 +54,7 @@ func Load(content []byte) ([]*kyvernov2.PolicyException, []*policiesv1beta1.Poli
 				return nil, nil, err
 			}
 			exceptions = append(exceptions, exception)
-		case polexV1alpha1, polexV1beta1:
+		case polexV1alpha1, polexV1beta1, polexV1:
 			exception, err := convert.To[policiesv1beta1.PolicyException](untyped)
 			if err != nil {
 				return nil, nil, err

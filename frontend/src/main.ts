@@ -50,6 +50,7 @@ import context from './schemas/context.json'
 
 import polexv1alpha1 from './schemas/policyexception-policies.kyverno.io-v1alpha1.json'
 import polexv1beta1 from './schemas/policyexception-policies.kyverno.io-v1beta1.json'
+import polexv1 from './schemas/policyexception-policies.kyverno.io-v1.json'
 
 const baseURL = `${window.location.protocol}//${window.location.host}`
 
@@ -98,6 +99,7 @@ configureMonacoYaml(monaco, {
           { $ref: '#/definitions/namespacedmutatingpolicy-v1' },
           { $ref: '#/definitions/policyexception-v1alpha1' },
           { $ref: '#/definitions/policyexception-v1beta1' },
+          { $ref: '#/definitions/policyexception-v1' },
         ],
         definitions: {
           'clusterpolicy-v1': clusterpolicyv1 as JSONSchema,
@@ -133,6 +135,7 @@ configureMonacoYaml(monaco, {
           'namespacedmutatingpolicy-v1': nmpolv1 as JSONSchema,
           'policyexception-v1alpha1': polexv1alpha1 as JSONSchema,
           'policyexception-v1beta1': polexv1beta1 as JSONSchema,
+          'policyexception-v1': polexv1 as JSONSchema,
         },
       },
       uri: `${baseURL}/schemas/policies.json`,
@@ -286,6 +289,11 @@ configureMonacoYaml(monaco, {
     {
       schema: vpolv1beta1 as JSONSchema,
       uri: `${baseURL}/schemas/policyexception-policies.kyverno.io-v1beta1.json`,
+      fileMatch: ['policyexception.yaml'],
+    },
+    {
+      schema: vpolv1 as JSONSchema,
+      uri: `${baseURL}/schemas/policyexception-policies.kyverno.io-v1.json`,
       fileMatch: ['policyexception.yaml'],
     },
   ],
