@@ -437,6 +437,14 @@
                       "object",
                       "null"
                     ]
+                  },
+                  "skipBackgroundRequests": {
+                    "default": true,
+                    "description": "SkipBackgroundRequests bypasses admission requests that are sent by the background controller.\nThe default value is set to \"true\", it must be set to \"false\" to apply mutateExisting rules to those requests.",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
                   }
                 },
                 "type": [
@@ -1406,6 +1414,14 @@
                                   },
                                   "type": [
                                     "object",
+                                    "null"
+                                  ]
+                                },
+                                "skipBackgroundRequests": {
+                                  "default": true,
+                                  "description": "SkipBackgroundRequests bypasses admission requests that are sent by the background controller.\nThe default value is set to \"true\", it must be set to \"false\" to apply mutateExisting rules to those requests.",
+                                  "type": [
+                                    "boolean",
                                     "null"
                                   ]
                                 }

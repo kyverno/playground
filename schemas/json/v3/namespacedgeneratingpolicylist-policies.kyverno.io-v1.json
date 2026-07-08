@@ -386,6 +386,14 @@
                       "null"
                     ]
                   },
+                  "skipBackgroundRequests": {
+                    "default": true,
+                    "description": "SkipBackgroundRequests bypasses admission requests that are sent by the background controller.\nThe default value is set to \"true\", it must be set to \"false\" to apply generateExisting rules to those requests.",
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
                   "synchronize": {
                     "description": "Synchronization defines the configuration for the synchronization of generated resources.",
                     "properties": {
@@ -802,6 +810,13 @@
                   "null"
                 ],
                 "x-kubernetes-map-type": "atomic"
+              },
+              "useServerSideApply": {
+                "description": "UseServerSideApply controls whether to use server-side apply for generate rules.\nIf set to \"true\", create & update for generated resources will use apply instead of create/update.\nDefaults to \"false\" if not specified.",
+                "type": [
+                  "boolean",
+                  "null"
+                ]
               },
               "variables": {
                 "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.\nThe variables defined here will be available under `variables` in other expressions of the policy\nexcept MatchConditions because MatchConditions are evaluated before the rest of the policy.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after.\nThus, Variables must be sorted by the order of first appearance and acyclic.",

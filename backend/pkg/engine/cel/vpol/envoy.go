@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	authv3 "github.com/envoyproxy/go-control-plane/envoy/service/auth/v3"
+	v1 "github.com/kyverno/api/api/policies.kyverno.io/v1"
 	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno-authz/pkg/engine"
 	vpolcompiler "github.com/kyverno/kyverno-authz/pkg/engine/compiler"
@@ -136,7 +137,11 @@ func NewSource(vpols []v1beta1.ValidatingPolicyLike, compiler engine.Compiler[po
 
 	for _, vpol := range vpols {
 		if v, ok := vpol.(*v1beta1.ValidatingPolicy); ok {
-			p, err := compiler.Compile(v)
+			p, err := compiler.Compile(&v1.ValidatingPolicy{
+				TypeMeta:   v.TypeMeta,
+				ObjectMeta: v.ObjectMeta,
+				Spec:       v.Spec,
+			}, nil)
 			if err != nil {
 				continue
 			}
@@ -150,7 +155,11 @@ func NewSource(vpols []v1beta1.ValidatingPolicyLike, compiler engine.Compiler[po
 
 func NewSingleSource(vpol v1beta1.ValidatingPolicyLike, compiler engine.Compiler[policy.Policy[dynamic.Interface, *authv3.CheckRequest, *authv3.CheckResponse]]) core.Source[policy.Policy[dynamic.Interface, *authv3.CheckRequest, *authv3.CheckResponse]] {
 	if v, ok := vpol.(*v1beta1.ValidatingPolicy); ok {
-		p, err := compiler.Compile(v)
+		p, err := compiler.Compile(&v1.ValidatingPolicy{
+			TypeMeta:   v.TypeMeta,
+			ObjectMeta: v.ObjectMeta,
+			Spec:       v.Spec,
+		}, nil)
 		if err != nil {
 			return nil
 		}
