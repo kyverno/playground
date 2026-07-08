@@ -18,8 +18,8 @@ import (
 	"github.com/kyverno/playground/backend/pkg/engine/utils"
 )
 
-func K8sProcess(ctx context.Context, dClient dclient.Interface, tcm patch.TypeConverterManager, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource, oldResource unstructured.Unstructured, mpols []v1beta1.MutatingPolicyLike) ([]models.Response, error) {
-	provider, err := NewProvider(compiler.NewCompiler(), mpols, nil, contextProvider)
+func K8sProcess(ctx context.Context, dClient dclient.Interface, tcm patch.TypeConverterManager, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, resource, oldResource unstructured.Unstructured, mpols []v1beta1.MutatingPolicyLike, exceptions []*v1beta1.PolicyException) ([]models.Response, error) {
+	provider, err := NewProvider(compiler.NewCompiler(), mpols, exceptions, contextProvider)
 	if err != nil {
 		return nil, err
 	}

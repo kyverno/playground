@@ -41,6 +41,16 @@
               ]
             },
             {
+              "name": "CEL PolicyExceptions",
+              "url": "tutorials/exceptions",
+              "policies": [
+                {
+                  "path": "vpol-exception",
+                  "title": "PolicyException for ValidatingPolicy"
+                }
+              ]
+            },
+            {
                 "name": "RuleTypes",
                 "url": "tutorials/policies",
                 "policies": [
