@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing/fstest"
 
+	policiesv1beta1 "github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	yamlutils "github.com/kyverno/kyverno/ext/yaml"
@@ -80,7 +81,7 @@ func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstru
 	return resource.LoadResources(resourceLoader, []byte(r.OldResources))
 }
 
-func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2.PolicyException, error) {
+func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2.PolicyException, []*policiesv1beta1.PolicyException, error) {
 	return exception.Load([]byte(r.PolicyExceptions))
 }
 

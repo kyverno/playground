@@ -26,6 +26,7 @@ type K8sPolicies struct {
 	DeletingPolicies        []v1beta1.DeletingPolicyLike
 	GeneratingPolicies      []v1beta1.GeneratingPolicyLike
 	MutatingPolicies        []v1beta1.MutatingPolicyLike
+	PolicyExceptions        []*v1beta1.PolicyException
 }
 
 func (p K8sPolicies) Length() int {
@@ -36,6 +37,7 @@ type JSONPolicies struct {
 	ValidatingPolicies      []v1beta1.ValidatingPolicyLike
 	ImageValidatingPolicies []v1beta1.ImageValidatingPolicyLike
 	MutatingPolicies        []v1beta1.MutatingPolicyLike
+	PolicyExceptions        []*v1beta1.PolicyException
 }
 
 func (p JSONPolicies) Length() int {
@@ -43,6 +45,7 @@ func (p JSONPolicies) Length() int {
 }
 
 type AuthzPolicies struct {
-	EnvoyPolicies []*v1beta1.ValidatingPolicy
-	HTTPPolicies  []*v1beta1.ValidatingPolicy
+	EnvoyPolicies    []*v1beta1.ValidatingPolicy
+	HTTPPolicies     []*v1beta1.ValidatingPolicy
+	PolicyExceptions []*v1beta1.PolicyException
 }

@@ -86,10 +86,15 @@ func newEngineHandler(cl cluster.Cluster, config APIConfiguration) (gin.HandlerF
 			if err != nil {
 				return nil, fmt.Errorf("unable to load config resources: %w", err)
 			}
-			exceptions, err := in.LoadPolicyExceptions()
+			exceptions, celExceptions, err := in.LoadPolicyExceptions()
 			if err != nil {
 				return nil, fmt.Errorf("unable to load policy exceptions: %w", err)
 			}
+
+			k8s.PolicyExceptions = append(k8s.PolicyExceptions, celExceptions...)
+			jsonPolicies.PolicyExceptions = append(jsonPolicies.PolicyExceptions, celExceptions...)
+			authzPolicies.PolicyExceptions = append(authzPolicies.PolicyExceptions, celExceptions...)
+
 			crds, err := in.LoadCRDs()
 			if err != nil {
 				return nil, fmt.Errorf("unable to load resources: %w", err)
