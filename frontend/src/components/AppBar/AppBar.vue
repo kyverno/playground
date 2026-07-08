@@ -12,7 +12,7 @@
             size="small"
             style="position: absolute; bottom: 20px; right: -90px"
           >
-            v1.18.1
+            v1.17.2
           </v-chip>
         </template>
         <template v-if="display.smAndDown.value">
@@ -22,7 +22,7 @@
             size="small"
             style="position: absolute; bottom: 16px; left: 90px"
           >
-            Kyverno v1.18.1
+            Kyverno v1.17.2
           </v-chip>
         </template>
       </div>

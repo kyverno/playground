@@ -647,7 +647,7 @@
                               ]
                             },
                             "secrets": {
-                              "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                              "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                               "items": {
                                 "type": [
                                   "string",
@@ -2150,7 +2150,7 @@
                                         ]
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -3680,7 +3680,7 @@
                                         ]
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -4186,7 +4186,7 @@
                                         ]
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -5042,7 +5042,7 @@
                                         ]
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -6952,7 +6952,7 @@
                           ]
                         },
                         "secrets": {
-                          "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                          "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                           "items": {
                             "type": [
                               "string",
@@ -7590,7 +7590,7 @@
                                   ]
                                 },
                                 "secrets": {
-                                  "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                  "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                   "items": {
                                     "type": [
                                       "string",
@@ -9093,7 +9093,7 @@
                                             ]
                                           },
                                           "secrets": {
-                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                             "items": {
                                               "type": [
                                                 "string",
@@ -10623,7 +10623,7 @@
                                             ]
                                           },
                                           "secrets": {
-                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                             "items": {
                                               "type": [
                                                 "string",
@@ -11129,7 +11129,7 @@
                                             ]
                                           },
                                           "secrets": {
-                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                             "items": {
                                               "type": [
                                                 "string",
@@ -11985,7 +11985,7 @@
                                             ]
                                           },
                                           "secrets": {
-                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                                             "items": {
                                               "type": [
                                                 "string",
@@ -13895,7 +13895,7 @@
                               ]
                             },
                             "secrets": {
-                              "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
+                              "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
                               "items": {
                                 "type": [
                                   "string",
