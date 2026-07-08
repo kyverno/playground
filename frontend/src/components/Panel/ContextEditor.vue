@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api'
+import { editor } from 'monaco-editor'
 import { Uri } from 'monaco-editor'
 import { editorTheme } from '@/config'
 import MonacoEditor from './MonacoEditor.vue'
