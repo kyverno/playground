@@ -444,7 +444,7 @@
                     ]
                   },
                   "mode": {
-                    "description": "Mode is the mode of policy evaluation.\nAllowed values are \"Kubernetes\" or \"JSON\".\nOptional. Default value is \"Kubernetes\".",
+                    "description": "Mode is the mode of policy evaluation.\nAllowed values are \"Kubernetes\", \"HTTP\" or \"Envoy\".\nOptional. Default value is \"Kubernetes\".",
                     "type": [
                       "string",
                       "null"
@@ -1082,7 +1082,7 @@
                                   ]
                                 },
                                 "mode": {
-                                  "description": "Mode is the mode of policy evaluation.\nAllowed values are \"Kubernetes\" or \"JSON\".\nOptional. Default value is \"Kubernetes\".",
+                                  "description": "Mode is the mode of policy evaluation.\nAllowed values are \"Kubernetes\", \"HTTP\" or \"Envoy\".\nOptional. Default value is \"Kubernetes\".",
                                   "type": [
                                     "string",
                                     "null"

@@ -2446,7 +2446,7 @@
                           ]
                         },
                         "orphanDownstreamOnPolicyDelete": {
-                          "description": "OrphanDownstreamOnPolicyDelete controls whether generated resources should be deleted when the rule that generated\nthem is deleted with synchronization enabled. This option is only applicable to generate rules of the data type.\nSee https://kyverno.io/docs/writing-policies/generate/#data-examples.\nDefaults to \"false\" if not specified.",
+                          "description": "OrphanDownstreamOnPolicyDelete controls whether generated resources should be deleted when the rule that generated\nthem is deleted with synchronization enabled.\nSee https://kyverno.io/docs/writing-policies/generate/.\nDefaults to \"false\" if not specified.",
                           "type": [
                             "boolean",
                             "null"
@@ -9386,7 +9386,7 @@
                               ]
                             },
                             "orphanDownstreamOnPolicyDelete": {
-                              "description": "OrphanDownstreamOnPolicyDelete controls whether generated resources should be deleted when the rule that generated\nthem is deleted with synchronization enabled. This option is only applicable to generate rules of the data type.\nSee https://kyverno.io/docs/writing-policies/generate/#data-examples.\nDefaults to \"false\" if not specified.",
+                              "description": "OrphanDownstreamOnPolicyDelete controls whether generated resources should be deleted when the rule that generated\nthem is deleted with synchronization enabled.\nSee https://kyverno.io/docs/writing-policies/generate/.\nDefaults to \"false\" if not specified.",
                               "type": [
                                 "boolean",
                                 "null"
