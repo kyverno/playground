@@ -23,7 +23,7 @@ require (
 	google.golang.org/protobuf v1.36.12-0.20260120151049-f2248ac996af
 	k8s.io/api v0.35.4
 	k8s.io/apiextensions-apiserver v0.35.4
-	k8s.io/apimachinery v0.36.0
+	k8s.io/apimachinery v0.36.2
 	k8s.io/apiserver v0.35.4
 	k8s.io/client-go v0.35.4
 	k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2
@@ -393,7 +393,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20260317180543-43fb72c5454a // indirect
 	k8s.io/kubectl v0.34.3 // indirect
 	k8s.io/pod-security-admission v0.34.1 // indirect
-	k8s.io/streaming v0.36.0 // indirect
+	k8s.io/streaming v0.36.2 // indirect
 	oras.land/oras-go/v2 v2.6.1 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.34.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
