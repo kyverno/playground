@@ -12,8 +12,8 @@ require (
 	github.com/knadh/koanf/parsers/yaml v1.1.0
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/v2 v2.3.5
-	github.com/kyverno/api v0.0.1-alpha.3.0.20260626140541-1384610c309e
-	github.com/kyverno/kyverno v1.5.0-rc1.0.20260708083317-1a945f98b9eb
+	github.com/kyverno/api v0.0.1-alpha.3.0.20260708093033-041f44dd179a
+	github.com/kyverno/kyverno v1.5.0-rc1.0.20260709093654-b70f98e893c8
 	github.com/kyverno/kyverno-authz v0.4.1-0.20260602072047-ea97befa33fd
 	github.com/kyverno/sdk v0.0.0-20260602081238-52b5869260a3
 	github.com/loopfz/gadgeto v0.11.6
@@ -23,6 +23,7 @@ require (
 	google.golang.org/protobuf v1.36.12-0.20260120151049-f2248ac996af
 	k8s.io/api v0.35.4
 	k8s.io/apiextensions-apiserver v0.35.4
+	k8s.io/apimachinery v0.36.2
 	k8s.io/apimachinery v0.36.2
 	k8s.io/apiserver v0.35.4
 	k8s.io/client-go v0.35.4
@@ -393,6 +394,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20260317180543-43fb72c5454a // indirect
 	k8s.io/kubectl v0.34.3 // indirect
 	k8s.io/pod-security-admission v0.34.1 // indirect
+	k8s.io/streaming v0.36.2 // indirect
 	k8s.io/streaming v0.36.2 // indirect
 	oras.land/oras-go/v2 v2.6.1 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.34.0 // indirect
