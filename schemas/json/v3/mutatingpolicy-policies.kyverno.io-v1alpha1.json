@@ -430,6 +430,13 @@
                 "boolean",
                 "null"
               ]
+            },
+            "useServerSideApply": {
+              "description": "UseServerSideApply applies ApplyConfiguration patches with Server-Side Apply semantics,\nwhich allows setting atomic fields (for example a container's args or a projected volume)\nthat the default MutatingAdmissionPolicy behaviour rejects. When true, an atomic value is\nreplaced as a whole, so any field the object owner set but the patch does not is dropped.\nThe default is false, which keeps parity with a native MutatingAdmissionPolicy.",
+              "type": [
+                "boolean",
+                "null"
+              ]
             }
           },
           "type": [
@@ -481,7 +488,7 @@
           "x-kubernetes-list-type": "map"
         },
         "matchConstraints": {
-          "description": "MatchConstraints specifies what resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nRequired.",
+          "description": "MatchConstraints specifies the trigger resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nTrigger constraints and MatchConditions are evaluated before Variables.\nRequired.",
           "properties": {
             "excludeResourceRules": {
               "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
@@ -884,8 +891,40 @@
             "null"
           ]
         },
+        "targetMatchConditions": {
+          "description": "TargetMatchConditions is a list of conditions that must be met for a resolved target resource.\nTarget match conditions are evaluated after variables and target resolution. They can reference\nvariables and use Object to refer to the target resource.",
+          "items": {
+            "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
+            "properties": {
+              "expression": {
+                "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                "type": "string"
+              },
+              "name": {
+                "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "expression",
+              "name"
+            ],
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "type": [
+            "array",
+            "null"
+          ],
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "targetMatchConstraints": {
-          "description": "TargetMatchConstraints specifies what target mutation resources this policy is designed to evaluate.",
+          "description": "TargetMatchConstraints resolves the resources to mutate after Variables are evaluated.",
           "properties": {
             "excludeResourceRules": {
               "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
@@ -984,6 +1023,7 @@
               "x-kubernetes-list-type": "atomic"
             },
             "expression": {
+              "description": "Expression resolves one target object or a list of target objects. The expression can use\nvariables computed from the trigger request.",
               "type": [
                 "string",
                 "null"
@@ -1412,6 +1452,13 @@
                               "boolean",
                               "null"
                             ]
+                          },
+                          "useServerSideApply": {
+                            "description": "UseServerSideApply applies ApplyConfiguration patches with Server-Side Apply semantics,\nwhich allows setting atomic fields (for example a container's args or a projected volume)\nthat the default MutatingAdmissionPolicy behaviour rejects. When true, an atomic value is\nreplaced as a whole, so any field the object owner set but the patch does not is dropped.\nThe default is false, which keeps parity with a native MutatingAdmissionPolicy.",
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           }
                         },
                         "type": [
@@ -1463,7 +1510,7 @@
                         "x-kubernetes-list-type": "map"
                       },
                       "matchConstraints": {
-                        "description": "MatchConstraints specifies what resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nRequired.",
+                        "description": "MatchConstraints specifies the trigger resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nTrigger constraints and MatchConditions are evaluated before Variables.\nRequired.",
                         "properties": {
                           "excludeResourceRules": {
                             "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
@@ -1866,8 +1913,40 @@
                           "null"
                         ]
                       },
+                      "targetMatchConditions": {
+                        "description": "TargetMatchConditions is a list of conditions that must be met for a resolved target resource.\nTarget match conditions are evaluated after variables and target resolution. They can reference\nvariables and use Object to refer to the target resource.",
+                        "items": {
+                          "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
+                          "properties": {
+                            "expression": {
+                              "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                              "type": "string"
+                            },
+                            "name": {
+                              "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "expression",
+                            "name"
+                          ],
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        },
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "x-kubernetes-list-map-keys": [
+                          "name"
+                        ],
+                        "x-kubernetes-list-type": "map"
+                      },
                       "targetMatchConstraints": {
-                        "description": "TargetMatchConstraints specifies what target mutation resources this policy is designed to evaluate.",
+                        "description": "TargetMatchConstraints resolves the resources to mutate after Variables are evaluated.",
                         "properties": {
                           "excludeResourceRules": {
                             "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
@@ -1966,6 +2045,7 @@
                             "x-kubernetes-list-type": "atomic"
                           },
                           "expression": {
+                            "description": "Expression resolves one target object or a list of target objects. The expression can use\nvariables computed from the trigger request.",
                             "type": [
                               "string",
                               "null"

@@ -52,9 +52,9 @@ KO_VERSION     				  := v0.18.0
 HELM_DOCS                     := $(TOOLS_DIR)/helm-docs
 HELM_DOCS_VERSION             := v1.14.2
 GCI                           := $(TOOLS_DIR)/gci
-GCI_VERSION                   := v0.13.4
+GCI_VERSION                   := v0.13.7
 GOFUMPT                       := $(TOOLS_DIR)/gofumpt
-GOFUMPT_VERSION               := v0.6.0
+GOFUMPT_VERSION               := v0.9.1
 TOOLS                         := $(KIND) $(HELM) $(KO) $(HELM_DOCS) $(GCI) $(GOFUMPT)
 
 $(HELM):

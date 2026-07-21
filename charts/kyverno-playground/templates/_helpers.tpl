@@ -63,3 +63,18 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+MCP server fully qualified name
+*/}}
+{{- define "kyverno-playground.mcp.fullname" -}}
+{{- printf "%s-mcp" (include "kyverno-playground.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+MCP selector labels
+*/}}
+{{- define "kyverno-playground.mcp.selectorLabels" -}}
+app.kubernetes.io/name: {{ printf "%s-mcp" (include "kyverno-playground.name" .) }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

@@ -1,9 +1,6 @@
-package engine
+package playground
 
 import (
-	"os"
-	"testing/fstest"
-
 	policiesv1beta1 "github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/ext/resource/loader"
@@ -14,11 +11,10 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/openapi"
-	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 	"sigs.k8s.io/yaml"
 
-	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/crd"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/playground/backend/pkg/exception"
 	"github.com/kyverno/playground/backend/pkg/policy"
@@ -43,6 +39,12 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	var params models.Parameters
 	if err := yaml.Unmarshal([]byte(r.Context), &params); err != nil {
 		return nil, err
+	}
+	if params.Kubernetes.Version == "" {
+		params.Kubernetes.Version = "v1.34.0"
+	}
+	if params.Context.Operation == "" {
+		params.Context.Operation = "CREATE"
 	}
 	return &params, nil
 }
@@ -96,49 +98,8 @@ func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.Config
 	return resource.Load[corev1.ConfigMap](resourceLoader, []byte(r.Config))
 }
 
-func (r *EngineRequest) OpenAPIClient(cluster cluster.Cluster, kubeVersion string, config APIConfiguration) (openapi.Client, error) {
-	var clients []openapi.Client
-	if cluster != nil && !cluster.IsFake() {
-		dclient, err := cluster.DClient(nil)
-		if err != nil {
-			return nil, err
-		}
-		clients = append(clients, dclient.GetKubeClient().Discovery().OpenAPIV3())
-	} else {
-		client, err := cluster.OpenAPIClient(kubeVersion)
-		if err != nil {
-			return nil, err
-		}
-		clients = append(clients, client)
-	}
-
-	schemas, err := data.Schemas()
-	if err != nil {
-		return nil, err
-	}
-
-	clients = append(clients, openapiclient.NewLocalSchemaFiles(schemas))
-	if len(r.CustomResourceDefinitions) != 0 {
-		mapFs := fstest.MapFS{
-			"crds.yaml": &fstest.MapFile{
-				Data: []byte(r.CustomResourceDefinitions),
-			},
-		}
-		clients = append(clients, openapiclient.NewLocalCRDFiles(mapFs))
-	}
-	for _, crd := range config.LocalCrds {
-		clients = append(clients, openapiclient.NewLocalCRDFiles(os.DirFS(crd)))
-	}
-	for _, crd := range config.BuiltInCrds {
-		fs, err := data.BuiltInCrds(crd)
-		if err != nil {
-			return nil, err
-		}
-
-		clients = append(clients, openapiclient.NewLocalCRDFiles(fs))
-	}
-
-	return openapiclient.NewComposite(clients...), nil
+func (r *EngineRequest) OpenAPIClient(cluster cluster.Cluster, kubeVersion string, config crd.APIConfiguration) (openapi.Client, error) {
+	return crd.OpenAPIClient(cluster, kubeVersion, r.CustomResourceDefinitions, config)
 }
 
 func (r *EngineRequest) ResourceLoader(client openapi.Client) (loader.Loader, error) {

@@ -1,25 +1,23 @@
+{{- if .Values.mcp.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "kyverno-playground.fullname" . }}
+  name: {{ include "kyverno-playground.mcp.fullname" . }}
   labels:
     {{- include "kyverno-playground.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .Values.mcp.replicaCount }}
   selector:
     matchLabels:
-      {{- include "kyverno-playground.selectorLabels" . | nindent 6 }}
+      {{- include "kyverno-playground.mcp.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      annotations:
-        checksum/secret: {{ include (print .Template.BasePath "/config.yaml") . | sha256sum | quote }}
       {{- with .Values.podAnnotations }}
+      annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "kyverno-playground.selectorLabels" . | nindent 8 }}
+        {{- include "kyverno-playground.mcp.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -38,58 +36,37 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: mcp
           args:
-            - run
-            - --config=/config.yaml
-            - --gin-mode={{ .Values.config.gin.mode }}
-            - --gin-cors={{ .Values.config.gin.cors }}
-            - --gin-log={{ .Values.config.gin.logger }}
-            - --gin-max-body-size={{ int .Values.config.gin.maxBodySize }}
-            - --server-host={{ .Values.config.server.host }}
-            - --server-port={{ int .Values.config.server.port }}
-            - --cluster={{ .Values.config.cluster.enabled }}
-            - --ui-sponsor={{ .Values.config.ui.sponsor }}
-            {{- range .Values.config.engine.builtinCrds }}
-            - --engine-builtin-crds={{ . }}
-            {{- end }}
-            {{- range .Values.config.engine.localCrds }}
-            - --engine-local-crds={{ . }}
-            {{- end }}
+            - mcp
+            - --server-port={{ int .Values.mcp.port }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.mcp.port }}
               protocol: TCP
-          {{- with .Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.readinessProbe }}
+            httpGet:
+              path: /healthz
+              port: 8085
           readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
+            httpGet:
+              path: /healthz
+              port: 8085
           env:
           - name: TUF_ROOT
             value: {{ .Values.tufRootMountPath }}
           volumeMounts:
             - mountPath: {{ .Values.tufRootMountPath }}
               name: sigstore
-            - mountPath: /config.yaml
-              name: config-file
-              readOnly: true
-              subPath: config.yaml
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.mcp.resources | nindent 12 }}
       volumes:
       - name: sigstore
         emptyDir: {}
-      - name: config-file
-        configMap:
-          name: {{ include "kyverno-playground.fullname" . }}-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -102,3 +79,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
