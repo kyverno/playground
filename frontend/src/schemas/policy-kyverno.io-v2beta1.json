@@ -3911,6 +3911,19 @@
                   "null"
                 ]
               },
+              "reportProperties": {
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": "ReportProperties are the additional properties from the rule that will be added to the policy report result",
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
               "skipBackgroundRequests": {
                 "default": true,
                 "description": "SkipBackgroundRequests bypasses admission requests that are sent by the background controller.\nThe default value is set to \"true\", it must be set to \"false\" to apply\ngenerate and mutateExisting rules to those requests.",

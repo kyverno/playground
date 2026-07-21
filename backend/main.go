@@ -10,7 +10,7 @@ import (
 func main() {
 	// set controller-runtime logger
 	log.SetLogger(logr.Discard())
-	rootCmd := cmd.NewRootCommand()
+	rootCmd := cmd.New()
 	if err := rootCmd.Execute(); err != nil {
 		panic(err)
 	}

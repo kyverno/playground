@@ -202,3 +202,45 @@ config:
     #   url: https://playground.kyverno.io/
     # - name: Kyverno v1.12
     #   url: https://playground.kyverno.io/v1.12/
+
+mcp:
+  # -- Enable the MCP server deployment
+  enabled: false
+
+  # -- Number of MCP server pod replicas
+  replicaCount: 1
+
+  # -- MCP server port
+  port: 8080
+
+  service:
+    # -- MCP service type
+    type: ClusterIP
+
+    # -- MCP service port
+    port: 8080
+
+  ingress:
+    # -- Enable MCP ingress
+    enabled: false
+
+    # -- Ingress class name
+    className: ""
+
+    # -- Ingress annotations
+    annotations: {}
+
+    # -- Ingress hosts
+    hosts: []
+      # - host: mcp.chart-example.local
+      #   paths:
+      #     - path: /
+      #       pathType: ImplementationSpecific
+
+    # -- Ingress tls
+    tls: []
+
+  # -- MCP container resource limits/requests
+  resources:
+    limits: {}
+    requests: {}

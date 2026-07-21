@@ -12,6 +12,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/crd"
+	"github.com/kyverno/playground/backend/pkg/playground"
 )
 
 func Test_Serve(t *testing.T) {
@@ -21,7 +23,7 @@ func Test_Serve(t *testing.T) {
 	require.NoError(t, err)
 
 	body := new(bytes.Buffer)
-	require.NoError(t, json.NewEncoder(body).Encode(EngineRequest{
+	require.NoError(t, json.NewEncoder(body).Encode(playground.EngineRequest{
 		Resources: string(singleResource),
 		Policies:  string(singlePolicy),
 	}))
@@ -31,7 +33,7 @@ func Test_Serve(t *testing.T) {
 	c.Request = httptest.NewRequest(http.MethodPost, "/", body)
 	c.Request.Header.Add("Content-Type", "application/json")
 
-	handler, err := newEngineHandler(cluster.NewFake(), APIConfiguration{})
+	handler, err := newEngineHandler(cluster.NewFake(), crd.APIConfiguration{})
 	require.NoError(t, err)
 	handler(c)
 

@@ -140,6 +140,13 @@ jobs:
         run: |
           set -e
           make kind-install
+      - name: Debug failure
+        if: failure()
+        run: |
+          set -e
+          kubectl get pods -n kyverno-playground
+          kubectl describe deploy kyverno-playground -n kyverno-playground
+          kubectl describe deploy kyverno-playground-mcp -n kyverno-playground
 
   check-actions:
     runs-on: ubuntu-latest

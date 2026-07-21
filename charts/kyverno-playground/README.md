@@ -2,7 +2,7 @@
 
 Kyverno Playground Web Application
 
-![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.8.0](https://img.shields.io/badge/AppVersion-v0.8.0-informational?style=flat-square)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.10.0](https://img.shields.io/badge/AppVersion-v0.10.0-informational?style=flat-square)
 
 ## About
 
@@ -99,6 +99,17 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | config.engine.builtinCrds | list | `[]` | Builtin CRDs enabled (`argocd`, `cert-manager`, `prometheus-operator`, `tekton-pipelines`) |
 | config.engine.localCrds | list | `[]` | Paths to folders containing yaml definitions for CRDs |
 | config.versions | list | `[]` | list of additional Kyverno Playground versions |
+| mcp.enabled | bool | `false` | Enable the MCP server deployment |
+| mcp.replicaCount | int | `1` | Number of MCP server pod replicas |
+| mcp.port | int | `8080` | MCP server port |
+| mcp.service.type | string | `"ClusterIP"` | MCP service type |
+| mcp.service.port | int | `8080` | MCP service port |
+| mcp.ingress.enabled | bool | `false` | Enable MCP ingress |
+| mcp.ingress.className | string | `""` | Ingress class name |
+| mcp.ingress.annotations | object | `{}` | Ingress annotations |
+| mcp.ingress.hosts | list | `[]` | Ingress hosts |
+| mcp.ingress.tls | list | `[]` | Ingress tls |
+| mcp.resources | object | `{"limits":{},"requests":{}}` | MCP container resource limits/requests |
 
 ## Source Code
 
