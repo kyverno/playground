@@ -32,6 +32,7 @@ The playground frontend offers a rich feature set:
 - Loading policies and resources from the Kyverno catalog
 - Sharing state with simple links
 - Comes with a tutorial to learn Kyverno easily
+- Since v0.10.0 it includes the same functionality as MCP Server
 
 ### Context and Variables
 
