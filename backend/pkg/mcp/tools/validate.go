@@ -50,11 +50,11 @@ func HandleValidate(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallTool
 		return nil, err
 	}
 
-	response := make([]Validation, 0, k8s.Length())
+	validations := make([]Validation, 0, k8s.Length())
 	for _, pol := range k8s.ValidatingPolicies {
 		w, err := vpol.Validate(pol)
 		if err != nil {
-			response = append(response, Validation{
+			validations = append(validations, Validation{
 				Policy: Policy{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       pol.GetObjectKind().GroupVersionKind().Kind,
@@ -73,7 +73,7 @@ func HandleValidate(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallTool
 	for _, pol := range k8s.MutatingPolicies {
 		w, err := mpol.Validate(pol)
 		if err != nil {
-			response = append(response, Validation{
+			validations = append(validations, Validation{
 				Policy: Policy{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       pol.GetObjectKind().GroupVersionKind().Kind,
@@ -92,7 +92,7 @@ func HandleValidate(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallTool
 	for _, pol := range k8s.GeneratingPolicies {
 		w, err := gpol.Validate(pol)
 		if err != nil {
-			response = append(response, Validation{
+			validations = append(validations, Validation{
 				Policy: Policy{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       pol.GetObjectKind().GroupVersionKind().Kind,
@@ -111,7 +111,7 @@ func HandleValidate(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallTool
 	for _, pol := range k8s.DeletingPolicies {
 		w, err := dpol.Validate(pol)
 		if err != nil {
-			response = append(response, Validation{
+			validations = append(validations, Validation{
 				Policy: Policy{
 					TypeMeta: metav1.TypeMeta{
 						Kind:       pol.GetObjectKind().GroupVersionKind().Kind,
@@ -128,5 +128,7 @@ func HandleValidate(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallTool
 		}
 	}
 
-	return mcp.NewToolResultJSON(response)
+	return mcp.NewToolResultJSON(Results[Validation]{
+		Results: validations,
+	})
 }
