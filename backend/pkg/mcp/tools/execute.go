@@ -24,5 +24,5 @@ func HandleExecute(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolR
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	return mcp.NewToolResultStructuredOnly(MapResponse(response)), nil
+	return mcp.NewToolResultJSON(MapResponse(response))
 }

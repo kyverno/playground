@@ -19,7 +19,11 @@ type Result struct {
 	Properties        map[string]string    `json:"properties,omitempty"`
 }
 
-func MapResponse(response *playground.EngineResponse) []Result {
+type Results[T any] struct {
+	Results []T `json:"results"`
+}
+
+func MapResponse(response *playground.EngineResponse) Results[Result] {
 	result := make([]Result, 0)
 	for _, v := range response.Validation {
 		for _, ruleResponse := range v.PolicyResponse.Rules {
@@ -83,5 +87,7 @@ func MapResponse(response *playground.EngineResponse) []Result {
 		}
 	}
 
-	return result
+	return Results[Result]{
+		Results: result,
+	}
 }
