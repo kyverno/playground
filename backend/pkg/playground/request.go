@@ -2,6 +2,7 @@ package playground
 
 import (
 	policiesv1beta1 "github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
+	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	yamlutils "github.com/kyverno/kyverno/ext/yaml"
@@ -29,6 +30,7 @@ type EngineRequest struct {
 	ClusterResources          string                      `json:"clusterResources"`
 	Context                   string                      `json:"context"`
 	Config                    string                      `json:"config"`
+	Operation                 string                      `json:"operation"`
 	CustomResourceDefinitions string                      `json:"customResourceDefinitions"`
 	PolicyExceptions          string                      `json:"policyExceptions"`
 	VAPBindings               string                      `json:"vapBindings"`
@@ -43,8 +45,10 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	if params.Kubernetes.Version == "" {
 		params.Kubernetes.Version = "v1.34.0"
 	}
-	if params.Context.Operation == "" {
-		params.Context.Operation = "CREATE"
+	if params.Context.Operation == "" && r.Operation != "" {
+		params.Context.Operation = kyvernov1.AdmissionOperation(r.Operation)
+	} else {
+		params.Context.Operation = kyvernov1.Create
 	}
 	return &params, nil
 }

@@ -23,6 +23,8 @@ func New() *server.StreamableHTTPServer {
 			mcp.WithString("oldResources", mcp.Description("a set of the resources in its previous state in YAML format or JSON payloads"), mcp.DefaultString("")),
 			mcp.WithString("clusterResources", mcp.Title("Existing Cluster Resources"), mcp.Description("a set of kubernetes resources which are handled as already existing in the fake cluster, provided as in YAML format"), mcp.DefaultString("")),
 			mcp.WithString("customResourceDefinitions", mcp.Title("Custom Resource Definitions"), mcp.Description("a set of kubernetes custom resource definitions in YAML format"), mcp.DefaultString("")),
+			mcp.WithString("context", mcp.Title("Admission Context Information"), mcp.Description("context information for the admission request, including username, groups, roles, clusterRoles, namespace labels, and dryRun flag"), mcp.DefaultString("")),
+			mcp.WithString("operation", mcp.Title("Admission Operation"), mcp.Description("the type of admission operation (e.g., CREATE, UPDATE, DELETE)"), mcp.Enum("CREATE", "UPDATE", "DELETE")),
 		),
 		tools.HandleExecute,
 	)
