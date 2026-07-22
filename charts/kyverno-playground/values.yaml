@@ -146,6 +146,13 @@ tolerations: []
 # -- Affinity
 affinity: {}
 
+networkPolicy:
+  # -- Enable egress restriction for the playground pods
+  enabled: false
+
+  # -- Allow DNS to in-cluster CoreDNS while keeping app egress internet-only
+  allowClusterDNS: true
+
 # -- Cluster roles
 clusterRoles: []
   # - name: read-all
