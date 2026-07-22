@@ -128,5 +128,5 @@ func HandleValidate(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallTool
 		}
 	}
 
-	return mcp.NewToolResultStructuredOnly(response), nil
+	return mcp.NewToolResultJSON(response)
 }
