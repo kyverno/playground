@@ -35,9 +35,14 @@ type EngineRequest struct {
 	PolicyExceptions          string                      `json:"policyExceptions"`
 	VAPBindings               string                      `json:"vapBindings"`
 	ImageData                 map[string]models.ImageData `json:"imageData"`
+	Parameters                *models.Parameters          `json:"-"`
 }
 
 func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
+	if r.Parameters != nil {
+		return r.Parameters, nil
+	}
+
 	var params models.Parameters
 	if err := yaml.Unmarshal([]byte(r.Context), &params); err != nil {
 		return nil, err

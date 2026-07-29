@@ -7,23 +7,23 @@ import (
 )
 
 type Result struct {
-	PolicyType        string               `json:"policyType"`
-	Mode              string               `json:"mode"`
-	Policy            string               `json:"policy"`
-	Resource          string               `json:"resource"`
-	Namespace         string               `json:"namespace"`
-	Message           string               `json:"message,omitempty"`
-	Result            engineapi.RuleStatus `json:"result"`
-	PatchedResource   string               `json:"patchedResource,omitempty"`
-	GeneratedResource string               `json:"generatedResource,omitempty"`
-	Properties        map[string]string    `json:"properties,omitempty"`
+	PolicyType        string               `json:"policyType" jsonschema:"The type of the policy (Validation, Mutation, Generation, Deletion)"`
+	Mode              string               `json:"mode" jsonschema:"The mode of the policy (e.g., Kubernetes, Envoy, HTTP, JSON)"`
+	Policy            string               `json:"policy" jsonschema:"The name of the policy"`
+	Resource          string               `json:"resource" jsonschema:"The name of the resource"`
+	Namespace         string               `json:"namespace" jsonschema:"The namespace of the resource"`
+	Message           string               `json:"message,omitempty" jsonschema:"The message returned by the policy execution"`
+	Result            engineapi.RuleStatus `json:"result" jsonschema:"The result of the policy execution (Pass, Fail, Warn, Skip, Error)"`
+	PatchedResource   string               `json:"patchedResource,omitempty" jsonschema:"The patched resource returned by mutating policies"`
+	GeneratedResource string               `json:"generatedResource,omitempty" jsonschema:"The generated resource returned by generating policies"`
+	Properties        map[string]string    `json:"properties,omitempty" jsonschema:"The properties returned by the policy execution"`
 }
 
 type Results[T any] struct {
 	Results []T `json:"results"`
 }
 
-func MapResponse(response *playground.EngineResponse) Results[Result] {
+func MapResponse(response *playground.EngineResponse) ExecuteOutputSchema {
 	result := make([]Result, 0)
 	for _, v := range response.Validation {
 		for _, ruleResponse := range v.PolicyResponse.Rules {
@@ -87,7 +87,7 @@ func MapResponse(response *playground.EngineResponse) Results[Result] {
 		}
 	}
 
-	return Results[Result]{
+	return ExecuteOutputSchema{
 		Results: result,
 	}
 }
