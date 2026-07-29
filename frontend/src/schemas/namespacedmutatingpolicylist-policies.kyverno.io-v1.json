@@ -331,6 +331,34 @@
           "spec": {
             "description": "MutatingPolicySpec is the specification of the desired behavior of the MutatingPolicy.",
             "properties": {
+              "auditAnnotations": {
+                "description": "AuditAnnotations contains CEL expressions which are used to produce audit annotations that are surfaced\nas properties in policy report results. auditAnnotations are evaluated after the mutations have been\napplied successfully. The results of evaluating the expressions are attached to the report result as\nproperties with the annotation key.\nIf the expression evaluates to an empty string or null the annotation will not be included.",
+                "items": {
+                  "description": "AuditAnnotation describes how to produce an audit annotation for an API request.",
+                  "properties": {
+                    "key": {
+                      "description": "key specifies the audit annotation key. The audit annotation keys of\na ValidatingAdmissionPolicy must be unique. The key must be a qualified\nname ([A-Za-z0-9][-A-Za-z0-9_.]*) no more than 63 bytes in length.\n\nThe key is combined with the resource name of the\nValidatingAdmissionPolicy to construct an audit annotation key:\n\"{ValidatingAdmissionPolicy name}/{key}\".\n\nIf an admission webhook uses the same resource name as this ValidatingAdmissionPolicy\nand the same audit annotation key, the annotation key will be identical.\nIn this case, the first annotation written with the key will be included\nin the audit event and all subsequent annotations with the same key\nwill be discarded.\n\nRequired.",
+                      "type": "string"
+                    },
+                    "valueExpression": {
+                      "description": "valueExpression represents the expression which is evaluated by CEL to\nproduce an audit annotation value. The expression must evaluate to either\na string or null value. If the expression evaluates to a string, the\naudit annotation is included with the string value. If the expression\nevaluates to null or empty string the audit annotation will be omitted.\nThe valueExpression may be no longer than 5kb in length.\nIf the result of the valueExpression is more than 10kb in length, it\nwill be truncated to 10kb.\n\nIf multiple ValidatingAdmissionPolicyBinding resources match an\nAPI request, then the valueExpression will be evaluated for\neach binding. All unique values produced by the valueExpressions\nwill be joined together in a comma-separated list.\n\nRequired.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "valueExpression"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
               "autogen": {
                 "description": "AutogenConfiguration defines the configuration for the generation controller.",
                 "properties": {
@@ -476,11 +504,11 @@
                   "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
                   "properties": {
                     "expression": {
-                      "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                      "description": "expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
                       "type": "string"
                     },
                     "name": {
-                      "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                      "description": "name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
                       "type": "string"
                     }
                   },
@@ -503,15 +531,15 @@
                 "x-kubernetes-list-type": "map"
               },
               "matchConstraints": {
-                "description": "MatchConstraints specifies the trigger resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nTrigger constraints and MatchConditions are evaluated before Variables.\nRequired.",
+                "description": "MatchConstraints specifies the trigger resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nTrigger constraints and MatchConditions are evaluated before target resolution.\nRequired.",
                 "properties": {
                   "excludeResourceRules": {
-                    "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
+                    "description": "excludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
                     "items": {
                       "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                       "properties": {
                         "apiGroups": {
-                          "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "apiGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -525,7 +553,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "apiVersions": {
-                          "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "apiVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -539,7 +567,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "operations": {
-                          "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "description": "OperationType specifies an operation for a request.",
                             "type": [
@@ -554,7 +582,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resourceNames": {
-                          "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                          "description": "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
                           "items": {
                             "type": [
                               "string",
@@ -568,7 +596,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resources": {
-                          "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                          "description": "resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -609,7 +637,7 @@
                     ]
                   },
                   "namespaceSelector": {
-                    "description": "NamespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
+                    "description": "namespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
                     "properties": {
                       "matchExpressions": {
                         "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -675,7 +703,7 @@
                     "x-kubernetes-map-type": "atomic"
                   },
                   "objectSelector": {
-                    "description": "ObjectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
+                    "description": "objectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
                     "properties": {
                       "matchExpressions": {
                         "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -741,12 +769,12 @@
                     "x-kubernetes-map-type": "atomic"
                   },
                   "resourceRules": {
-                    "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
+                    "description": "resourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
                     "items": {
                       "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                       "properties": {
                         "apiGroups": {
-                          "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "apiGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -760,7 +788,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "apiVersions": {
-                          "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "apiVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -774,7 +802,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "operations": {
-                          "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "description": "OperationType specifies an operation for a request.",
                             "type": [
@@ -789,7 +817,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resourceNames": {
-                          "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                          "description": "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
                           "items": {
                             "type": [
                               "string",
@@ -803,7 +831,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resources": {
-                          "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                          "description": "resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -912,11 +940,11 @@
                   "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
                   "properties": {
                     "expression": {
-                      "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                      "description": "expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
                       "type": "string"
                     },
                     "name": {
-                      "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                      "description": "name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
                       "type": "string"
                     }
                   },
@@ -942,12 +970,12 @@
                 "description": "TargetMatchConstraints resolves the resources to mutate after Variables are evaluated.",
                 "properties": {
                   "excludeResourceRules": {
-                    "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
+                    "description": "excludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
                     "items": {
                       "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                       "properties": {
                         "apiGroups": {
-                          "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "apiGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -961,7 +989,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "apiVersions": {
-                          "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "apiVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -975,7 +1003,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "operations": {
-                          "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "description": "OperationType specifies an operation for a request.",
                             "type": [
@@ -990,7 +1018,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resourceNames": {
-                          "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                          "description": "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
                           "items": {
                             "type": [
                               "string",
@@ -1004,7 +1032,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resources": {
-                          "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                          "description": "resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -1052,7 +1080,7 @@
                     ]
                   },
                   "namespaceSelector": {
-                    "description": "NamespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
+                    "description": "namespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
                     "properties": {
                       "matchExpressions": {
                         "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -1118,7 +1146,7 @@
                     "x-kubernetes-map-type": "atomic"
                   },
                   "objectSelector": {
-                    "description": "ObjectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
+                    "description": "objectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
                     "properties": {
                       "matchExpressions": {
                         "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -1184,12 +1212,12 @@
                     "x-kubernetes-map-type": "atomic"
                   },
                   "resourceRules": {
-                    "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
+                    "description": "resourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
                     "items": {
                       "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                       "properties": {
                         "apiGroups": {
-                          "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "apiGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -1203,7 +1231,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "apiVersions": {
-                          "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "apiVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -1217,7 +1245,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "operations": {
-                          "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                          "description": "operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                           "items": {
                             "description": "OperationType specifies an operation for a request.",
                             "type": [
@@ -1232,7 +1260,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resourceNames": {
-                          "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                          "description": "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
                           "items": {
                             "type": [
                               "string",
@@ -1246,7 +1274,7 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "resources": {
-                          "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                          "description": "resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
                           "items": {
                             "type": [
                               "string",
@@ -1287,16 +1315,16 @@
                 "x-kubernetes-map-type": "atomic"
               },
               "variables": {
-                "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.\nThe variables defined here will be available under `variables` in other expressions of the policy\nexcept MatchConditions because MatchConditions are evaluated before the rest of the policy.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after.\nThus, Variables must be sorted by the order of first appearance and acyclic.",
+                "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.\nThe variables defined here will be available under `variables` in other expressions of the policy,\nincluding MatchConditions where they are evaluated lazily on first reference.\nNote that a native Kubernetes MutatingAdmissionPolicy does not support variables in match\nconditions; policies that generate a MutatingAdmissionPolicy through autogen should not\nreference variables in MatchConditions.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after.\nThus, Variables must be sorted by the order of first appearance and acyclic.",
                 "items": {
                   "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
                   "properties": {
                     "expression": {
-                      "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
+                      "description": "expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
                       "type": "string"
                     },
                     "name": {
-                      "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
+                      "description": "name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
                       "type": "string"
                     }
                   },
@@ -1350,6 +1378,34 @@
                         "spec": {
                           "description": "MutatingPolicySpec is the specification of the desired behavior of the MutatingPolicy.",
                           "properties": {
+                            "auditAnnotations": {
+                              "description": "AuditAnnotations contains CEL expressions which are used to produce audit annotations that are surfaced\nas properties in policy report results. auditAnnotations are evaluated after the mutations have been\napplied successfully. The results of evaluating the expressions are attached to the report result as\nproperties with the annotation key.\nIf the expression evaluates to an empty string or null the annotation will not be included.",
+                              "items": {
+                                "description": "AuditAnnotation describes how to produce an audit annotation for an API request.",
+                                "properties": {
+                                  "key": {
+                                    "description": "key specifies the audit annotation key. The audit annotation keys of\na ValidatingAdmissionPolicy must be unique. The key must be a qualified\nname ([A-Za-z0-9][-A-Za-z0-9_.]*) no more than 63 bytes in length.\n\nThe key is combined with the resource name of the\nValidatingAdmissionPolicy to construct an audit annotation key:\n\"{ValidatingAdmissionPolicy name}/{key}\".\n\nIf an admission webhook uses the same resource name as this ValidatingAdmissionPolicy\nand the same audit annotation key, the annotation key will be identical.\nIn this case, the first annotation written with the key will be included\nin the audit event and all subsequent annotations with the same key\nwill be discarded.\n\nRequired.",
+                                    "type": "string"
+                                  },
+                                  "valueExpression": {
+                                    "description": "valueExpression represents the expression which is evaluated by CEL to\nproduce an audit annotation value. The expression must evaluate to either\na string or null value. If the expression evaluates to a string, the\naudit annotation is included with the string value. If the expression\nevaluates to null or empty string the audit annotation will be omitted.\nThe valueExpression may be no longer than 5kb in length.\nIf the result of the valueExpression is more than 10kb in length, it\nwill be truncated to 10kb.\n\nIf multiple ValidatingAdmissionPolicyBinding resources match an\nAPI request, then the valueExpression will be evaluated for\neach binding. All unique values produced by the valueExpressions\nwill be joined together in a comma-separated list.\n\nRequired.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "valueExpression"
+                                ],
+                                "type": [
+                                  "object",
+                                  "null"
+                                ]
+                              },
+                              "type": [
+                                "array",
+                                "null"
+                              ]
+                            },
                             "autogen": {
                               "description": "AutogenConfiguration defines the configuration for the generation controller.",
                               "properties": {
@@ -1495,11 +1551,11 @@
                                 "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
                                 "properties": {
                                   "expression": {
-                                    "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                                    "description": "expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
                                     "type": "string"
                                   },
                                   "name": {
-                                    "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                                    "description": "name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
                                     "type": "string"
                                   }
                                 },
@@ -1522,15 +1578,15 @@
                               "x-kubernetes-list-type": "map"
                             },
                             "matchConstraints": {
-                              "description": "MatchConstraints specifies the trigger resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nTrigger constraints and MatchConditions are evaluated before Variables.\nRequired.",
+                              "description": "MatchConstraints specifies the trigger resources this policy is designed to evaluate.\nThe AdmissionPolicy cares about a request if it matches _all_ Constraints.\nTrigger constraints and MatchConditions are evaluated before target resolution.\nRequired.",
                               "properties": {
                                 "excludeResourceRules": {
-                                  "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
+                                  "description": "excludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
                                   "items": {
                                     "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                                     "properties": {
                                       "apiGroups": {
-                                        "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "apiGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1544,7 +1600,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "apiVersions": {
-                                        "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "apiVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1558,7 +1614,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "operations": {
-                                        "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "description": "OperationType specifies an operation for a request.",
                                           "type": [
@@ -1573,7 +1629,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "resourceNames": {
-                                        "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                                        "description": "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1587,7 +1643,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "resources": {
-                                        "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                                        "description": "resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1628,7 +1684,7 @@
                                   ]
                                 },
                                 "namespaceSelector": {
-                                  "description": "NamespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
+                                  "description": "namespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
                                   "properties": {
                                     "matchExpressions": {
                                       "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -1694,7 +1750,7 @@
                                   "x-kubernetes-map-type": "atomic"
                                 },
                                 "objectSelector": {
-                                  "description": "ObjectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
+                                  "description": "objectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
                                   "properties": {
                                     "matchExpressions": {
                                       "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -1760,12 +1816,12 @@
                                   "x-kubernetes-map-type": "atomic"
                                 },
                                 "resourceRules": {
-                                  "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
+                                  "description": "resourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
                                   "items": {
                                     "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                                     "properties": {
                                       "apiGroups": {
-                                        "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "apiGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1779,7 +1835,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "apiVersions": {
-                                        "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "apiVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1793,7 +1849,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "operations": {
-                                        "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "description": "OperationType specifies an operation for a request.",
                                           "type": [
@@ -1808,7 +1864,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "resourceNames": {
-                                        "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                                        "description": "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1822,7 +1878,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "resources": {
-                                        "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                                        "description": "resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1931,11 +1987,11 @@
                                 "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
                                 "properties": {
                                   "expression": {
-                                    "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                                    "description": "expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
                                     "type": "string"
                                   },
                                   "name": {
-                                    "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                                    "description": "name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
                                     "type": "string"
                                   }
                                 },
@@ -1961,12 +2017,12 @@
                               "description": "TargetMatchConstraints resolves the resources to mutate after Variables are evaluated.",
                               "properties": {
                                 "excludeResourceRules": {
-                                  "description": "ExcludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
+                                  "description": "excludeResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy should not care about.\nThe exclude rules take precedence over include rules (if a resource matches both, it is excluded)",
                                   "items": {
                                     "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                                     "properties": {
                                       "apiGroups": {
-                                        "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "apiGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1980,7 +2036,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "apiVersions": {
-                                        "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "apiVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -1994,7 +2050,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "operations": {
-                                        "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "description": "OperationType specifies an operation for a request.",
                                           "type": [
@@ -2009,7 +2065,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "resourceNames": {
-                                        "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                                        "description": "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -2023,7 +2079,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "resources": {
-                                        "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                                        "description": "resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -2071,7 +2127,7 @@
                                   ]
                                 },
                                 "namespaceSelector": {
-                                  "description": "NamespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
+                                  "description": "namespaceSelector decides whether to run the admission control policy on an object based\non whether the namespace for that object matches the selector. If the\nobject itself is a namespace, the matching is performed on\nobject.metadata.labels. If the object is another cluster scoped resource,\nit never skips the policy.\n\nFor example, to run the webhook on any objects whose namespace is not\nassociated with \"runlevel\" of \"0\" or \"1\";  you will set the selector as\nfollows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"runlevel\",\n      \"operator\": \"NotIn\",\n      \"values\": [\n        \"0\",\n        \"1\"\n      ]\n    }\n  ]\n}\n\nIf instead you want to only run the policy on any objects whose\nnamespace is associated with the \"environment\" of \"prod\" or \"staging\";\nyou will set the selector as follows:\n\"namespaceSelector\": {\n  \"matchExpressions\": [\n    {\n      \"key\": \"environment\",\n      \"operator\": \"In\",\n      \"values\": [\n        \"prod\",\n        \"staging\"\n      ]\n    }\n  ]\n}\n\nSee\nhttps://kubernetes.io/docs/concepts/overview/working-with-objects/labels/\nfor more examples of label selectors.\n\nDefault to the empty LabelSelector, which matches everything.",
                                   "properties": {
                                     "matchExpressions": {
                                       "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -2137,7 +2193,7 @@
                                   "x-kubernetes-map-type": "atomic"
                                 },
                                 "objectSelector": {
-                                  "description": "ObjectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
+                                  "description": "objectSelector decides whether to run the validation based on if the\nobject has matching labels. objectSelector is evaluated against both\nthe oldObject and newObject that would be sent to the cel validation, and\nis considered to match if either object matches the selector. A null\nobject (oldObject in the case of create, or newObject in the case of\ndelete) or an object that cannot have labels (like a\nDeploymentRollback or a PodProxyOptions object) is not considered to\nmatch.\nUse the object selector only if the webhook is opt-in, because end\nusers may skip the admission webhook by setting the labels.\nDefault to the empty LabelSelector, which matches everything.",
                                   "properties": {
                                     "matchExpressions": {
                                       "description": "matchExpressions is a list of label selector requirements. The requirements are ANDed.",
@@ -2203,12 +2259,12 @@
                                   "x-kubernetes-map-type": "atomic"
                                 },
                                 "resourceRules": {
-                                  "description": "ResourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
+                                  "description": "resourceRules describes what operations on what resources/subresources the ValidatingAdmissionPolicy matches.\nThe policy cares about an operation if it matches _any_ Rule.",
                                   "items": {
                                     "description": "NamedRuleWithOperations is a tuple of Operations and Resources with ResourceNames.",
                                     "properties": {
                                       "apiGroups": {
-                                        "description": "APIGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "apiGroups is the API groups the resources belong to. '*' is all groups.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -2222,7 +2278,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "apiVersions": {
-                                        "description": "APIVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "apiVersions is the API versions the resources belong to. '*' is all versions.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -2236,7 +2292,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "operations": {
-                                        "description": "Operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
+                                        "description": "operations is the operations the admission hook cares about - CREATE, UPDATE, DELETE, CONNECT or *\nfor all of those operations and any future admission operations that are added.\nIf '*' is present, the length of the slice must be one.\nRequired.",
                                         "items": {
                                           "description": "OperationType specifies an operation for a request.",
                                           "type": [
@@ -2251,7 +2307,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "resourceNames": {
-                                        "description": "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+                                        "description": "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -2265,7 +2321,7 @@
                                         "x-kubernetes-list-type": "atomic"
                                       },
                                       "resources": {
-                                        "description": "Resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
+                                        "description": "resources is a list of resources this rule applies to.\n\nFor example:\n'pods' means pods.\n'pods/log' means the log subresource of pods.\n'*' means all resources, but not subresources.\n'pods/*' means all subresources of pods.\n'*/scale' means all scale subresources.\n'*/*' means all resources and their subresources.\n\nIf wildcard is present, the validation rule will ensure resources do not\noverlap with each other.\n\nDepending on the enclosing object, subresources might not be allowed.\nRequired.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -2306,16 +2362,16 @@
                               "x-kubernetes-map-type": "atomic"
                             },
                             "variables": {
-                              "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.\nThe variables defined here will be available under `variables` in other expressions of the policy\nexcept MatchConditions because MatchConditions are evaluated before the rest of the policy.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after.\nThus, Variables must be sorted by the order of first appearance and acyclic.",
+                              "description": "Variables contain definitions of variables that can be used in composition of other expressions.\nEach variable is defined as a named CEL expression.\nThe variables defined here will be available under `variables` in other expressions of the policy,\nincluding MatchConditions where they are evaluated lazily on first reference.\nNote that a native Kubernetes MutatingAdmissionPolicy does not support variables in match\nconditions; policies that generate a MutatingAdmissionPolicy through autogen should not\nreference variables in MatchConditions.\n\nThe expression of a variable can refer to other variables defined earlier in the list but not those after.\nThus, Variables must be sorted by the order of first appearance and acyclic.",
                               "items": {
                                 "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
                                 "properties": {
                                   "expression": {
-                                    "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
+                                    "description": "expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
                                     "type": "string"
                                   },
                                   "name": {
-                                    "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
+                                    "description": "name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
                                     "type": "string"
                                   }
                                 },
