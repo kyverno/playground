@@ -11,7 +11,7 @@ require (
 	github.com/go-logr/logr v1.4.4
 	github.com/knadh/koanf/parsers/yaml v1.1.0
 	github.com/knadh/koanf/providers/file v1.2.0
-	github.com/knadh/koanf/v2 v2.3.5
+	github.com/knadh/koanf/v2 v2.3.6
 	github.com/kyverno/api v0.0.1-alpha.3.0.20260716135252-8729d40080d9
 	github.com/kyverno/kyverno v1.5.0-rc1.0.20260722083702-5f52bd61eab4
 	github.com/kyverno/kyverno-authz v0.4.1-0.20260602072047-ea97befa33fd
