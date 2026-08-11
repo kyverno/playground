@@ -24,7 +24,7 @@ type JSONProcessor struct {
 func (p *JSONProcessor) Run(ctx context.Context, policies policy.JSONPolicies, resources []unstructured.Unstructured) (*models.Results, error) {
 	response := &models.Results{}
 
-	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(), nil, false)
+	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(0), nil, false)
 	if err != nil {
 		return nil, err
 	}

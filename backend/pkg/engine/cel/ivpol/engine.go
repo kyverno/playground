@@ -6,8 +6,8 @@ import (
 	"github.com/kyverno/kyverno/pkg/cel/policies/ivpol/engine"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	imageverifycache "github.com/kyverno/kyverno/pkg/image/verification/cache"
-	k8scorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 
+	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/utils"
 )
 
@@ -15,11 +15,6 @@ func newIVPEngine(dClient dclient.Interface, policies []v1beta1.ImageValidatingP
 	provider, err := engine.NewProvider(policies, exceptions)
 	if err != nil {
 		return nil, err
-	}
-
-	var secretsClient k8scorev1.SecretInterface
-	if dClient != nil {
-		secretsClient = dClient.GetKubeClient().CoreV1().Secrets("")
 	}
 
 	var nsResolver engine.NamespaceResolver
@@ -36,8 +31,8 @@ func newIVPEngine(dClient dclient.Interface, policies []v1beta1.ImageValidatingP
 		provider,
 		nsResolver,
 		matching.NewMatcher(),
-		secretsClient,
-		nil,
+		cluster.NewSecretLister(dClient, ""),
 		cache,
+		nil,
 	), nil
 }
