@@ -459,12 +459,15 @@ func NewProcessor(
 	restMapper meta.RESTMapper,
 ) (*K8sProcessor, error) {
 	cfg := config.NewDefaultConfiguration(false)
+
+	defaultNS := "kyverno"
 	if kyvernoConfig != nil {
 		cfg.Load(kyvernoConfig)
+		defaultNS = kyvernoConfig.Namespace
 	}
 	jp := jmespath.New(cfg)
 
-	rclient := registryclient.New(cluster.NewSecretLister(dClient, ""), kyvernoConfig.Namespace, strings.Join(params.Flags.Registry.PullSecrets, ","), strings.Join(params.Flags.Registry.CredentialHelpers, ","), params.Flags.Registry.AllowInsecure)
+	rclient := registryclient.New(cluster.NewSecretLister(dClient, ""), defaultNS, strings.Join(params.Flags.Registry.PullSecrets, ","), strings.Join(params.Flags.Registry.CredentialHelpers, ","), params.Flags.Registry.AllowInsecure)
 
 	engine, err := newEngine(
 		cfg,
