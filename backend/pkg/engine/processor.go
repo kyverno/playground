@@ -21,9 +21,9 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	gctxstore "github.com/kyverno/kyverno/pkg/globalcontext/store"
 	imageverifycache "github.com/kyverno/kyverno/pkg/image/verification/cache"
-	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
+	"github.com/kyverno/sdk/extensions/registryclient"
 	admissionv1 "k8s.io/api/admission/v1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -79,7 +79,7 @@ func (p *K8sProcessor) Run(
 
 	oldMaxIndex := len(oldResources) - 1
 
-	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(), p.restMapper, false)
+	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(0), p.restMapper, false)
 	if err != nil {
 		return nil, err
 	}
@@ -464,26 +464,7 @@ func NewProcessor(
 	}
 	jp := jmespath.New(cfg)
 
-	registryOptions := []registryclient.Option{}
-
-	if len(params.Flags.Registry.PullSecrets) > 0 {
-		registryOptions = append(registryOptions, registryclient.WithKeychainPullSecrets(cluster.NewSecretLister(dClient, ""), kyvernoConfig.Namespace, params.Flags.Registry.PullSecrets...))
-	} else {
-		registryOptions = append(registryOptions, registryclient.WithLocalKeychain())
-	}
-
-	if len(params.Flags.Registry.CredentialHelpers) > 0 {
-		registryOptions = append(registryOptions, registryclient.WithCredentialProviders(params.Flags.Registry.CredentialHelpers...))
-	}
-
-	if params.Flags.Registry.AllowInsecure {
-		registryOptions = append(registryOptions, registryclient.WithAllowInsecureRegistry())
-	}
-
-	rclient, err := registryclient.New(registryOptions...)
-	if err != nil {
-		return nil, err
-	}
+	rclient := registryclient.New(cluster.NewSecretLister(dClient, ""), kyvernoConfig.Namespace, strings.Join(params.Flags.Registry.PullSecrets, ","), strings.Join(params.Flags.Registry.CredentialHelpers, ","), params.Flags.Registry.AllowInsecure)
 
 	engine, err := newEngine(
 		cfg,

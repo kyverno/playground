@@ -3940,11 +3940,7 @@
                     "x-kubernetes-preserve-unknown-fields": true
                   },
                   "assert": {
-                    "description": "Assert defines a kyverno-json assertion tree.",
-                    "type": [
-                      "object",
-                      "null"
-                    ],
+                    "description": "Assert defines a kyverno-json assertion tree.\nDeprecated, kept only for backward compatibility but has no effect since 1.19.",
                     "x-kubernetes-preserve-unknown-fields": true
                   },
                   "cel": {
@@ -10926,11 +10922,7 @@
                         "x-kubernetes-preserve-unknown-fields": true
                       },
                       "assert": {
-                        "description": "Assert defines a kyverno-json assertion tree.",
-                        "type": [
-                          "object",
-                          "null"
-                        ],
+                        "description": "Assert defines a kyverno-json assertion tree.\nDeprecated, kept only for backward compatibility but has no effect since 1.19.",
                         "x-kubernetes-preserve-unknown-fields": true
                       },
                       "cel": {
