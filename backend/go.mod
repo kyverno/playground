@@ -19,7 +19,7 @@ require (
 	github.com/loopfz/gadgeto v0.11.6
 	github.com/mark3labs/mcp-go v0.57.0
 	github.com/spf13/cobra v1.10.2
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.0
 	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f
 	google.golang.org/protobuf v1.36.12-0.20260120151049-f2248ac996af
 	k8s.io/api v0.36.3
