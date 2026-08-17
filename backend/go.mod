@@ -13,7 +13,7 @@ require (
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/v2 v2.3.6
 	github.com/kyverno/api v0.0.1-alpha.3.0.20260723090831-fb2785727f98
-	github.com/kyverno/kyverno v1.19.0-rc.2
+	github.com/kyverno/kyverno v1.19.0-rc.3
 	github.com/kyverno/kyverno-authz v0.4.1-0.20260701230957-9101a3ffd44f
 	github.com/kyverno/sdk v0.0.0-20260703121625-e0dc6fb8661a
 	github.com/loopfz/gadgeto v0.11.6
