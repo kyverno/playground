@@ -110,7 +110,7 @@ httproute:
   # -- Enable HTTPRoute resource (Gateway API alternative to Ingress)
   # Requires Gateway API CRDs (v1) installed in cluster
   # https://gateway-api.sigs.k8s.io/
-  enabled: true
+  enabled: false
   # -- Additional HTTPRoute labels
   labels: {}
   # -- Additional HTTPRoute annotations
@@ -288,7 +288,7 @@ mcp:
     # -- Enable HTTPRoute resource (Gateway API alternative to Ingress)
     # Requires Gateway API CRDs (v1) installed in cluster
     # https://gateway-api.sigs.k8s.io/
-    enabled: true
+    enabled: false
     # -- Additional HTTPRoute labels
     labels: {}
     # -- Additional HTTPRoute annotations
