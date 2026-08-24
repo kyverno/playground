@@ -2,7 +2,7 @@
 
 Kyverno Playground Web Application
 
-![Version: 0.10.2](https://img.shields.io/badge/Version-0.10.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.10.2](https://img.shields.io/badge/AppVersion-v0.10.2-informational?style=flat-square)
+![Version: 0.10.4](https://img.shields.io/badge/Version-0.10.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.10.4](https://img.shields.io/badge/AppVersion-v0.10.4-informational?style=flat-square)
 
 ## About
 
@@ -75,6 +75,12 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | ingress.annotations | object | `{}` | Ingress annotations |
 | ingress.hosts | list | `[]` | Ingress hosts |
 | ingress.tls | list | `[]` | Ingress tls |
+| httproute.enabled | bool | `true` | Enable HTTPRoute resource (Gateway API alternative to Ingress) Requires Gateway API CRDs (v1) installed in cluster https://gateway-api.sigs.k8s.io/ |
+| httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| httproute.parentRefs | list | `[]` | Gateway API parentRefs (list of Gateway references) Must reference an existing Gateway resource |
+| httproute.hostnames | list | `[]` | List of hostnames for HTTPRoute |
+| httproute.rules | list | `[{"matches":[{"path":{"type":"PathPrefix","value":"/"}}]}]` | HTTPRoute rules configuration Allows advanced routing with matches and filters |
 | resources.limits | string | `nil` | Container resource limits |
 | resources.requests | string | `nil` | Container resource requests |
 | autoscaling.enabled | bool | `false` | Enable autoscaling |
@@ -111,6 +117,12 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | mcp.ingress.annotations | object | `{}` | Ingress annotations |
 | mcp.ingress.hosts | list | `[]` | Ingress hosts |
 | mcp.ingress.tls | list | `[]` | Ingress tls |
+| mcp.httproute.enabled | bool | `true` | Enable HTTPRoute resource (Gateway API alternative to Ingress) Requires Gateway API CRDs (v1) installed in cluster https://gateway-api.sigs.k8s.io/ |
+| mcp.httproute.labels | object | `{}` | Additional HTTPRoute labels |
+| mcp.httproute.annotations | object | `{}` | Additional HTTPRoute annotations |
+| mcp.httproute.parentRefs | list | `[]` | Gateway API parentRefs (list of Gateway references) Must reference an existing Gateway resource |
+| mcp.httproute.hostnames | list | `[]` | List of hostnames for HTTPRoute |
+| mcp.httproute.rules | list | `[{"matches":[{"path":{"type":"PathPrefix","value":"/"}}]}]` | HTTPRoute rules configuration Allows advanced routing with matches and filters |
 | mcp.resources | object | `{"limits":{},"requests":{}}` | MCP container resource limits/requests |
 
 ## Source Code
