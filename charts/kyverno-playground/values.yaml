@@ -106,6 +106,43 @@ ingress:
   # -- Ingress tls
   tls: []
 
+httproute:
+  # -- Enable HTTPRoute resource (Gateway API alternative to Ingress)
+  # Requires Gateway API CRDs (v1) installed in cluster
+  # https://gateway-api.sigs.k8s.io/
+  enabled: true
+  # -- Additional HTTPRoute labels
+  labels: {}
+  # -- Additional HTTPRoute annotations
+  annotations: {}
+  # -- Gateway API parentRefs (list of Gateway references)
+  # Must reference an existing Gateway resource
+  parentRefs: []
+  #  - name: example-gateway
+  #    namespace: gateway-system
+  #    sectionName: https
+  # -- List of hostnames for HTTPRoute
+  hostnames: []
+  #  - policy-reporter.example.com
+  # -- HTTPRoute rules configuration
+  # Allows advanced routing with matches and filters
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      # Optional filters:
+      # filters:
+      #   - type: RequestHeaderModifier
+      #     requestHeaderModifier:
+      #       add:
+      #         - name: X-Custom-Header
+      #           value: value
+      # Optional timeouts configuration:
+      # timeouts:
+      #  request: 30s
+      #  backendRequest: 30s
+
 # We usually recommend not to specify default resources and to leave this as a conscious
 # choice for the user. This also increases chances charts run on environments with little
 # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -246,6 +283,43 @@ mcp:
 
     # -- Ingress tls
     tls: []
+
+  httproute:
+    # -- Enable HTTPRoute resource (Gateway API alternative to Ingress)
+    # Requires Gateway API CRDs (v1) installed in cluster
+    # https://gateway-api.sigs.k8s.io/
+    enabled: true
+    # -- Additional HTTPRoute labels
+    labels: {}
+    # -- Additional HTTPRoute annotations
+    annotations: {}
+    # -- Gateway API parentRefs (list of Gateway references)
+    # Must reference an existing Gateway resource
+    parentRefs: []
+    #  - name: example-gateway
+    #    namespace: gateway-system
+    #    sectionName: https
+    # -- List of hostnames for HTTPRoute
+    hostnames: []
+    #  - policy-reporter.example.com
+    # -- HTTPRoute rules configuration
+    # Allows advanced routing with matches and filters
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # Optional filters:
+        # filters:
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       add:
+        #         - name: X-Custom-Header
+        #           value: value
+        # Optional timeouts configuration:
+        # timeouts:
+        #  request: 30s
+        #  backendRequest: 30s
 
   # -- MCP container resource limits/requests
   resources:
