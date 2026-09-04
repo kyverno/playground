@@ -5,6 +5,7 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/crd"
+	apicel "github.com/kyverno/playground/backend/pkg/server/api/cel"
 	apicluster "github.com/kyverno/playground/backend/pkg/server/api/cluster"
 	apiconfig "github.com/kyverno/playground/backend/pkg/server/api/config"
 	apiengine "github.com/kyverno/playground/backend/pkg/server/api/engine"
@@ -25,6 +26,9 @@ func AddRoutes(group *gin.RouterGroup, cluster cluster.Cluster, config APIConfig
 		return err
 	}
 	if err := apiengine.AddRoutes(group, cluster, config.EngineConfiguration); err != nil {
+		return err
+	}
+	if err := apicel.AddRoutes(group, cluster); err != nil {
 		return err
 	}
 	// do not register cluster routes if we don't have a cluster
