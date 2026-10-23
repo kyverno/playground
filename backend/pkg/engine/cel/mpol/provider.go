@@ -17,10 +17,7 @@ type staticProvider struct {
 }
 
 func (p *staticProvider) Fetch(ctx context.Context, mutateExisting bool) []engine.Policy {
-	p1 := p.inner.Fetch(ctx, true)
-	p2 := p.inner.Fetch(ctx, false)
-
-	return append(p1, p2...)
+	return p.inner.Fetch(ctx, mutateExisting)
 }
 
 func (r *staticProvider) MatchesMutateExisting(ctx context.Context, attr admission.Attributes, req *admissionv1.AdmissionRequest, namespace *corev1.Namespace) []string {
