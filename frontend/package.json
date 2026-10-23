@@ -36,7 +36,7 @@
     "@vue/tsconfig": "^0.8.1",
     "jiti": "^2.6.1",
     "npm-run-all2": "^8.0.4",
-    "oxfmt": "^0.32.0",
+    "oxfmt": "^0.74.0",
     "oxlint": "~1.47.0",
     "typescript": "~5.9.3",
     "vite": "^7.3.7",
