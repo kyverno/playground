@@ -21,7 +21,7 @@
     "object-hash": "^3.0.0",
     "roboto-fontface": "0.10.0",
     "v-onboarding": "^2.12.2",
-    "vue": "^3.5.28",
+    "vue": "^3.5.44",
     "vue-router": "^5.0.2",
     "vuetify": "^3.6.0",
     "webfontloader": "^1.0.0",
