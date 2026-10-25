@@ -5,6 +5,10 @@
     </template>
     <v-card min-width="250">
       <v-card-text>
+        <v-btn to="/cel" prepend-icon="mdi-function-variant" variant="outlined" block>
+          CEL Playground
+        </v-btn>
+        <v-divider class="my-2" />
         <ShareButton variant="outlined" block />
         <v-divider class="my-2" />
         <SaveButton variant="outlined" block />
