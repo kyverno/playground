@@ -467,7 +467,12 @@ func NewProcessor(
 	}
 	jp := jmespath.New(cfg)
 
-	rclient := registryclient.New(cluster.NewSecretLister(dClient, ""), defaultNS, strings.Join(params.Flags.Registry.PullSecrets, ","), strings.Join(params.Flags.Registry.CredentialHelpers, ","), params.Flags.Registry.AllowInsecure)
+	rclient := registryclient.New(
+		registryclient.WithSecretLister(cluster.NewSecretLister(dClient, ""), defaultNS),
+		registryclient.WithImagePullSecrets(params.Flags.Registry.PullSecrets...),
+		registryclient.WithCredentialHelpers(params.Flags.Registry.CredentialHelpers...),
+		registryclient.WithAllowInsecureRegistry(params.Flags.Registry.AllowInsecure),
+	)
 
 	engine, err := newEngine(
 		cfg,

@@ -36,7 +36,7 @@ func Run(ctx context.Context, cl cluster.Cluster, request *EngineRequest, config
 		return nil, err
 	}
 
-	client, err := crd.OpenAPIClient(cl, params.Kubernetes.Version, "", config)
+	client, err := request.OpenAPIClient(cl, params.Kubernetes.Version, config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load OpenAPI client: %w", err)
 	}
@@ -93,6 +93,9 @@ func Run(ctx context.Context, cl cluster.Cluster, request *EngineRequest, config
 
 		clusterResources = append(oldResources, clusterResources...)
 		clusterObjects := resource.AppendNamespaces(resources, clusterResources)
+		for _, crd := range crds {
+			clusterObjects = append(clusterObjects, crd)
+		}
 
 		dClient, err := cl.DClient(append(resource.ToObjects(resources), clusterObjects...))
 		if err != nil {
