@@ -8,7 +8,7 @@ import (
 
 func ContextLoaderFactory(cmResolver engineapi.ConfigmapResolver) engineapi.ContextLoaderFactory {
 	next := factories.DefaultContextLoaderFactory(cmResolver)
-	return func(policy kyvernov1.PolicyInterface, rule kyvernov1.Rule) engineapi.ContextLoader {
+	return func(policy engineapi.PolicyScope, rule kyvernov1.Rule) engineapi.ContextLoader {
 		chain := next(policy, rule)
 		chain = WithoutAPICalls(chain)
 		chain = WithCMCheck(cmResolver, chain)

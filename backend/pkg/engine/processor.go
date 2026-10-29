@@ -21,9 +21,9 @@ import (
 	"github.com/kyverno/kyverno/pkg/engine/policycontext"
 	gctxstore "github.com/kyverno/kyverno/pkg/globalcontext/store"
 	imageverifycache "github.com/kyverno/kyverno/pkg/image/verification/cache"
-	"github.com/kyverno/kyverno/pkg/registryclient"
 	"github.com/kyverno/kyverno/pkg/toggle"
 	jsonutils "github.com/kyverno/kyverno/pkg/utils/json"
+	"github.com/kyverno/sdk/extensions/registryclient"
 	admissionv1 "k8s.io/api/admission/v1"
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -79,7 +79,7 @@ func (p *K8sProcessor) Run(
 
 	oldMaxIndex := len(oldResources) - 1
 
-	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(), p.restMapper, false)
+	contextProvider, err := libs.NewContextProvider(p.dClient, nil, gctxstore.New(0), p.restMapper, false)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.MutatingPolicies) > 0 {
-			results, err := mpol.K8sProcess(context.TODO(), p.dClient, p.tcm, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.MutatingPolicies)
+			results, err := mpol.K8sProcess(context.TODO(), p.dClient, p.tcm, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.MutatingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -169,7 +169,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.ImageValidatingPolicies) > 0 {
-			results, err := ivpol.K8sProcess(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.ImageValidatingPolicies)
+			results, err := ivpol.K8sProcess(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.ImageValidatingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -178,7 +178,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.ValidatingPolicies) > 0 {
-			results, err := vpol.K8sProcess(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.ValidatingPolicies)
+			results, err := vpol.K8sProcess(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, oldResource, k8s.ValidatingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -187,7 +187,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.DeletingPolicies) > 0 {
-			results, err := dpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, newResource, k8s.DeletingPolicies)
+			results, err := dpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, newResource, k8s.DeletingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -196,7 +196,7 @@ func (p *K8sProcessor) Run(
 		}
 
 		if len(k8s.GeneratingPolicies) > 0 {
-			results, err := gpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, k8s.GeneratingPolicies)
+			results, err := gpol.Process(context.TODO(), p.dClient, p.restMapper, contextProvider, p.params, newResource, k8s.GeneratingPolicies, k8s.PolicyExceptions)
 			if err != nil {
 				return nil, err
 			}
@@ -459,31 +459,20 @@ func NewProcessor(
 	restMapper meta.RESTMapper,
 ) (*K8sProcessor, error) {
 	cfg := config.NewDefaultConfiguration(false)
+
+	defaultNS := "kyverno"
 	if kyvernoConfig != nil {
 		cfg.Load(kyvernoConfig)
+		defaultNS = kyvernoConfig.Namespace
 	}
 	jp := jmespath.New(cfg)
 
-	registryOptions := []registryclient.Option{}
-
-	if len(params.Flags.Registry.PullSecrets) > 0 {
-		registryOptions = append(registryOptions, registryclient.WithKeychainPullSecrets(cluster.NewSecretLister(dClient, ""), kyvernoConfig.Namespace, params.Flags.Registry.PullSecrets...))
-	} else {
-		registryOptions = append(registryOptions, registryclient.WithLocalKeychain())
-	}
-
-	if len(params.Flags.Registry.CredentialHelpers) > 0 {
-		registryOptions = append(registryOptions, registryclient.WithCredentialProviders(params.Flags.Registry.CredentialHelpers...))
-	}
-
-	if params.Flags.Registry.AllowInsecure {
-		registryOptions = append(registryOptions, registryclient.WithAllowInsecureRegistry())
-	}
-
-	rclient, err := registryclient.New(registryOptions...)
-	if err != nil {
-		return nil, err
-	}
+	rclient := registryclient.New(
+		registryclient.WithSecretLister(cluster.NewSecretLister(dClient, ""), defaultNS),
+		registryclient.WithImagePullSecrets(params.Flags.Registry.PullSecrets...),
+		registryclient.WithCredentialHelpers(params.Flags.Registry.CredentialHelpers...),
+		registryclient.WithAllowInsecureRegistry(params.Flags.Registry.AllowInsecure),
+	)
 
 	engine, err := newEngine(
 		cfg,

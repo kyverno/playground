@@ -18,12 +18,12 @@ import (
 	helper "github.com/kyverno/playground/backend/pkg/utils"
 )
 
-func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, resource unstructured.Unstructured, dpols []v1beta1.DeletingPolicyLike) ([]models.Response, error) {
+func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, resource unstructured.Unstructured, dpols []v1beta1.DeletingPolicyLike, exceptions []*v1beta1.PolicyException) ([]models.Response, error) {
 	filtered := helper.Filter(dpols, func(p v1beta1.DeletingPolicyLike) bool {
 		return p.GetNamespace() == "" || p.GetNamespace() == resource.GetNamespace()
 	})
 
-	provider, err := engine.NewProvider(compiler.NewCompiler(), filtered, nil)
+	provider, err := engine.NewProvider(compiler.NewCompiler(), filtered, exceptions)
 	engine := engine.NewEngine(utils.NSResolver(dClient), restMapper, contextProvider, matching.NewMatcher())
 	if err != nil {
 		return nil, err

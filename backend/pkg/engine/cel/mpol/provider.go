@@ -7,6 +7,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/cel/libs"
 	"github.com/kyverno/kyverno/pkg/cel/policies/mpol/compiler"
 	"github.com/kyverno/kyverno/pkg/cel/policies/mpol/engine"
+	admissionv1 "k8s.io/api/admission/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apiserver/pkg/admission"
 )
@@ -16,14 +17,11 @@ type staticProvider struct {
 }
 
 func (p *staticProvider) Fetch(ctx context.Context, mutateExisting bool) []engine.Policy {
-	p1 := p.inner.Fetch(ctx, true)
-	p2 := p.inner.Fetch(ctx, false)
-
-	return append(p1, p2...)
+	return p.inner.Fetch(ctx, mutateExisting)
 }
 
-func (r *staticProvider) MatchesMutateExisting(ctx context.Context, attr admission.Attributes, namespace *corev1.Namespace) []string {
-	return r.inner.MatchesMutateExisting(ctx, attr, namespace)
+func (r *staticProvider) MatchesMutateExisting(ctx context.Context, attr admission.Attributes, req *admissionv1.AdmissionRequest, namespace *corev1.Namespace, requestMapFn func() (map[string]any, error)) []string {
+	return r.inner.MatchesMutateExisting(ctx, attr, req, namespace, requestMapFn)
 }
 
 func NewProvider(compiler compiler.Compiler, policies []v1beta1.MutatingPolicyLike, exceptions []*v1beta1.PolicyException, libCtx libs.Context) (engine.Provider, error) {

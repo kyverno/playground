@@ -9,3 +9,6 @@ ingress:
       paths:
         - path: /playground(/|$)(.*)
           pathType: Prefix
+
+mcp:
+  enabled: true

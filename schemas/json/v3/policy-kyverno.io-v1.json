@@ -395,11 +395,11 @@
                   "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
                   "properties": {
                     "expression": {
-                      "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                      "description": "expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
                       "type": "string"
                     },
                     "name": {
-                      "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                      "description": "name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
                       "type": "string"
                     }
                   },
@@ -647,7 +647,7 @@
                               ]
                             },
                             "secrets": {
-                              "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                              "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                               "items": {
                                 "type": [
                                   "string",
@@ -2150,7 +2150,7 @@
                                         ]
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -2431,7 +2431,7 @@
                     ]
                   },
                   "orphanDownstreamOnPolicyDelete": {
-                    "description": "OrphanDownstreamOnPolicyDelete controls whether generated resources should be deleted when the rule that generated\nthem is deleted with synchronization enabled. This option is only applicable to generate rules of the data type.\nSee https://kyverno.io/docs/writing-policies/generate/#data-examples.\nDefaults to \"false\" if not specified.",
+                    "description": "OrphanDownstreamOnPolicyDelete controls whether generated resources should be deleted when the rule that generated\nthem is deleted with synchronization enabled.\nSee https://kyverno.io/docs/writing-policies/generate/.\nDefaults to \"false\" if not specified.",
                     "type": [
                       "boolean",
                       "null"
@@ -2461,6 +2461,13 @@
                 "additionalProperties": {
                   "items": {
                     "properties": {
+                      "filter": {
+                        "description": "Filter is an optional value to match against 'key' during wildcard array expansion.\nWhen set, only array elements where the field named by 'key' equals this value\nare extracted as image references. Requires 'key' to be set.\nThis is useful when a wildcard path expands an array containing both image and\nnon-image elements, and only specific elements should be treated as images.\nFilter applies at the terminal wildcard only; intermediate wildcards in nested\npaths are expanded without filtering.\nFilter only applies to wildcard expansion over arrays, not maps.",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
                       "jmesPath": {
                         "description": "JMESPath is an optional JMESPath expression to apply to the image value.\nThis is useful when the extracted image begins with a prefix like 'docker://'.\nThe 'trim_prefix' function may be used to trim the prefix: trim_prefix(@, 'docker://').\nNote - Image digest mutation may not be used when applying a JMESPAth to an image.",
                         "type": [
@@ -3680,7 +3687,7 @@
                                         ]
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -4186,7 +4193,7 @@
                                         ]
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -4427,11 +4434,7 @@
                     "x-kubernetes-preserve-unknown-fields": true
                   },
                   "assert": {
-                    "description": "Assert defines a kyverno-json assertion tree.",
-                    "type": [
-                      "object",
-                      "null"
-                    ],
+                    "description": "Assert defines a kyverno-json assertion tree.\nDeprecated, kept only for backward compatibility but has no effect since 1.19.",
                     "x-kubernetes-preserve-unknown-fields": true
                   },
                   "cel": {
@@ -4471,11 +4474,11 @@
                           "description": "Validation specifies the CEL expression which is used to apply the validation.",
                           "properties": {
                             "expression": {
-                              "description": "Expression represents the expression which will be evaluated by CEL.\nref: https://github.com/google/cel-spec\nCEL expressions have access to the contents of the API request/response, organized into CEL variables as well as some other useful variables:\n\n- 'object' - The object from the incoming request. The value is null for DELETE requests.\n- 'oldObject' - The existing object. The value is null for CREATE requests.\n- 'request' - Attributes of the API request([ref](/pkg/apis/admission/types.go#AdmissionRequest)).\n- 'params' - Parameter resource referred to by the policy binding being evaluated. Only populated if the policy has a ParamKind.\n- 'namespaceObject' - The namespace object that the incoming object belongs to. The value is null for cluster-scoped resources.\n- 'variables' - Map of composited variables, from its name to its lazily evaluated value.\n  For example, a variable named 'foo' can be accessed as 'variables.foo'.\n- 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n- 'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\n\nThe `apiVersion`, `kind`, `metadata.name` and `metadata.generateName` are always accessible from the root of the\nobject. No other metadata properties are accessible.\n\nOnly property names of the form `[a-zA-Z_.-/][a-zA-Z0-9_.-/]*` are accessible.\nAccessible property names are escaped according to the following rules when accessed in the expression:\n- '__' escapes to '__underscores__'\n- '.' escapes to '__dot__'\n- '-' escapes to '__dash__'\n- '/' escapes to '__slash__'\n- Property names that exactly match a CEL RESERVED keyword escape to '__{keyword}__'. The keywords are:\n\t  \"true\", \"false\", \"null\", \"in\", \"as\", \"break\", \"const\", \"continue\", \"else\", \"for\", \"function\", \"if\",\n\t  \"import\", \"let\", \"loop\", \"package\", \"namespace\", \"return\".\nExamples:\n  - Expression accessing a property named \"namespace\": {\"Expression\": \"object.__namespace__ > 0\"}\n  - Expression accessing a property named \"x-prop\": {\"Expression\": \"object.x__dash__prop > 0\"}\n  - Expression accessing a property named \"redact__d\": {\"Expression\": \"object.redact__underscores__d > 0\"}\n\nEquality on arrays with list type of 'set' or 'map' ignores element order, i.e. [1, 2] == [2, 1].\nConcatenation on arrays with x-kubernetes-list-type use the semantics of the list type:\n  - 'set': `X + Y` performs a union where the array positions of all elements in `X` are preserved and\n    non-intersecting elements in `Y` are appended, retaining their partial order.\n  - 'map': `X + Y` performs a merge where the array positions of all keys in `X` are preserved but the values\n    are overwritten by values in `Y` when the key sets of `X` and `Y` intersect. Elements in `Y` with\n    non-intersecting keys are appended, retaining their partial order.\nRequired.",
+                              "description": "expression represents the expression which will be evaluated by CEL.\nref: https://github.com/google/cel-spec\nCEL expressions have access to the contents of the API request/response, organized into CEL variables as well as some other useful variables:\n\n- 'object' - The object from the incoming request. The value is null for DELETE requests.\n- 'oldObject' - The existing object. The value is null for CREATE requests.\n- 'request' - Attributes of the API request([ref](/pkg/apis/admission/types.go#AdmissionRequest)).\n- 'params' - Parameter resource referred to by the policy binding being evaluated. Only populated if the policy has a ParamKind.\n- 'namespaceObject' - The namespace object that the incoming object belongs to. The value is null for cluster-scoped resources.\n- 'variables' - Map of composited variables, from its name to its lazily evaluated value.\n  For example, a variable named 'foo' can be accessed as 'variables.foo'.\n- 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n- 'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\n\nThe `apiVersion`, `kind`, `metadata.name` and `metadata.generateName` are always accessible from the root of the\nobject. No other metadata properties are accessible.\n\nOnly property names of the form `[a-zA-Z_.-/][a-zA-Z0-9_.-/]*` are accessible.\nAccessible property names are escaped according to the following rules when accessed in the expression:\n- '__' escapes to '__underscores__'\n- '.' escapes to '__dot__'\n- '-' escapes to '__dash__'\n- '/' escapes to '__slash__'\n- Property names that exactly match a CEL RESERVED keyword escape to '__{keyword}__'. The keywords are:\n\t  \"true\", \"false\", \"null\", \"in\", \"as\", \"break\", \"const\", \"continue\", \"else\", \"for\", \"function\", \"if\",\n\t  \"import\", \"let\", \"loop\", \"package\", \"namespace\", \"return\".\nExamples:\n  - Expression accessing a property named \"namespace\": {\"Expression\": \"object.__namespace__ > 0\"}\n  - Expression accessing a property named \"x-prop\": {\"Expression\": \"object.x__dash__prop > 0\"}\n  - Expression accessing a property named \"redact__d\": {\"Expression\": \"object.redact__underscores__d > 0\"}\n\nEquality on arrays with list type of 'set' or 'map' ignores element order, i.e. [1, 2] == [2, 1].\nConcatenation on arrays with x-kubernetes-list-type use the semantics of the list type:\n  - 'set': `X + Y` performs a union where the array positions of all elements in `X` are preserved and\n    non-intersecting elements in `Y` are appended, retaining their partial order.\n  - 'map': `X + Y` performs a merge where the array positions of all keys in `X` are preserved but the values\n    are overwritten by values in `Y` when the key sets of `X` and `Y` intersect. Elements in `Y` with\n    non-intersecting keys are appended, retaining their partial order.\nRequired.",
                               "type": "string"
                             },
                             "message": {
-                              "description": "Message represents the message displayed when validation fails. The message is required if the Expression contains\nline breaks. The message must not contain line breaks.\nIf unset, the message is \"failed rule: {Rule}\".\ne.g. \"must be a URL with the host matching spec.host\"\nIf the Expression contains line breaks. Message is required.\nThe message must not contain line breaks.\nIf unset, the message is \"failed Expression: {Expression}\".",
+                              "description": "message represents the message displayed when validation fails. The message is required if the Expression contains\nline breaks. The message must not contain line breaks.\nIf unset, the message is \"failed rule: {Rule}\".\ne.g. \"must be a URL with the host matching spec.host\"\nIf the Expression contains line breaks. Message is required.\nThe message must not contain line breaks.\nIf unset, the message is \"failed Expression: {Expression}\".",
                               "type": [
                                 "string",
                                 "null"
@@ -4489,7 +4492,7 @@
                               ]
                             },
                             "reason": {
-                              "description": "Reason represents a machine-readable description of why this validation failed.\nIf this is the first validation in the list to fail, this reason, as well as the\ncorresponding HTTP response code, are used in the\nHTTP response to the client.\nThe currently supported reasons are: \"Unauthorized\", \"Forbidden\", \"Invalid\", \"RequestEntityTooLarge\".\nIf not set, StatusReasonInvalid is used in the response to the client.",
+                              "description": "reason represents a machine-readable description of why this validation failed.\nIf this is the first validation in the list to fail, this reason, as well as the\ncorresponding HTTP response code, are used in the\nHTTP response to the client.\nThe currently supported reasons are: \"Unauthorized\", \"Forbidden\", \"Invalid\", \"RequestEntityTooLarge\".\nIf not set, StatusReasonInvalid is used in the response to the client.",
                               "type": [
                                 "string",
                                 "null"
@@ -4521,14 +4524,14 @@
                         "description": "ParamKind is a tuple of Group Kind and Version.",
                         "properties": {
                           "apiVersion": {
-                            "description": "APIVersion is the API group version the resources belong to.\nIn format of \"group/version\".\nRequired.",
+                            "description": "apiVersion is the API group version the resources belong to.\nIn format of \"group/version\".\nRequired.",
                             "type": [
                               "string",
                               "null"
                             ]
                           },
                           "kind": {
-                            "description": "Kind is the API kind the resources belong to.\nRequired.",
+                            "description": "kind is the API kind the resources belong to.\nRequired.",
                             "type": [
                               "string",
                               "null"
@@ -4559,7 +4562,7 @@
                             ]
                           },
                           "parameterNotFoundAction": {
-                            "description": "`parameterNotFoundAction` controls the behavior of the binding when the resource\nexists, and name or selector is valid, but there are no parameters\nmatched by the binding. If the value is set to `Allow`, then no\nmatched parameters will be treated as successful validation by the binding.\nIf set to `Deny`, then no matched parameters will be subject to the\n`failurePolicy` of the policy.\n\nAllowed values are `Allow` or `Deny`\n\nRequired",
+                            "description": "parameterNotFoundAction controls the behavior of the binding when the resource\nexists, and name or selector is valid, but there are no parameters\nmatched by the binding. If the value is set to `Allow`, then no\nmatched parameters will be treated as successful validation by the binding.\nIf set to `Deny`, then no matched parameters will be subject to the\n`failurePolicy` of the policy.\n\nAllowed values are `Allow` or `Deny`\n\nRequired",
                             "type": [
                               "string",
                               "null"
@@ -4644,11 +4647,11 @@
                           "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
                           "properties": {
                             "expression": {
-                              "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
+                              "description": "expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
                               "type": "string"
                             },
                             "name": {
-                              "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
+                              "description": "name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
                               "type": "string"
                             }
                           },
@@ -5042,7 +5045,7 @@
                                         ]
                                       },
                                       "secrets": {
-                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                         "items": {
                                           "type": [
                                             "string",
@@ -6952,7 +6955,7 @@
                           ]
                         },
                         "secrets": {
-                          "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                          "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                           "items": {
                             "type": [
                               "string",
@@ -7271,11 +7274,11 @@
                 "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
                 "properties": {
                   "expression": {
-                    "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                    "description": "expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
                     "type": "string"
                   },
                   "name": {
-                    "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                    "description": "name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
                     "type": "string"
                   }
                 },
@@ -7338,11 +7341,11 @@
                       "description": "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.",
                       "properties": {
                         "expression": {
-                          "description": "Expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
+                          "description": "expression represents the expression which will be evaluated by CEL. Must evaluate to bool.\nCEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests.\n'oldObject' - The existing object. The value is null for CREATE requests.\n'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).\n'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nRequired.",
                           "type": "string"
                         },
                         "name": {
-                          "description": "Name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
+                          "description": "name is an identifier for this match condition, used for strategic merging of MatchConditions,\nas well as providing an identifier for logging purposes. A good name should be descriptive of\nthe associated expression.\nName must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and\nmust start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or\n'123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an\noptional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')\n\nRequired.",
                           "type": "string"
                         }
                       },
@@ -7590,7 +7593,7 @@
                                   ]
                                 },
                                 "secrets": {
-                                  "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                  "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                   "items": {
                                     "type": [
                                       "string",
@@ -9093,7 +9096,7 @@
                                             ]
                                           },
                                           "secrets": {
-                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                             "items": {
                                               "type": [
                                                 "string",
@@ -9374,7 +9377,7 @@
                         ]
                       },
                       "orphanDownstreamOnPolicyDelete": {
-                        "description": "OrphanDownstreamOnPolicyDelete controls whether generated resources should be deleted when the rule that generated\nthem is deleted with synchronization enabled. This option is only applicable to generate rules of the data type.\nSee https://kyverno.io/docs/writing-policies/generate/#data-examples.\nDefaults to \"false\" if not specified.",
+                        "description": "OrphanDownstreamOnPolicyDelete controls whether generated resources should be deleted when the rule that generated\nthem is deleted with synchronization enabled.\nSee https://kyverno.io/docs/writing-policies/generate/.\nDefaults to \"false\" if not specified.",
                         "type": [
                           "boolean",
                           "null"
@@ -9404,6 +9407,13 @@
                     "additionalProperties": {
                       "items": {
                         "properties": {
+                          "filter": {
+                            "description": "Filter is an optional value to match against 'key' during wildcard array expansion.\nWhen set, only array elements where the field named by 'key' equals this value\nare extracted as image references. Requires 'key' to be set.\nThis is useful when a wildcard path expands an array containing both image and\nnon-image elements, and only specific elements should be treated as images.\nFilter applies at the terminal wildcard only; intermediate wildcards in nested\npaths are expanded without filtering.\nFilter only applies to wildcard expansion over arrays, not maps.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
                           "jmesPath": {
                             "description": "JMESPath is an optional JMESPath expression to apply to the image value.\nThis is useful when the extracted image begins with a prefix like 'docker://'.\nThe 'trim_prefix' function may be used to trim the prefix: trim_prefix(@, 'docker://').\nNote - Image digest mutation may not be used when applying a JMESPAth to an image.",
                             "type": [
@@ -10623,7 +10633,7 @@
                                             ]
                                           },
                                           "secrets": {
-                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                             "items": {
                                               "type": [
                                                 "string",
@@ -11129,7 +11139,7 @@
                                             ]
                                           },
                                           "secrets": {
-                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                             "items": {
                                               "type": [
                                                 "string",
@@ -11370,11 +11380,7 @@
                         "x-kubernetes-preserve-unknown-fields": true
                       },
                       "assert": {
-                        "description": "Assert defines a kyverno-json assertion tree.",
-                        "type": [
-                          "object",
-                          "null"
-                        ],
+                        "description": "Assert defines a kyverno-json assertion tree.\nDeprecated, kept only for backward compatibility but has no effect since 1.19.",
                         "x-kubernetes-preserve-unknown-fields": true
                       },
                       "cel": {
@@ -11414,11 +11420,11 @@
                               "description": "Validation specifies the CEL expression which is used to apply the validation.",
                               "properties": {
                                 "expression": {
-                                  "description": "Expression represents the expression which will be evaluated by CEL.\nref: https://github.com/google/cel-spec\nCEL expressions have access to the contents of the API request/response, organized into CEL variables as well as some other useful variables:\n\n- 'object' - The object from the incoming request. The value is null for DELETE requests.\n- 'oldObject' - The existing object. The value is null for CREATE requests.\n- 'request' - Attributes of the API request([ref](/pkg/apis/admission/types.go#AdmissionRequest)).\n- 'params' - Parameter resource referred to by the policy binding being evaluated. Only populated if the policy has a ParamKind.\n- 'namespaceObject' - The namespace object that the incoming object belongs to. The value is null for cluster-scoped resources.\n- 'variables' - Map of composited variables, from its name to its lazily evaluated value.\n  For example, a variable named 'foo' can be accessed as 'variables.foo'.\n- 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n- 'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\n\nThe `apiVersion`, `kind`, `metadata.name` and `metadata.generateName` are always accessible from the root of the\nobject. No other metadata properties are accessible.\n\nOnly property names of the form `[a-zA-Z_.-/][a-zA-Z0-9_.-/]*` are accessible.\nAccessible property names are escaped according to the following rules when accessed in the expression:\n- '__' escapes to '__underscores__'\n- '.' escapes to '__dot__'\n- '-' escapes to '__dash__'\n- '/' escapes to '__slash__'\n- Property names that exactly match a CEL RESERVED keyword escape to '__{keyword}__'. The keywords are:\n\t  \"true\", \"false\", \"null\", \"in\", \"as\", \"break\", \"const\", \"continue\", \"else\", \"for\", \"function\", \"if\",\n\t  \"import\", \"let\", \"loop\", \"package\", \"namespace\", \"return\".\nExamples:\n  - Expression accessing a property named \"namespace\": {\"Expression\": \"object.__namespace__ > 0\"}\n  - Expression accessing a property named \"x-prop\": {\"Expression\": \"object.x__dash__prop > 0\"}\n  - Expression accessing a property named \"redact__d\": {\"Expression\": \"object.redact__underscores__d > 0\"}\n\nEquality on arrays with list type of 'set' or 'map' ignores element order, i.e. [1, 2] == [2, 1].\nConcatenation on arrays with x-kubernetes-list-type use the semantics of the list type:\n  - 'set': `X + Y` performs a union where the array positions of all elements in `X` are preserved and\n    non-intersecting elements in `Y` are appended, retaining their partial order.\n  - 'map': `X + Y` performs a merge where the array positions of all keys in `X` are preserved but the values\n    are overwritten by values in `Y` when the key sets of `X` and `Y` intersect. Elements in `Y` with\n    non-intersecting keys are appended, retaining their partial order.\nRequired.",
+                                  "description": "expression represents the expression which will be evaluated by CEL.\nref: https://github.com/google/cel-spec\nCEL expressions have access to the contents of the API request/response, organized into CEL variables as well as some other useful variables:\n\n- 'object' - The object from the incoming request. The value is null for DELETE requests.\n- 'oldObject' - The existing object. The value is null for CREATE requests.\n- 'request' - Attributes of the API request([ref](/pkg/apis/admission/types.go#AdmissionRequest)).\n- 'params' - Parameter resource referred to by the policy binding being evaluated. Only populated if the policy has a ParamKind.\n- 'namespaceObject' - The namespace object that the incoming object belongs to. The value is null for cluster-scoped resources.\n- 'variables' - Map of composited variables, from its name to its lazily evaluated value.\n  For example, a variable named 'foo' can be accessed as 'variables.foo'.\n- 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n- 'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\n\nThe `apiVersion`, `kind`, `metadata.name` and `metadata.generateName` are always accessible from the root of the\nobject. No other metadata properties are accessible.\n\nOnly property names of the form `[a-zA-Z_.-/][a-zA-Z0-9_.-/]*` are accessible.\nAccessible property names are escaped according to the following rules when accessed in the expression:\n- '__' escapes to '__underscores__'\n- '.' escapes to '__dot__'\n- '-' escapes to '__dash__'\n- '/' escapes to '__slash__'\n- Property names that exactly match a CEL RESERVED keyword escape to '__{keyword}__'. The keywords are:\n\t  \"true\", \"false\", \"null\", \"in\", \"as\", \"break\", \"const\", \"continue\", \"else\", \"for\", \"function\", \"if\",\n\t  \"import\", \"let\", \"loop\", \"package\", \"namespace\", \"return\".\nExamples:\n  - Expression accessing a property named \"namespace\": {\"Expression\": \"object.__namespace__ > 0\"}\n  - Expression accessing a property named \"x-prop\": {\"Expression\": \"object.x__dash__prop > 0\"}\n  - Expression accessing a property named \"redact__d\": {\"Expression\": \"object.redact__underscores__d > 0\"}\n\nEquality on arrays with list type of 'set' or 'map' ignores element order, i.e. [1, 2] == [2, 1].\nConcatenation on arrays with x-kubernetes-list-type use the semantics of the list type:\n  - 'set': `X + Y` performs a union where the array positions of all elements in `X` are preserved and\n    non-intersecting elements in `Y` are appended, retaining their partial order.\n  - 'map': `X + Y` performs a merge where the array positions of all keys in `X` are preserved but the values\n    are overwritten by values in `Y` when the key sets of `X` and `Y` intersect. Elements in `Y` with\n    non-intersecting keys are appended, retaining their partial order.\nRequired.",
                                   "type": "string"
                                 },
                                 "message": {
-                                  "description": "Message represents the message displayed when validation fails. The message is required if the Expression contains\nline breaks. The message must not contain line breaks.\nIf unset, the message is \"failed rule: {Rule}\".\ne.g. \"must be a URL with the host matching spec.host\"\nIf the Expression contains line breaks. Message is required.\nThe message must not contain line breaks.\nIf unset, the message is \"failed Expression: {Expression}\".",
+                                  "description": "message represents the message displayed when validation fails. The message is required if the Expression contains\nline breaks. The message must not contain line breaks.\nIf unset, the message is \"failed rule: {Rule}\".\ne.g. \"must be a URL with the host matching spec.host\"\nIf the Expression contains line breaks. Message is required.\nThe message must not contain line breaks.\nIf unset, the message is \"failed Expression: {Expression}\".",
                                   "type": [
                                     "string",
                                     "null"
@@ -11432,7 +11438,7 @@
                                   ]
                                 },
                                 "reason": {
-                                  "description": "Reason represents a machine-readable description of why this validation failed.\nIf this is the first validation in the list to fail, this reason, as well as the\ncorresponding HTTP response code, are used in the\nHTTP response to the client.\nThe currently supported reasons are: \"Unauthorized\", \"Forbidden\", \"Invalid\", \"RequestEntityTooLarge\".\nIf not set, StatusReasonInvalid is used in the response to the client.",
+                                  "description": "reason represents a machine-readable description of why this validation failed.\nIf this is the first validation in the list to fail, this reason, as well as the\ncorresponding HTTP response code, are used in the\nHTTP response to the client.\nThe currently supported reasons are: \"Unauthorized\", \"Forbidden\", \"Invalid\", \"RequestEntityTooLarge\".\nIf not set, StatusReasonInvalid is used in the response to the client.",
                                   "type": [
                                     "string",
                                     "null"
@@ -11464,14 +11470,14 @@
                             "description": "ParamKind is a tuple of Group Kind and Version.",
                             "properties": {
                               "apiVersion": {
-                                "description": "APIVersion is the API group version the resources belong to.\nIn format of \"group/version\".\nRequired.",
+                                "description": "apiVersion is the API group version the resources belong to.\nIn format of \"group/version\".\nRequired.",
                                 "type": [
                                   "string",
                                   "null"
                                 ]
                               },
                               "kind": {
-                                "description": "Kind is the API kind the resources belong to.\nRequired.",
+                                "description": "kind is the API kind the resources belong to.\nRequired.",
                                 "type": [
                                   "string",
                                   "null"
@@ -11502,7 +11508,7 @@
                                 ]
                               },
                               "parameterNotFoundAction": {
-                                "description": "`parameterNotFoundAction` controls the behavior of the binding when the resource\nexists, and name or selector is valid, but there are no parameters\nmatched by the binding. If the value is set to `Allow`, then no\nmatched parameters will be treated as successful validation by the binding.\nIf set to `Deny`, then no matched parameters will be subject to the\n`failurePolicy` of the policy.\n\nAllowed values are `Allow` or `Deny`\n\nRequired",
+                                "description": "parameterNotFoundAction controls the behavior of the binding when the resource\nexists, and name or selector is valid, but there are no parameters\nmatched by the binding. If the value is set to `Allow`, then no\nmatched parameters will be treated as successful validation by the binding.\nIf set to `Deny`, then no matched parameters will be subject to the\n`failurePolicy` of the policy.\n\nAllowed values are `Allow` or `Deny`\n\nRequired",
                                 "type": [
                                   "string",
                                   "null"
@@ -11587,11 +11593,11 @@
                               "description": "Variable is the definition of a variable that is used for composition. A variable is defined as a named expression.",
                               "properties": {
                                 "expression": {
-                                  "description": "Expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
+                                  "description": "expression is the expression that will be evaluated as the value of the variable.\nThe CEL expression has access to the same identifiers as the CEL expressions in Validation.",
                                   "type": "string"
                                 },
                                 "name": {
-                                  "description": "Name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
+                                  "description": "name is the name of the variable. The name must be a valid CEL identifier and unique among all variables.\nThe variable can be accessed in other expressions through `variables`\nFor example, if name is \"foo\", the variable will be available as `variables.foo`",
                                   "type": "string"
                                 }
                               },
@@ -11985,7 +11991,7 @@
                                             ]
                                           },
                                           "secrets": {
-                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                                            "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                                             "items": {
                                               "type": [
                                                 "string",
@@ -13895,7 +13901,7 @@
                               ]
                             },
                             "secrets": {
-                              "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                              "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                               "items": {
                                 "type": [
                                   "string",

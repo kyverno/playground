@@ -2,9 +2,9 @@
 # DEFAULTS #
 ############
 
-KIND_IMAGE           ?= kindest/node:v1.35.1
+KIND_IMAGE           ?= kindest/node:v1.36.1
 KIND_NAME            ?= kind
-KYVERNO_VERSION      ?= v1.17.1
+KYVERNO_VERSION      ?= v1.19.2
 KOCACHE              ?= /tmp/ko-cache
 USE_CONFIG           ?= standard,no-ingress,in-cluster,all-read-rbac
 KUBECONFIG           ?= ""
@@ -46,15 +46,15 @@ CURRENT_DIR                   := $(PWD)
 HELM                          := $(TOOLS_DIR)/helm
 HELM_VERSION                  := v3.19.0
 KIND                          := $(TOOLS_DIR)/kind
-KIND_VERSION                  := v0.31.0
+KIND_VERSION                  := v0.32.0
 KO                            := $(TOOLS_DIR)/ko
 KO_VERSION     				  := v0.18.0
 HELM_DOCS                     := $(TOOLS_DIR)/helm-docs
 HELM_DOCS_VERSION             := v1.14.2
 GCI                           := $(TOOLS_DIR)/gci
-GCI_VERSION                   := v0.13.4
+GCI_VERSION                   := v0.13.7
 GOFUMPT                       := $(TOOLS_DIR)/gofumpt
-GOFUMPT_VERSION               := v0.6.0
+GOFUMPT_VERSION               := v0.9.1
 TOOLS                         := $(KIND) $(HELM) $(KO) $(HELM_DOCS) $(GCI) $(GOFUMPT)
 
 $(HELM):
@@ -211,8 +211,10 @@ build-frontend: ## Build frontend
 	@cp schemas/json/v3/validatingadmissionpolicy-admissionregistration-v1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexception-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexception-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/policyexception-policies.kyverno.io-v1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexceptionlist-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/policyexceptionlist-policies.kyverno.io-v1beta1.json frontend/src/schemas
+	@cp schemas/json/v3/policyexceptionlist-policies.kyverno.io-v1.json frontend/src/schemas
 	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1alpha1.json frontend/src/schemas
 	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1beta1.json frontend/src/schemas
 	@cp schemas/json/v3/imagevalidatingpolicy-policies.kyverno.io-v1.json frontend/src/schemas

@@ -1,9 +1,8 @@
-package engine
+package playground
 
 import (
-	"os"
-	"testing/fstest"
-
+	policiesv1beta1 "github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
+	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	kyvernov2 "github.com/kyverno/kyverno/api/kyverno/v2"
 	"github.com/kyverno/kyverno/ext/resource/loader"
 	yamlutils "github.com/kyverno/kyverno/ext/yaml"
@@ -13,11 +12,10 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/openapi"
-	"sigs.k8s.io/kubectl-validate/pkg/openapiclient"
 	"sigs.k8s.io/yaml"
 
-	"github.com/kyverno/playground/backend/data"
 	"github.com/kyverno/playground/backend/pkg/cluster"
+	"github.com/kyverno/playground/backend/pkg/crd"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 	"github.com/kyverno/playground/backend/pkg/exception"
 	"github.com/kyverno/playground/backend/pkg/policy"
@@ -32,16 +30,30 @@ type EngineRequest struct {
 	ClusterResources          string                      `json:"clusterResources"`
 	Context                   string                      `json:"context"`
 	Config                    string                      `json:"config"`
+	Operation                 string                      `json:"operation"`
 	CustomResourceDefinitions string                      `json:"customResourceDefinitions"`
 	PolicyExceptions          string                      `json:"policyExceptions"`
 	VAPBindings               string                      `json:"vapBindings"`
 	ImageData                 map[string]models.ImageData `json:"imageData"`
+	Parameters                *models.Parameters          `json:"-"`
 }
 
 func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
+	if r.Parameters != nil {
+		return r.Parameters, nil
+	}
+
 	var params models.Parameters
 	if err := yaml.Unmarshal([]byte(r.Context), &params); err != nil {
 		return nil, err
+	}
+	if params.Kubernetes.Version == "" {
+		params.Kubernetes.Version = "v1.34.0"
+	}
+	if params.Context.Operation == "" && r.Operation != "" {
+		params.Context.Operation = kyvernov1.AdmissionOperation(r.Operation)
+	} else {
+		params.Context.Operation = kyvernov1.Create
 	}
 	return &params, nil
 }
@@ -80,7 +92,7 @@ func (r *EngineRequest) LoadOldResources(resourceLoader loader.Loader) ([]unstru
 	return resource.LoadResources(resourceLoader, []byte(r.OldResources))
 }
 
-func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2.PolicyException, error) {
+func (r *EngineRequest) LoadPolicyExceptions() ([]*kyvernov2.PolicyException, []*policiesv1beta1.PolicyException, error) {
 	return exception.Load([]byte(r.PolicyExceptions))
 }
 
@@ -95,49 +107,8 @@ func (r *EngineRequest) LoadConfig(resourceLoader loader.Loader) (*corev1.Config
 	return resource.Load[corev1.ConfigMap](resourceLoader, []byte(r.Config))
 }
 
-func (r *EngineRequest) OpenAPIClient(cluster cluster.Cluster, kubeVersion string, config APIConfiguration) (openapi.Client, error) {
-	var clients []openapi.Client
-	if cluster != nil && !cluster.IsFake() {
-		dclient, err := cluster.DClient(nil)
-		if err != nil {
-			return nil, err
-		}
-		clients = append(clients, dclient.GetKubeClient().Discovery().OpenAPIV3())
-	} else {
-		client, err := cluster.OpenAPIClient(kubeVersion)
-		if err != nil {
-			return nil, err
-		}
-		clients = append(clients, client)
-	}
-
-	schemas, err := data.Schemas()
-	if err != nil {
-		return nil, err
-	}
-
-	clients = append(clients, openapiclient.NewLocalSchemaFiles(schemas))
-	if len(r.CustomResourceDefinitions) != 0 {
-		mapFs := fstest.MapFS{
-			"crds.yaml": &fstest.MapFile{
-				Data: []byte(r.CustomResourceDefinitions),
-			},
-		}
-		clients = append(clients, openapiclient.NewLocalCRDFiles(mapFs))
-	}
-	for _, crd := range config.LocalCrds {
-		clients = append(clients, openapiclient.NewLocalCRDFiles(os.DirFS(crd)))
-	}
-	for _, crd := range config.BuiltInCrds {
-		fs, err := data.BuiltInCrds(crd)
-		if err != nil {
-			return nil, err
-		}
-
-		clients = append(clients, openapiclient.NewLocalCRDFiles(fs))
-	}
-
-	return openapiclient.NewComposite(clients...), nil
+func (r *EngineRequest) OpenAPIClient(cluster cluster.Cluster, kubeVersion string, config crd.APIConfiguration) (openapi.Client, error) {
+	return crd.OpenAPIClient(cluster, kubeVersion, r.CustomResourceDefinitions, config)
 }
 
 func (r *EngineRequest) ResourceLoader(client openapi.Client) (loader.Loader, error) {

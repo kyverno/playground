@@ -1,0 +1,79 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "kyverno-playground.fullname" . }}-egress-internet-only
+  labels:
+    {{- include "kyverno-playground.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "kyverno-playground.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 100.64.0.0/10
+              - 127.0.0.0/8
+              - 169.254.0.0/16
+      {{- if .Values.networkPolicy.allowClusterDNS }}
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+      {{- end }}
+{{- if .Values.mcp.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "kyverno-playground.mcp.fullname" . }}-egress-internet-only
+  labels:
+    {{- include "kyverno-playground.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "kyverno-playground.mcp.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+              - 100.64.0.0/10
+              - 127.0.0.0/8
+              - 169.254.0.0/16
+      {{- if .Values.networkPolicy.allowClusterDNS }}
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+      {{- end }}
+{{- end }}
+{{- end }}

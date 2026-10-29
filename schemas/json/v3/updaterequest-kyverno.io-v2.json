@@ -351,7 +351,10 @@
                         "kind",
                         "version"
                       ],
-                      "type": "object"
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     },
                     "name": {
                       "description": "name is the name of the object as presented in the request.  On a CREATE operation, the client may omit name and\nrely on the server to generate the name.  If that is the case, this field will contain an empty string.",
@@ -385,7 +388,10 @@
                     },
                     "operation": {
                       "description": "operation is the operation being performed. This may be different than the operation\nrequested. e.g. a patch can result in either a CREATE or UPDATE Operation.",
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "options": {
                       "description": "options is the operation option structure of the operation being performed.\ne.g. `meta.k8s.io/v1.DeleteOptions` or `meta.k8s.io/v1.CreateOptions`. This may be\ndifferent than the options the caller provided. e.g. for a patch request the performed\nOperation might be a CREATE, in which case the Options will a\n`meta.k8s.io/v1.CreateOptions` even though the caller provided `meta.k8s.io/v1.PatchOptions`.",
@@ -466,7 +472,10 @@
                         "resource",
                         "version"
                       ],
-                      "type": "object"
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     },
                     "subResource": {
                       "description": "subResource is the subresource being requested, if any (for example, \"status\" or \"scale\")",
@@ -477,7 +486,10 @@
                     },
                     "uid": {
                       "description": "uid is an identifier for the individual request/response. It allows us to distinguish instances of requests which are\notherwise identical (parallel requests, requests when earlier requests did not modify etc)\nThe UID is meant to track the round trip (request/response) between the KAS and the WebHook, not the user request.\nIt is suitable for correlating log entries between the webhook and apiserver, for either auditing or debugging.",
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "userInfo": {
                       "description": "userInfo is information about the requesting user",
@@ -496,14 +508,14 @@
                               "null"
                             ]
                           },
-                          "description": "Any additional information provided by the authenticator.",
+                          "description": "extra is any additional information provided by the authenticator.",
                           "type": [
                             "object",
                             "null"
                           ]
                         },
                         "groups": {
-                          "description": "The names of groups this user is a part of.",
+                          "description": "groups is the names of groups this user is a part of.",
                           "items": {
                             "type": [
                               "string",
@@ -517,30 +529,26 @@
                           "x-kubernetes-list-type": "atomic"
                         },
                         "uid": {
-                          "description": "A unique value that identifies this user across time. If this user is\ndeleted and another user by the same name is added, they will have\ndifferent UIDs.",
+                          "description": "uid is a unique value that identifies this user across time. If this user is\ndeleted and another user by the same name is added, they will have\ndifferent UIDs.",
                           "type": [
                             "string",
                             "null"
                           ]
                         },
                         "username": {
-                          "description": "The name that uniquely identifies this user among all active users.",
+                          "description": "username is the name that uniquely identifies this user among all active users.",
                           "type": [
                             "string",
                             "null"
                           ]
                         }
                       },
-                      "type": "object"
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     }
                   },
-                  "required": [
-                    "kind",
-                    "operation",
-                    "resource",
-                    "uid",
-                    "userInfo"
-                  ],
                   "type": [
                     "object",
                     "null"
@@ -614,14 +622,14 @@
                           "null"
                         ]
                       },
-                      "description": "Any additional information provided by the authenticator.",
+                      "description": "extra is any additional information provided by the authenticator.",
                       "type": [
                         "object",
                         "null"
                       ]
                     },
                     "groups": {
-                      "description": "The names of groups this user is a part of.",
+                      "description": "groups is the names of groups this user is a part of.",
                       "items": {
                         "type": [
                           "string",
@@ -635,14 +643,14 @@
                       "x-kubernetes-list-type": "atomic"
                     },
                     "uid": {
-                      "description": "A unique value that identifies this user across time. If this user is\ndeleted and another user by the same name is added, they will have\ndifferent UIDs.",
+                      "description": "uid is a unique value that identifies this user across time. If this user is\ndeleted and another user by the same name is added, they will have\ndifferent UIDs.",
                       "type": [
                         "string",
                         "null"
                       ]
                     },
                     "username": {
-                      "description": "The name that uniquely identifies this user among all active users.",
+                      "description": "username is the name that uniquely identifies this user among all active users.",
                       "type": [
                         "string",
                         "null"

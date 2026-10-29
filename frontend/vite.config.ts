@@ -26,7 +26,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // monaco-editor >= 0.56 restricts deep imports via its exports map,
+      // but monaco-worker-manager (used by monaco-yaml) still uses the old path
+      'monaco-editor/esm/vs/editor/editor.worker.js': 'monaco-editor/editor/editor.worker.js'
     },
     extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue']
   },

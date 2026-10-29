@@ -15,14 +15,14 @@ import (
 	helper "github.com/kyverno/playground/backend/pkg/utils"
 )
 
-func K8sProcess(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, vpols []v1beta1.ValidatingPolicyLike) ([]models.Response, error) {
+func K8sProcess(ctx context.Context, dClient dclient.Interface, restMapper meta.RESTMapper, contextProvider libs.Context, params *models.Parameters, newResource, oldResource unstructured.Unstructured, vpols []v1beta1.ValidatingPolicyLike, exceptions []*v1beta1.PolicyException) ([]models.Response, error) {
 	request := utils.NewCELRequest(restMapper, contextProvider, params, newResource, oldResource)
 
 	filtered := helper.Filter(vpols, func(p v1beta1.ValidatingPolicyLike) bool {
 		return p.GetNamespace() == "" || p.GetNamespace() == newResource.GetNamespace()
 	})
 
-	eng, err := newCELEngine(dClient, filtered, nil)
+	eng, err := newCELEngine(dClient, filtered, exceptions)
 	if err != nil {
 		return nil, err
 	}

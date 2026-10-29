@@ -1,12 +1,15 @@
 name: codecov
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
   push:
     branches:
       - main
+
+permissions:
+  id-token: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set up Go
-        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
@@ -32,9 +35,9 @@ jobs:
           set -e
           make test-backend
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           file: ./backend/coverage.out
-          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           verbose: true
+          use_oidc: true

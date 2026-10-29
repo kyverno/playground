@@ -8,7 +8,7 @@ import (
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	"github.com/kyverno/kyverno/pkg/engine/adapters"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
-	"github.com/kyverno/kyverno/pkg/registryclient"
+	"github.com/kyverno/sdk/extensions/registryclient"
 
 	"github.com/kyverno/playground/backend/pkg/engine/models"
 )

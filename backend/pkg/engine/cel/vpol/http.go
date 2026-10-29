@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	v1 "github.com/kyverno/api/api/policies.kyverno.io/v1"
 	"github.com/kyverno/api/api/policies.kyverno.io/v1beta1"
 	"github.com/kyverno/kyverno-authz/pkg/cel/libs/authz/http"
 	"github.com/kyverno/kyverno-authz/pkg/engine"
@@ -121,7 +122,11 @@ func HTTPProcess(ctx context.Context, dclient dclient.Interface, resource *http.
 
 func NewHTTPSource(vpol v1beta1.ValidatingPolicyLike, compiler engine.Compiler[engine.HTTPPolicy]) core.Source[policy.Policy[dynamic.Interface, *http.CheckRequest, *http.CheckResponse]] {
 	if v, ok := vpol.(*v1beta1.ValidatingPolicy); ok {
-		p, err := compiler.Compile(v)
+		p, err := compiler.Compile(&v1.ValidatingPolicy{
+			TypeMeta:   v.TypeMeta,
+			ObjectMeta: v.ObjectMeta,
+			Spec:       v.Spec,
+		}, nil)
 		if err != nil {
 			return nil
 		}

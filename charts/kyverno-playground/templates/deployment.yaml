@@ -40,6 +40,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           args:
+            - run
             - --config=/config.yaml
             - --gin-mode={{ .Values.config.gin.mode }}
             - --gin-cors={{ .Values.config.gin.cors }}
