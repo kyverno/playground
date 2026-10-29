@@ -10,6 +10,7 @@ import (
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -69,28 +70,73 @@ func (c fakeCluster) OpenAPIClient(version string) (openapi.Client, error) {
 }
 
 func (c fakeCluster) DClient(objects []runtime.Object) (dclient.Interface, error) {
+	objects = append([]runtime.Object(nil), objects...)
 	s := runtime.NewScheme()
-	gvr := make(map[schema.GroupVersionResource]string)
-	list := []schema.GroupVersionResource{}
-
-	for _, o := range objects {
-		plural, _ := meta.UnsafeGuessKindToResource(o.GetObjectKind().GroupVersionKind())
-		if _, ok := gvr[plural]; ok {
+	listKinds := make(map[schema.GroupVersionResource]string)
+	resources := make(map[schema.GroupVersionKind]schema.GroupVersionResource)
+	// A custom resource's plural cannot reliably be inferred from its kind
+	// (Gateway, for example, is gateways rather than gatewaies). Register CRDs
+	// before their instances, including kinds with no supplied instances.
+	for i, object := range objects {
+		if crd, ok := object.(*apiextensionsv1.CustomResourceDefinition); ok {
+			for _, version := range crd.Spec.Versions {
+				gvk := schema.GroupVersionKind{Group: crd.Spec.Group, Version: version.Name, Kind: crd.Spec.Names.Kind}
+				gvr := gvk.GroupVersion().WithResource(crd.Spec.Names.Plural)
+				resources[gvk] = gvr
+				listKind := crd.Spec.Names.ListKind
+				if listKind == "" {
+					listKind = gvk.Kind + "List"
+				}
+				listKinds[gvr] = listKind
+				s.AddKnownTypeWithName(gvk, &unstructured.Unstructured{})
+			}
+			data, err := runtime.DefaultUnstructuredConverter.ToUnstructured(crd)
+			if err != nil {
+				return nil, err
+			}
+			objects[i] = &unstructured.Unstructured{Object: data}
+		}
+	}
+	for _, object := range objects {
+		gvk := object.GetObjectKind().GroupVersionKind()
+		if _, ok := resources[gvk]; ok {
 			continue
 		}
-
-		s.AddKnownTypeWithName(o.GetObjectKind().GroupVersionKind(), o)
-
-		gvr[plural] = o.GetObjectKind().GroupVersionKind().Kind + "List"
-
-		list = append(list, plural)
+		gvr, _ := meta.UnsafeGuessKindToResource(gvk)
+		resources[gvk] = gvr
+		listKinds[gvr] = gvk.Kind + "List"
+		s.AddKnownTypeWithName(gvk, &unstructured.Unstructured{})
 	}
 
-	dyn := fake.NewSimpleDynamicClientWithCustomListKinds(s, gvr, objects...)
+	dyn := fake.NewSimpleDynamicClientWithCustomListKinds(s, listKinds)
+	for _, object := range objects {
+		accessor, err := meta.Accessor(object)
+		if err != nil {
+			return nil, err
+		}
+		// Add would infer the plural again; seed the tracker with the CRD's GVR.
+		gvr := resources[object.GetObjectKind().GroupVersionKind()]
+		err = dyn.Tracker().Create(gvr, object, accessor.GetNamespace())
+		if apierrors.IsAlreadyExists(err) {
+			// Match the original tracker.Add behavior when UPDATE requests supply
+			// both the current resource and its previous version.
+			err = dyn.Tracker().Update(gvr, object, accessor.GetNamespace())
+		}
+		if err != nil {
+			return nil, err
+		}
+	}
+	registered := make([]schema.GroupVersionResource, 0, len(resources))
+	for _, gvr := range resources {
+		registered = append(registered, gvr)
+	}
+	discovery := dclient.NewFakeDiscoveryClient(registered)
+	for gvk, gvr := range resources {
+		discovery.AddGVRToGVKMapping(gvr, gvk)
+	}
 	kclient := kubefake.NewClientset(resource.ConvertResources(objects)...)
-
 	dClient, _ := dclient.NewClient(context.Background(), dyn, kclient, time.Hour, false, nil)
-	dClient.SetDiscovery(dclient.NewFakeDiscoveryClient(list))
+	dClient.SetDiscovery(discovery)
 
 	return dClient, nil
 }
