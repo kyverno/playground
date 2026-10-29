@@ -1,6 +1,6 @@
 import App from './App.vue'
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+import editorWorker from 'monaco-editor/editor/editor.worker.js?worker'
+import jsonWorker from 'monaco-editor/language/json/json.worker.js?worker'
 import yamlWorker from './worker/yaml.worker.js?worker?worker'
 import * as monaco from 'monaco-editor'
 import { configureMonacoYaml, type JSONSchema } from 'monaco-yaml'
