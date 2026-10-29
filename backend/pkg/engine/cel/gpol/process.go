@@ -44,7 +44,7 @@ func Process(ctx context.Context, dClient dclient.Interface, restMapper meta.RES
 			continue
 		}
 
-		engineResponse, err := eng.Handle(request, policy, false)
+		engineResponse, err := eng.Handle(ctx, request, policy, false)
 		if err != nil {
 			return nil, err
 		}

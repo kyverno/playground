@@ -20,8 +20,8 @@ func (p *staticProvider) Fetch(ctx context.Context, mutateExisting bool) []engin
 	return p.inner.Fetch(ctx, mutateExisting)
 }
 
-func (r *staticProvider) MatchesMutateExisting(ctx context.Context, attr admission.Attributes, req *admissionv1.AdmissionRequest, namespace *corev1.Namespace) []string {
-	return r.inner.MatchesMutateExisting(ctx, attr, req, namespace)
+func (r *staticProvider) MatchesMutateExisting(ctx context.Context, attr admission.Attributes, req *admissionv1.AdmissionRequest, namespace *corev1.Namespace, requestMapFn func() (map[string]any, error)) []string {
+	return r.inner.MatchesMutateExisting(ctx, attr, req, namespace, requestMapFn)
 }
 
 func NewProvider(compiler compiler.Compiler, policies []v1beta1.MutatingPolicyLike, exceptions []*v1beta1.PolicyException, libCtx libs.Context) (engine.Provider, error) {
