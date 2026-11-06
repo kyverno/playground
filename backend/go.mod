@@ -5,7 +5,6 @@ go 1.27.3
 require (
 	github.com/Masterminds/semver/v3 v3.5.0
 	github.com/envoyproxy/go-control-plane/envoy v1.39.0
-	github.com/evanphx/json-patch/v5 v5.9.11
 	github.com/gin-contrib/cors v1.7.9
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-logr/logr v1.4.4
@@ -15,7 +14,6 @@ require (
 	github.com/kyverno/api v0.0.1-alpha.3.0.20260723090831-fb2785727f98
 	github.com/kyverno/kyverno v1.19.3-0.20261026211809-0925e394a3b2
 	github.com/kyverno/kyverno-authz v0.4.1-0.20260701230957-9101a3ffd44f
-	github.com/kyverno/sdk v0.0.0-20261008171927-5a61cbc9e077
 	github.com/loopfz/gadgeto v0.11.6
 	github.com/mark3labs/mcp-go v0.58.0
 	github.com/spf13/cobra v1.10.2
@@ -25,9 +23,7 @@ require (
 	k8s.io/api v0.36.4
 	k8s.io/apiextensions-apiserver v0.36.3
 	k8s.io/apimachinery v0.36.4
-	k8s.io/apiserver v0.36.4
 	k8s.io/client-go v0.36.4
-	k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2
 	sigs.k8s.io/controller-runtime v0.24.1
 	sigs.k8s.io/kubectl-validate v0.0.5-0.20260105161640-a97ccfaca20b
 	sigs.k8s.io/yaml v1.6.0
@@ -141,6 +137,7 @@ require (
 	github.com/emicklei/proto v1.14.3 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.3.3 // indirect
 	github.com/evanphx/json-patch v5.9.11+incompatible // indirect
+	github.com/evanphx/json-patch/v5 v5.9.11 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fluxcd/pkg/oci v0.45.0 // indirect
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
@@ -232,6 +229,7 @@ require (
 	github.com/knadh/koanf/maps v0.1.2 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/kyverno/go-jmespath v0.4.1-0.20231124160150-95e59c162877 // indirect
+	github.com/kyverno/sdk v0.0.0-20261008171927-5a61cbc9e077 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.4 // indirect
 	github.com/lestrrat-go/dsig v1.2.1 // indirect
@@ -382,6 +380,7 @@ require (
 	gopkg.in/ini.v1 v1.67.3 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	k8s.io/apiserver v0.36.4 // indirect
 	k8s.io/cli-runtime v0.36.3 // indirect
 	k8s.io/component-base v0.36.4 // indirect
 	k8s.io/klog/v2 v2.140.0 // indirect
@@ -389,6 +388,7 @@ require (
 	k8s.io/kubectl v0.36.2 // indirect
 	k8s.io/pod-security-admission v0.36.2 // indirect
 	k8s.io/streaming v0.36.4 // indirect
+	k8s.io/utils v0.0.0-20260210185600-b8788abfbbc2 // indirect
 	oras.land/oras-go/v2 v2.6.2 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.34.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect

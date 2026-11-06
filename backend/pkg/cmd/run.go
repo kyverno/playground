@@ -14,7 +14,8 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/config"
-	"github.com/kyverno/playground/backend/pkg/engine"
+	"github.com/kyverno/playground/backend/pkg/playground"
+	"github.com/kyverno/playground/backend/pkg/serve"
 	"github.com/kyverno/playground/backend/pkg/server"
 	"github.com/kyverno/playground/backend/pkg/server/api"
 	apiconfig "github.com/kyverno/playground/backend/pkg/server/api/config"
@@ -49,6 +50,7 @@ type uiFlags struct {
 type engineFlags struct {
 	builtInCrds []string
 	localCrds   []string
+	serveURL    string
 }
 
 type clusterFlags struct {
@@ -76,6 +78,7 @@ func NewRunCommand() *cobra.Command {
 	// engine flags
 	res.Flags().StringSliceVar(&command.engineFlags.builtInCrds, "engine-builtin-crds", nil, "list of enabled builtin custom resource definitions")
 	res.Flags().StringSliceVar(&command.engineFlags.localCrds, "engine-local-crds", nil, "list of folders containing custom resource definitions")
+	res.Flags().StringVar(&command.engineFlags.serveURL, "engine-serve-url", serve.URLFromEnv(), "URL of the `kyverno serve --allow-request-policies` instance that evaluates policies (env KYVERNO_SERVE_URL)")
 	// cluster flags
 	res.Flags().BoolVar(&command.clusterFlags.cluster, "cluster", false, "enable cluster connected mode")
 	clientcmd.BindOverrideFlags(&command.clusterFlags.kubeConfigOverrides, res.Flags(), clientcmd.RecommendedConfigOverrideFlags("kube-"))
@@ -93,20 +96,13 @@ func (c *commandFlags) Run(_ *cobra.Command, _ []string) error {
 	gin.SetMode(c.ginFlags.mode)
 	tonic.SetBindHook(tonic.DefaultBindingHookMaxBodyBytes(int64(c.ginFlags.maxBodySize)))
 	tonic.SetErrorHook(func(c *gin.Context, err error) (int, interface{}) {
-		switch e := err.(type) {
-		case engine.PolicyViolationError:
-			return http.StatusBadRequest, gin.H{
-				"violations": e.Violations,
-				"error":      e.Error(),
-				"reason":     "POLICY_VALIDATION",
-			}
-		default:
-			return http.StatusBadRequest, gin.H{
-				"error":  e.Error(),
-				"reason": "ERROR",
-			}
+		return http.StatusBadRequest, gin.H{
+			"error":  err.Error(),
+			"reason": "ERROR",
 		}
 	})
+	// all policy evaluation is delegated to kyverno serve
+	playground.SetServeURL(c.engineFlags.serveURL)
 	// create server
 	server, err := server.New(c.ginFlags.log, c.ginFlags.cors)
 	if err != nil {

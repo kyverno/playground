@@ -33,6 +33,7 @@ func targetRequest(t *testing.T) *playground.EngineRequest {
 }
 
 func TestMutatingPolicyTargets(t *testing.T) {
+	requireServe(t)
 	req := targetRequest(t)
 	response, err := playground.Run(context.Background(), cluster.NewFake(), req, crd.APIConfiguration{})
 	require.NoError(t, err)
@@ -57,6 +58,7 @@ func TestMutatingPolicyTargets(t *testing.T) {
 }
 
 func TestMutatingPolicyTargetSelection(t *testing.T) {
+	requireServe(t)
 	tests := []struct {
 		name   string
 		change func(*playground.EngineRequest, map[string]interface{})
@@ -168,6 +170,7 @@ func TestMutatingPolicyTargetSelection(t *testing.T) {
 }
 
 func TestMutatingPolicyTargetConditions(t *testing.T) {
+	requireServe(t)
 	req := targetRequest(t)
 	req.Policies = strings.Replace(req.Policies, "  mutations:", "  targetMatchConditions:\n  - name: selected-gateway\n    expression: object.metadata.name == 'gateway-a'\n  mutations:", 1)
 	response, err := playground.Run(context.Background(), cluster.NewFake(), req, crd.APIConfiguration{})
@@ -188,6 +191,7 @@ func TestMutatingPolicyTargetConditions(t *testing.T) {
 }
 
 func TestOrdinaryMutatingPolicy(t *testing.T) {
+	requireServe(t)
 	for _, emptyConstraints := range []bool{false, true} {
 		t.Run(fmt.Sprintf("empty constraints %t", emptyConstraints), func(t *testing.T) {
 			req := targetRequest(t)

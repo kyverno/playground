@@ -78,3 +78,28 @@ MCP selector labels
 app.kubernetes.io/name: {{ printf "%s-mcp" (include "kyverno-playground.name" .) }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+kyverno serve sidecar: all Playground policy evaluation is delegated to it. It listens on the pod
+loopback only, since it accepts policies in requests and has no authentication.
+*/}}
+{{- define "kyverno-playground.serveURL" -}}
+http://127.0.0.1:{{ int .Values.kyvernoServe.port }}
+{{- end -}}
+
+{{- define "kyverno-playground.serveContainer" -}}
+- name: kyverno-serve
+  image: "{{ .Values.kyvernoServe.image.registry }}/{{ .Values.kyvernoServe.image.repository }}:{{ .Values.kyvernoServe.image.tag }}"
+  imagePullPolicy: {{ .Values.kyvernoServe.image.pullPolicy }}
+  args:
+    - serve
+    - --allow-request-policies
+    - --address=127.0.0.1:{{ int .Values.kyvernoServe.port }}
+  env:
+    - name: KYVERNO_EXPERIMENTAL
+      value: "true"
+  securityContext:
+    {{- toYaml .Values.securityContext | nindent 4 }}
+  resources:
+    {{- toYaml .Values.kyvernoServe.resources | nindent 4 }}
+{{- end -}}

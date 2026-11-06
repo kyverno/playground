@@ -50,6 +50,7 @@ spec:
             - --server-port={{ int .Values.config.server.port }}
             - --cluster={{ .Values.config.cluster.enabled }}
             - --ui-sponsor={{ .Values.config.ui.sponsor }}
+            - --engine-serve-url={{ include "kyverno-playground.serveURL" . }}
             {{- range .Values.config.engine.builtinCrds }}
             - --engine-builtin-crds={{ . }}
             {{- end }}
@@ -84,6 +85,7 @@ spec:
               subPath: config.yaml
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        {{- include "kyverno-playground.serveContainer" . | nindent 8 }}
       volumes:
       - name: sigstore
         emptyDir: {}

@@ -23,6 +23,23 @@ image:
   # -- Image tag (will default to app version if not set)
   tag: ~
 
+kyvernoServe:
+  # The Playground evaluates every request with `kyverno serve` (experimental, from the Kyverno CLI
+  # image), run as a sidecar listening on the pod loopback only.
+  image:
+    # -- kyverno serve image registry
+    registry: ghcr.io
+    # -- kyverno serve image repository (the Kyverno CLI image)
+    repository: kyverno/kyverno-cli
+    # -- kyverno serve image tag; must be a Kyverno CLI release that includes `kyverno serve`
+    tag: v1.20.0
+    # -- kyverno serve image pull policy
+    pullPolicy: IfNotPresent
+  # -- Loopback port kyverno serve listens on
+  port: 8081
+  # -- kyverno serve container resources
+  resources: {}
+
 # -- Image pull secrets
 imagePullSecrets: []
 

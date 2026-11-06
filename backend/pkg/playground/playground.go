@@ -2,245 +2,419 @@ package playground
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"sort"
+	"strings"
+	"sync"
 
-	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	"github.com/kyverno/kyverno/ext/resource/loader"
-	"github.com/kyverno/kyverno/pkg/clients/dclient"
+	yamlutils "github.com/kyverno/kyverno/ext/yaml"
 	engineapi "github.com/kyverno/kyverno/pkg/engine/api"
+	"google.golang.org/protobuf/encoding/protojson"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apiserver/pkg/admission/plugin/policy/mutating/patch"
+	"sigs.k8s.io/yaml"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/crd"
-	"github.com/kyverno/playground/backend/pkg/engine"
-	"github.com/kyverno/playground/backend/pkg/engine/cel/processor"
 	"github.com/kyverno/playground/backend/pkg/engine/models"
-	"github.com/kyverno/playground/backend/pkg/policy"
 	"github.com/kyverno/playground/backend/pkg/resource"
+	"github.com/kyverno/playground/backend/pkg/serve"
 )
 
-func Run(ctx context.Context, cl cluster.Cluster, request *EngineRequest, config crd.APIConfiguration) (*EngineResponse, error) {
+// The Playground has no policy evaluation of its own: every request is evaluated by a
+// `kyverno serve --allow-request-policies` instance through its v1alpha1 HTTP API, so the
+// Playground, `kyverno apply` and `kyverno serve` share one evaluation path.
+
+var (
+	clientMu sync.RWMutex
+	client   = serve.NewClient(serve.URLFromEnv())
+)
+
+// SetServeURL points the Playground at the kyverno serve instance that evaluates requests.
+func SetServeURL(url string) {
+	clientMu.Lock()
+	defer clientMu.Unlock()
+	client = serve.NewClient(url)
+}
+
+func serveClient() *serve.Client {
+	clientMu.RLock()
+	defer clientMu.RUnlock()
+	return client
+}
+
+const (
+	modeKubernetes = "Kubernetes"
+	modeJSON       = "JSON"
+	modeHTTP       = "HTTP"
+	modeEnvoy      = "Envoy"
+)
+
+// Run evaluates request with kyverno serve. The cluster and CRD configuration parameters are kept
+// for API compatibility; kyverno serve evaluates offline against the objects in the request.
+func Run(ctx context.Context, _ cluster.Cluster, request *EngineRequest, _ crd.APIConfiguration) (*EngineResponse, error) {
 	params, err := request.LoadParameters()
 	if err != nil {
 		return nil, err
 	}
-
-	openAPI, err := cl.OpenAPIClient(params.Kubernetes.Version)
+	if err := checkSupported(params); err != nil {
+		return nil, err
+	}
+	policies, err := parsePolicies(request.Policies)
 	if err != nil {
 		return nil, err
 	}
-
-	policyLoader, err := loader.New(openAPI)
+	mode := policies.mode()
+	if mode == "" || strings.TrimSpace(request.Resources) == "" {
+		return &EngineResponse{}, nil
+	}
+	payloads, resources, err := splitPayloads(mode, request.Resources)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to load resources: %w", err)
 	}
 
-	client, err := request.OpenAPIClient(cl, params.Kubernetes.Version, config)
-	if err != nil {
-		return nil, fmt.Errorf("failed to load OpenAPI client: %w", err)
+	base := serve.EvaluationRequest{
+		Mode:       mode,
+		Policies:   joinDocuments(request.Policies, request.VAPBindings),
+		Exceptions: request.PolicyExceptions,
 	}
-
-	resourceLoader, err := request.ResourceLoader(client)
-	if err != nil {
-		return nil, err
-	}
-
-	c, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	tcm := patch.NewTypeConverterManager(nil, client)
-	go tcm.Run(c)
-
-	k8s, jsonPolicies, authzPolicies, err := policy.Load(policyLoader, []byte(request.Policies))
-	if err != nil {
-		return nil, err
-	}
-
-	var results *models.Results
-	var resources []unstructured.Unstructured
-
-	if k8s.Length() > 0 {
-		resources, err = resource.LoadResources(resourceLoader, []byte(request.Resources))
-		if err != nil {
-			return nil, fmt.Errorf("unable to load resources: %w", err)
-		}
-		oldResources, err := resource.LoadResources(resourceLoader, []byte(request.OldResources))
-		if err != nil {
-			return nil, fmt.Errorf("unable to load old resources: %w", err)
-		}
-		clusterResources, err := resource.LoadResources(resourceLoader, []byte(request.ClusterResources))
-		if err != nil {
+	var clusterObjects []unstructured.Unstructured
+	if mode == modeKubernetes {
+		base.Operation = string(params.Context.Operation)
+		base.CustomResourceDefinitions = request.CustomResourceDefinitions
+		base.OldPayload = request.OldResources
+		// Playground cluster resources are the existing cluster: namespace lookups, CEL
+		// resource.get/resource.list (through a CLI Context) and mutateExisting targets read them.
+		existing := request.ClusterResources
+		base.ClusterResources = existing
+		base.TargetResources = existing
+		if base.Context, err = buildContext(existing, params.ImageData, request.ImageData); err != nil {
 			return nil, err
 		}
-		config, err := request.LoadConfig(resourceLoader)
+		objects, err := yamlObjects(existing)
 		if err != nil {
-			return nil, fmt.Errorf("unable to load config resources: %w", err)
+			return nil, fmt.Errorf("unable to load cluster resources: %w", err)
 		}
-		exceptions, celExceptions, err := request.LoadPolicyExceptions()
+		for _, o := range objects {
+			clusterObjects = append(clusterObjects, unstructured.Unstructured{Object: o})
+		}
+	}
+
+	results := &models.Results{
+		Mutation:          []models.Response{},
+		ImageVerification: []models.Response{},
+		Deletion:          []models.Response{},
+		Validation:        []models.Response{},
+		Generation:        []models.Response{},
+	}
+	for i, payload := range payloads {
+		req := base
+		req.Payload = payload
+		resp, err := serveClient().Evaluate(ctx, req)
 		if err != nil {
-			return nil, fmt.Errorf("unable to load policy exceptions: %w", err)
-		}
-
-		k8s.PolicyExceptions = append(k8s.PolicyExceptions, celExceptions...)
-		jsonPolicies.PolicyExceptions = append(jsonPolicies.PolicyExceptions, celExceptions...)
-		authzPolicies.PolicyExceptions = append(authzPolicies.PolicyExceptions, celExceptions...)
-
-		crds, err := request.LoadCRDs()
-		if err != nil {
-			return nil, fmt.Errorf("unable to load resources: %w", err)
-		}
-
-		clusterResources = append(oldResources, clusterResources...)
-		clusterObjects := resource.AppendNamespaces(resources, clusterResources)
-		for _, crd := range crds {
-			clusterObjects = append(clusterObjects, crd)
-		}
-
-		dClient, err := cl.DClient(append(resource.ToObjects(resources), clusterObjects...))
-		if err != nil {
-			return nil, err
-		}
-		cmResolver, err := cluster.NewConfigMapResolver(dClient)
-		if err != nil {
-			return nil, err
-		}
-
-		var exceptionSelector engineapi.PolicyExceptionSelector
-		if params.Flags.Exceptions.Enabled {
-			exceptionSelector = cl.PolicyExceptionSelector(params.Flags.Exceptions.Namespace, exceptions...)
-		}
-
-		if cl.IsFake() {
-			if err := ValidateParams(params, cmResolver, k8s.Policies); err != nil {
-				return nil, err
+			var serveErr *serve.Error
+			if errors.As(err, &serveErr) && serveErr.Code < 500 {
+				return nil, errors.New(serveErr.Message)
 			}
-		}
-
-		processor, err := engine.NewProcessor(params, cl, config, dClient, cmResolver, exceptionSelector, tcm, cl.RESTMapper(crds))
-		if err != nil {
 			return nil, err
 		}
-		results, err = processor.Run(ctx, k8s, resources, oldResources)
-		if err != nil {
-			return nil, err
+		var payloadObject *unstructured.Unstructured
+		if mode != modeKubernetes && i < len(resources) {
+			payloadObject = &resources[i]
 		}
-
-		return &EngineResponse{
-			Resources: resources,
-			Results:   results,
-		}, nil
+		addResults(results, resp, policies, append(cloneObjects(resources), clusterObjects...), len(resources), payloadObject)
 	}
-
-	if jsonPolicies.Length() > 0 {
-		resources, err = resource.LoadJSON(request.Resources)
-		if err != nil {
-			return nil, fmt.Errorf("unable to load resources: %w", err)
-		}
-
-		dClient, err := CreateDClient(cl, request, resourceLoader, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		processor := processor.NewJSON(dClient, tcm)
-		results, err = processor.Run(ctx, jsonPolicies, resources)
-		if err != nil {
-			return nil, err
-		}
-
-		return &EngineResponse{
-			Resources: resources,
-			Results:   results,
-		}, nil
+	out := &EngineResponse{Results: results}
+	if mode == modeKubernetes || mode == modeJSON {
+		out.Resources = resources
 	}
-
-	if len(authzPolicies.EnvoyPolicies) > 0 {
-		resources, err := resource.LoadEnvyRequests(request.Resources)
-		if err != nil {
-			return nil, fmt.Errorf("unable to load resources: %w", err)
-		}
-
-		dClient, err := CreateDClient(cl, request, resourceLoader, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		processor := processor.NewAuthz(dClient)
-		results, err = processor.RunEnvoy(context.Background(), authzPolicies, resources)
-		if err != nil {
-			return nil, err
-		}
-
-		return &EngineResponse{
-			Results: results,
-		}, nil
-	}
-
-	if len(authzPolicies.HTTPPolicies) > 0 {
-		resources, err := resource.LoadHTTPRequests(request.Resources)
-		if err != nil {
-			return nil, fmt.Errorf("unable to load resources: %w", err)
-		}
-
-		dClient, err := CreateDClient(cl, request, resourceLoader, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		processor := processor.NewAuthz(dClient)
-		results, err = processor.RunHTTP(context.Background(), authzPolicies, resources)
-		if err != nil {
-			return nil, err
-		}
-
-		return &EngineResponse{
-			Results: results,
-		}, nil
-	}
-
-	return &EngineResponse{
-		Resources: nil,
-		Results:   nil,
-	}, nil
+	return out, nil
 }
 
-func ValidateParams(params *models.Parameters, cmResolver engineapi.ConfigmapResolver, policies []kyvernov1.PolicyInterface) error {
-	if params == nil {
-		return nil
+func cloneObjects(in []unstructured.Unstructured) []unstructured.Unstructured {
+	return append([]unstructured.Unstructured(nil), in...)
+}
+
+// checkSupported rejects request settings kyverno serve v1alpha1 cannot honor, instead of silently
+// evaluating without them.
+func checkSupported(params *models.Parameters) error {
+	var unsupported []string
+	if len(params.Variables) > 0 {
+		unsupported = append(unsupported, "context variables")
 	}
-
-	for _, policy := range policies {
-		for _, rule := range policy.GetSpec().Rules {
-			for _, variable := range rule.Context {
-				if variable.APICall == nil && variable.ConfigMap == nil {
-					continue
-				}
-				if _, ok := params.Variables[variable.Name]; ok {
-					continue
-				}
-				if variable.ConfigMap != nil {
-					_, err := cmResolver.Get(context.Background(), variable.ConfigMap.Namespace, variable.ConfigMap.Name)
-					if err == nil {
-						continue
-					}
-				}
-
-				return fmt.Errorf("variable %s is not defined in the context", variable.Name)
-			}
-		}
+	c := params.Context
+	if c.Username != "" || len(c.Groups) > 0 || len(c.Roles) > 0 || len(c.ClusterRoles) > 0 {
+		unsupported = append(unsupported, "user info (username, groups, roles, clusterRoles)")
 	}
-
+	if len(c.NamespaceLabels) > 0 {
+		unsupported = append(unsupported, "context namespaceLabels (add the Namespace to cluster resources instead)")
+	}
+	if len(unsupported) > 0 {
+		return fmt.Errorf("not supported by the kyverno serve v1alpha1 evaluation backend: %s", strings.Join(unsupported, ", "))
+	}
 	return nil
 }
 
-func CreateDClient(cl cluster.Cluster, in *EngineRequest, loader loader.Loader, resources []unstructured.Unstructured) (dclient.Interface, error) {
-	clusterResources, err := in.LoadClusterResources(loader)
+func joinDocuments(docs ...string) string {
+	var parts []string
+	for _, d := range docs {
+		if strings.TrimSpace(d) != "" {
+			parts = append(parts, strings.TrimSpace(d))
+		}
+	}
+	return strings.Join(parts, "\n---\n")
+}
+
+// buildContext converts cluster objects and image data into a cli.kyverno.io/v1alpha1 Context.
+func buildContext(clusterResources string, imageData ...map[string]models.ImageData) (string, error) {
+	spec := map[string]any{}
+	if strings.TrimSpace(clusterResources) != "" {
+		objects, err := yamlObjects(clusterResources)
+		if err != nil {
+			return "", fmt.Errorf("unable to load cluster resources: %w", err)
+		}
+		if len(objects) > 0 {
+			spec["resources"] = objects
+		}
+	}
+	var images []map[string]any
+	for _, m := range imageData {
+		for _, img := range m {
+			images = append(images, map[string]any{
+				"image":         img.Image,
+				"resolvedImage": img.ResolvedImage,
+				"registry":      img.Registry,
+				"repository":    img.Repository,
+				"identifier":    img.Identifier,
+				"manifest":      img.Manifest,
+				"configData":    img.ConfigData,
+			})
+		}
+	}
+	if len(images) > 0 {
+		spec["images"] = images
+	}
+	if len(spec) == 0 {
+		return "", nil
+	}
+	b, err := yaml.Marshal(map[string]any{
+		"apiVersion": "cli.kyverno.io/v1alpha1",
+		"kind":       "Context",
+		"metadata":   map[string]any{"name": "playground"},
+		"spec":       spec,
+	})
+	return string(b), err
+}
+
+func yamlObjects(content string) ([]map[string]any, error) {
+	docs, err := yamlutils.SplitDocuments([]byte(content))
 	if err != nil {
 		return nil, err
 	}
+	var out []map[string]any
+	for _, doc := range docs {
+		var obj map[string]any
+		if err := yaml.Unmarshal(doc, &obj); err != nil {
+			return nil, err
+		}
+		if len(obj) == 0 {
+			continue
+		}
+		if items, ok := obj["items"].([]any); ok && strings.HasSuffix(fmt.Sprint(obj["kind"]), "List") {
+			for _, item := range items {
+				if m, ok := item.(map[string]any); ok {
+					out = append(out, m)
+				}
+			}
+			continue
+		}
+		out = append(out, obj)
+	}
+	return out, nil
+}
 
-	clusterObjects := resource.AppendNamespaces(resources, clusterResources)
+// splitPayloads turns the Playground "resources" editor content into kyverno serve payloads: one
+// request with every Kubernetes resource, or one request per JSON/HTTP/Envoy payload (a JSON
+// array holds several). It also returns the decoded objects shown back in the UI.
+func splitPayloads(mode, content string) ([]string, []unstructured.Unstructured, error) {
+	switch mode {
+	case modeKubernetes:
+		objects, err := yamlObjects(content)
+		if err != nil {
+			return nil, nil, err
+		}
+		resources := make([]unstructured.Unstructured, 0, len(objects))
+		for _, o := range objects {
+			resources = append(resources, unstructured.Unstructured{Object: o})
+		}
+		return []string{content}, resources, nil
+	case modeJSON:
+		resources, err := resource.LoadJSON(content)
+		if err != nil {
+			return nil, nil, err
+		}
+		payloads := make([]string, 0, len(resources))
+		for _, r := range resources {
+			b, err := json.Marshal(r.Object)
+			if err != nil {
+				return nil, nil, err
+			}
+			payloads = append(payloads, string(b))
+		}
+		return payloads, resources, nil
+	case modeEnvoy:
+		requests, err := resource.LoadEnvyRequests(content)
+		if err != nil {
+			return nil, nil, err
+		}
+		payloads := make([]string, 0, len(requests))
+		for _, r := range requests {
+			b, err := protojson.Marshal(r)
+			if err != nil {
+				return nil, nil, err
+			}
+			payloads = append(payloads, string(b))
+		}
+		return payloads, nil, nil
+	case modeHTTP:
+		requests, err := resource.LoadHTTPRequests(content)
+		if err != nil {
+			return nil, nil, err
+		}
+		payloads := make([]string, 0, len(requests))
+		for _, r := range requests {
+			b, err := json.Marshal(r)
+			if err != nil {
+				return nil, nil, err
+			}
+			payloads = append(payloads, string(b))
+		}
+		return payloads, nil, nil
+	}
+	return nil, nil, fmt.Errorf("unsupported mode %s", mode)
+}
 
-	return cl.DClient(clusterObjects)
+// addResults groups kyverno serve rule results by policy, resource and rule type into the
+// Playground's per-type response lists, ordered like the objects in the request.
+func addResults(out *models.Results, resp *serve.EvaluationResponse, policies policyIndex, objects []unstructured.Unstructured, payloadCount int, payload *unstructured.Unstructured) {
+	type key struct {
+		policy   serve.ObjectRef
+		resource serve.ObjectRef
+		ruleType string
+	}
+	type group struct {
+		key      key
+		position int
+		seq      int
+		response *models.Response
+	}
+	var groups []*group
+	byKey := map[key]*group{}
+	for _, r := range resp.Results {
+		var resRef serve.ObjectRef
+		if r.Resource != nil {
+			resRef = *r.Resource
+		}
+		k := key{policy: r.Policy, resource: resRef, ruleType: r.Type}
+		g, ok := byKey[k]
+		if !ok {
+			g = &group{key: k, position: len(objects), seq: len(groups), response: &models.Response{Policy: policies.describe(r.Policy)}}
+			if idx, obj := findResource(objects, r.Resource, payload); obj != nil {
+				g.position = idx
+				g.response.Resource = *obj
+				if b, err := yaml.Marshal(obj.Object); err == nil {
+					g.response.OriginalResource = string(b)
+					g.response.PatchedResource = string(b)
+				}
+			}
+			byKey[k] = g
+			groups = append(groups, g)
+		}
+		patched := r.PatchedResource
+		if r.PatchedTarget != nil {
+			patched = r.PatchedTarget
+		}
+		if patched != nil {
+			if b, err := yaml.Marshal(patched); err == nil {
+				g.response.PatchedResource = string(b)
+			}
+		}
+		g.response.PolicyResponse.Rules = append(g.response.PolicyResponse.Rules, convertRule(r))
+	}
+	// payload resources keep their order; results on other objects (mutateExisting targets) follow,
+	// ordered by namespace and name
+	sort.SliceStable(groups, func(i, j int) bool {
+		pi, pj := groups[i].position, groups[j].position
+		if pi >= payloadCount && pj >= payloadCount {
+			ri, rj := groups[i].key.resource, groups[j].key.resource
+			if ri.Namespace != rj.Namespace {
+				return ri.Namespace < rj.Namespace
+			}
+			if ri.Name != rj.Name {
+				return ri.Name < rj.Name
+			}
+			return groups[i].seq < groups[j].seq
+		}
+		if pi != pj {
+			return pi < pj
+		}
+		return groups[i].seq < groups[j].seq
+	})
+	for _, g := range groups {
+		switch engineapi.RuleType(g.key.ruleType) {
+		case engineapi.Mutation:
+			out.Mutation = append(out.Mutation, *g.response)
+		case engineapi.Generation:
+			out.Generation = append(out.Generation, *g.response)
+		case engineapi.ImageVerify:
+			out.ImageVerification = append(out.ImageVerification, *g.response)
+		case engineapi.Deletion:
+			out.Deletion = append(out.Deletion, *g.response)
+		default:
+			out.Validation = append(out.Validation, *g.response)
+		}
+	}
+}
+
+func convertRule(r serve.RuleResult) models.RuleResponse {
+	name := r.Rule
+	if name == "" {
+		name = r.Policy.Name
+	}
+	rule := models.RuleResponse{
+		Name:       name,
+		RuleType:   engineapi.RuleType(r.Type),
+		Message:    r.Message,
+		Status:     engineapi.RuleStatus(r.Status),
+		Properties: r.Properties,
+	}
+	if r.PatchedTarget != nil {
+		rule.PatchedTarget = &unstructured.Unstructured{Object: r.PatchedTarget}
+	}
+	switch len(r.GeneratedResources) {
+	case 0:
+	case 1:
+		if b, err := yaml.Marshal(r.GeneratedResources[0]); err == nil {
+			rule.GeneratedResource = string(b)
+		}
+	default:
+		if b, err := yaml.Marshal(r.GeneratedResources); err == nil {
+			rule.GeneratedResource = string(b)
+		}
+	}
+	return rule
+}
+
+func findResource(objects []unstructured.Unstructured, ref *serve.ObjectRef, payload *unstructured.Unstructured) (int, *unstructured.Unstructured) {
+	if ref == nil {
+		return 0, payload
+	}
+	for i := range objects {
+		r := &objects[i]
+		if r.GetAPIVersion() == ref.APIVersion && r.GetKind() == ref.Kind && r.GetNamespace() == ref.Namespace && r.GetName() == ref.Name {
+			return i, r
+		}
+	}
+	return len(objects), payload
 }
