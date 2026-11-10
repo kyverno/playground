@@ -63,7 +63,7 @@ check() { # name policy-file payload-file apply-flag
   curl -s -X POST -H 'Content-Type: application/json' --data-binary "@$WORK/req.json" "http://127.0.0.1:$PG_PORT/api/engine" >"$WORK/pg.json"
   got="$(playground_summary "$WORK/pg.json" 2>/dev/null || echo "invalid: $(head -c 300 "$WORK/pg.json")")"
   serve_got="$(jq -n --rawfile p "$policy" --rawfile r "$payload" --arg m "$5" '{mode: $m, policies: $p, payload: $r}' |
-    curl -s -X POST --data-binary @- "http://127.0.0.1:$SERVE_PORT/v1alpha1/evaluate" |
+    curl -s -X POST -H 'Content-Type: application/json' --data-binary @- "http://127.0.0.1:$SERVE_PORT/v1alpha1/evaluate" |
     jq -r '.summary | [.pass, .fail, .warn, .error, .skip] | map(tostring) | join(" ")')"
   if [ -n "$want" ] && [ "$want" = "$got" ] && [ "$want" = "$serve_got" ]; then
     echo "PASS  $name  (pass fail warn error skip: $want)"

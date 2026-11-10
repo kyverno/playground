@@ -56,13 +56,13 @@ helm install kyverno-playground --namespace kyverno --create-namespace kyverno-p
 | image.repository | string | `"kyverno/playground"` | Image repository |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | image.tag | string | `nil` | Image tag (will default to app version if not set) |
-| imagePullSecrets | list | `[]` | Image pull secrets |
 | kyvernoServe.image.registry | string | `"ghcr.io"` | kyverno serve image registry |
 | kyvernoServe.image.repository | string | `"kyverno/kyverno-cli"` | kyverno serve image repository (the Kyverno CLI image) |
 | kyvernoServe.image.tag | string | `"v1.20.0"` | kyverno serve image tag; must be a Kyverno CLI release that includes `kyverno serve` |
 | kyvernoServe.image.pullPolicy | string | `"IfNotPresent"` | kyverno serve image pull policy |
 | kyvernoServe.port | int | `8081` | Loopback port kyverno serve listens on |
 | kyvernoServe.resources | object | `{}` | kyverno serve container resources |
+| imagePullSecrets | list | `[]` | Image pull secrets |
 | priorityClassName | string | `""` | Priority class name |
 | serviceAccount.create | bool | `true` | Create service account |
 | serviceAccount.annotations | object | `{}` | Service account annotations |

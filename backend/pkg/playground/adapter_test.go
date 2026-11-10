@@ -60,16 +60,24 @@ metadata:
 func TestRunKubernetes(t *testing.T) {
 	requests := fakeServe(t, func(serve.EvaluationRequest) (int, any) {
 		return 200, serve.EvaluationResponse{APIVersion: serve.APIVersion, Results: []serve.RuleResult{
-			{Policy: serve.ObjectRef{APIVersion: "policies.kyverno.io/v1", Kind: "ValidatingPolicy", Name: "check-labels"}, Type: "Validation", Status: "fail", Message: "nope",
-				Resource: &serve.ObjectRef{APIVersion: "apps/v1", Kind: "Deployment", Namespace: "default", Name: "b"}},
-			{Policy: serve.ObjectRef{APIVersion: "policies.kyverno.io/v1", Kind: "ValidatingPolicy", Name: "check-labels"}, Type: "Validation", Status: "pass",
-				Resource: &serve.ObjectRef{APIVersion: "apps/v1", Kind: "Deployment", Namespace: "default", Name: "a"}},
-			{Policy: serve.ObjectRef{Kind: "MutatingPolicy", Name: "label-gw"}, Type: "Mutation", Status: "pass",
+			{
+				Policy: serve.ObjectRef{APIVersion: "policies.kyverno.io/v1", Kind: "ValidatingPolicy", Name: "check-labels"}, Type: "Validation", Status: "fail", Message: "nope",
+				Resource: &serve.ObjectRef{APIVersion: "apps/v1", Kind: "Deployment", Namespace: "default", Name: "b"},
+			},
+			{
+				Policy: serve.ObjectRef{APIVersion: "policies.kyverno.io/v1", Kind: "ValidatingPolicy", Name: "check-labels"}, Type: "Validation", Status: "pass",
+				Resource: &serve.ObjectRef{APIVersion: "apps/v1", Kind: "Deployment", Namespace: "default", Name: "a"},
+			},
+			{
+				Policy: serve.ObjectRef{Kind: "MutatingPolicy", Name: "label-gw"}, Type: "Mutation", Status: "pass",
 				Resource:      &serve.ObjectRef{APIVersion: "v1", Kind: "ConfigMap", Namespace: "default", Name: "cm"},
-				PatchedTarget: map[string]any{"apiVersion": "v1", "kind": "ConfigMap", "metadata": map[string]any{"name": "cm", "namespace": "default", "labels": map[string]any{"x": "z"}}}},
-			{Policy: serve.ObjectRef{Kind: "GeneratingPolicy", Name: "gen"}, Type: "Generation", Status: "pass",
+				PatchedTarget: map[string]any{"apiVersion": "v1", "kind": "ConfigMap", "metadata": map[string]any{"name": "cm", "namespace": "default", "labels": map[string]any{"x": "z"}}},
+			},
+			{
+				Policy: serve.ObjectRef{Kind: "GeneratingPolicy", Name: "gen"}, Type: "Generation", Status: "pass",
 				Resource:           &serve.ObjectRef{APIVersion: "apps/v1", Kind: "Deployment", Namespace: "default", Name: "a"},
-				GeneratedResources: []map[string]any{{"apiVersion": "v1", "kind": "Secret"}}},
+				GeneratedResources: []map[string]any{{"apiVersion": "v1", "kind": "Secret"}},
+			},
 		}}
 	})
 	req := &EngineRequest{
