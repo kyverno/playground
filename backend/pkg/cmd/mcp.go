@@ -8,11 +8,14 @@ import (
 
 	"github.com/kyverno/playground/backend/pkg/config"
 	"github.com/kyverno/playground/backend/pkg/mcp"
+	"github.com/kyverno/playground/backend/pkg/playground"
+	"github.com/kyverno/playground/backend/pkg/serve"
 )
 
 type mcpFlags struct {
 	serverFlags serverFlags
 	configFile  string
+	serveURL    string
 }
 
 func NewMCPCommand() *cobra.Command {
@@ -25,6 +28,7 @@ func NewMCPCommand() *cobra.Command {
 	// server flags
 	res.Flags().StringVar(&command.serverFlags.host, "server-host", "0.0.0.0", "server host")
 	res.Flags().IntVar(&command.serverFlags.port, "server-port", 9090, "server port")
+	res.Flags().StringVar(&command.serveURL, "engine-serve-url", serve.URLFromEnv(), "URL of the `kyverno serve --allow-request-policies` instance that evaluates policies (env KYVERNO_SERVE_URL)")
 
 	return res
 }
@@ -35,6 +39,8 @@ func (c *mcpFlags) Run(_ *cobra.Command, _ []string) error {
 	if err != nil {
 		return err
 	}
+
+	playground.SetServeURL(c.serveURL)
 
 	go func() {
 		s := http.NewServeMux()

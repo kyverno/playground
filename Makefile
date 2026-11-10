@@ -301,13 +301,26 @@ ko-publish: $(KO) ## Build and publish playground image (with ko)
 ########
 
 .PHONY: test-backend
-test-backend: ## Test backend
+test-backend: ## Test backend (tests that need kyverno serve are skipped unless KYVERNO_SERVE_URL is set)
 	@echo Testing backend... >&2
 	@cd backend && go test ./... -race -coverprofile=coverage.out -covermode=atomic
+
+KYVERNO_CLI        ?= kyverno
+KYVERNO_SERVE_PORT ?= 8081
+
+.PHONY: test-backend-serve
+test-backend-serve: ## Test backend against a local kyverno serve (set KYVERNO_CLI to the kyverno binary)
+	@echo Testing backend against kyverno serve... >&2
+	@./scripts/test-backend-serve.sh "$(KYVERNO_CLI)" "$(KYVERNO_SERVE_PORT)"
 
 #######
 # RUN #
 #######
+
+.PHONY: run-serve
+run-serve: ## Run the kyverno serve evaluation backend locally (set KYVERNO_CLI to the kyverno binary)
+	@echo Run kyverno serve... >&2
+	@KYVERNO_EXPERIMENTAL=true $(KYVERNO_CLI) serve --allow-request-policies --address 127.0.0.1:$(KYVERNO_SERVE_PORT)
 
 .PHONY: run
 run: build-backend-assets ## Run locally (with connected cluster)

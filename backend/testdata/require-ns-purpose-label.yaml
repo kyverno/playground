@@ -1,0 +1,14 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: require-ns-purpose-label
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups: [""]
+      apiVersions: ["v1"]
+      operations: ["CREATE", "UPDATE"]
+      resources: ["namespaces"]
+  validations:
+  - expression: "has(object.metadata.labels) && object.metadata.labels[?'purpose'].orValue('') == 'production'"
+    message: "You must have label `purpose` with value `production` set on all new namespaces."

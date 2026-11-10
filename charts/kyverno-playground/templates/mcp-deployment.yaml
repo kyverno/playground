@@ -40,6 +40,7 @@ spec:
           args:
             - mcp
             - --server-port={{ int .Values.mcp.port }}
+            - --engine-serve-url={{ include "kyverno-playground.serveURL" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -64,6 +65,7 @@ spec:
               name: sigstore
           resources:
             {{- toYaml .Values.mcp.resources | nindent 12 }}
+        {{- include "kyverno-playground.serveContainer" . | nindent 8 }}
       volumes:
       - name: sigstore
         emptyDir: {}

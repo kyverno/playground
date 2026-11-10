@@ -12,7 +12,24 @@ The **public version of the Playground** is available at https://playground.kyve
 
 The Kyverno Playground is a web service that simulates [Kyverno](https://github.com/kyverno/kyverno) behaviour, you can experiment and play with Kyverno policies directly in your browser
 
-The service receives a configuration, resource and policies definitions, runs the Kyverno engine, and returns the results of evaluating policies against resources.
+The service receives a configuration, resource and policies definitions, and returns the results of evaluating policies against resources.
+
+The Playground has no policy engine of its own. Every request is evaluated by
+[`kyverno serve`](https://github.com/kyverno/kyverno/blob/main/docs/user/cli/serve.md), the
+Kyverno CLI's experimental local evaluation server. As a result, the Playground gives the same
+results as `kyverno apply`.
+
+The Helm chart runs `kyverno serve` as a sidecar on the pod loopback. To run the Playground
+yourself:
+
+1. Start `KYVERNO_EXPERIMENTAL=true kyverno serve --allow-request-policies --address 127.0.0.1:8081`,
+   or run `make run-serve`.
+2. Point the backend at it with `--engine-serve-url` or `KYVERNO_SERVE_URL`. The default is
+   `http://127.0.0.1:8081`.
+
+`kyverno serve` v1alpha1 doesn't support these context fields: `username`, `groups`, `roles`,
+`clusterRoles`, `namespaceLabels` and `variables`. Requests that set them are rejected with an
+error. To make a namespace selector match, add the Namespace object to the cluster resources.
 
 The playground currently supports:
 - Validation rules
@@ -27,7 +44,6 @@ The playground currently supports:
 ## Features
 
 The playground frontend offers a rich feature set:
-- Supports admission information like `username`, `groups`, `roles` and `cluster roles`
 - Saving and loading state from the local storage
 - Loading policies and resources from the Kyverno catalog
 - Sharing state with simple links

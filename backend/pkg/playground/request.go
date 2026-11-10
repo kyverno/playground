@@ -50,10 +50,13 @@ func (r *EngineRequest) LoadParameters() (*models.Parameters, error) {
 	if params.Kubernetes.Version == "" {
 		params.Kubernetes.Version = "v1.34.0"
 	}
-	if params.Context.Operation == "" && r.Operation != "" {
-		params.Context.Operation = kyvernov1.AdmissionOperation(r.Operation)
-	} else {
-		params.Context.Operation = kyvernov1.Create
+	// the operation from the context wins, then the request's, then CREATE
+	if params.Context.Operation == "" {
+		if r.Operation != "" {
+			params.Context.Operation = kyvernov1.AdmissionOperation(r.Operation)
+		} else {
+			params.Context.Operation = kyvernov1.Create
+		}
 	}
 	return &params, nil
 }

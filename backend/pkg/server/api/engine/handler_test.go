@@ -18,10 +18,22 @@ import (
 	"github.com/kyverno/playground/backend/pkg/playground"
 )
 
+// requireServe skips tests that need a real evaluation backend unless KYVERNO_SERVE_URL points at
+// a `KYVERNO_EXPERIMENTAL=true kyverno serve --allow-request-policies` instance.
+func requireServe(t *testing.T) {
+	t.Helper()
+	url := os.Getenv("KYVERNO_SERVE_URL")
+	if url == "" {
+		t.Skip("set KYVERNO_SERVE_URL to a `kyverno serve --allow-request-policies` instance")
+	}
+	playground.SetServeURL(url)
+}
+
 func Test_Serve(t *testing.T) {
+	requireServe(t)
 	singleResource, err := os.ReadFile("../../../../testdata/namespace.yaml")
 	require.NoError(t, err)
-	singlePolicy, err := os.ReadFile("../../../../testdata/single-policy.yaml")
+	singlePolicy, err := os.ReadFile("../../../../testdata/require-ns-purpose-label.yaml")
 	require.NoError(t, err)
 
 	body := new(bytes.Buffer)
@@ -46,7 +58,29 @@ func Test_Serve(t *testing.T) {
 	}
 }
 
+// TestServeLegacyPolicyRejected checks legacy kyverno.io policies get kyverno's 1.20 migration
+// error as a 400, not an empty result.
+func TestServeLegacyPolicyRejected(t *testing.T) {
+	requireServe(t)
+	resource, err := os.ReadFile("../../../../testdata/namespace.yaml")
+	require.NoError(t, err)
+	legacy, err := os.ReadFile("../../../../testdata/single-policy.yaml")
+	require.NoError(t, err)
+	body := new(bytes.Buffer)
+	require.NoError(t, json.NewEncoder(body).Encode(playground.EngineRequest{Resources: string(resource), Policies: string(legacy)}))
+	recorder := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(recorder)
+	ctx.Request = httptest.NewRequest(http.MethodPost, "/", body)
+	ctx.Request.Header.Set("Content-Type", "application/json")
+	handler, err := newEngineHandler(cluster.NewFake(), crd.APIConfiguration{})
+	require.NoError(t, err)
+	handler(ctx)
+	require.Equal(t, http.StatusBadRequest, recorder.Code)
+	require.Contains(t, recorder.Body.String(), "migration-to-cel")
+}
+
 func TestServeMutatingPolicyTargets(t *testing.T) {
+	requireServe(t)
 	read := func(name string) string {
 		t.Helper()
 		data, err := os.ReadFile("../../../../testdata/mpol-targets/" + name + ".yaml")
