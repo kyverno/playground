@@ -5,7 +5,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/cel/matching"
 	"github.com/kyverno/kyverno/pkg/cel/policies/ivpol/engine"
 	"github.com/kyverno/kyverno/pkg/clients/dclient"
-	imageverifycache "github.com/kyverno/kyverno/pkg/image/verification/cache"
 
 	"github.com/kyverno/playground/backend/pkg/cluster"
 	"github.com/kyverno/playground/backend/pkg/engine/utils"
@@ -22,17 +21,15 @@ func newIVPEngine(dClient dclient.Interface, policies []v1beta1.ImageValidatingP
 		nsResolver = utils.NSResolver(dClient)
 	}
 
-	cache, err := imageverifycache.New()
-	if err != nil {
-		return nil, err
-	}
-
+	// Like the Kyverno CLI, run without an image verification cache: every
+	// playground request is evaluated once, and imageverifycache.New() with no
+	// options fails with "NumCounters can't be zero".
 	return engine.NewEngine(
 		provider,
 		nsResolver,
 		matching.NewMatcher(),
 		cluster.NewSecretLister(dClient, ""),
-		cache,
+		nil,
 		nil,
 	), nil
 }
