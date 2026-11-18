@@ -12,6 +12,7 @@
       </template>
       <template #desktop-actions>
         <PrimeButton @click="start" v-if="onboarding" variant="outlined">Onboarding</PrimeButton>
+        <v-btn to="/cel" prepend-icon="mdi-function-variant" class="ml-2">CEL Playground</v-btn>
         <ShareButton btn-class="ml-2" />
         <SaveButton btn-class="ml-2" />
         <LoadButton btn-class="mx-2" />

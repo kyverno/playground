@@ -82,3 +82,9 @@ export type EngineResponse = {
   imageVerification?: Mutation[]
   generation?: Generation[]
 }
+
+export type CelEvaluateResponse = {
+  value?: unknown
+  type?: string
+  error?: string
+}

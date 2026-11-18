@@ -1,6 +1,7 @@
 import Home from '@/pages/Home.vue'
 import MutationDetails from '@/pages/MutationDetails.vue'
 import GenerationDetails from '@/pages/GenerationDetails.vue'
+import CelPlayground from '@/pages/CelPlayground.vue'
 import { type RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -13,6 +14,11 @@ const routes: RouteRecordRaw[] = [
     path: '/generation/:id',
     component: GenerationDetails,
     name: 'generation-details',
+  },
+  {
+    path: '/cel',
+    component: CelPlayground,
+    name: 'cel-playground',
   },
   {
     path: '/',
